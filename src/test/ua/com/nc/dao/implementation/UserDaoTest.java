@@ -16,7 +16,7 @@ public class UserDaoTest {
 
     @BeforeClass
     public static void before() {
-        iUserDao = new UserDao();
+        iUserDao = new UserDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019");
         System.out.println("instantiated accountDao");
         newUser = new User("user@gmail.com", "kjdfdfshd", "test", "user", 0, true);
     }

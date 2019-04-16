@@ -19,6 +19,7 @@ public class UserServiceImpl implements UserService {
     public void add(User user) {
         try {
             userDao.insert(user);
+            userDao.commit();
             userDao.close();
         } catch (Exception e) {
             e.printStackTrace();

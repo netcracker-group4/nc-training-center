@@ -1,5 +1,7 @@
 package ua.com.nc.dao.implementation;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IUserDao;
 import ua.com.nc.model.User;
@@ -10,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class UserDao extends GenericAbstractDao<User, Integer> implements IUserDao {
 
     private final String EMAIL = "EMAIL";
@@ -21,7 +24,10 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     private final String IS_ACTIVE = "IS_ACTIVE";
     private final String USER_ID = "USER_ID";
 
-    UserDao() throws PersistException {
+    public UserDao(@Value("${spring.datasource.url}") String DATABASE_URL,
+                   @Value("${spring.datasource.username}") String DATABASE_USER,
+                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
     @Override
