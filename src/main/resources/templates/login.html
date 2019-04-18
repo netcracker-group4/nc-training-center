@@ -2,16 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Авторизация</title>    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title>Авторизация</title>
+    <!--<link href="../static/css/style.css" th:href="@{/static/css/style.css}" rel="stylesheet" />-->
 </head>
 <body>
     <form th:action="@{/login}" method="POST">
         <div class="group">
+            <h1>Login</h1>
             <input type="text" placeholder="Login" class="field" name="username">
             <span class="highlight"></span>
             <span class="bar"></span>
         </div>
         <div class="group">
+            <h1>Password</h1>
             <input type="password" placeholder="Password" class="field" name="password">
             <span class="highlight"></span>
             <span class="bar"></span>
