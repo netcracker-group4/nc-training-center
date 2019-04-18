@@ -10,6 +10,8 @@ import java.util.Collection;
 public class User implements UserDetails {
     private Integer id;
     private String email;
+    private String firstname;
+    private String lastname;
     private String password;
 
     @Override

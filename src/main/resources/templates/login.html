@@ -2,10 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Авторизация</title>    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <form th:action="@{/login}" method="POST">
+    <form th:action="@{/login}" method="POST" class="form">
         <div class="group">
             <input type="text" placeholder="Login" class="field" name="username">
             <span class="highlight"></span>
@@ -17,6 +18,12 @@
             <span class="bar"></span>
         </div>
         <button type="submit" class="button buttonBlue">Log in
+            <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
+        </button>
+    </form>
+
+    <form method="get" action="/registration" class="registration">
+        <button type="submit" class="button buttonBlue">Registration
             <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
         </button>
     </form>
