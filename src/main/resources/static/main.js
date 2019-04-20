@@ -7,8 +7,8 @@ import 'vuetify/dist/vuetify.min.css'
 import router from '../router/router'
 
 
-Vue.use(VueResource)
-Vue.use(Vuetify)
+Vue.use(VueResource);
+Vue.use(Vuetify);
 
 
 new Vue({
