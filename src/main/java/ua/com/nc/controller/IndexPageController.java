@@ -7,10 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ua.com.nc.dao.UserDao;
-import ua.com.nc.domain.User;
+import ua.com.nc.dao.interfaces.IUserDao;
+import ua.com.nc.model.User;
 
-import javax.servlet.http.HttpServletRequest;
 
 @Log4j
 @Controller
@@ -18,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 public class IndexPageController {
 
     @Autowired
-    private UserDao userDao;
+    private IUserDao userDao;
 
     @GetMapping
     public String showIndexPage(@AuthenticationPrincipal User user, Model model){

@@ -15,24 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Configuration
-@PropertySource("classpath:sql_queries.properties")
 public class UserDao extends GenericAbstractDao<User, Integer> implements IUserDao {
 
     private final String USER_ID = "USER_ID";
-//    @Value("${usr.select.all}")
-    private String selectAll;
-//    @Value("${usr.select.by.id}")
-    private String selectById;
-//    @Value("${usr.select.by.email}")
-    private String selectByEmail;
-//    @Value("${usr.update}")
-    private String update;
-//    @Value("${usr.delete}")
-    private String delete;
-//    @Value("${usr.insert}")
-    private String insert;
-
 
     public UserDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
@@ -49,27 +34,27 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     @Override
     protected String getSelectByIdQuery() {
-        return selectById;
+        return sqlQueriesProperties.getSelectById();
     }
 
     @Override
     protected String getSelectQuery() {
-        return selectAll;
+        return sqlQueriesProperties.getSelectAll();
     }
 
     @Override
     protected String getInsertQuery() {
-        return insert;
+        return sqlQueriesProperties.getInsert();
     }
 
     @Override
     protected String getDeleteQuery() {
-        return delete;
+        return sqlQueriesProperties.getDelete();
     }
 
     @Override
     protected String getUpdateQuery() {
-        return update;
+        return sqlQueriesProperties.getUpdate();
     }
 
     @Override
@@ -123,7 +108,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public User getByEmail(String email) {
         List<User> list;
-        String sql = selectByEmail;
+        String sql = sqlQueriesProperties.getSelectByEmail();
         log(sql, "find by email");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
@@ -142,51 +127,4 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         return list.iterator().next();
     }
 
-    public String getSelectAll() {
-        return selectAll;
-    }
-
-    public void setSelectAll(String selectAll) {
-        this.selectAll = selectAll;
-    }
-
-    public String getSelectById() {
-        return selectById;
-    }
-
-    public void setSelectById(String selectById) {
-        this.selectById = selectById;
-    }
-
-    public String getSelectByEmail() {
-        return selectByEmail;
-    }
-
-    public void setSelectByEmail(String selectByEmail) {
-        this.selectByEmail = selectByEmail;
-    }
-
-    public String getUpdate() {
-        return update;
-    }
-
-    public void setUpdate(String update) {
-        this.update = update;
-    }
-
-    public String getDelete() {
-        return delete;
-    }
-
-    public void setDelete(String delete) {
-        this.delete = delete;
-    }
-
-    public String getInsert() {
-        return insert;
-    }
-
-    public void setInsert(String insert) {
-        this.insert = insert;
-    }
 }

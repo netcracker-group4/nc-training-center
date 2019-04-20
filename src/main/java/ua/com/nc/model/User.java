@@ -1,8 +1,12 @@
 package ua.com.nc.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 import java.util.Objects;
 
-public class User extends Entity<Integer>{
+public class User extends Entity<Integer> implements UserDetails {
     private String email;
     private String passwordHash;
     private String firstname;
@@ -86,7 +90,7 @@ public class User extends Entity<Integer>{
                 '}';
     }
 
-    private void setEmail(String email) {
+    public void setEmail(String email) {
         if (email != null) {
             this.email = email.trim();
         }
@@ -118,5 +122,44 @@ public class User extends Entity<Integer>{
 
     private void setActive(boolean active) {
         isActive = active;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return isActive;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isActive;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isActive;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isActive;
+    }
+
+    public void setPassword(String password) {
+        this.passwordHash = password;
     }
 }

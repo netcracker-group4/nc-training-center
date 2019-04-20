@@ -17,7 +17,10 @@ import java.util.List;
 
 public abstract class GenericAbstractDao<E extends Entity<K>, K> implements GenericDao<E, K> {
 
-    protected Connection connection;
+    Connection connection;
+
+    @Autowired
+    SqlQueriesProperties sqlQueriesProperties;
 
     GenericAbstractDao() {
     }
@@ -73,7 +76,7 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
         return list.iterator().next();
     }
 
-    protected void log(String sql, String msg) {
+    void log(String sql, String msg) {
         System.out.println(msg);
         System.out.println(sql);
     }
@@ -115,7 +118,6 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
         if (entity.getId() != null) {
             throw new PersistException("Object is already persist.");
         }
-        // Добавляем запись
         String sql = getInsertQuery();
         log(sql, "LOG InsertQuery");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
