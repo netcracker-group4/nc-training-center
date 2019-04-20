@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.IUserDao;
-import ua.com.nc.model.User;
+import ua.com.nc.domain.User;
 import ua.com.nc.service.UserService;
 
 @Service
@@ -20,6 +20,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void add(User user) {
         userDao.insert(user);
+        userDao.commit();
     }
 
     @Override

@@ -3,71 +3,70 @@ package ua.com.nc.dao.implementation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
 @SuppressWarnings("unused")
 @Configuration
 @PropertySource("classpath:sql_queries.properties")
 public class SqlQueriesProperties {
     @Value("${usr.select-all}")
-    private String selectAll;
+    private String usrSelectAll;
     @Value("${usr.select-by-id}")
-    private String selectById;
+    private String usrSelectById;
     @Value("${usr.select-by-email}")
-    private String selectByEmail;
+    private String usrSelectByEmail;
     @Value("${usr.update}")
-    private String update;
+    private String usrUpdate;
     @Value("${usr.delete}")
-    private String delete;
+    private String usrDelete;
     @Value("${usr.insert}")
-    private String insert;
+    private String usrInsert;
 
 
-    public String getSelectAll() {
-        return selectAll;
+    String getUsrSelectAll() {
+        return usrSelectAll;
     }
 
-    public void setSelectAll(String selectAll) {
-        this.selectAll = selectAll;
+    public void setUsrSelectAll(String usrSelectAll) {
+        this.usrSelectAll = usrSelectAll;
     }
 
-    public String getSelectById() {
-        return selectById;
+    String getUsrSelectById() {
+        return usrSelectById;
     }
 
-    public void setSelectById(String selectById) {
-        this.selectById = selectById;
+    public void setUsrSelectById(String usrSelectById) {
+        this.usrSelectById = usrSelectById;
     }
 
-    public String getSelectByEmail() {
-        return selectByEmail;
+    String getUsrSelectByEmail() {
+        return usrSelectByEmail;
     }
 
-    public void setSelectByEmail(String selectByEmail) {
-        this.selectByEmail = selectByEmail;
+    public void setUsrSelectByEmail(String usrSelectByEmail) {
+        this.usrSelectByEmail = usrSelectByEmail;
     }
 
-    public String getUpdate() {
-        return update;
+    String getUsrUpdate() {
+        return usrUpdate;
     }
 
-    public void setUpdate(String update) {
-        this.update = update;
+    public void setUsrUpdate(String usrUpdate) {
+        this.usrUpdate = usrUpdate;
     }
 
-    public String getDelete() {
-        return delete;
+    String getUsrDelete() {
+        return usrDelete;
     }
 
-    public void setDelete(String delete) {
-        this.delete = delete;
+    public void setUsrDelete(String usrDelete) {
+        this.usrDelete = usrDelete;
     }
 
-    public String getInsert() {
-        return insert;
+    String getInsert() {
+        return usrInsert;
     }
 
     public void setInsert(String insert) {
-        this.insert = insert;
+        this.usrInsert = insert;
     }
 }

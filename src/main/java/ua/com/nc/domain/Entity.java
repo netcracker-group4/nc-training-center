@@ -1,4 +1,4 @@
-package ua.com.nc.model;
+package ua.com.nc.domain;
 
 import java.util.Objects;
 

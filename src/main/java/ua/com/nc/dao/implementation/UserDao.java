@@ -1,16 +1,15 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IUserDao;
-import ua.com.nc.model.User;
+import ua.com.nc.domain.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +33,12 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     @Override
     protected String getSelectByIdQuery() {
-        return sqlQueriesProperties.getSelectById();
+        return sqlQueriesProperties.getUsrSelectById();
     }
 
     @Override
     protected String getSelectQuery() {
-        return sqlQueriesProperties.getSelectAll();
+        return sqlQueriesProperties.getUsrSelectAll();
     }
 
     @Override
@@ -49,12 +48,12 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     @Override
     protected String getDeleteQuery() {
-        return sqlQueriesProperties.getDelete();
+        return sqlQueriesProperties.getUsrDelete();
     }
 
     @Override
     protected String getUpdateQuery() {
-        return sqlQueriesProperties.getUpdate();
+        return sqlQueriesProperties.getUsrUpdate();
     }
 
     @Override
@@ -78,7 +77,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         statement.setString(2, entity.getPasswordHash());
         statement.setString(3, entity.getFirstname());
         statement.setString(4, entity.getLastname());
-        statement.setInt(5, entity.getManagerId());
+        statement.setObject(5, entity.getManagerId(), Types.INTEGER);
         statement.setBoolean(6, entity.isActive());
     }
 
@@ -108,7 +107,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public User getByEmail(String email) {
         List<User> list;
-        String sql = sqlQueriesProperties.getSelectByEmail();
+        String sql = sqlQueriesProperties.getUsrSelectByEmail();
         log(sql, "find by email");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);

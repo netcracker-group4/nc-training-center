@@ -2,7 +2,7 @@ package ua.com.nc.dao.implementation;
 
 import org.junit.*;
 import ua.com.nc.dao.interfaces.IUserDao;
-import ua.com.nc.model.User;
+import ua.com.nc.domain.User;
 
 import java.util.List;
 

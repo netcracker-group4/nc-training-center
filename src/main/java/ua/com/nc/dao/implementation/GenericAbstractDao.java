@@ -1,10 +1,9 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.GenericDao;
-import ua.com.nc.model.Entity;
+import ua.com.nc.domain.Entity;
 
 import java.sql.*;
 import java.util.List;

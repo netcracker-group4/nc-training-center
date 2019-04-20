@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.model.User;
+import ua.com.nc.domain.User;
 import ua.com.nc.service.UserService;
 
 @Log4j
@@ -18,10 +18,10 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<?> save(@RequestBody User user) {
         log.debug(user);
-        if(     user != null &
-                user.getEmail() != null &
-                user.getFirstname() != null &
-                user.getLastname() != null &
+        if(     user != null &&
+                user.getEmail() != null &&
+                user.getFirstname() != null &&
+                user.getLastname() != null &&
                 user.getPassword() != null){
             userService.add(user);
             return ResponseEntity.ok().body("User saved");

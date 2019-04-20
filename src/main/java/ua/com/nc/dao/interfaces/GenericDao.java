@@ -1,7 +1,7 @@
 package ua.com.nc.dao.interfaces;
 
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.model.Entity;
+import ua.com.nc.domain.Entity;
 
 import java.util.List;
 
