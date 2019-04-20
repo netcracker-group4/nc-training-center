@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.domain.User;
+import ua.com.nc.model.User;
 import ua.com.nc.service.UserService;
 
 @Log4j
@@ -12,14 +12,8 @@ import ua.com.nc.service.UserService;
 @CrossOrigin(origins = "http://localhost:8000")
 @RequestMapping("/users")
 public class UserController {
-
-    private UserService userService;
-
     @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
+    private UserService userService;
 
     @PostMapping()
     public ResponseEntity<?> save(@RequestBody User user) {
