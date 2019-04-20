@@ -98,4 +98,14 @@ public class UserDaoTest {
         assertEquals(user, insertedUser);
     }
 
+
+    @Test
+    public void findByEmail() {
+        User user = iUserDao.getByEmail(newUser.getEmail());
+        assertNotNull(user);
+        assertEquals(user, newUser);
+    }
+
+
+
 }

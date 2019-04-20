@@ -1,6 +1,8 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IUserDao;
@@ -13,16 +15,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Configuration
+@PropertySource("classpath:sql_queries.properties")
 public class UserDao extends GenericAbstractDao<User, Integer> implements IUserDao {
 
-    private final String EMAIL = "EMAIL";
-    private final String PASSWORD_HASH = "PASSWORD_HASH";
-    private final String FIRSTNAME = "FIRSTNAME";
-    private final String LASTNAME = "LASTNAME";
-    private final String MANAGER_ID = "MANAGER_ID";
-    private final String TABLE_NAME = "USR";
-    private final String IS_ACTIVE = "IS_ACTIVE";
     private final String USER_ID = "USER_ID";
+//    @Value("${usr.select.all}")
+    private String selectAll;
+//    @Value("${usr.select.by.id}")
+    private String selectById;
+//    @Value("${usr.select.by.email}")
+    private String selectByEmail;
+//    @Value("${usr.update}")
+    private String update;
+//    @Value("${usr.delete}")
+    private String delete;
+//    @Value("${usr.insert}")
+    private String insert;
+
 
     public UserDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
@@ -39,46 +49,27 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     @Override
     protected String getSelectByIdQuery() {
-        return "SELECT " + USER_ID + ", " + EMAIL + ", " + PASSWORD_HASH + ", " + FIRSTNAME + ", " + LASTNAME + ", " +
-                MANAGER_ID + ", " + IS_ACTIVE + " FROM " + TABLE_NAME + " WHERE " + USER_ID + " = ?";
+        return selectById;
     }
 
     @Override
     protected String getSelectQuery() {
-        return "SELECT " + USER_ID + ", " + EMAIL + ", " + PASSWORD_HASH + ", " + FIRSTNAME + ", " +
-                LASTNAME + ", " + MANAGER_ID + ", " + IS_ACTIVE + " FROM " + TABLE_NAME;
+        return selectAll;
     }
 
     @Override
     protected String getInsertQuery() {
-        return " INSERT INTO " + TABLE_NAME + "(" +
-                EMAIL + ", " +
-                PASSWORD_HASH + ", " +
-                FIRSTNAME + ", " +
-                LASTNAME + ", " +
-                MANAGER_ID + ", " +
-                IS_ACTIVE + ")\n" +
-                "VALUES\n" +
-                "        ( ?, ?, ?, ?, ?, ?) RETURNING " + USER_ID ;
+        return insert;
     }
 
     @Override
     protected String getDeleteQuery() {
-        return "DELETE FROM " + TABLE_NAME + " \n" +
-                "WHERE " + USER_ID + " = ? ";
+        return delete;
     }
 
     @Override
     protected String getUpdateQuery() {
-        return "UPDATE " + TABLE_NAME + " \n" +
-                "SET \n" +
-                EMAIL + " = ?,\n" +
-                PASSWORD_HASH + " = ?,\n" +
-                FIRSTNAME + " = ?,\n" +
-                LASTNAME + " = ?,\n" +
-                MANAGER_ID + " = ?,\n" +
-                IS_ACTIVE + " = ?\n" +
-                "WHERE " + USER_ID + " = ? ";
+        return update;
     }
 
     @Override
@@ -111,11 +102,17 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         List<User> list = new ArrayList<>();
         while (rs.next()) {
             Integer userId = rs.getInt(USER_ID);
+            String EMAIL = "EMAIL";
             String email = rs.getString(EMAIL);
+            String PASSWORD_HASH = "PASSWORD_HASH";
             String passwordHash = rs.getString(PASSWORD_HASH);
+            String FIRSTNAME = "FIRSTNAME";
             String firstname = rs.getString(FIRSTNAME);
+            String LASTNAME = "LASTNAME";
             String lastname = rs.getString(LASTNAME);
+            String MANAGER_ID = "MANAGER_ID";
             Integer managerId = rs.getInt(MANAGER_ID);
+            String IS_ACTIVE = "IS_ACTIVE";
             boolean isActive = rs.getBoolean(IS_ACTIVE);
             User user = new User(userId, email, passwordHash, firstname, lastname, managerId, isActive);
             list.add(user);
@@ -124,10 +121,10 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     }
 
     @Override
-    public User findByEmail(String email) {
+    public User getByEmail(String email) {
         List<User> list;
-        String sql = "SELECT " + USER_ID + ", " + EMAIL + ", " + PASSWORD_HASH + ", " + FIRSTNAME + ", " + LASTNAME + ", " +
-                MANAGER_ID + ", " + IS_ACTIVE + " FROM " + TABLE_NAME + " WHERE " + EMAIL + " = ? " ;
+        String sql = selectByEmail;
+        log(sql, "find by email");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
             ResultSet rs = statement.executeQuery();
@@ -143,5 +140,53 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             throw new PersistException("Received more than one record.");
         }
         return list.iterator().next();
+    }
+
+    public String getSelectAll() {
+        return selectAll;
+    }
+
+    public void setSelectAll(String selectAll) {
+        this.selectAll = selectAll;
+    }
+
+    public String getSelectById() {
+        return selectById;
+    }
+
+    public void setSelectById(String selectById) {
+        this.selectById = selectById;
+    }
+
+    public String getSelectByEmail() {
+        return selectByEmail;
+    }
+
+    public void setSelectByEmail(String selectByEmail) {
+        this.selectByEmail = selectByEmail;
+    }
+
+    public String getUpdate() {
+        return update;
+    }
+
+    public void setUpdate(String update) {
+        this.update = update;
+    }
+
+    public String getDelete() {
+        return delete;
+    }
+
+    public void setDelete(String delete) {
+        this.delete = delete;
+    }
+
+    public String getInsert() {
+        return insert;
+    }
+
+    public void setInsert(String insert) {
+        this.insert = insert;
     }
 }

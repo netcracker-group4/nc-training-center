@@ -40,6 +40,7 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
     public List<E> getAll() throws PersistException {
         List<E> list;
         String sql = getSelectQuery();
+        log(sql, "find all");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
@@ -72,7 +73,7 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
         return list.iterator().next();
     }
 
-    private void log(String sql, String msg) {
+    protected void log(String sql, String msg) {
         System.out.println(msg);
         System.out.println(sql);
     }

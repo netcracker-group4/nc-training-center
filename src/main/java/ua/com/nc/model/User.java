@@ -87,23 +87,33 @@ public class User extends Entity<Integer>{
     }
 
     private void setEmail(String email) {
-        this.email = email.trim();
+        if (email != null) {
+            this.email = email.trim();
+        }
     }
 
     private void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash.trim();
+        if (passwordHash != null) {
+            this.passwordHash = passwordHash.trim();
+        }
     }
 
     private void setFirstname(String firstname) {
-        this.firstname = firstname.trim();
+        if (firstname != null) {
+            this.firstname = firstname.trim();
+        }
     }
 
     private void setLastname(String lastname) {
-        this.lastname = lastname.trim();
+        if (lastname != null) {
+            this.lastname = lastname.trim();
+        }
     }
 
     private void setManagerId(Integer managerId) {
-        this.managerId = managerId;
+        if (managerId != null) {
+            this.managerId = managerId;
+        }
     }
 
     private void setActive(boolean active) {
