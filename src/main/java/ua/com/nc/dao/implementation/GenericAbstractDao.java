@@ -17,25 +17,10 @@ import java.util.List;
 
 public abstract class GenericAbstractDao<E extends Entity<K>, K> implements GenericDao<E, K> {
 
-    private Connection connection;
-//    private String database_url;
-//    private String database_user;
-//    private String database_password;
+    protected Connection connection;
 
     GenericAbstractDao() {
     }
-
-
-//    GenericAbstractDao() throws PersistException {
-//        try {
-//            this.connection = DriverManager.getConnection(database_url,
-//                    database_user, database_password);
-//            connection.setAutoCommit(false);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            throw new PersistException("Error while setting autocommit false", e);
-//        }
-//    }
 
     @Autowired
     GenericAbstractDao(String DATABASE_URL,

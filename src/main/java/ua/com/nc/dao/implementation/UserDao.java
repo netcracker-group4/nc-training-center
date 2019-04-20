@@ -122,4 +122,26 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         }
         return list;
     }
+
+    @Override
+    public User findByEmail(String email) {
+        List<User> list;
+        String sql = "SELECT " + USER_ID + ", " + EMAIL + ", " + PASSWORD_HASH + ", " + FIRSTNAME + ", " + LASTNAME + ", " +
+                MANAGER_ID + ", " + IS_ACTIVE + " FROM " + TABLE_NAME + " WHERE " + EMAIL + " = ? " ;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
 }
