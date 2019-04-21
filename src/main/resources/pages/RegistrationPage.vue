@@ -8,10 +8,10 @@
                             <v-text-field v-model="email" label="Email" clearable></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm12>
-                            <v-text-field v-model="firstname" label="First name" clearable></v-text-field>
+                            <v-text-field v-model="firstName" label="First name" clearable></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm12>
-                            <v-text-field v-model="lastname" label="Last name" clearable></v-text-field>
+                            <v-text-field v-model="lastName" label="Last name" clearable></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm12>
                             <v-text-field
@@ -47,20 +47,20 @@
             return{
                 pass_show: false,
                 email: null,
-                firstname: null,
-                lastname: null,
+                firstName: null,
+                lastName: null,
                 password: null
             }
         },
         methods:{
             submit(){
-                if(this.email != null & this.firstname != null
-                    & this.lastname != null & this.password != null){
+                if(this.email != null & this.firstName != null
+                    & this.lastName != null & this.password != null){
                     console.log(this.email + " " + this.password)
                     axios.post('http://localhost:8080/users', {
                         email: this.email,
-                        firstname: this.firstname,
-                        lastname: this.lastname,
+                        firstName: this.firstName,
+                        lastName: this.lastName,
                         password: this.password
                     })
                         .then(response => alert("User added"))

@@ -3,35 +3,41 @@ package ua.com.nc.domain;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Objects;
 
 public class User extends Entity<Integer> implements UserDetails {
     private String email;
-    private String passwordHash;
-    private String firstname;
-    private String lastname;
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String token;
+    private OffsetDateTime created;
     private Integer managerId;
+    private String imageUrl;
     private boolean isActive;
+    private boolean isOnLandingPage;
+    private String description;
 
     public User() {
     }
 
-    public User(Integer id, String email, String passwordHash, String firstname, String lastname, Integer managerId, boolean isActive) {
+    public User(Integer id, String email, String password, String firstName, String lastName, Integer managerId, boolean isActive) {
         super(id);
         this.setEmail(email);
-        this.setPasswordHash(passwordHash);
-        this.setFirstname(firstname);
-        this.setLastname(lastname);
+        this.setPassword(password);
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
         this.setManagerId(managerId);
         this.setActive(isActive);
     }
 
-    public User(String email, String passwordHash, String firstname, String lastname, Integer managerId, boolean isActive) {
+    public User(String email, String password, String firstName, String lastName, Integer managerId, boolean isActive) {
         this.setEmail(email);
-        this.setPasswordHash(passwordHash);
-        this.setFirstname(firstname);
-        this.setLastname(lastname);
+        this.setPassword(password);
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
         this.setManagerId(managerId);
         this.setActive(isActive);
     }
@@ -46,33 +52,23 @@ public class User extends Entity<Integer> implements UserDetails {
         }
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getFirstName() {
+        return firstName;
     }
 
-    private void setPasswordHash(String passwordHash) {
-        if (passwordHash != null) {
-            this.passwordHash = passwordHash.trim();
+    private void setFirstName(String firstName) {
+        if (firstName != null) {
+            this.firstName = firstName.trim();
         }
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getLastName() {
+        return lastName;
     }
 
-    private void setFirstname(String firstname) {
-        if (firstname != null) {
-            this.firstname = firstname.trim();
-        }
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    private void setLastname(String lastname) {
-        if (lastname != null) {
-            this.lastname = lastname.trim();
+    private void setLastName(String lastName) {
+        if (lastName != null) {
+            this.lastName = lastName.trim();
         }
     }
 
@@ -101,24 +97,24 @@ public class User extends Entity<Integer> implements UserDetails {
         User user = (User) o;
         return isActive() == user.isActive() &&
                 Objects.equals(getEmail(), user.getEmail()) &&
-                Objects.equals(getPasswordHash(), user.getPasswordHash()) &&
-                Objects.equals(getFirstname(), user.getFirstname()) &&
-                Objects.equals(getLastname(), user.getLastname()) &&
+                Objects.equals(getPassword(), user.getPassword()) &&
+                Objects.equals(getFirstName(), user.getFirstName()) &&
+                Objects.equals(getLastName(), user.getLastName()) &&
                 Objects.equals(getManagerId(), user.getManagerId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getEmail(), getPasswordHash(), getFirstname(), getLastname(), getManagerId(), isActive());
+        return Objects.hash(getEmail(), getPassword(), getFirstName(), getLastName(), getManagerId(), isActive());
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "email='" + getEmail() + '\'' +
-                ", passwordHash='" + getPasswordHash() + '\'' +
-                ", firstname='" + getFirstname() + '\'' +
-                ", lastname='" + getLastname() + '\'' +
+                ", password='" + getPassword() + '\'' +
+                ", firstName='" + getFirstName() + '\'' +
+                ", lastName='" + getLastName() + '\'' +
                 ", managerId=" + getManagerId() +
                 ", isActive=" + isActive() +
                 '}';
@@ -131,7 +127,7 @@ public class User extends Entity<Integer> implements UserDetails {
 
     @Override
     public String getPassword() {
-        return passwordHash;
+        return password;
     }
 
     @Override
@@ -140,7 +136,7 @@ public class User extends Entity<Integer> implements UserDetails {
     }
 
     public void setPassword(String password) {
-        this.passwordHash = password;
+        this.password = password;
     }
 
     @Override

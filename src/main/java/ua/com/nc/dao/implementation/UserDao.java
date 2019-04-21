@@ -16,12 +16,13 @@ import java.util.List;
 @Component
 public class UserDao extends GenericAbstractDao<User, Integer> implements IUserDao {
 
-    private final String USER_ID = "USER_ID";
+    private final String USER_ID = "ID";
 
     public UserDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
-                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD, SqlQueriesProperties sqlQueriesProperties) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
+        setSqlQueriesProperties(sqlQueriesProperties);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     @Override
     protected String getInsertQuery() {
-        return sqlQueriesProperties.getInsert();
+        return sqlQueriesProperties.getUsrInsert();
     }
 
     @Override
@@ -74,9 +75,9 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     private void setAllFields(PreparedStatement statement, User entity) throws SQLException {
         statement.setString(1, entity.getEmail());
-        statement.setString(2, entity.getPasswordHash());
-        statement.setString(3, entity.getFirstname());
-        statement.setString(4, entity.getLastname());
+        statement.setString(2, entity.getPassword());
+        statement.setString(3, entity.getFirstName());
+        statement.setString(4, entity.getLastName());
         statement.setObject(5, entity.getManagerId(), Types.INTEGER);
         statement.setBoolean(6, entity.isActive());
     }
@@ -88,11 +89,11 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             Integer userId = rs.getInt(USER_ID);
             String EMAIL = "EMAIL";
             String email = rs.getString(EMAIL);
-            String PASSWORD_HASH = "PASSWORD_HASH";
+            String PASSWORD_HASH = "PASSWORD";
             String passwordHash = rs.getString(PASSWORD_HASH);
-            String FIRSTNAME = "FIRSTNAME";
+            String FIRSTNAME = "FIRST_NAME";
             String firstname = rs.getString(FIRSTNAME);
-            String LASTNAME = "LASTNAME";
+            String LASTNAME = "LAST_NAME";
             String lastname = rs.getString(LASTNAME);
             String MANAGER_ID = "MANAGER_ID";
             Integer managerId = rs.getInt(MANAGER_ID);

@@ -16,9 +16,16 @@ public class UserDaoTest {
 
     @BeforeClass
     public static void before() {
-        iUserDao = new UserDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019");
-        System.out.println("instantiated accountDao");
-        newUser = new User("user@gmail.com", "kjdfdfshd", "test", "user", 0, true);
+        SqlQueriesProperties sqlQueriesProperties = new SqlQueriesProperties();
+        sqlQueriesProperties.setUsrDelete("delete FROM USR WHERE ID = ?");
+        sqlQueriesProperties.setUsrInsert("insert INTO USR(EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, MANAGER_ID, IS_ACTIVE) VALUES ( ?, ?, ?, ?, ?, ?) RETURNING ID");
+        sqlQueriesProperties.setUsrSelectAll("SELECT ID, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, MANAGER_ID, IS_ACTIVE FROM USR");
+        sqlQueriesProperties.setUsrSelectById("SELECT ID, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, MANAGER_ID, IS_ACTIVE FROM USR WHERE ID = ?");
+        sqlQueriesProperties.setUsrUpdate("update USR SET EMAIL = ?, PASSWORD = ?, FIRST_NAME = ?, LAST_NAME = ?, MANAGER_ID = ?, IS_ACTIVE = ? WHERE ID = ?");
+        sqlQueriesProperties.setUsrSelectByEmail("SELECT ID, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, MANAGER_ID, IS_ACTIVE FROM USR WHERE EMAIL = ?");
+        iUserDao = new UserDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019", sqlQueriesProperties);
+        System.out.println("instantiated USERDAO");
+        newUser = new User("user@gmail.com", "kjdfdfshd", "test", "user", 3, true);
     }
 
     @AfterClass
@@ -64,7 +71,7 @@ public class UserDaoTest {
         assertNotNull(savedUser);
         assertEquals(newUser, savedUser);
 
-        User newUser = new User(id,"new@new.com", "new", "firstNew", "lastNew", 0, false);
+        User newUser = new User(id,"new@new.com", "new", "firstNew", "lastNew", 1, false);
         iUserDao.update(newUser);
 
         User updatedRetrievedUser = iUserDao.getEntityById(id);
@@ -87,7 +94,7 @@ public class UserDaoTest {
         List<User> users = iUserDao.getAll();
         int before = users.size();
         assertTrue(users.size() > 0);
-        User user = new User("JustInsertedUser@gmail.com", "kjdfdfshd", "test", "user", 0, true);
+        User user = new User("JustInsertedUser@gmail.com", "kjdfdfshd", "test", "user", 5, true);
         iUserDao.insert(user);
         assertNotNull(user.getId());
         Integer newID = user.getId();
