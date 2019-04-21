@@ -34,7 +34,7 @@ values
 	(4, 'employee');
 
 
-insert into assigned_role (role_id, user_id)
+insert into assigned_role (user_id, role_id)
 values 
 	(1, 1),
 	(1, 3),
