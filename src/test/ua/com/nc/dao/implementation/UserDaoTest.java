@@ -4,7 +4,12 @@ import org.junit.*;
 import ua.com.nc.dao.interfaces.IUserDao;
 import ua.com.nc.domain.User;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 
 import static org.junit.Assert.*;
 
@@ -17,12 +22,20 @@ public class UserDaoTest {
     @BeforeClass
     public static void before() {
         SqlQueriesProperties sqlQueriesProperties = new SqlQueriesProperties();
-        sqlQueriesProperties.setUsrDelete("delete FROM USR WHERE ID = ?");
-        sqlQueriesProperties.setUsrInsert("insert INTO USR(EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, MANAGER_ID, IS_ACTIVE) VALUES ( ?, ?, ?, ?, ?, ?) RETURNING ID");
-        sqlQueriesProperties.setUsrSelectAll("SELECT ID, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, MANAGER_ID, IS_ACTIVE FROM USR");
-        sqlQueriesProperties.setUsrSelectById("SELECT ID, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, MANAGER_ID, IS_ACTIVE FROM USR WHERE ID = ?");
-        sqlQueriesProperties.setUsrUpdate("update USR SET EMAIL = ?, PASSWORD = ?, FIRST_NAME = ?, LAST_NAME = ?, MANAGER_ID = ?, IS_ACTIVE = ? WHERE ID = ?");
-        sqlQueriesProperties.setUsrSelectByEmail("SELECT ID, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, MANAGER_ID, IS_ACTIVE FROM USR WHERE EMAIL = ?");
+        Properties properties = new Properties();
+        InputStream input = null;
+        try {
+            input = UserDaoTest.class.getClassLoader().getResourceAsStream("sql_queries.properties");
+            properties.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        sqlQueriesProperties.setUsrDelete(properties.getProperty("usr.delete"));
+        sqlQueriesProperties.setUsrInsert(properties.getProperty("usr.insert"));
+        sqlQueriesProperties.setUsrSelectAll(properties.getProperty("usr.select-all"));
+        sqlQueriesProperties.setUsrSelectById(properties.getProperty("usr.select-by-id"));
+        sqlQueriesProperties.setUsrUpdate(properties.getProperty("usr.update"));
+        sqlQueriesProperties.setUsrSelectByEmail(properties.getProperty("usr.select-by-email"));
         iUserDao = new UserDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019", sqlQueriesProperties);
         System.out.println("instantiated USERDAO");
         newUser = new User("user@gmail.com", "kjdfdfshd", "test", "user", 3, true);
