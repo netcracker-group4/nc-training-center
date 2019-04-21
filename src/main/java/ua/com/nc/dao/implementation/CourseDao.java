@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ICourseDao;
 import ua.com.nc.domain.Course;
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class CourseDao extends GenericAbstractDao<Course, Integer> implements ICourseDao {
 
     public CourseDao(@Value("${spring.datasource.url}") String DATABASE_URL,

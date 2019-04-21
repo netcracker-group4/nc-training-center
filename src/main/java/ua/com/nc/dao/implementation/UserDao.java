@@ -127,4 +127,25 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         return list.iterator().next();
     }
 
+    @Override
+    public List<User> getAllTrainers() {
+        List<User> list;
+        String sql = sqlQueriesProperties.getUsrSelectAllTrainers();
+        log(sql, "select all trainers");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list;
+    }
+
 }
