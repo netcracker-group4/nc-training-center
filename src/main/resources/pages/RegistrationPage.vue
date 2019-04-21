@@ -24,6 +24,7 @@
                                     @click:append="pass_show = !pass_show"
                             ></v-text-field>
                         </v-flex>
+                        <v-spacer></v-spacer>
                         <v-flex xs12 sm12>
                             <v-btn @click="submit">submit</v-btn>
                         </v-flex>

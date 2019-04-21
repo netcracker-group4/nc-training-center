@@ -1,10 +1,11 @@
+
 insert into usr (id, email, password, first_name, last_name, token, created,
 				manager_id, is_active, is_on_landing_page, description)
 values
 	(1, 'theking@gmail.com', 'kingthe', 'THE', 'KING', 'jt4RFkGzmaSq',
 	 '2018-04-11 21:06:00', null, true, false, 'ADMIN'),
 	(2, 'voodyallen@gmail.com', 'allenvoody', 'VOODY', 'ALLEN', 'WCl5WhuVC9ej',
-	 '2014-04-30 08:42:00', null, true, false, 'Vooden Allen'),	
+	 '2014-04-30 08:42:00', null, true, false, 'Vooden Allen'),
 	(3, 'jamieward@gmail.com', 'wardjamie', 'JAMIE', 'WARD', '05iQZp4y6CeV',
 	 '2014-07-30 10:44:00', null, true, false, 'Jamie Wardie'),
 	(4, 'jackjones@gmail.com', 'jonesjack', 'JACK', 'JONES', '8N00odJBX3bY',
@@ -21,8 +22,8 @@ values
  	 '2012-12-16 00:12:00', 3, false, false, 'Johnyy Smith');
 
 alter sequence usr_seq restart with 10;
- 	 	
- 	
+
+
 insert into role_r (id, name)
 values
 	(1, 'admin'),
@@ -34,7 +35,7 @@ alter sequence role_seq restart with 5;
 
 
 insert into assigned_role (user_id, role_id)
-values 
+values
 	(1, 1),
 	(1, 3),
 	(2, 2),
@@ -50,7 +51,7 @@ values
 
 
 insert into level (id, title)
-values 
+values
 	(1, 'beginner'),
 	(2, 'junior'),
 	(3, 'middle'),
@@ -60,16 +61,16 @@ alter sequence level_seq restart with 5;
 
 
 insert into course_status (id, name, description)
-values 
+values
 	(1, 'planned', 'The registration has not started yet'),
 	(2, 'registration', 'The registrion is open. No schedule yet'),
 	(3, 'scheduled', 'Registration is closed. Schedule is formed. The lessons have not started yet'),
 	(4, 'ongoing', 'The lessons have started'),
 	(5, 'ended', 'The lessons have ended');
-	
+
 alter sequence course_status_seq restart with 6;
 
-	
+
 insert into course (id, name, level, course_status_id, user_id,
 					start_date, end_date, is_on_landing_page)
 values
@@ -92,7 +93,7 @@ alter sequence problem_status_seq restart with 6;
 
 
 insert into absence_reason (id, title)
-values 
+values
 	(1, 'No reason'),
 	(2, 'Sick'),
 	(3, 'Business trip'),
@@ -102,7 +103,7 @@ alter sequence absence_reason_seq restart with 5;
 
 
 insert into attendance_status (id, title)
-values 
+values
 	(1, 'present'),
 	(2, 'absent'),
 	(3, 'late');
@@ -143,7 +144,7 @@ values
 
 
 insert into suitability (id, title, priority)
-values 
+values
 	(1, 'perfect', 3),
 	(2, 'suitable', 2),
 	(3, 'normal', 3);
