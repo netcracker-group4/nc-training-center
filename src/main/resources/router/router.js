@@ -16,7 +16,7 @@ const routes = [
     {path: '/', component: MainPage},
     {path: '/registration', component: RegistrationPage},
     {path: '/dashboard', component: DashBoardPage},
-    {path: '/login', component: LoginPage}
+    {path: '/login', component: LoginPage},
     {path: '/dashboard', component: DashBoardPage},
     {path: '/groups/:id', component: GroupPage},
     {path: '/courses/:id', component: CoursePage},
