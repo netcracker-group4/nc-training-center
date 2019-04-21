@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import MainPage from '../pages/MainPage.vue'
 import RegistrationPage from '../pages/RegistrationPage.vue'
-import DashBoardPage from "../pages/DashBoardPage";
+import DashBoardPage from "../pages/DashBoardPage.vue";
 
 
 Vue.use(Router);
