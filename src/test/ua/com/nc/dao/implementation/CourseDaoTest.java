@@ -19,13 +19,13 @@ public class CourseDaoTest {
     public static void before() {
         SqlQueriesProperties sqlQueriesProperties = new SqlQueriesProperties();
         sqlQueriesProperties.setCourseDelete("delete from course where id = ?");
-        sqlQueriesProperties.setCourseInsert("insert into course (name, level, course_status_id, user_id, IMAGE_URL, start_date, end_date, is_on_landing_page, description) values(?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING ID");
+        sqlQueriesProperties.setCourseInsert("insert into course (courseName, level, course_status_id, user_id, IMAGE_URL, start_date, end_date, is_on_landing_page, description) values(?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING ID");
         sqlQueriesProperties.setCourseSelectAll("SELECT ID, NAME, LEVEL, course_status_id, USER_ID, IMAGE_URL, start_date, end_date, is_on_landing_page, description FROM course");
         sqlQueriesProperties.setCourseSelectById("SELECT ID, NAME, LEVEL, course_status_id, USER_ID, IMAGE_URL, start_date, end_date, is_on_landing_page, description FROM course where id = ?");
         sqlQueriesProperties.setCourseUpdate("update course set NAME = ?, LEVEL = ?, course_status_id = ?, USER_ID = ?, IMAGE_URL = ?, start_date = ?, end_date = ?, is_on_landing_page = ?, description = ?   where id = ?");
         iCourseDao = new CourseDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019", sqlQueriesProperties);
         System.out.println("instantiated COURSE DAO");
-        newCourse = new Course("name", 1, 1, 1, "url", new Date(65465465L), new Date(654L), true, "desc");
+        newCourse = new Course("courseName", 1, 1, 1, "url", new Date(65465465L), new Date(654L), true, "desc");
     }
 
     @AfterClass
@@ -71,7 +71,7 @@ public class CourseDaoTest {
         assertNotNull(savedCourse);
         assertEquals(newCourse, savedCourse);
 
-        Course newCourse = new Course(id,"new name", 2, 2, 2, "new url", new Date(55555L), new Date(6666L), false, "new desc");
+        Course newCourse = new Course(id,"new courseName", 2, 2, 2, "new url", new Date(55555L), new Date(6666L), false, "new desc");
         iCourseDao.update(newCourse);
 
         Course updatedRetrievedCourse = iCourseDao.getEntityById(id);
@@ -94,7 +94,7 @@ public class CourseDaoTest {
         List<Course> courses = iCourseDao.getAll();
         int before = courses.size();
         assertTrue(courses.size() > 0);
-        Course course = new Course("new name", 2, 2, 2, "new url", new Date(55555), new Date(6666), false, "new desc");
+        Course course = new Course("new courseName", 2, 2, 2, "new url", new Date(55555), new Date(6666), false, "new desc");
         iCourseDao.insert(course);
         assertNotNull(course.getId());
         Integer newID = course.getId();
