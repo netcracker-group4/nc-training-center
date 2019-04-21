@@ -103,4 +103,31 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
         }
         return list;
     }
+
+    @Override
+    public List<Course> getAllByLevel(int levelId) {
+        String sql = sqlQueriesProperties.getCourseSelectByLevel();
+        log(sql, "find all by level");
+        return getFromQueryWithId(levelId, sql);
+    }
+
+    private List<Course> getFromQueryWithId(int levelId, String sql) {
+        List<Course> list;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, levelId);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PersistException(e);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Course> getAllByTrainer(int trainerId) {
+        String sql = sqlQueriesProperties.getCourseSelectByTrainer();
+        log(sql, "find all by trainer");
+        return getFromQueryWithId(trainerId, sql);
+    }
 }

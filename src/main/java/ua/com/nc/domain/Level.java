@@ -14,4 +14,5 @@ public class Level extends Entity<Integer>{
         super(id);
         this.title = title;
     }
+
 }
