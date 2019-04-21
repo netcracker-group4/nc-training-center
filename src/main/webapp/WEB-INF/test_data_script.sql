@@ -1,4 +1,4 @@
-insert into usr (id, email, password, firstname, lastname, token, created,
+insert into usr (id, email, password, firstName, lastName, token, created,
 				manager_id, is_active, is_on_landing_page, description)
 values
 	(1, 'theking@gmail.com', 'kingthe', 'THE', 'KING', 'jt4RFkGzmaSq',
@@ -19,7 +19,7 @@ values
 	 '2017-10-20 20:04:00', 2, true, false, 'Scottish Wasley');
 
 
-insert into usr (email, password, firstname, lastname, token, created,
+insert into usr (email, password, firstName, lastName, token, created,
 				 manager_id, is_active, is_on_landing_page, description)
 values
 	(9, 'johnsmith@gmail.com', 'smithjohn', 'JOHN', 'SMITH', 'gcMg0GR5zf60',

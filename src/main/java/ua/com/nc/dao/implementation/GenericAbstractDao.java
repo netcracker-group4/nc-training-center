@@ -17,9 +17,12 @@ import java.util.List;
 public abstract class GenericAbstractDao<E extends Entity<K>, K> implements GenericDao<E, K> {
 
     Connection connection;
+    SqlQueriesProperties sqlQueriesProperties;
 
     @Autowired
-    SqlQueriesProperties sqlQueriesProperties;
+    public void setSqlQueriesProperties(SqlQueriesProperties sqlQueriesProperties) {
+        this.sqlQueriesProperties = sqlQueriesProperties;
+    }
 
     GenericAbstractDao() {
     }

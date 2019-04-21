@@ -22,6 +22,18 @@ public class SqlQueriesProperties {
     private String usrInsert;
 
 
+    @Value("${course.select-all}")
+    private String courseSelectAll;
+    @Value("${course.select-by-id}")
+    private String courseSelectById;
+    @Value("${course.update}")
+    private String courseUpdate;
+    @Value("${course.delete}")
+    private String courseDelete;
+    @Value("${course.insert}")
+    private String courseInsert;
+
+
     String getUsrSelectAll() {
         return usrSelectAll;
     }
@@ -62,11 +74,51 @@ public class SqlQueriesProperties {
         this.usrDelete = usrDelete;
     }
 
-    String getInsert() {
+    public String getUsrInsert() {
         return usrInsert;
     }
 
-    public void setInsert(String insert) {
-        this.usrInsert = insert;
+    public void setUsrInsert(String usrInsert) {
+        this.usrInsert = usrInsert;
+    }
+
+    public String getCourseSelectAll() {
+        return courseSelectAll;
+    }
+
+    public void setCourseSelectAll(String courseSelectAll) {
+        this.courseSelectAll = courseSelectAll;
+    }
+
+    public String getCourseSelectById() {
+        return courseSelectById;
+    }
+
+    public void setCourseSelectById(String courseSelectById) {
+        this.courseSelectById = courseSelectById;
+    }
+
+    public String getCourseUpdate() {
+        return courseUpdate;
+    }
+
+    public void setCourseUpdate(String courseUpdate) {
+        this.courseUpdate = courseUpdate;
+    }
+
+    public String getCourseDelete() {
+        return courseDelete;
+    }
+
+    public void setCourseDelete(String courseDelete) {
+        this.courseDelete = courseDelete;
+    }
+
+    public String getCourseInsert() {
+        return courseInsert;
+    }
+
+    public void setCourseInsert(String courseInsert) {
+        this.courseInsert = courseInsert;
     }
 }

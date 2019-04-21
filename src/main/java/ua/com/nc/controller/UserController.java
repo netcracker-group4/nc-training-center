@@ -20,8 +20,8 @@ public class UserController {
         log.debug(user);
         if(     user != null &&
                 user.getEmail() != null &&
-                user.getFirstname() != null &&
-                user.getLastname() != null &&
+                user.getFirstName() != null &&
+                user.getLastName() != null &&
                 user.getPassword() != null){
             userService.add(user);
             return ResponseEntity.ok().body("User saved");
