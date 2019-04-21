@@ -8,7 +8,7 @@
                 :headers="headers"
                 :items="levelsAndGroupQuantities"
                 :expand="true"
-                item-key="levelId"
+                item-key="level.id"
         >
             <template v-slot:items="props">
                 <tr>
@@ -17,9 +17,9 @@
                             <span v-else>unfold</span></v-btn>
                     </td>
                     <td>
-                        <div>{{ props.item.level }}</div>
+                        <div>{{ props.item.level.title }}</div>
                     </td>
-                    <td class="text-xs-right">{{ props.item.quantityOfGroups }}</td>
+                    <td class="text-xs-right">{{ props.item.numberOfGroups }}</td>
                 </tr>
             </template>
             <template v-slot:expand="props">
@@ -31,8 +31,12 @@
                 >
                     <template v-slot:items="props">
                         <tr class="inner-table">
-                            <td @click="goToGroupPage(props.item.groupId)" class="text-xs-right my-link">{{ props.item.groupName }}</td>
-                            <td @click="goToCoursePage(props.item.courseId)" class="text-xs-right my-link">{{ props.item.courseName }}</td>
+                            <td @click="goToGroupPage(props.item.group.id)" class="text-xs-right my-link">{{
+                                props.item.group.title }}
+                            </td>
+                            <td @click="goToCoursePage(props.item.course.id)" class="text-xs-right my-link">{{
+                                props.item.course.name }}
+                            </td>
                         </tr>
                     </template>
                 </v-data-table>
@@ -42,7 +46,10 @@
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
+
         name: "DashBoardTableLevelAndQuantity",
         data: function () {
             return {
@@ -67,269 +74,7 @@
                     },
                     {text: 'Course name', value: 'courseName'},
                 ],
-                levelsAndGroupQuantities: [
-                    {
-                        level: 'junior',
-                        quantityOfGroups: 159,
-                        levelId: 1,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'gr',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: '3343',
-                                courseName: 55,
-                                groupId: 1,
-                                courseId: 2
-                            }
-                        ]
-
-                    },
-                    {
-                        level: 'middle',
-                        quantityOfGroups: 237,
-                        levelId: 2,
-                        groups: [
-                            {
-                                groupName: 'grd',
-                                courseName: 20,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 85,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 5,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'g',
-                                courseName: 0,
-                                groupId: 1,
-                                courseId: 2
-                            }
-                        ]
-                    },
-                    {
-                        level: 'senior',
-                        quantityOfGroups: 262,
-                        levelId: 3,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            }
-                        ]
-                    },
-                    {
-                        level: 'elementary',
-                        quantityOfGroups: 305,
-                        levelId: 4,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            }
-                        ]
-                    },
-                    {
-                        level: 'intermediate',
-                        quantityOfGroups: 356,
-                        levelId: 5,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            }
-                        ]
-                    },
-                    {
-                        level: 'pre-intermediate',
-                        quantityOfGroups: 375,
-                        levelId: 6,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            }
-                        ]
-                    },
-                    {
-                        level: 'advanced',
-                        quantityOfGroups: 392,
-                        levelId: 7,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            }
-                        ]
-                    },
-                    {
-                        level: 'upper-intermediate',
-                        quantityOfGroups: 408,
-                        levelId: 8,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            },
-                            {
-                                groupName: 'group1',
-                                courseName: 10,
-                                groupId: 1,
-                                courseId: 2
-                            }
-                        ]
-                    }
-                ]
+                levelsAndGroupQuantities: []
             }
         },
         methods: {
@@ -339,6 +84,17 @@
             goToCoursePage(levelId) {
                 this.$router.push('/courses/' + levelId);
             }
+        },
+        mounted() {
+            // http://localhost:8080/dashboard/training-and-quantity
+            let self = this;
+            axios.get('http://localhost:8080/dashboard/level-and-quantity')
+                .then(function (response) {
+                    self.levelsAndGroupQuantities = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     }
 </script>

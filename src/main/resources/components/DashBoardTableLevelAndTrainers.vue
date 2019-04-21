@@ -8,7 +8,7 @@
                 :headers="headers"
                 :items="trainersAndLevels"
                 :expand="true"
-                item-key="trainerId"
+                item-key="trainer.id"
         >
             <template v-slot:items="props">
                 <tr>
@@ -16,23 +16,23 @@
                         <v-btn smal flat><span v-if="props.expanded">fold</span>
                             <span v-else>unfold</span></v-btn>
                     </td>
-                    <td @click="goToTrainerPage(props.item.trainerId)" class="my-link">
-                        <div>{{ props.item.trainerName }}</div>
+                    <td @click="goToTrainerPage(props.item.trainer.id)" class="my-link">
+                        <div>{{ props.item.trainer.firstName  + " " + props.item.trainer.lastName}}</div>
                     </td>
-                    <td class="text-xs-right">{{ props.item.quantityOfCourses }}</td>
+                    <td class="text-xs-right">{{ props.item.numberOfCourses }}</td>
                 </tr>
             </template>
             <template v-slot:expand="props">
                 <v-data-table
                         :headers="headers2"
-                        :items="props.item.groups"
+                        :items="props.item.courseAndLevels"
                         hide-headers
                         hide-actions
                 >
                     <template v-slot:items="props">
-                        <tr @click="goToCoursePage(props.item.courseId)" class="inner-table my-link">
-                            <td class="text-xs-right">{{ props.item.courseName }}</td>
-                            <td class="text-xs-right">{{ props.item.courseLevel }}</td>
+                        <tr @click="goToCoursePage(props.item.course.id)" class="inner-table my-link">
+                            <td class="text-xs-right">{{ props.item.course.name }}</td>
+                            <td class="text-xs-right">{{ props.item.level.title }}</td>
                         </tr>
                     </template>
                 </v-data-table>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+    import axios from 'axios'
     export default {
         name: "DashBoardTableTrainingAndQuantity",
         data: function () {
@@ -67,279 +68,7 @@
                     },
                     {text: 'Course level', value: 'courseLevel'},
                 ],
-                trainersAndLevels: [
-                    {
-                        trainerName: 'Business english',
-                        quantityOfCourses: 159,
-                        trainerId: 1,
-                        groups: [
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'gr',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: '3343',
-                                courseLevel: 55,
-                                courseId: 1
-                            }
-                        ]
-
-                    },
-                    {
-                        trainerName: 'Python',
-                        quantityOfCourses: 237,
-                        trainerId: 2,
-                        groups: [
-                            {
-                                courseName: 'grd',
-                                courseLevel: 20,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 85,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 5,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'g',
-                                courseLevel: 0,
-                                courseId: 1
-                            }
-                        ]
-                    },
-                    {
-                        trainerName: 'Java basics',
-                        quantityOfCourses: 262,
-                        trainerId: 3,
-                        groups: [
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            }
-                        ]
-                    },
-                    {
-                        trainerName: 'Databases',
-                        quantityOfCourses: 305,
-                        trainerId: 4,
-                        groups: [
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            }
-                        ]
-                    },
-                    {
-                        trainerName: 'No SQL databases',
-                        quantityOfCourses: 356,
-                        trainerId: 5,
-                        groups: [
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            }
-                        ]
-                    },
-                    {
-                        trainerName: 'QA',
-                        quantityOfCourses: 375,
-                        trainerId: 6,
-                        groups: [
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            }
-                        ]
-                    },
-                    {
-                        trainerName: 'Angular 2',
-                        quantityOfCourses: 392,
-                        trainerId: 7,
-                        groups: [
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            }
-                        ]
-                    },
-                    {
-                        trainerName: 'Soft skills',
-                        quantityOfCourses: 408,
-                        trainerId: 8,
-                        groups: [
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            }
-                        ]
-                    },
-                    {
-                        trainerName: 'Management',
-                        quantityOfCourses: 452,
-                        trainerId: 9,
-                        groups: [
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            },
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            }
-                        ]
-                    },
-                    {
-                        trainerName: 'HR',
-                        quantityOfCourses: 518,
-                        trainerId: 10,
-                        groups: [
-                            {
-                                courseName: 'group1',
-                                courseLevel: 10,
-                                courseId: 1
-                            }
-                        ]
-                    }
-                ]
+                trainersAndLevels: []
             }
         },
         methods: {
@@ -349,6 +78,16 @@
             goToCoursePage(trainerId) {
                 this.$router.push('/courses/' + trainerId);
             }
+        },
+        mounted() {
+            let self = this;
+            axios.get('http://localhost:8080/dashboard/level-and-trainers')
+                .then(function (response) {
+                    self.trainersAndLevels = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     }
 </script>

@@ -8,7 +8,7 @@
                 :headers="headers"
                 :items="coursesAndQuantities"
                 :expand="true"
-                item-key="courseId"
+                item-key="course.id"
         >
             <template v-slot:items="props">
                 <tr>
@@ -16,10 +16,10 @@
                         <v-btn smal flat><span v-if="props.expanded">fold</span>
                             <span v-else>unfold</span></v-btn>
                     </td>
-                    <td @click="goToCoursePage(props.item.courseId)" class="my-link">
-                        <div>{{ props.item.courseName }}</div>
+                    <td @click="goToCoursePage(props.item.course.id)" class="my-link">
+                        <div>{{ props.item.course.name }}</div>
                     </td>
-                    <td class="text-xs-right">{{ props.item.quantityOfEmployees }}</td>
+                    <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
                 </tr>
             </template>
             <template v-slot:expand="props">
@@ -30,9 +30,9 @@
                         hide-actions
                 >
                     <template v-slot:items="props">
-                        <tr @click="goToGroupPage(props.item.groupId)" class="inner-table my-link">
-                            <td class="text-xs-right">{{ props.item.groupName }}</td>
-                            <td class="text-xs-right">{{ props.item.quantityOfEmployeesInGroup }}</td>
+                        <tr @click="goToGroupPage(props.item.group.id)" class="inner-table my-link">
+                            <td class="text-xs-right">{{ props.item.group.title }}</td>
+                            <td class="text-xs-right">{{ props.item.quantityOfEmployees }}</td>
                         </tr>
                     </template>
                 </v-data-table>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+    import axios from 'axios'
     export default {
         name: "DashBoardTableLevelAndTrainers",
         data: function () {
@@ -67,279 +68,7 @@
                     },
                     {text: 'Number of employees', value: 'quantityOfEmployeesInGroup'},
                 ],
-                coursesAndQuantities: [
-                    {
-                        courseName: 'Business english',
-                        quantityOfEmployees: 159,
-                        courseId: 1,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'gr',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: '3343',
-                                quantityOfEmployeesInGroup: 55,
-                                groupId: 1
-                            }
-                        ]
-
-                    },
-                    {
-                        courseName: 'Python',
-                        quantityOfEmployees: 237,
-                        courseId: 2,
-                        groups: [
-                            {
-                                groupName: 'grd',
-                                quantityOfEmployeesInGroup: 20,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 85,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 5,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'g',
-                                quantityOfEmployeesInGroup: 0,
-                                groupId: 1
-                            }
-                        ]
-                    },
-                    {
-                        courseName: 'Java basics',
-                        quantityOfEmployees: 262,
-                        courseId: 3,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            }
-                        ]
-                    },
-                    {
-                        courseName: 'Databases',
-                        quantityOfEmployees: 305,
-                        courseId: 4,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            }
-                        ]
-                    },
-                    {
-                        courseName: 'No SQL databases',
-                        quantityOfEmployees: 356,
-                        courseId: 5,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            }
-                        ]
-                    },
-                    {
-                        courseName: 'QA',
-                        quantityOfEmployees: 375,
-                        courseId: 6,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            }
-                        ]
-                    },
-                    {
-                        courseName: 'Angular 2',
-                        quantityOfEmployees: 392,
-                        courseId: 7,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            }
-                        ]
-                    },
-                    {
-                        courseName: 'Soft skills',
-                        quantityOfEmployees: 408,
-                        courseId: 8,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            }
-                        ]
-                    },
-                    {
-                        courseName: 'Management',
-                        quantityOfEmployees: 452,
-                        courseId: 9,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            },
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            }
-                        ]
-                    },
-                    {
-                        courseName: 'HR',
-                        quantityOfEmployees: 518,
-                        courseId: 10,
-                        groups: [
-                            {
-                                groupName: 'group1',
-                                quantityOfEmployeesInGroup: 10,
-                                groupId: 1
-                            }
-                        ]
-                    }
-                ]
+                coursesAndQuantities: []
             }
         },
         methods: {
@@ -349,6 +78,16 @@
             goToCoursePage(courseId) {
                 this.$router.push('/courses/' + courseId);
             }
+        },
+        mounted() {
+            let self = this;
+            axios.get('http://localhost:8080/dashboard/training-and-quantity')
+                .then(function (response) {
+                    self.coursesAndQuantities = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     }
 </script>
