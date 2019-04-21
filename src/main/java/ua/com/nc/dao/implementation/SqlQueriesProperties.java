@@ -33,6 +33,17 @@ public class SqlQueriesProperties {
     @Value("${course.insert}")
     private String courseInsert;
 
+    @Value("${group.select-all}")
+    private String groupSelectAll;
+    @Value("${group.select-by-id}")
+    private String groupSelectById;
+    @Value("${group.update}")
+    private String groupUpdate;
+    @Value("${group.delete}")
+    private String groupDelete;
+    @Value("${group.insert}")
+    private String groupInsert;
+
 
     String getUsrSelectAll() {
         return usrSelectAll;
@@ -119,6 +130,46 @@ public class SqlQueriesProperties {
     }
 
     public void setCourseInsert(String courseInsert) {
+        this.courseInsert = courseInsert;
+    }
+
+    public String getGroupeSelectAll() {
+        return courseSelectAll;
+    }
+
+    public void setGroupSelectAll(String courseSelectAll) {
+        this.courseSelectAll = courseSelectAll;
+    }
+
+    public String getGroupSelectById() {
+        return courseSelectById;
+    }
+
+    public void setGroupSelectById(String courseSelectById) {
+        this.courseSelectById = courseSelectById;
+    }
+
+    public String getGroupUpdate() {
+        return courseUpdate;
+    }
+
+    public void setGroupUpdate(String courseUpdate) {
+        this.courseUpdate = courseUpdate;
+    }
+
+    public String getGroupDelete() {
+        return courseDelete;
+    }
+
+    public void setGroupDelete(String courseDelete) {
+        this.courseDelete = courseDelete;
+    }
+
+    public String getGroupInsert() {
+        return courseInsert;
+    }
+
+    public void setGroupInsert(String courseInsert) {
         this.courseInsert = courseInsert;
     }
 }
