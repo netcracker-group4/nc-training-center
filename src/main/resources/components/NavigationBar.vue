@@ -30,6 +30,7 @@
         data(){
             return{
                 isAuthorized: isAuthorized,
+                //TODO function that checks if logged user is an admin
                 isAdmin : true
             }
         }
