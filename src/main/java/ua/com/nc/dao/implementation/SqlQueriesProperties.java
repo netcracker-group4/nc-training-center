@@ -20,8 +20,9 @@ public class SqlQueriesProperties {
     private String usrDelete;
     @Value("${usr.insert}")
     private String usrInsert;
-
-
+    @Value("${usr.select-all-trainers}")
+    private String usrSelectAllTrainers;
+    
     @Value("${course.select-all}")
     private String courseSelectAll;
     @Value("${course.select-by-id}")
@@ -44,6 +45,18 @@ public class SqlQueriesProperties {
     @Value("${group.insert}")
     private String groupInsert;
 
+
+    @Value("${level.select-all}")
+    private String levelSelectAll;
+    @Value("${level.select-by-id}")
+    private String levelSelectById;
+    @Value("${level.update}")
+    private String levelUpdate;
+    @Value("${level.delete}")
+    private String levelDelete;
+    @Value("${level.insert}")
+    private String levelInsert;
+    
 
     String getUsrSelectAll() {
         return usrSelectAll;
@@ -171,5 +184,59 @@ public class SqlQueriesProperties {
 
     public void setGroupInsert(String courseInsert) {
         this.courseInsert = courseInsert;
+    }
+
+
+    public String getUsrSelectAllTrainers() {
+        return usrSelectAllTrainers;
+    }
+
+    public void setUsrSelectAllTrainers(String usrSelectAllTrainers) {
+        this.usrSelectAllTrainers = usrSelectAllTrainers;
+    }
+
+    public String getGroupSelectAll() {
+        return groupSelectAll;
+    }
+
+
+    public String getLevelSelectAll() {
+        return levelSelectAll;
+    }
+
+    public void setLevelSelectAll(String levelSelectAll) {
+        this.levelSelectAll = levelSelectAll;
+    }
+
+    public String getLevelSelectById() {
+        return levelSelectById;
+    }
+
+    public void setLevelSelectById(String levelSelectById) {
+        this.levelSelectById = levelSelectById;
+    }
+
+    public String getLevelUpdate() {
+        return levelUpdate;
+    }
+
+    public void setLevelUpdate(String levelUpdate) {
+        this.levelUpdate = levelUpdate;
+    }
+
+    public String getLevelDelete() {
+        return levelDelete;
+    }
+
+    public void setLevelDelete(String levelDelete) {
+        this.levelDelete = levelDelete;
+    }
+
+    public String getLevelInsert() {
+        return levelInsert;
+    }
+
+    public void setLevelInsert(String levelInsert) {
+        this.levelInsert = levelInsert;
     }
 }
