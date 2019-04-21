@@ -15,6 +15,11 @@ public class Group extends Entity<Integer> {
         this.title = title;
     }
 
+    public Group(int courseId, String title) {
+        this.courseId = courseId;
+        this.title = title;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -63,13 +63,14 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
     protected void prepareStatementForInsert(PreparedStatement statement, Group entity) throws SQLException {
         statement.setInt(1,entity.getCourseId());
         statement.setString(2,entity.getTitle());
-        statement.setInt(3,entity.getId());
     }
 
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Group entity) throws SQLException {
-
+        statement.setInt(1,entity.getCourseId());
+        statement.setString(2,entity.getTitle());
+        statement.setInt(3,entity.getId());
     }
 
     @Override

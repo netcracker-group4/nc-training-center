@@ -4,8 +4,13 @@ import org.junit.*;
 import ua.com.nc.dao.interfaces.ICourseDao;
 import ua.com.nc.domain.Course;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Date;
 import java.util.List;
+import java.util.Properties;
 
 import static org.junit.Assert.*;
 
@@ -18,11 +23,19 @@ public class CourseDaoTest {
     @BeforeClass
     public static void before() {
         SqlQueriesProperties sqlQueriesProperties = new SqlQueriesProperties();
-        sqlQueriesProperties.setCourseDelete("delete from course where id = ?");
-        sqlQueriesProperties.setCourseInsert("insert into course (courseName, level, course_status_id, user_id, IMAGE_URL, start_date, end_date, is_on_landing_page, description) values(?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING ID");
-        sqlQueriesProperties.setCourseSelectAll("SELECT ID, NAME, LEVEL, course_status_id, USER_ID, IMAGE_URL, start_date, end_date, is_on_landing_page, description FROM course");
-        sqlQueriesProperties.setCourseSelectById("SELECT ID, NAME, LEVEL, course_status_id, USER_ID, IMAGE_URL, start_date, end_date, is_on_landing_page, description FROM course where id = ?");
-        sqlQueriesProperties.setCourseUpdate("update course set NAME = ?, LEVEL = ?, course_status_id = ?, USER_ID = ?, IMAGE_URL = ?, start_date = ?, end_date = ?, is_on_landing_page = ?, description = ?   where id = ?");
+        Properties properties = new Properties();
+        InputStream input;
+        try {
+            input = CourseDaoTest.class.getClassLoader().getResourceAsStream("sql_queries.properties");
+            properties.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        sqlQueriesProperties.setCourseDelete(properties.getProperty("course.delete"));
+        sqlQueriesProperties.setCourseInsert(properties.getProperty("course.insert"));
+        sqlQueriesProperties.setCourseSelectAll(properties.getProperty("course.select-all"));
+        sqlQueriesProperties.setCourseSelectById(properties.getProperty("course.select-by-id"));
+        sqlQueriesProperties.setCourseUpdate(properties.getProperty("course.update"));
         iCourseDao = new CourseDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019", sqlQueriesProperties);
         System.out.println("instantiated COURSE DAO");
         newCourse = new Course("courseName", 1, 1, 1, "url", new Date(65465465L), new Date(654L), true, "desc");
