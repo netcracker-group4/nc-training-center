@@ -4,30 +4,41 @@ import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.implementation.CourseDao;
+import ua.com.nc.dao.implementation.LevelDao;
+import ua.com.nc.domain.Level;
+
+import java.util.List;
 
 @Log4j
 @Controller
 @CrossOrigin(origins = "http://localhost:8000")
-@RequestMapping("/courses")
+@RequestMapping("/getcourses")
 public class CourseController {
     @Autowired
     private CourseDao courseDao;
+
     private final Gson gson = new Gson();
 
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public String getCourse(){
-       String res = gson.toJson(courseDao.getAll());
-        System.out.println("_______________________________________");
-        System.out.println(res);
-       return res;
-        //return courseDao.getAll();
+    public String getCourses(){
+       return gson.toJson(courseDao.getAll());
     }
+    @RequestMapping(method = RequestMethod.GET,value="/{id}")
+    @ResponseBody
+    public String getCourse(@PathVariable String id){
+       return gson.toJson(courseDao.getEntityById(Integer.parseInt(id)));
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE,value="/{id}")
+    public void deleteCourse(@PathVariable String id){
+        courseDao.delete(Integer.parseInt(id));
+    }
+
+
+
 
 }
