@@ -1,41 +1,25 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-<!--        <v-toolbar>-->
-<!--            <v-select-->
-<!--                    v-model="value"-->
-<!--                    :items="items"-->
-<!--                    label="Select Levels"-->
-<!--                    multiple-->
-<!--            >-->
-<!--                <template v-slot:selection="{ item, index }">-->
-<!--                    <v-chip v-if="index === 0">-->
-<!--                        <span>{{ item }}</span>-->
-<!--                    </v-chip>-->
-<!--                    <span-->
-<!--                            v-if="index === 1"-->
-<!--                            class="grey&#45;&#45;text caption"-->
-<!--                    >(+{{ value.length - 1 }} others)</span>-->
-<!--                </template>-->
-<!--            </v-select>-->
-<!--            <v-divider vertical  class="mx-3" inset></v-divider>-->
-<!--            <v-select-->
-<!--                    v-model="value"-->
-<!--                    :items="items"-->
-<!--                    label="Select Courses"-->
-<!--                    multiple-->
-<!--            >-->
-<!--                <template v-slot:selection="{ item, index }">-->
-<!--                    <v-chip v-if="index === 0">-->
-<!--                        <span>{{ item }}</span>-->
-<!--                    </v-chip>-->
-<!--                    <span-->
-<!--                            v-if="index === 1"-->
-<!--                            class="grey&#45;&#45;text caption"-->
-<!--                    >(+{{ value.length - 1 }} others)</span>-->
-<!--                </template>-->
-<!--            </v-select>-->
-
-<!--        </v-toolbar>-->
+        <v-toolbar>
+            <v-select
+                    v-model="selectedLevels"
+                    item-value="level.id"
+                    :items="levelsAndGroupQuantities"
+                    item-text="level.title"
+                    label="Select Levels"
+                    multiple
+            >
+                <template v-slot:selection="{ item, index }">
+                    <v-chip v-if="index === 0">
+                        <span>{{ item.level.title }}</span>
+                    </v-chip>
+                    <span
+                            v-if="index === 1"
+                            class="grey--text caption"
+                    >(+{{ selectedLevels.length - 1 }} others)</span>
+                </template>
+            </v-select>
+        </v-toolbar>
         <div>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Levels and quantity of groups</v-toolbar-title>
@@ -43,7 +27,7 @@
             </v-toolbar>
             <v-data-table
                     :headers="headers"
-                    :items="levelsAndGroupQuantities"
+                    :items="filteredLevels"
                     :expand="true"
                     class="elevation-1"
                     item-key="level.id"
@@ -113,7 +97,8 @@
                     },
                     {text: 'Course name', value: 'course.name'},
                 ],
-                levelsAndGroupQuantities: []
+                levelsAndGroupQuantities: [],
+                selectedLevels : []
             }
         },
         methods: {
@@ -130,10 +115,20 @@
             axios.get('http://localhost:8080/dashboard/level-and-quantity')
                 .then(function (response) {
                     self.levelsAndGroupQuantities = response.data;
+                    self.levelsAndGroupQuantities.forEach(function (value) {
+                        self.selectedLevels.push(value.level.id)
+                    })
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        computed : {
+            filteredLevels () {
+                return this.levelsAndGroupQuantities.filter((i) => {
+                    return this.selectedLevels.includes(i.level.id);
+                })
+            }
         }
     }
 </script>

@@ -19,41 +19,6 @@
                     >(+{{ selectedTrainers.length - 1 }} others)</span>
                 </template>
             </v-select>
-            <!--            <v-divider vertical  class="mx-3" inset></v-divider>-->
-            <!--            <v-select-->
-            <!--                    v-model="value"-->
-            <!--                    :items="items"-->
-            <!--                    label="Select Courses"-->
-            <!--                    multiple-->
-            <!--            >-->
-            <!--                <template v-slot:selection="{ item, index }">-->
-            <!--                    <v-chip v-if="index === 0">-->
-            <!--                        <span>{{ item }}</span>-->
-            <!--                    </v-chip>-->
-            <!--                    <span-->
-            <!--                            v-if="index === 1"-->
-            <!--                            class="grey&#45;&#45;text caption"-->
-            <!--                    >(+{{ value.length - 1 }} others)</span>-->
-            <!--                </template>-->
-            <!--            </v-select>-->
-            <!--            <v-divider vertical  class="mx-3" inset></v-divider>-->
-            <!--            <v-select-->
-            <!--                    v-model="value"-->
-            <!--                    :items="items"-->
-            <!--                    label="Select Courses"-->
-            <!--                    multiple-->
-            <!--            >-->
-            <!--                <template v-slot:selection="{ item, index }">-->
-            <!--                    <v-chip v-if="index === 0">-->
-            <!--                        <span>{{ item }}</span>-->
-            <!--                    </v-chip>-->
-            <!--                    <span-->
-            <!--                            v-if="index === 1"-->
-            <!--                            class="grey&#45;&#45;text caption"-->
-            <!--                    >(+{{ value.length - 1 }} others)</span>-->
-            <!--                </template>-->
-            <!--            </v-select>-->
-
         </v-toolbar>
         <div>
             <v-toolbar flat color="white">
