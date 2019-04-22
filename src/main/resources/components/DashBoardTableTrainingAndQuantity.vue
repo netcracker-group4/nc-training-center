@@ -19,26 +19,6 @@
                     >(+{{ selectedCourses.length - 1 }} others)</span>
                 </template>
             </v-select>
-<!--            <v-divider vertical class="mx-3" inset></v-divider>-->
-<!--            <v-select-->
-<!--                    v-model="selectedGroups"-->
-<!--                    :items="allGroups"-->
-<!--                    item-value="id"-->
-<!--                    item-text="title"-->
-<!--                    label="Select Groups"-->
-<!--                    multiple-->
-<!--            >-->
-<!--                <template v-slot:selection="{ item, index }">-->
-<!--                    <v-chip v-if="index === 0">-->
-<!--                        <span>{{ item.title }}</span>-->
-<!--                    </v-chip>-->
-<!--                    <span-->
-<!--                            v-if="index === 1"-->
-<!--                            class="grey&#45;&#45;text caption"-->
-<!--                    >(+{{ selectedGroups.length - 1 }} others)</span>-->
-<!--                </template>-->
-<!--            </v-select>-->
-
         </v-toolbar>
         <div>
             <v-toolbar flat color="white">
@@ -82,8 +62,6 @@
                 </template>
             </v-data-table>
         </div>
-
-        {{filteredGroups}}
     </div>
 </template>
 
