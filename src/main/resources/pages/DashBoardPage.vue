@@ -1,4 +1,5 @@
 <template>
+    <form class="table">
     <div>
         <v-layout row wrap class="text-xs-center">
             <v-flex xs12 sm12 md4>
@@ -18,9 +19,8 @@
             <DashBoardTableLevelAndTrainers  v-show="shownTable===3"></DashBoardTableLevelAndTrainers>
         </v-container>
 
-
-
     </div>
+    </form>
 </template>
 
 <script>
