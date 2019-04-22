@@ -33,4 +33,5 @@ public class LandingPageController {
     @RequestMapping (value = {"/trainers-on-landing-page"}, method = RequestMethod.GET)
     @ResponseBody
     public String getLandingPageTrainers () {return landingPageService.getLandingPageTrainers(); }
+
 }
