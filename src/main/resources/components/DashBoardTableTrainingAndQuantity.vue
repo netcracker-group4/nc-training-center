@@ -1,48 +1,73 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <v-toolbar flat color="white">
-            <v-toolbar-title>Trainings and quantity of employees</v-toolbar-title>
-            <v-spacer></v-spacer>
+        <v-toolbar>
+            <v-select
+                    v-model="selectedCourses"
+                    item-value="course.id"
+                    :items="coursesAndQuantities"
+                    item-text="course.name"
+                    label="Select Trainings"
+                    multiple
+            >
+                <template v-slot:selection="{ item, index }">
+                    <v-chip v-if="index === 0">
+                        <span>{{ item.course.name }}</span>
+                    </v-chip>
+                    <span
+                            v-if="index === 1"
+                            class="grey--text caption"
+                    >(+{{ selectedCourses.length - 1 }} others)</span>
+                </template>
+            </v-select>
         </v-toolbar>
-        <v-data-table
-                :headers="headers"
-                :items="coursesAndQuantities"
-                :expand="true"
-                item-key="course.id"
-        >
-            <template v-slot:items="props">
-                <tr>
-                    <td @click="props.expanded = !props.expanded">
-                        <v-btn smal flat><span v-if="props.expanded">fold</span>
-                            <span v-else>unfold</span></v-btn>
-                    </td>
-                    <td @click="goToCoursePage(props.item.course.id)" class="my-link">
-                        <div>{{ props.item.course.name }}</div>
-                    </td>
-                    <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
-                </tr>
-            </template>
-            <template v-slot:expand="props">
-                <v-data-table
-                        :headers="headers2"
-                        :items="props.item.groups"
-                        hide-headers
-                        hide-actions
-                >
-                    <template v-slot:items="props">
-                        <tr @click="goToGroupPage(props.item.group.id)" class="inner-table my-link">
-                            <td class="text-xs-right">{{ props.item.group.title }}</td>
-                            <td class="text-xs-right">{{ props.item.quantityOfEmployees }}</td>
-                        </tr>
-                    </template>
-                </v-data-table>
-            </template>
-        </v-data-table>
+        <div>
+            <v-toolbar flat color="white">
+                <v-toolbar-title>Trainings and quantity of employees</v-toolbar-title>
+                <v-spacer></v-spacer>
+            </v-toolbar>
+
+            <v-data-table
+                    :headers="headers"
+                    :items="filteredCourses"
+                    :expand="true"
+                    class="elevation-1"
+                    item-key="course.id"
+            >
+                <template v-slot:items="props">
+                    <tr>
+                        <td @click="props.expanded = !props.expanded">
+                            <v-btn smal flat><span v-if="props.expanded">fold</span>
+                                <span v-else>unfold</span></v-btn>
+                        </td>
+                        <td @click="goToCoursePage(props.item.course.id)" class="my-link">
+                            <div>{{ props.item.course.name }}</div>
+                        </td>
+                        <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
+                    </tr>
+                </template>
+                <template v-slot:expand="props">
+                    <v-data-table
+                            :headers="headers2"
+                            :items="props.item.groups"
+                            hide-headers
+                            hide-actions
+                    >
+                        <template v-slot:items="props">
+                            <tr @click="goToGroupPage(props.item.group.id)" class="inner-table my-link">
+                                <td class="text-xs-right">{{ props.item.group.title }}</td>
+                                <td class="text-xs-right">{{ props.item.quantityOfEmployees }}</td>
+                            </tr>
+                        </template>
+                    </v-data-table>
+                </template>
+            </v-data-table>
+        </div>
     </div>
 </template>
 
 <script>
     import axios from 'axios'
+
     export default {
         name: "DashBoardTableLevelAndTrainers",
         data: function () {
@@ -52,7 +77,7 @@
                     {
                         text: 'Name of the course',
                         align: 'left',
-                        value: 'courseName'
+                        value: 'course.name'
                     },
                     {
                         text: 'Number of employees', value: 'quantityOfEmployees',
@@ -64,11 +89,15 @@
                         text: 'Group name',
                         align: 'right',
                         sortable: false,
-                        value: 'groupName'
+                        value: 'group.title'
                     },
                     {text: 'Number of employees', value: 'quantityOfEmployeesInGroup'},
                 ],
-                coursesAndQuantities: []
+                coursesAndQuantities: [],
+                selectedCourses: [],
+                selectedGroups: [],
+                allGroups: [],
+                groupsForCourses: {}
             }
         },
         methods: {
@@ -84,10 +113,26 @@
             axios.get('http://localhost:8080/dashboard/training-and-quantity')
                 .then(function (response) {
                     self.coursesAndQuantities = response.data;
+                    self.coursesAndQuantities.forEach(function (s) {
+                        self.selectedCourses.push(s.course.id);
+                        s.groups.forEach(function (ee) {
+                            self.allGroups.push(ee.group);
+                            self.selectedGroups.push(ee.group.id);
+                        });
+                        self.groupsForCourses[s.course.id] = s.groups;
+                    });
+
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        computed: {
+            filteredCourses() {
+                return this.coursesAndQuantities.filter((i) => {
+                    return this.selectedCourses.includes(i.course.id);
+                })
+            }
         }
     }
 </script>

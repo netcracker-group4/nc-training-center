@@ -1,46 +1,32 @@
-<template >
-    <v-layout row>
-        <v-flex xs12 sm6 offset-sm3>
-            <v-card>
-                <v-toolbar color="white" flat>
-                    <v-btn icon light>
-                        <v-icon color="grey darken-2">arrow_back</v-icon>
-                    </v-btn>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+    <div>
+        <v-toolbar flat color="white">
+            <v-toolbar-title>Courses</v-toolbar-title>
+            <span class="text-xs-right">
+                <v-btn flat color="primary" @click="createCourse">Create new course</v-btn>
+            </span>
+            <v-spacer></v-spacer>
+        </v-toolbar>
+        <v-data-table
+                :headers="headers"
+                :items="coursesAndQuantities"
+                :expand="true"
+                item-key="course.id"
+        >
+            <template v-slot:items="props">
+                <tr>
+                    <td @click="goToCoursePage(props.item.course.id)" class="my-link">
+                        <div>{{ props.item.course.name }}</div>
+                    </td>
+                    <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
+                    <td class="text-xs-right" v-if="isAdmin">
+                        <v-btn color="success" @click="update(props.item.course.id)">Update</v-btn>
+                        <v-btn color="error" @click="deleteCourse(props.item.course.id)">Delete</v-btn></td>
+                </tr>
+            </template>
 
-                    <v-toolbar-title class="grey--text text--darken-4">Courses</v-toolbar-title>
-
-                    <v-spacer></v-spacer>
-
-                    <v-btn icon light>
-                        <v-icon color="grey darken-2" @click="search">search</v-icon>
-                    </v-btn>
-                </v-toolbar>
-                <v-subheader>June</v-subheader>
-                <v-container fluid grid-list-xs v-for="course in courses">
-                    <v-layout row wrap>
-                        <v-flex
-                                v-for="i in 6"
-                                :key="i"
-                                xs4
-                        >
-                            <img
-                                    :src=course.imageURL
-                                    alt="lorem"
-                                    class="image"
-                                    height="100%"
-                                    width="100%"
-                            >
-                        </v-flex>
-                        <v-flex>course.name</v-flex>
-                    </v-layout>
-                    <v-btn color="success" @click="updatecourse">Update</v-btn>
-                    <v-btn color="error" @click="deleteCourse">Delete</v-btn>
-                </v-container>
-
-                <v-footer class="mt-5"></v-footer>
-            </v-card>
-        </v-flex>
-    </v-layout>
+        </v-data-table>
+    </div>
 </template>
 
 <script>
@@ -48,22 +34,50 @@
 
     export default {
         name: "AdminCourses",
-        props: ['courses'],
-        created: function () {
-            axios.get('http://localhost:8001/courses').then(function (response) {
-                response.data.forEach(course => this.courses.push(course));
-                //console.log(response);
-            })
+        data: function(){
+          return{
+              headers: [
+                  {
+                      text: 'Name of the course',
+                      align: 'left',
+                      value: 'courseName'
+                  },
+                  {
+                      text: 'Number of employees', value: 'quantityOfEmployees',
+                      width: "20", align: 'right'
+                  },
+              ],
+              coursesAndQuantities: [],
+              isAdmin: 'true'
+          }
+        },
+        mounted() {
+            let self = this;
+            axios.get('http://localhost:8080/dashboard/training-and-quantity')
+                .then(function (response) {
+                    self.coursesAndQuantities = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
         methods: {
             search(){
 
             },
-            deleteCourse(){
-
+            deleteCourse(courseId){
+                if(confirm("Are you shure you want to delete "+this.coursesAndQuantities[courseId].course.name)){
+                    axios.delete('http://localhost:8080/getcourses/'+courseId)
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
             },
-            updatecourse(){
-
+            update(courseId){
+                this.$router.push('/courseupdate/'+ courseId);
+            },
+            createCourse(){
+                this.$router.push('/coursecreate');
             }
         }
     }
