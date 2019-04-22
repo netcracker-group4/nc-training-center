@@ -48,12 +48,12 @@
         methods:{
             login(){
                 if(this.emailValidation(this.email) && this.passwordValidation(this.password)){
-                    let form = new FormData()
+                    let form = new FormData();
                     let request = new XMLHttpRequest();
                     request.open('POST', 'http://localhost:8080/login');
-                    form.append('username', this.email)
-                    form.append('password', this.password)
-                    request.send(form)
+                    form.append('username', this.email);
+                    form.append('password', this.password);
+                    request.send(form);
                     request.onreadystatechange = function () {
                         location.replace(location.origin)
                     }

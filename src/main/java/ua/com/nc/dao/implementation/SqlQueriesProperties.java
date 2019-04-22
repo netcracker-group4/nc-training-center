@@ -22,11 +22,15 @@ public class SqlQueriesProperties {
     private String usrInsert;
     @Value("${usr.select-all-trainers}")
     private String usrSelectAllTrainers;
-    
+
     @Value("${course.select-all}")
     private String courseSelectAll;
     @Value("${course.select-by-id}")
     private String courseSelectById;
+    @Value("${course.select-by-level}")
+    private String courseSelectByLevel;
+    @Value("${course.select-by-trainer}")
+    private String courseSelectByTrainer;
     @Value("${course.update}")
     private String courseUpdate;
     @Value("${course.delete}")
@@ -44,6 +48,10 @@ public class SqlQueriesProperties {
     private String groupDelete;
     @Value("${group.insert}")
     private String groupInsert;
+    @Value("${group.select-by-course}")
+    private String groupSelectByCourse;
+    @Value("${group.select-number-of-employees}")
+    private String groupSelectNumberOfEmployees;
 
 
     @Value("${level.select-all}")
@@ -56,13 +64,15 @@ public class SqlQueriesProperties {
     private String levelDelete;
     @Value("${level.insert}")
     private String levelInsert;
-    
+    @Value("${level.select-by-trainer}")
+    private String levelSelectByTrainer;
+
 
     String getUsrSelectAll() {
         return usrSelectAll;
     }
 
-    public void setUsrSelectAll(String usrSelectAll) {
+    void setUsrSelectAll(String usrSelectAll) {
         this.usrSelectAll = usrSelectAll;
     }
 
@@ -70,7 +80,7 @@ public class SqlQueriesProperties {
         return usrSelectById;
     }
 
-    public void setUsrSelectById(String usrSelectById) {
+    void setUsrSelectById(String usrSelectById) {
         this.usrSelectById = usrSelectById;
     }
 
@@ -78,7 +88,7 @@ public class SqlQueriesProperties {
         return usrSelectByEmail;
     }
 
-    public void setUsrSelectByEmail(String usrSelectByEmail) {
+    void setUsrSelectByEmail(String usrSelectByEmail) {
         this.usrSelectByEmail = usrSelectByEmail;
     }
 
@@ -86,7 +96,7 @@ public class SqlQueriesProperties {
         return usrUpdate;
     }
 
-    public void setUsrUpdate(String usrUpdate) {
+    void setUsrUpdate(String usrUpdate) {
         this.usrUpdate = usrUpdate;
     }
 
@@ -94,149 +104,191 @@ public class SqlQueriesProperties {
         return usrDelete;
     }
 
-    public void setUsrDelete(String usrDelete) {
+    void setUsrDelete(String usrDelete) {
         this.usrDelete = usrDelete;
     }
 
-    public String getUsrInsert() {
+    String getUsrInsert() {
         return usrInsert;
     }
 
-    public void setUsrInsert(String usrInsert) {
+    void setUsrInsert(String usrInsert) {
         this.usrInsert = usrInsert;
     }
 
-    public String getCourseSelectAll() {
+    String getCourseSelectAll() {
         return courseSelectAll;
     }
 
-    public void setCourseSelectAll(String courseSelectAll) {
+    void setCourseSelectAll(String courseSelectAll) {
         this.courseSelectAll = courseSelectAll;
     }
 
-    public String getCourseSelectById() {
+    String getCourseSelectById() {
         return courseSelectById;
     }
 
-    public void setCourseSelectById(String courseSelectById) {
+    void setCourseSelectById(String courseSelectById) {
         this.courseSelectById = courseSelectById;
     }
 
-    public String getCourseUpdate() {
+    String getCourseUpdate() {
         return courseUpdate;
     }
 
-    public void setCourseUpdate(String courseUpdate) {
+    void setCourseUpdate(String courseUpdate) {
         this.courseUpdate = courseUpdate;
     }
 
-    public String getCourseDelete() {
+    String getCourseDelete() {
         return courseDelete;
     }
 
-    public void setCourseDelete(String courseDelete) {
+    void setCourseDelete(String courseDelete) {
         this.courseDelete = courseDelete;
     }
 
-    public String getCourseInsert() {
+    String getCourseInsert() {
         return courseInsert;
     }
 
-    public void setCourseInsert(String courseInsert) {
+    void setCourseInsert(String courseInsert) {
         this.courseInsert = courseInsert;
     }
 
-    public String getGroupeSelectAll() {
+    String getGroupeSelectAll() {
         return courseSelectAll;
     }
 
-    public void setGroupSelectAll(String courseSelectAll) {
+    void setGroupSelectAll(String courseSelectAll) {
         this.courseSelectAll = courseSelectAll;
     }
 
-    public String getGroupSelectById() {
+    String getGroupSelectById() {
         return courseSelectById;
     }
 
-    public void setGroupSelectById(String courseSelectById) {
+    void setGroupSelectById(String courseSelectById) {
         this.courseSelectById = courseSelectById;
     }
 
-    public String getGroupUpdate() {
+    String getGroupUpdate() {
         return courseUpdate;
     }
 
-    public void setGroupUpdate(String courseUpdate) {
+    void setGroupUpdate(String courseUpdate) {
         this.courseUpdate = courseUpdate;
     }
 
-    public String getGroupDelete() {
+    String getGroupDelete() {
         return courseDelete;
     }
 
-    public void setGroupDelete(String courseDelete) {
+    void setGroupDelete(String courseDelete) {
         this.courseDelete = courseDelete;
     }
 
-    public String getGroupInsert() {
+    String getGroupInsert() {
         return courseInsert;
     }
 
-    public void setGroupInsert(String courseInsert) {
+    void setGroupInsert(String courseInsert) {
         this.courseInsert = courseInsert;
     }
 
 
-    public String getUsrSelectAllTrainers() {
+    String getUsrSelectAllTrainers() {
         return usrSelectAllTrainers;
     }
 
-    public void setUsrSelectAllTrainers(String usrSelectAllTrainers) {
+    void setUsrSelectAllTrainers(String usrSelectAllTrainers) {
         this.usrSelectAllTrainers = usrSelectAllTrainers;
     }
 
-    public String getGroupSelectAll() {
+    String getGroupSelectAll() {
         return groupSelectAll;
     }
 
 
-    public String getLevelSelectAll() {
+    String getLevelSelectAll() {
         return levelSelectAll;
     }
 
-    public void setLevelSelectAll(String levelSelectAll) {
+    void setLevelSelectAll(String levelSelectAll) {
         this.levelSelectAll = levelSelectAll;
     }
 
-    public String getLevelSelectById() {
+    String getLevelSelectById() {
         return levelSelectById;
     }
 
-    public void setLevelSelectById(String levelSelectById) {
+    void setLevelSelectById(String levelSelectById) {
         this.levelSelectById = levelSelectById;
     }
 
-    public String getLevelUpdate() {
+    String getLevelUpdate() {
         return levelUpdate;
     }
 
-    public void setLevelUpdate(String levelUpdate) {
+    void setLevelUpdate(String levelUpdate) {
         this.levelUpdate = levelUpdate;
     }
 
-    public String getLevelDelete() {
+    String getLevelDelete() {
         return levelDelete;
     }
 
-    public void setLevelDelete(String levelDelete) {
+    void setLevelDelete(String levelDelete) {
         this.levelDelete = levelDelete;
     }
 
-    public String getLevelInsert() {
+    String getLevelInsert() {
         return levelInsert;
     }
 
-    public void setLevelInsert(String levelInsert) {
+    void setLevelInsert(String levelInsert) {
         this.levelInsert = levelInsert;
+    }
+
+    String getCourseSelectByLevel() {
+        return courseSelectByLevel;
+    }
+
+    void setCourseSelectByLevel(String courseSelectByLevel) {
+        this.courseSelectByLevel = courseSelectByLevel;
+    }
+
+
+    String getGroupSelectByCourse() {
+        return groupSelectByCourse;
+    }
+
+    void setGroupSelectByCourse(String groupSelectByCourse) {
+        this.groupSelectByCourse = groupSelectByCourse;
+    }
+
+
+    String getLevelSelectByTrainer() {
+        return levelSelectByTrainer;
+    }
+
+    void setLevelSelectByTrainer(String levelSelectByTrainer) {
+        this.levelSelectByTrainer = levelSelectByTrainer;
+    }
+
+    String getCourseSelectByTrainer() {
+        return courseSelectByTrainer;
+    }
+
+    void setCourseSelectByTrainer(String courseSelectByTrainer) {
+        this.courseSelectByTrainer = courseSelectByTrainer;
+    }
+
+    String getGroupSelectNumberOfEmployees() {
+        return groupSelectNumberOfEmployees;
+    }
+
+    void setGroupSelectNumberOfEmployees(String groupSelectNumberOfEmployees) {
+        this.groupSelectNumberOfEmployees = groupSelectNumberOfEmployees;
     }
 }

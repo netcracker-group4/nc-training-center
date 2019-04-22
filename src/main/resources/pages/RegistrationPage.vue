@@ -31,10 +31,6 @@
                     </v-layout>
                 </v-container>
             </v-flex>
-
-
-
-
         </v-layout>
     </v-container>
 </template>

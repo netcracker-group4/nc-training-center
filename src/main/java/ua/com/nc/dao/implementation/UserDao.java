@@ -142,9 +142,6 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         if (list == null || list.size() == 0) {
             return null;
         }
-        if (list.size() > 1) {
-            throw new PersistException("Received more than one record.");
-        }
         return list;
     }
 
