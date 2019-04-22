@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/MainPage")
 public class LandingPageController {
 
-    private final LandingPageService landingPageService;
+    private LandingPageService landingPageService;
 
     @RequestMapping (value = {"/courses-on-landing-page"}, method = RequestMethod.GET)
     @ResponseBody
