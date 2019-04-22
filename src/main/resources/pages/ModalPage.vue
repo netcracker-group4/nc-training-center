@@ -1,5 +1,7 @@
 <template>
+    <div>
     <transition name="modal-fade">
+        <div>
         <v-container>
             <v-layout>
                 <v-flex xs12 sm12>
@@ -17,7 +19,9 @@
                 <v-btn @click="close">submit</v-btn>
             </div>
         </div>
+        </div>
     </transition>
+    </div>
 </template>
 
 <script>
