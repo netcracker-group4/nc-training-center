@@ -7,4 +7,5 @@ import java.util.List;
 public interface IUserDao extends GenericDao<User, Integer> {
     User getByEmail(String email);
     List<User> getAllTrainers ();
+    List<User> getLandingPageTrainers ();
 }

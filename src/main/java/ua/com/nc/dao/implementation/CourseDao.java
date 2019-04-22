@@ -6,10 +6,7 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ICourseDao;
 import ua.com.nc.domain.Course;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,5 +126,20 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
         String sql = sqlQueriesProperties.getCourseSelectByTrainer();
         log(sql, "find all by trainer");
         return getFromQueryWithId(trainerId, sql);
+    }
+
+    @Override
+    public List<Course> getLandingPageCourses () {
+        List <Course> landingPageCourses;
+        String sql = sqlQueriesProperties.getCourseLandingPage();
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
+            ResultSet rs = statement.executeQuery();
+            landingPageCourses = parseResultSet(rs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PersistException(e);
+        }
+        log (sql, "find all on landing page");
+        return landingPageCourses;
     }
 }

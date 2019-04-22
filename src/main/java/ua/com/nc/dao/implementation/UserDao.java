@@ -145,4 +145,21 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         return list;
     }
 
+    @Override
+    public List <User> getLandingPageTrainers () {
+        List <User> landingPageTrainers;
+        String sql = sqlQueriesProperties.getUsrLandingPage();
+        log (sql, "select trainers on landing page");
+        try (PreparedStatement statement = connection.prepareStatement (sql)) {
+            ResultSet rs = statement.executeQuery ();
+            landingPageTrainers = parseResultSet(rs);
+        } catch (Exception e) {
+            throw new PersistException (e);
+        }
+        if (landingPageTrainers.size() == 0) {
+            return null;
+        }
+        return landingPageTrainers;
+    }
+
 }

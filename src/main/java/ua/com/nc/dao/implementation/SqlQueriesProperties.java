@@ -22,6 +22,8 @@ public class SqlQueriesProperties {
     private String usrInsert;
     @Value("${usr.select-all-trainers}")
     private String usrSelectAllTrainers;
+    @Value("${usr.select-on-landing-page}")
+    private String usrLandingPage;
 
     @Value("${course.select-all}")
     private String courseSelectAll;
@@ -37,6 +39,8 @@ public class SqlQueriesProperties {
     private String courseDelete;
     @Value("${course.insert}")
     private String courseInsert;
+    @Value("${course.select-on-landing-page}")
+    private String courseLandingPage;
 
     @Value("${group.select-all}")
     private String groupSelectAll;
@@ -116,6 +120,12 @@ public class SqlQueriesProperties {
         this.usrInsert = usrInsert;
     }
 
+    String getUsrLandingPage() { return usrLandingPage; }
+
+    void setUsrLandingPage(String usrLandingPage) { this.usrLandingPage = usrLandingPage; }
+
+
+
     String getCourseSelectAll() {
         return courseSelectAll;
     }
@@ -155,6 +165,12 @@ public class SqlQueriesProperties {
     void setCourseInsert(String courseInsert) {
         this.courseInsert = courseInsert;
     }
+
+    public String getCourseLandingPage() { return courseLandingPage; }
+
+    public void setCourseLandingPage(String courseLandingPage) { this.courseLandingPage = courseLandingPage; }
+
+
 
     String getGroupeSelectAll() {
         return courseSelectAll;

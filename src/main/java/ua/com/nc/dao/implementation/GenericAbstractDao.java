@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.List;
 
 /**
- * @param <E> entity type
+ * @param <E> entity typesqlQueriesProperties
  * @param <K>  type of entity's primary key
  */
 
