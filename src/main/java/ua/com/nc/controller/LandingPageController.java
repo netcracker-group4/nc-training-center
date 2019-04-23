@@ -31,7 +31,7 @@ public class LandingPageController {
 
     @RequestMapping (value = {"/update-landing-page"}, method = RequestMethod.POST)
     @ResponseBody
-    public void updateLandingPage (@RequestParam boolean isOnLandingPage, @RequestParam int id) {
+    public void updateLandingPage (@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage, @RequestParam int id) {
         landingPageService.updateLandingPage (id, isOnLandingPage);
     }
 
