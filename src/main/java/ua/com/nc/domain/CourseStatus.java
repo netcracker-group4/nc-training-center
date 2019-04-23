@@ -1,19 +1,22 @@
 package ua.com.nc.domain;
 
-import lombok.Data;
 
-@Data
-public class CourseStatus extends Entity<Integer>{
-    private String title, description;
-
-    public CourseStatus(Integer id, String title, String description) {
-        super(id);
-        this.title = title;
-        this.description = description;
+public enum  CourseStatus {
+    PLANNED("The registration has not started yet"),
+    REGISTRATION("The registrion is open. No schedule yet"),
+    SCHEDULED("Registration is closed. Schedule is formed. The lessons have not started yet"),
+    ONGOING("The lessons have started"),
+    ENDED("The lessons have ended");
+    private String description;
+    private CourseStatus(String description){
+        this.description=description;
     }
 
-    public CourseStatus(String title, String description) {
-        this.title = title;
-        this.description = description;
+    public String getDescription() {
+        return description;
+    }
+
+    public String getName() {
+        return name();
     }
 }

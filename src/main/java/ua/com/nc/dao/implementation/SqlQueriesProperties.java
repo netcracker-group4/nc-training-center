@@ -62,6 +62,8 @@ public class SqlQueriesProperties {
     private String levelSelectAll;
     @Value("${level.select-by-id}")
     private String levelSelectById;
+    @Value("${level.select-by-name}")
+    private String levelSelectByName;
     @Value("${level.update}")
     private String levelUpdate;
     @Value("${level.delete}")
@@ -237,6 +239,7 @@ public class SqlQueriesProperties {
     String getLevelSelectById() {
         return levelSelectById;
     }
+    String getLevelSelectByName(){ return levelSelectByName;}
 
     void setLevelSelectById(String levelSelectById) {
         this.levelSelectById = levelSelectById;

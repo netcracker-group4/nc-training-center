@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container>
         <v-layout row wrap>
             <v-flex xs12 sm4>
@@ -12,7 +12,7 @@
                         </v-flex>
                         <v-flex xs12 sm12>
                             <div v-for="lvl in levels">
-                                <input type="radio" id="two" value="Два" v-model="picked" v-on:click="setLevel(lvl)">
+                                <input type="radio" id="two" value="Два" v-on:click="setLevel(lvl)">
                                 <label for="two">{{lvl.title}}</label>
                             </div>
                         </v-flex>
@@ -26,6 +26,7 @@
                         <v-flex xs12 sm12>
                             <v-flex xs6 style="width: 30%">
                                 <v-textarea
+                                        id="course-descr-text"
                                         box
                                         name="input-7-4"
                                         label="Course description"
@@ -33,7 +34,11 @@
                                 ></v-textarea>
                             </v-flex>
                         </v-flex>
+                        <ChooserDate/>
                         <v-spacer></v-spacer>
+                        <v-flex xs12 sm12>
+                            <v-btn @click="submit">submit</v-btn>
+                        </v-flex>
                     </v-layout>
                 </v-container>
             </v-flex>
@@ -43,9 +48,11 @@
 
 <script>
     import axios from 'axios'
+    import ChooserDate from "../components/ChooserDate.vue";
 
     export default {
         name: "CreateCourse",
+        components: {ChooserDate},
         data(){
             return{
                 name: null,
@@ -54,6 +61,8 @@
                 imageUrl: null,
                 isOnLandingPage: null,
                 description: null,
+                startDay: null,
+                endDay: null,
                 levels: [],
                 courseStatuses: []
             }
@@ -81,29 +90,33 @@
             }
         },
         methods:{
-            /*submit(){
-                this.description = desc;
-                if(this.email != null & this.firstName != null
-                    & this.lastName != null & this.password != null){
-                    console.log(this.email + " " + this.password);
-                    axios.post('http://localhost:8080/users', {
-                        email: this.email,
-                        firstName: this.firstName,
-                        lastName: this.lastName,
-                        password: this.password
-                    })
-                        .then(response => alert("User added"))
-                }else{
-                    alert("Incorrect information in fields")
-                }
 
-            },*/
             setLevel(lvl){
                 this.level = lvl;
             },
             setOnLandingPage(is){
                 this.isOnLandingPage = is;
+            },
+            setData(){
+                this.description=document.querySelector('#course-descr-text')._value;
+                this.startDay = ChooserDate.data.date1;
+                this.endDay = ChooserDate.data.date2;
+            },
+            submit(){
+                    this.setData();
+                    axios.post('http://localhost:8080/getcourses/create', {
+                        name: this.name,
+                        level: this.level,
+                        courseStatus: this.courseStatus,
+                        imageUrl: this.imageUrl,
+                        isOnLandingPage: this.isOnLandingPage,
+                        description: this.description,
+                        startDay: this.startDay,
+                        endDay: this.endDay
+                    })
+                        .then(response => alert("Course created"))
             }
+
         }
     }
 </script>

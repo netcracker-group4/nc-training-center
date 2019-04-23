@@ -17,7 +17,8 @@ public class Course extends Entity<Integer>  {
     private Boolean isOnLandingPage;
     private String description;
 
-    public Course(String name, int level, int courseStatusId, int userId, String imageUrl, Date startDate, Date endDate, Boolean isOnLandingPage, String description) {
+    public Course(String name, int level, int courseStatusId, int userId,
+                  String imageUrl, Date startDate, Date endDate, Boolean isOnLandingPage, String description) {
         this.name = name;
         this.level = level;
         this.courseStatusId = courseStatusId;
@@ -30,7 +31,9 @@ public class Course extends Entity<Integer>  {
     }
 
 
-    public Course(Integer id, String name, int level, int courseStatusId, int userId, String imageUrl, Date startDate, Date endDate, Boolean isOnLandingPage, String description) {
+    public Course(Integer id, String name, int level, int courseStatusId,
+                  int userId, String imageUrl, Date startDate, Date endDate,
+                  Boolean isOnLandingPage, String description) {
         super(id);
         this.name = name;
         this.level = level;
@@ -62,6 +65,8 @@ public class Course extends Entity<Integer>  {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, level, courseStatusId, userId, imageUrl, startDate.toString(), endDate.toString(), isOnLandingPage, description);
+        return Objects.hash(super.hashCode(), name, level, courseStatusId,
+                userId, imageUrl, startDate.toString(), endDate.toString(),
+                isOnLandingPage, description);
     }
 }

@@ -102,4 +102,17 @@ public class LevelDao  extends GenericAbstractDao<Level, Integer> implements ILe
         }
         return list;
     }
+
+    @Override
+    public int getIdByName(String name) {
+        String sql = sqlQueriesProperties.getLevelSelectByName();
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1,name);
+            return statement.executeQuery().getInt(1);
+        }catch (SQLException e){
+            System.err.println(e.getMessage());
+        }
+
+        return 0;
+    }
 }
