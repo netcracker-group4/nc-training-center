@@ -142,4 +142,17 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
         log (sql, "find all on landing page");
         return landingPageCourses;
     }
+
+    @Override
+    public void updateLandingPage (int id, boolean isOnLandingPage) {
+        String sql = sqlQueriesProperties.getUpdateDropFromLandingPage();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBoolean(1, isOnLandingPage);
+            statement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PersistException(e);
+        }
+    }
+
 }

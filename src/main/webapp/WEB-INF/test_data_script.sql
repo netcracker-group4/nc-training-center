@@ -72,11 +72,18 @@ alter sequence course_status_seq restart with 6;
 
 
 insert into course (id, name, level, course_status_id, user_id,
-					start_date, end_date, is_on_landing_page)
+					start_date, end_date, is_on_landing_page,
+					image_url, description)
 values
-	(1, 'Java Beginner Course', 1, 2, 4, '2019-08-29', '2019-12-05', true),
-	(2, 'Java Standart Edition', 2, 3, 4, '2019-07-23', '2019-10-25', true),
-	(3, 'Java Senior', 4, 4, 5, '2019-02-28', '2019-08-14', false);
+	(1, 'Java Beginner Course', 1, 2, 4, '2019-08-29', '2019-12-05', true,
+	'https://udemyimages-a.akamaihd.net/course/480x270/184574_7227.jpg',
+	'Java Programming Course For Complete Beginners'),
+	(2, 'Java Standart Edition', 2, 3, 4, '2019-07-23', '2019-10-25', true,
+	'https://i.udemycdn.com/course/480x270/1777758_d2db_3.jpg',
+	'Java Standart Edition For Middle Java Developers'),
+	(3, 'Java Senior', 4, 4, 5, '2019-02-28', '2019-08-14', false,
+	'https://cdn-images-1.medium.com/max/1200/1*5T57bx4OS6o6lPe1ryU9oQ.png',
+	'Java Programming Course For Advanced Java Developers');
 
 alter sequence course_seq restart with 5;
 

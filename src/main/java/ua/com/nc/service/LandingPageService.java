@@ -7,4 +7,6 @@ public interface LandingPageService {
 
     String getLandingPageTrainers ();
 
+    void updateLandingPage (int id, boolean isOnLandingPage);
+
 }

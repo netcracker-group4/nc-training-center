@@ -3,10 +3,7 @@ package ua.com.nc.controller;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.interfaces.IUserDao;
 import ua.com.nc.service.DashBoardService;
 import ua.com.nc.service.LandingPageService;
@@ -26,12 +23,16 @@ public class LandingPageController {
 
     @RequestMapping (value = {"/courses-on-landing-page"}, method = RequestMethod.GET)
     @ResponseBody
-    public String getLandingPageCourses () {
-        return landingPageService.getLandingPageCourses();
-    }
+    public String getLandingPageCourses () { return landingPageService.getLandingPageCourses(); }
 
     @RequestMapping (value = {"/trainers-on-landing-page"}, method = RequestMethod.GET)
     @ResponseBody
-    public String getLandingPageTrainers () {return landingPageService.getLandingPageTrainers(); }
+    public String getLandingPageTrainers () { return landingPageService.getLandingPageTrainers(); }
+
+    @RequestMapping (value = {"/update-landing-page"}, method = RequestMethod.POST)
+    @ResponseBody
+    public void updateLandingPage (@RequestParam boolean isOnLandingPage, @RequestParam int id) {
+        landingPageService.updateLandingPage (id, isOnLandingPage);
+    }
 
 }

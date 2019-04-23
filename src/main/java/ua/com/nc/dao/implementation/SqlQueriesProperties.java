@@ -41,6 +41,9 @@ public class SqlQueriesProperties {
     private String courseInsert;
     @Value("${course.select-on-landing-page}")
     private String courseLandingPage;
+    @Value("${course.update-drop-from-landing-page}")
+    private String updateDropFromLandingPage;
+
 
     @Value("${group.select-all}")
     private String groupSelectAll;
@@ -168,10 +171,13 @@ public class SqlQueriesProperties {
         this.courseInsert = courseInsert;
     }
 
-    public String getCourseLandingPage() { return courseLandingPage; }
+    String getCourseLandingPage() { return courseLandingPage; }
 
-    public void setCourseLandingPage(String courseLandingPage) { this.courseLandingPage = courseLandingPage; }
+    void setCourseLandingPage(String courseLandingPage) { this.courseLandingPage = courseLandingPage; }
 
+    String getUpdateDropFromLandingPage() { return updateDropFromLandingPage; }
+
+    void setUpdateDropFromLandingPage(String updateDropFromLandingPage) { this.updateDropFromLandingPage = updateDropFromLandingPage; }
 
 
     String getGroupeSelectAll() {
