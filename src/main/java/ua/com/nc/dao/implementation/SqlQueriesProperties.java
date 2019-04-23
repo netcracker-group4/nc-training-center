@@ -73,6 +73,17 @@ public class SqlQueriesProperties {
     @Value("${level.select-by-trainer}")
     private String levelSelectByTrainer;
 
+    @Value("${absence_reason.select-all}")
+    private String absenceReasonSelectAll;
+    @Value("${absence_reason.select-by-id}")
+    private String absenceReasonSelectById;
+    @Value("${absence_reason.update}")
+    private String absenceReasonUpdate;
+    @Value("${absence_reason.delete}")
+    private String absenceReasonDelete;
+    @Value("${absence_reason.insert}")
+    private String absenceReasonInsert;
+
 
     String getUsrSelectAll() {
         return usrSelectAll;
@@ -309,5 +320,45 @@ public class SqlQueriesProperties {
 
     void setGroupSelectNumberOfEmployees(String groupSelectNumberOfEmployees) {
         this.groupSelectNumberOfEmployees = groupSelectNumberOfEmployees;
+    }
+
+    public void setAbsenceReasonDelete(String absenceReasonDelete) {
+        this.absenceReasonDelete = absenceReasonDelete;
+    }
+
+    public void setAbsenceReasonInsert(String absenceReasonInsert) {
+        this.absenceReasonInsert = absenceReasonInsert;
+    }
+
+    public void setAbsenceReasonSelectAll(String absenceReasonSelectAll) {
+        this.absenceReasonSelectAll = absenceReasonSelectAll;
+    }
+
+    public void setAbsenceReasonSelectById(String absenceReasonSelectById) {
+        this.absenceReasonSelectById = absenceReasonSelectById;
+    }
+
+    public void setAbsenceReasonUpdate(String absenceReasonUpdate) {
+        this.absenceReasonUpdate = absenceReasonUpdate;
+    }
+
+    public String getAbsenceReasonDelete() {
+        return absenceReasonDelete;
+    }
+
+    public String getAbsenceReasonInsert() {
+        return absenceReasonInsert;
+    }
+
+    public String getAbsenceReasonSelectAll() {
+        return absenceReasonSelectAll;
+    }
+
+    public String getAbsenceReasonSelectById() {
+        return absenceReasonSelectById;
+    }
+
+    public String getAbsenceReasonUpdate() {
+        return absenceReasonUpdate;
     }
 }
