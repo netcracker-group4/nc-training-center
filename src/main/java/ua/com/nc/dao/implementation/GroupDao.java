@@ -117,4 +117,19 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
             throw new PersistException(e);
         }
     }
+
+    @Override
+    public List<Group> getGroupByTrainerId(Integer id) {
+        List<Group> groups;
+        String sql = sqlQueriesProperties.getGroupSelectByTrainerId();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            groups = parseResultSet(rs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PersistException(e);
+        }
+        return groups;
+    }
 }

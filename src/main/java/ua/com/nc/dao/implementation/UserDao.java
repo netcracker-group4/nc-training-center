@@ -146,6 +146,21 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     }
 
     @Override
+    public List<User> getByGroupId(Integer id) {
+        List<User> users;
+        String sql = sqlQueriesProperties.getUsrSelectByGroupId();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            users = parseResultSet(rs);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new PersistException(e);
+        }
+        return users;
+    }
+
+    @Override
     public List <User> getLandingPageTrainers () {
         List <User> landingPageTrainers;
         String sql = sqlQueriesProperties.getUsrLandingPage();

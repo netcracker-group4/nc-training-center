@@ -1,11 +1,11 @@
-<template>
-    <v-container class="form">
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+    <v-container class="form" id="email">
         <v-layout row wrap>
             <v-flex xs12 sm12 >
                 <v-container>
                     <v-layout row wrap>
                         <v-flex xs12 sm12>
-                            <v-text-field v-model="email" label="Email" ></v-text-field>
+                            <v-text-field v-model="email" label="Email"></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm12>
                             <v-text-field
@@ -26,7 +26,21 @@
                 </v-container>
             </v-flex>
         </v-layout>
-        <modal-page v-show="isModalVisible" @close="closeModal" :message="modalMessage"/>
+        <div class="text-xs-center">
+            <v-dialog v-model="dialog" width="500" height="300">
+                <v-card>
+                    <v-card-title class="headline red lighten-4" primary-title>
+                        Entered data is incorrect
+                    </v-card-title>
+                    <v-card-actions class="red lighten-4">
+                        <v-spacer></v-spacer>
+                        <v-btn class="error-button light-blue lighten-3" @click="dialog = false">
+                            submit
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </div>
     </v-container>
 </template>
 
@@ -42,7 +56,8 @@
                 email: null,
                 password: null,
                 isModalVisible: false,
-                modalMessage: null
+                modalMessage: null,
+                dialog: false
             }
         },
         methods:{
@@ -58,8 +73,8 @@
                         location.replace(location.origin)
                     }
                 }else{
-                    this.modalMessage = "Incorrect data"
-                    //this.showModal()
+                    //this.modalMessage = "Incorrect data"
+                    this.dialog = true
                 }
 
             },
@@ -83,8 +98,7 @@
             showModal(){
                 this.isModalVisible = true
             }
-        }
-
+        },
     }
 </script>
 
@@ -104,5 +118,9 @@
         margin: 0px;
         margin-top: 40px;
         float: right;
+    }
+    .error-button{
+        margin-bottom: 10px;
+        margin-right: 10px;
     }
 </style>

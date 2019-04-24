@@ -1,13 +1,18 @@
 <template>
     <v-toolbar app v-if="">
-        <v-toolbar-items class="hidden-sm-and-down" v-if="isAuthorized">
+        <v-toolbar-items class="hidden-sm-and-down" v-if="this.$store.getters.isAuthorized">
             <v-btn @click="forwardToMainPage" flat>Main</v-btn>
         </v-toolbar-items>
+        <v-toolbar-items class="hidden-sm-and-down" v-if="  this.$store.getters.isAuthorized &&
+                                                            this.$store.getters.isAdmin">
+            <v-btn @click="forwardToDashboardPage" flat>dashboard</v-btn>
+            <v-btn @click="forwardToAttendancePage" flat>attendance</v-btn>
+        </v-toolbar-items>
         <v-spacer></v-spacer>
-        <v-toolbar-items class="hidden-sm-and-down" v-if="isAuthorized == false || isAuthorized == null">
+        <v-toolbar-items class="hidden-sm-and-down" v-if="!this.$store.getters.isAuthorized">
             <v-btn @click="forwardToLoginPage" flat>login</v-btn>
         </v-toolbar-items>
-        <form action="/logout" method="get" v-if="isAuthorized">
+        <form action="/logout" method="get" v-if="this.$store.getters.isAuthorized">
             <v-btn type="submit" flat>Exit</v-btn>
         </form>
     </v-toolbar>
@@ -23,11 +28,19 @@
             forwardToLoginPage(){
                 this.$router.push('/login')
             },
+            forwardToDashboardPage(){
+                this.$router.push('/dashboard')
+            },
+            forwardToAttendancePage(){
+                this.$router.push('/attendance')
+            }
         },
         data(){
             return{
-                isAuthorized: isAuthorized,
+
             }
+        },
+        mounted() {
         }
     }
 </script>

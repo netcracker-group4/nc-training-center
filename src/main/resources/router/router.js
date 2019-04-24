@@ -9,7 +9,8 @@ import CoursePage from "../pages/CoursePage.vue";
 import TrainerPage from "../pages/TrainerPage.vue";
 import AdminCourses from "../pages/AdminCourses.vue";
 import CreateCourse from "../pages/CreateCourse.vue";
-import AbsenceReasons from "../pages/AbsenceReasons.vue";
+import AttendancePage from "../pages/AttendancePage.vue";
+
 
 
 Vue.use(Router);
@@ -25,6 +26,7 @@ const routes = [
     {path: '/trainers/:id', component: TrainerPage},
     {path: '/admincourses', component: AdminCourses},
     {path: '/coursecreate', component: CreateCourse},
+    {path: '/attendance', component: AttendancePage},
     {path: '/absencereasons', component: AbsenceReasons}
 ];
 

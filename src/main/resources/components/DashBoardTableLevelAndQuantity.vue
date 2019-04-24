@@ -110,7 +110,6 @@
             }
         },
         mounted() {
-            // http://localhost:8080/dashboard/training-and-quantity
             let self = this;
             axios.get('http://localhost:8080/dashboard/level-and-quantity')
                 .then(function (response) {
