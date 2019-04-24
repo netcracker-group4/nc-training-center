@@ -11,5 +11,6 @@ public interface IUserDao extends GenericDao<User, Integer> {
     User getManagerById(Integer id);
     List<User> getAllTrainersById(Integer id);
     List<User> getByGroupId(Integer id);
+    void updateTrainerLandingPage (int id, boolean isOnLandingPage);
     List<User> getAllForCourse(int courseId);
 }

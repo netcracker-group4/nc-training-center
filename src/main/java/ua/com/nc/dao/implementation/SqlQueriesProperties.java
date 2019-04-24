@@ -30,6 +30,9 @@ public class SqlQueriesProperties {
     private String usrSelectAllTrainersById;
     @Value("${usr.select-manager-by-id}")
     private String usrSelectManagerById;
+    @Value("usr.update-landing-page")
+    private String usrUpdateLandingPage;
+
 
     @Value("${course.select-all}")
     private String courseSelectAll;
@@ -47,8 +50,8 @@ public class SqlQueriesProperties {
     private String courseInsert;
     @Value("${course.select-on-landing-page}")
     private String courseLandingPage;
-    @Value("${course.update-drop-from-landing-page}")
-    private String updateDropFromLandingPage;
+    @Value("${course.update-landing-page}")
+    private String courseUpdateLandingPage;
 
 
     @Value("${group.select-all}")
@@ -160,6 +163,10 @@ public class SqlQueriesProperties {
 
     void setUsrLandingPage(String usrLandingPage) { this.usrLandingPage = usrLandingPage; }
 
+    String getUsrUpdateLandingPage() { return usrUpdateLandingPage; }
+
+    void setUsrUpdateLandingPage(String usrUpdateLandingPage) { this.usrUpdateLandingPage = usrUpdateLandingPage; }
+
 
 
     String getCourseSelectAll() {
@@ -206,9 +213,9 @@ public class SqlQueriesProperties {
 
     void setCourseLandingPage(String courseLandingPage) { this.courseLandingPage = courseLandingPage; }
 
-    String getUpdateDropFromLandingPage() { return updateDropFromLandingPage; }
+    String getCourseUpdateLandingPage () { return courseUpdateLandingPage; }
 
-    void setUpdateDropFromLandingPage(String updateDropFromLandingPage) { this.updateDropFromLandingPage = updateDropFromLandingPage; }
+    void setCourseUpdateLandingPage (String updateDropFromLandingPage) { this.courseUpdateLandingPage = updateDropFromLandingPage; }
 
 
     String getGroupeSelectAll() {

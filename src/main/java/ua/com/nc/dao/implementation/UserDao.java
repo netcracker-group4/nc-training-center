@@ -101,7 +101,9 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             String imageUrl = rs.getString(IMAGE_URL);
             String IS_ACTIVE = "IS_ACTIVE";
             boolean isActive = rs.getBoolean(IS_ACTIVE);
-            User user = new User(userId, email, passwordHash, firstname, lastname, managerId, imageUrl, isActive);
+            User user = new User(userId, email, passwordHash, firstname, lastname, managerId,
+                    imageUrl,
+                    isActive);
             list.add(user);
         }
         return list;
@@ -240,6 +242,19 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         return list;
     }
 
+    @Override
+    public void updateTrainerLandingPage (int id, boolean isOnLandingPage) {
+        String sql = sqlQueriesProperties.getUsrUpdateLandingPage();
+        log (sql, "update trainer on landing page");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBoolean(1, isOnLandingPage);
+            statement.setInt(2, id);
+            statement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PersistException (e);
+        }
+    }
 
 
 }

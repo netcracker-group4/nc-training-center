@@ -7,6 +7,7 @@ public interface LandingPageService {
 
     String getLandingPageTrainers ();
 
-    void updateLandingPage (int id, boolean isOnLandingPage);
+    void updateCourseLandingPage (int id, boolean isOnLandingPage);
 
+    void updateTrainerLandingPage (int id, boolean isOnLandingPage);
 }

@@ -11,6 +11,6 @@ public interface ICourseDao extends GenericDao<Course, Integer> {
 
     List <Course> getLandingPageCourses ();
 
-    void updateLandingPage (int id, boolean isOnLandingPage);
+    void updateCourseLandingPage (int id, boolean isOnLandingPage);
 
 }
