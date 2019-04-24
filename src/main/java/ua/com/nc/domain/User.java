@@ -23,22 +23,24 @@ public class User extends Entity<Integer> implements UserDetails {
     public User() {
     }
 
-    public User(Integer id, String email, String password, String firstName, String lastName, Integer managerId, boolean isActive) {
+    public User(Integer id, String email, String password, String firstName, String lastName, Integer managerId, String image, boolean isActive) {
         super(id);
         this.setEmail(email);
         this.setPassword(password);
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setManagerId(managerId);
+        this.setImageUrl(imageUrl);
         this.setActive(isActive);
     }
 
-    public User(String email, String password, String firstName, String lastName, Integer managerId, boolean isActive) {
+    public User(String email, String password, String firstName, String lastName, Integer managerId, String image, boolean isActive) {
         this.setEmail(email);
         this.setPassword(password);
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setManagerId(managerId);
+        this.setImageUrl(imageUrl);
         this.setActive(isActive);
     }
 
@@ -79,6 +81,17 @@ public class User extends Entity<Integer> implements UserDetails {
     private void setManagerId(Integer managerId) {
         if (managerId != null) {
             this.managerId = managerId;
+        }
+    }
+
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        if (imageUrl != null) {
+            this.imageUrl = imageUrl;
         }
     }
 

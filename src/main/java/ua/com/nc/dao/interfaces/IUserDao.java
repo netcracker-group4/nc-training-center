@@ -8,5 +8,7 @@ public interface IUserDao extends GenericDao<User, Integer> {
     User getByEmail(String email);
     List<User> getAllTrainers ();
     List<User> getLandingPageTrainers ();
+    User getManagerById(Integer id);
+    List<User> getAllTrainersById(Integer id);
     List<User> getByGroupId(Integer id);
 }
