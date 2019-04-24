@@ -1,5 +1,6 @@
 <template>
     <div>Course with  {{ $route.params.id }}  number</div>
+
 </template>
 
 <script>

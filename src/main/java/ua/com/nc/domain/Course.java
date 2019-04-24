@@ -69,4 +69,19 @@ public class Course extends Entity<Integer>  {
                 userId, imageUrl, startDate.toString(), endDate.toString(),
                 isOnLandingPage, description);
     }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "name='" + name + '\'' +
+                ", level=" + level +
+                ", courseStatusId=" + courseStatusId +
+                ", userId=" + userId +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", isOnLandingPage=" + isOnLandingPage +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

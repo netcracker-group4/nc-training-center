@@ -12,7 +12,7 @@
                         </v-flex>
                         <v-flex xs12 sm12>
                             <div v-for="lvl in levels">
-                                <input type="radio" id="two" value="Два" v-on:click="setLevel(lvl)">
+                                <input type="radio" id="two" value="Два" v-on:click="setLevel(lvl.title)">
                                 <label for="two">{{lvl.title}}</label>
                             </div>
                         </v-flex>
@@ -99,12 +99,25 @@
             },
             setData(){
                 this.description=document.querySelector('#course-descr-text')._value;
-                this.startDay = ChooserDate.data.date1;
-                this.endDay = ChooserDate.data.date2;
+                this.startDay = ChooserDate.data().date1;
+                this.endDay = ChooserDate.data().date2;
+                console.log(this);
             },
             submit(){
                     this.setData();
-                    axios.post('http://localhost:8080/getcourses/create', {
+                let form = new FormData();
+                let request = new XMLHttpRequest();
+                request.open('POST', 'http://localhost:8080/getcourses/create');
+                form.append('name', this.name);
+                form.append('level',this.level);
+                form.append('courseStatus',this.courseStatus);
+                form.append('imageUrl',this.imageUrl);
+                form.append('isOnLandingPage',this.isOnLandingPage);
+                form.append('description',this.description);
+                form.append('startDay',this.startDay);
+                form.append('endDay',this.endDay);
+                request.send(form);
+                    /*axios.post('http://localhost:8080/getcourses/create', {
                         name: this.name,
                         level: this.level,
                         courseStatus: this.courseStatus,
@@ -114,7 +127,7 @@
                         startDay: this.startDay,
                         endDay: this.endDay
                     })
-                        .then(response => alert("Course created"))
+                        .then(response => alert("Course created"))*/
             }
 
         }

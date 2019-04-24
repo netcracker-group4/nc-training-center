@@ -12,13 +12,13 @@
                         <v-text-field
                                 :value="StartingDate"
                                 clearable
-                                label="Formatted with Moment.js"
+                                label="First day"
                                 readonly
                                 v-on="on"
                         ></v-text-field>
                     </template>
                     <v-date-picker
-                            v-model="date"
+                            v-model="date1"
                             @change="menu1 = false"
                     ></v-date-picker>
                 </v-menu>
@@ -35,13 +35,13 @@
                         <v-text-field
                                 :value="EndingDate"
                                 clearable
-                                label="Formatted with datefns"
+                                label="The last day"
                                 readonly
                                 v-on="on"
                         ></v-text-field>
                     </template>
                     <v-date-picker
-                            v-model="date"
+                            v-model="date2"
                             @change="menu2 = false"
                     ></v-date-picker>
                 </v-menu>
