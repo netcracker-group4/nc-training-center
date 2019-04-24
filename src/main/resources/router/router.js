@@ -10,7 +10,7 @@ import TrainerPage from "../pages/TrainerPage.vue";
 import AdminCourses from "../pages/AdminCourses.vue";
 import CreateCourse from "../pages/CreateCourse.vue";
 import AttendancePage from "../pages/AttendancePage.vue";
-
+import AbsenceReasons from '../pages/AbsenceReasons.vue'
 
 
 Vue.use(Router);
