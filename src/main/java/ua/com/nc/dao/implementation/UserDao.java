@@ -163,6 +163,25 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     }
 
     @Override
+    public List<User> getAllForCourse(int courseId) {
+        List <User> allUsersForCourse;
+        String sql = "select distinct usr.* from usr join desirable_schedule ug on usr.id = ug.user_id  where course_id = ?";
+        log (sql, "select all users for a course");
+        try (PreparedStatement statement = connection.prepareStatement (sql)) {
+            statement.setInt(1,courseId);
+            ResultSet rs = statement.executeQuery();
+            allUsersForCourse = parseResultSet(rs);
+        } catch (Exception e) {
+            throw new PersistException (e);
+        }
+        if (allUsersForCourse.size() == 0) {
+            return null;
+        }
+        return allUsersForCourse;
+    }
+
+
+    @Override
     public List <User> getLandingPageTrainers () {
         List <User> landingPageTrainers;
         String sql = sqlQueriesProperties.getUsrLandingPage();

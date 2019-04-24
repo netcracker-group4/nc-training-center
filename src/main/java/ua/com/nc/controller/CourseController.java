@@ -71,7 +71,17 @@ public class CourseController {
         service.add(name,userId, level,status,imageUrl,isLanding,desc,startingDay,endingDay);
     }
 
+    @RequestMapping(value = {"/{id}/desired"}, method = RequestMethod.GET)
+    @ResponseBody
+    public String getDesiredScheduleForCourse(@PathVariable("id") String id) throws Exception {
+        return service.getDesiredScheduleForCourse(Integer.parseInt(id));
+    }
 
+    @RequestMapping(value = {"/desired/day-intervals"}, method = RequestMethod.GET)
+    @ResponseBody
+    public String getDayIntervals() {
+        return service.getDayIntervals();
+    }
 
 
 

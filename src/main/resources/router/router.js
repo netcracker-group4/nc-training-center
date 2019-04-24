@@ -13,10 +13,11 @@ import AllUsersPage from "../pages/AllUsersPage.vue";
 import UserPage from "../pages/UserPage.vue";
 import AttendancePage from "../pages/AttendancePage.vue";
 import AbsenceReasons from '../pages/AbsenceReasons.vue'
-
+import DesiredSchedulePage from "../pages/DesiredSchedulePage.vue";
+import VueDraggable from 'vuedraggable';
 
 Vue.use(Router);
-
+Vue.use(VueDraggable);
 const routes = [
     {path: '/', component: MainPage},
     {path: '/registration', component: RegistrationPage},
@@ -31,7 +32,8 @@ const routes = [
     {path: '/userpage', component: AllUsersPage},
     {path: '/userpage/:id', component: UserPage},
     {path: '/attendance', component: AttendancePage},
-    {path: '/absencereasons', component: AbsenceReasons}
+    {path: '/absencereasons', component: AbsenceReasons},
+    {path: '/desired-schedule/:id', component: DesiredSchedulePage}
 ];
 
 export default new Router({
