@@ -53,22 +53,21 @@ public class CourseController {
     public void add(@RequestParam(name = "name") String name, @RequestParam(name="level" ) String level,
                     @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
-                    @RequestParam(name = "startDay") String startDay,@RequestParam(name = "endDay") String endDay){
+                    @RequestParam(name = "startDay") String startDay,@RequestParam(name = "endDay") String endDay) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int userId =0;
+        int userId = 0;
 //        CourseStatus status = CourseStatus.valueOf(courseStatus);
         CourseStatus status = CourseStatus.ENDED;
         boolean isLanding = Boolean.parseBoolean(isOnLandingPage);
-        Date startingDay;
-        Date endingDay;
-        try{
+        Date startingDay = new Date();
+        Date endingDay = startingDay;
+        try {
             startingDay = format.parse(startDay);
             endingDay = format.parse(endDay);
-        } catch (ParseException e){
-            System.err.println("KKEEEKK");
-            return;
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
         }
-        service.add(name,userId, level,status,imageUrl,isLanding,desc,startingDay,endingDay);
+        service.add(name, userId, level, status, imageUrl, isLanding, desc, startingDay, endingDay);
     }
 
 

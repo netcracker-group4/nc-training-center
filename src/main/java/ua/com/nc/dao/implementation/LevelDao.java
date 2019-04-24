@@ -108,11 +108,14 @@ public class LevelDao  extends GenericAbstractDao<Level, Integer> implements ILe
         String sql = sqlQueriesProperties.getLevelSelectByName();
         try(PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1,name);
-            return statement.executeQuery().getInt("id");
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            return rs.getInt("id");
         }catch (SQLException e){
             System.err.println(e.getMessage());
+            throw  new RuntimeException(new SQLException("Level "+name+" not found"));
         }
 
-        throw  new RuntimeException(new SQLException("Level "+name+" not found"));
+
     }
 }
