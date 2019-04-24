@@ -144,10 +144,11 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
     }
 
     @Override
-    public void updateLandingPage (int id, boolean isOnLandingPage) {
-        String sql = sqlQueriesProperties.getUpdateDropFromLandingPage();
+    public void updateCourseLandingPage (int id, boolean isOnLandingPage) {
+        String sql = sqlQueriesProperties.getCourseUpdateLandingPage();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, isOnLandingPage);
+            statement.setInt(2, id);
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

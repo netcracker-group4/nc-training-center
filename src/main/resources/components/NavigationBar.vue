@@ -7,6 +7,7 @@
                                                             this.$store.getters.isAdmin">
             <v-btn @click="forwardToDashboardPage" flat>dashboard</v-btn>
             <v-btn @click="forwardToAttendancePage" flat>attendance</v-btn>
+            <v-btn @click="forwardToCoursePage" flat>courses</v-btn>
         </v-toolbar-items>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down" v-if="!this.$store.getters.isAuthorized">
@@ -33,6 +34,9 @@
             },
             forwardToAttendancePage(){
                 this.$router.push('/attendance')
+            },
+            forwardToCoursePage(){
+                this.$router.push('/admincourses')
             }
         },
         data(){
