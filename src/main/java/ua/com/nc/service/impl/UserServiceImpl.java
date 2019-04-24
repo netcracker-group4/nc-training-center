@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     public DtoUserProfiles getById(Integer id) {
         User user = userDao.getEntityById(id);
         List<Role> role = roleDao.findAllByUserId(id);
-        User manager = userDao.getManagerByUser(id);
+        User manager = userDao.getManagerById(id);
         List<User> teachers = userDao.getAllTrainersById(id);
         List<Group> groups = groupDao.getAllGroupsByStudent(id);
 

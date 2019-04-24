@@ -24,6 +24,10 @@ public class SqlQueriesProperties {
     private String usrSelectAllTrainers;
     @Value("${usr.select-on-landing-page}")
     private String usrLandingPage;
+    @Value("${usr.select-all-trainers-by-id}")
+    private String usrSelectAllTrainersById;
+    @Value("${usr.select-manager-by-id}")
+    private String usrSelectManagerById;
 
     @Value("${course.select-all}")
     private String courseSelectAll;
@@ -59,6 +63,8 @@ public class SqlQueriesProperties {
     private String groupSelectByCourse;
     @Value("${group.select-number-of-employees}")
     private String groupSelectNumberOfEmployees;
+    @Value("${group.select-by-employee}")
+    private String groupSelectByEmployee;
 
 
     @Value("${level.select-all}")
@@ -366,5 +372,33 @@ public class SqlQueriesProperties {
 
     public String getAbsenceReasonUpdate() {
         return absenceReasonUpdate;
+    }
+
+    public String getUsrSelectAllTrainersById() {
+        return usrSelectAllTrainersById;
+    }
+
+    public void setUsrSelectAllTrainersById(String usrSelectAllTrainersById) {
+        this.usrSelectAllTrainersById = usrSelectAllTrainersById;
+    }
+
+    public String getUsrSelectManagerById() {
+        return usrSelectManagerById;
+    }
+
+    public void setUsrSelectManagerById(String usrSelectManagerById) {
+        this.usrSelectManagerById = usrSelectManagerById;
+    }
+
+    public void setLevelSelectByName(String levelSelectByName) {
+        this.levelSelectByName = levelSelectByName;
+    }
+
+    public String getGroupSelectByEmployee() {
+        return groupSelectByEmployee;
+    }
+
+    public void setGroupSelectByEmployee(String groupSelectByEmployee) {
+        this.groupSelectByEmployee = groupSelectByEmployee;
     }
 }

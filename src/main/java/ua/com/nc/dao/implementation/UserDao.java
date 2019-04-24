@@ -97,9 +97,11 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             String lastname = rs.getString(LASTNAME);
             String MANAGER_ID = "MANAGER_ID";
             Integer managerId = rs.getInt(MANAGER_ID);
+            String IMAGE_URL = "IMAGE_URL";
+            String imageUrl = rs.getString(IMAGE_URL);
             String IS_ACTIVE = "IS_ACTIVE";
             boolean isActive = rs.getBoolean(IS_ACTIVE);
-            User user = new User(userId, email, passwordHash, firstname, lastname, managerId, isActive);
+            User user = new User(userId, email, passwordHash, firstname, lastname, managerId, imageUrl, isActive);
             list.add(user);
         }
         return list;
@@ -161,5 +163,49 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         }
         return landingPageTrainers;
     }
+
+    @Override
+    public User getManagerById(Integer id) {
+        List<User> list;
+        String sql = sqlQueriesProperties.getUsrSelectManagerById();
+        log(sql, "find manager by user id");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
+
+    @Override
+    public List<User> getAllTrainersById(Integer id) {
+        List<User> list;
+        String sql = sqlQueriesProperties.getUsrSelectAllTrainersById();
+        log(sql, "find all trainers by id");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+
+        return list;
+    }
+
+
 
 }

@@ -121,7 +121,7 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
     @Override
     public List<Group> getAllGroupsByStudent(int studentId) {
         List<Group> groups;
-        String sql = sqlQueriesProperties.getGroupSelectByStudent();
+        String sql = sqlQueriesProperties.getGroupSelectByEmployee();
         log(sql, "select all groups");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, studentId);

@@ -30,6 +30,7 @@ public class User extends Entity<Integer> implements UserDetails {
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setManagerId(managerId);
+        this.setImageUrl(imageUrl);
         this.setActive(isActive);
     }
 
@@ -39,6 +40,7 @@ public class User extends Entity<Integer> implements UserDetails {
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setManagerId(managerId);
+        this.setImageUrl(imageUrl);
         this.setActive(isActive);
     }
 
@@ -82,12 +84,15 @@ public class User extends Entity<Integer> implements UserDetails {
         }
     }
 
+
     public String getImageUrl() {
         return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+        if (imageUrl != null) {
+            this.imageUrl = imageUrl;
+        }
     }
 
     public boolean isActive() {
