@@ -9,7 +9,6 @@ import CoursePage from "../pages/CoursePage.vue";
 import TrainerPage from "../pages/TrainerPage.vue";
 import AdminCourses from "../pages/AdminCourses.vue";
 import CreateCourse from "../pages/CreateCourse.vue";
-import AbsenceReasons from "../pages/AbsenceReasons.vue";
 import AllUsersPage from "../pages/AllUsersPage.vue";
 import UserPage from "../pages/UserPage.vue";
 import AttendancePage from "../pages/AttendancePage.vue";
