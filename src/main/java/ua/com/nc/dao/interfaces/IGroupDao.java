@@ -11,5 +11,7 @@ public interface IGroupDao extends GenericDao<Group, Integer> {
 
     int getNumberOfEmployeesInGroup(int groupId);
 
+    List<Group> getAllGroupsByStudent(int studentId);
+  
     List<Group> getGroupByTrainerId(Integer id);
 }
