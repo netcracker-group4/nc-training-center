@@ -101,7 +101,9 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             String imageUrl = rs.getString(IMAGE_URL);
             String IS_ACTIVE = "IS_ACTIVE";
             boolean isActive = rs.getBoolean(IS_ACTIVE);
-            User user = new User(userId, email, passwordHash, firstname, lastname, managerId, imageUrl, isActive);
+            User user = new User(userId, email, passwordHash, firstname, lastname, managerId,
+                    imageUrl,
+                    isActive);
             list.add(user);
         }
         return list;

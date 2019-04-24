@@ -32,7 +32,7 @@ public class CourseServiceImpl implements CourseService {
         int statusId = 1;
         System.err.println(level.trim());
         int lvl = levelDao.getIdByName(level.trim());
-        Course course = new Course(name,lvl,statusId,userId,imageUrl,
+        Course course = new Course(name,lvl,statusId, userId,imageUrl,
                 new java.sql.Date(startingDay.getTime()),new java.sql.Date(endingDay.getTime()),isLanding,desc);
         System.err.println(course.toString());
         add(course);
