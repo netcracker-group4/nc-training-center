@@ -101,6 +101,15 @@ public class SqlQueriesProperties {
     private String absenceReasonInsert;
 
 
+    @Value("${desirable.schedule.select-all}")
+    private String desirableScheduleSelectAll;
+    @Value("${desirable.schedule.insert}")
+    private String desirableScheduleInsert;
+    @Value("${desirable.schedule.select-by-course-id}")
+    private String desirableScheduleSelectByCourseId;
+
+    @Value("${suitability.select-all}")
+    private String suitabilitySelectAll;
 
     String getUsrSelectAll() {
         return usrSelectAll;
@@ -428,5 +437,37 @@ public class SqlQueriesProperties {
 
     public void setGroupSelectByEmployee(String groupSelectByEmployee) {
         this.groupSelectByEmployee = groupSelectByEmployee;
+    }
+
+    public String getDesirableScheduleSelectAll() {
+        return desirableScheduleSelectAll;
+    }
+
+    public void setDesirableScheduleSelectAll(String desirableScheduleSelectAll) {
+        this.desirableScheduleSelectAll = desirableScheduleSelectAll;
+    }
+
+    public String getDesirableScheduleInsert() {
+        return desirableScheduleInsert;
+    }
+
+    public void setDesirableScheduleInsert(String desirableScheduleInsert) {
+        this.desirableScheduleInsert = desirableScheduleInsert;
+    }
+
+    public String getDesirableScheduleSelectByCourseId() {
+        return desirableScheduleSelectByCourseId;
+    }
+
+    public void setDesirableScheduleSelectByCourseId(String desirableScheduleSelectByCourseId) {
+        this.desirableScheduleSelectByCourseId = desirableScheduleSelectByCourseId;
+    }
+
+    public String getSuitabilitySelectAll() {
+        return suitabilitySelectAll;
+    }
+
+    public void setSuitabilitySelectAll(String suitabilitySelectAll) {
+        this.suitabilitySelectAll = suitabilitySelectAll;
     }
 }
