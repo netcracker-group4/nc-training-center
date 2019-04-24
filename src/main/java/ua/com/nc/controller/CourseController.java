@@ -54,22 +54,24 @@ public class CourseController {
                     @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
                     @RequestParam(name = "startDay") String startDay,@RequestParam(name = "endDay") String endDay) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int userId = 1;
-//        CourseStatus status = CourseStatus.valueOf(courseStatus);
-        CourseStatus status = CourseStatus.ENDED;
-        boolean isLanding = Boolean.parseBoolean(isOnLandingPage);
-        Date startingDay = new Date();
-        Date endingDay = startingDay;
-        try {
-            startingDay = format.parse(startDay);
-            endingDay = format.parse(endDay);
-        } catch (ParseException e) {
-            System.err.println(e.getMessage());
-        }
-        service.add(name, userId, level, status, imageUrl, isLanding, desc, startingDay, endingDay);
+
+        service.add(service.stringToObjCourse(name, "1", level, courseStatus,
+                imageUrl, isOnLandingPage, desc, startDay, endDay));
     }
 
+
+    @RequestMapping(method = RequestMethod.PUT,value = "{id}/create")
+    @ResponseBody
+    public void update(@RequestParam(name = "name") String name, @RequestParam(name="level" ) String level,
+                    @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
+                    @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
+                    @RequestParam(name = "startDay") String startDay,@RequestParam(name = "endDay") String endDay,
+                       @PathVariable int id){
+
+        Course course = service.stringToObjCourse(name, "1", level, courseStatus,
+                imageUrl, isOnLandingPage, desc, startDay, endDay);
+        courseDao.update(course);
+    }
 
 
 
