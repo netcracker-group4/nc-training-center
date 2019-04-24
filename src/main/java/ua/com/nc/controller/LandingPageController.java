@@ -30,10 +30,18 @@ public class LandingPageController {
     @ResponseBody
     public String getLandingPageTrainers () { return landingPageService.getLandingPageTrainers(); }
 
-    @RequestMapping (value = {"/update-landing-page"}, method = RequestMethod.POST)
+    @RequestMapping (value = {"/update-course-landing-page"}, method = RequestMethod.POST)
     @ResponseBody
-    public void updateLandingPage (@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage, @RequestParam int id) {
-        landingPageService.updateLandingPage (id, isOnLandingPage);
+    public void updateCourseLandingPage (@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage,
+                                         @RequestParam (name = "id") int id) {
+        landingPageService.updateCourseLandingPage (id, isOnLandingPage);
+    }
+
+    @RequestMapping (value = {"/update-trainer-landing-page"}, method = RequestMethod.POST)
+    @ResponseBody
+    public void updateTrainerLandingPage (@RequestParam (name = "isOnLandingPage") boolean isOnLandingPage,
+                                          @RequestParam (name = "id") int id) {
+        landingPageService.updateTrainerLandingPage(id, isOnLandingPage);
     }
 
 }
