@@ -1,5 +1,6 @@
 package ua.com.nc.dao.interfaces;
 
+import ua.com.nc.dao.PersistException;
 import ua.com.nc.domain.Group;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface IGroupDao extends GenericDao<Group, Integer> {
     int getNumberOfEmployeesInGroup(int groupId);
 
     List<Group> getAllGroupsByStudent(int studentId);
+  
+    List<Group> getGroupByTrainerId(Integer id);
 }

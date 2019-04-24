@@ -138,5 +138,11 @@
 </script>
 
 <style scoped>
+    .inner-table {
+        background-color: lavender;
+    }
 
+    .my-link {
+        cursor: pointer;
+    }
 </style>

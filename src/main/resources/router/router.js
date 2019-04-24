@@ -12,7 +12,8 @@ import CreateCourse from "../pages/CreateCourse.vue";
 import AbsenceReasons from "../pages/AbsenceReasons.vue";
 import AllUsersPage from "../pages/AllUsersPage.vue";
 import UserPage from "../pages/UserPage.vue";
-
+import AttendancePage from "../pages/AttendancePage.vue";
+import AbsenceReasons from '../pages/AbsenceReasons.vue'
 
 
 Vue.use(Router);
@@ -28,10 +29,10 @@ const routes = [
     {path: '/trainers/:id', component: TrainerPage},
     {path: '/admincourses', component: AdminCourses},
     {path: '/coursecreate', component: CreateCourse},
-    {path: '/absencereasons', component: AbsenceReasons},
     {path: '/userpage', component: AllUsersPage},
     {path: '/userpage/:id', component: UserPage}
-
+    {path: '/attendance', component: AttendancePage},
+    {path: '/absencereasons', component: AbsenceReasons}
 ];
 
 export default new Router({

@@ -22,6 +22,8 @@ public class SqlQueriesProperties {
     private String usrInsert;
     @Value("${usr.select-all-trainers}")
     private String usrSelectAllTrainers;
+    @Value("${usr.select-by-group-id}")
+    private String usrSelectByGroupId;
     @Value("${usr.select-on-landing-page}")
     private String usrLandingPage;
     @Value("${usr.select-all-trainers-by-id}")
@@ -65,6 +67,8 @@ public class SqlQueriesProperties {
     private String groupSelectNumberOfEmployees;
     @Value("${group.select-by-employee}")
     private String groupSelectByEmployee;
+    @Value("${group.select-by-trainer-id}")
+    private String groupSelectByTrainerId;
 
 
     @Value("${level.select-all}")
@@ -92,6 +96,7 @@ public class SqlQueriesProperties {
     private String absenceReasonDelete;
     @Value("${absence_reason.insert}")
     private String absenceReasonInsert;
+
 
 
     String getUsrSelectAll() {
@@ -332,6 +337,22 @@ public class SqlQueriesProperties {
 
     void setGroupSelectNumberOfEmployees(String groupSelectNumberOfEmployees) {
         this.groupSelectNumberOfEmployees = groupSelectNumberOfEmployees;
+    }
+
+    public String getUsrSelectByGroupId() {
+        return usrSelectByGroupId;
+    }
+
+    public void setUsrSelectByGroupId(String usrSelectByGroupId) {
+        this.usrSelectByGroupId = usrSelectByGroupId;
+    }
+
+    public String getGroupSelectByTrainerId() {
+        return groupSelectByTrainerId;
+    }
+
+    public void setGroupSelectByTrainerId(String groupSelectByTrainerId) {
+        this.groupSelectByTrainerId = groupSelectByTrainerId;
     }
 
     public void setAbsenceReasonDelete(String absenceReasonDelete) {
