@@ -4,7 +4,7 @@ import Vuetify from 'vuetify'
 import '@babel/polyfill'
 import VueResource from 'vue-resource'
 import 'vuetify/dist/vuetify.min.css'
-import router from '../router/router'
+import router from '../router/router';
 
 
 Vue.use(VueResource);
