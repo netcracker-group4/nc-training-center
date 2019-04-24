@@ -55,7 +55,7 @@ public class CourseController {
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
                     @RequestParam(name = "startDay") String startDay,@RequestParam(name = "endDay") String endDay) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int userId = 0;
+        int userId = 1;
 //        CourseStatus status = CourseStatus.valueOf(courseStatus);
         CourseStatus status = CourseStatus.ENDED;
         boolean isLanding = Boolean.parseBoolean(isOnLandingPage);
