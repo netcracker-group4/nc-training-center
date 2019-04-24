@@ -30,7 +30,7 @@ const routes = [
     {path: '/admincourses', component: AdminCourses},
     {path: '/coursecreate', component: CreateCourse},
     {path: '/userpage', component: AllUsersPage},
-    {path: '/userpage/:id', component: UserPage}
+    {path: '/userpage/:id', component: UserPage},
     {path: '/attendance', component: AttendancePage},
     {path: '/absencereasons', component: AbsenceReasons}
 ];
