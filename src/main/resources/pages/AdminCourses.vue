@@ -73,24 +73,28 @@
             });
     },
     methods: {
-    search(){
+        search(){
 
-    },
-    deleteCourse(courseId){
-        if(confirm("Are you shure you want to delete "+this.coursesAndQuantities[courseId].course.name)){
-            axios.delete('http://localhost:8080/getcourses/'+courseId)
-                .catch(function (error) {
-                    console.log(error);
-                });
+        },
+        deleteCourse(courseId){
+            alert(courseId);
+            if(confirm("Are you shure you want to delete "+this.findCourseById(courseId).name)){
+                axios.delete('http://localhost:8080/getcourses/'+courseId)
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        },
+        findCourseById(id){
+            return this.coursesAndQuantities.find(c => c.course.id===id).course;
+        },
+        update(courseId){
+            this.$router.push('/courses/'+ courseId);
+        },
+        createCourse(){
+            this.$router.push('/coursecreate');
         }
-    },
-    update(courseId){
-        this.$router.push('/courseupdate/'+ courseId);
-    },
-    createCourse(){
-        this.$router.push('/coursecreate');
     }
-}
 }
 </script>
 
