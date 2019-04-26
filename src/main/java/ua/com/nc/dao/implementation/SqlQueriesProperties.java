@@ -30,8 +30,10 @@ public class SqlQueriesProperties {
     private String usrSelectAllTrainersById;
     @Value("${usr.select-manager-by-id}")
     private String usrSelectManagerById;
-    @Value("usr.update-landing-page")
+    @Value("${usr.update-landing-page}")
     private String usrUpdateLandingPage;
+    @Value("${usr.select-ungrouped-by-course-id}")
+    private String usrSelectUngroupedByCourseId;
 
 
     @Value("${course.select-all}")
@@ -72,6 +74,23 @@ public class SqlQueriesProperties {
     private String groupSelectByEmployee;
     @Value("${group.select-by-trainer-id}")
     private String groupSelectByTrainerId;
+
+
+    //
+    @Value("${usr_group.delete-all-for-group}")
+    private String userGroupDeleteForGroup;
+    @Value("${usr_group.select-by-usr-and-course}")
+    private String userGroupSelectByUsrAndCourse;
+    @Value("${usr_group.insert}")
+    private String userGroupInsert;
+    @Value("${usr_group.update}")
+    private String userGroupUpdate;
+    @Value("${usr_group.select-by-group}")
+    private String userGroupSelectByGroup;
+
+    @Value("${usr_group.select-by-usr-and-group}")
+    private String userGroupSelectAttendanceByUsrAndGroup;
+
 
 
     @Value("${level.select-all}")
@@ -159,14 +178,21 @@ public class SqlQueriesProperties {
         this.usrInsert = usrInsert;
     }
 
-    String getUsrLandingPage() { return usrLandingPage; }
+    String getUsrLandingPage() {
+        return usrLandingPage;
+    }
 
-    void setUsrLandingPage(String usrLandingPage) { this.usrLandingPage = usrLandingPage; }
+    void setUsrLandingPage(String usrLandingPage) {
+        this.usrLandingPage = usrLandingPage;
+    }
 
-    String getUsrUpdateLandingPage() { return usrUpdateLandingPage; }
+    String getUsrUpdateLandingPage() {
+        return usrUpdateLandingPage;
+    }
 
-    void setUsrUpdateLandingPage(String usrUpdateLandingPage) { this.usrUpdateLandingPage = usrUpdateLandingPage; }
-
+    void setUsrUpdateLandingPage(String usrUpdateLandingPage) {
+        this.usrUpdateLandingPage = usrUpdateLandingPage;
+    }
 
 
     String getCourseSelectAll() {
@@ -209,14 +235,30 @@ public class SqlQueriesProperties {
         this.courseInsert = courseInsert;
     }
 
-    String getCourseLandingPage() { return courseLandingPage; }
+    String getCourseLandingPage() {
+        return courseLandingPage;
+    }
 
-    void setCourseLandingPage(String courseLandingPage) { this.courseLandingPage = courseLandingPage; }
+    void setCourseLandingPage(String courseLandingPage) {
+        this.courseLandingPage = courseLandingPage;
+    }
 
-    String getCourseUpdateLandingPage () { return courseUpdateLandingPage; }
+    String getCourseUpdateLandingPage() {
+        return courseUpdateLandingPage;
+    }
 
-    void setCourseUpdateLandingPage (String updateDropFromLandingPage) { this.courseUpdateLandingPage = updateDropFromLandingPage; }
+    void setCourseUpdateLandingPage(String updateDropFromLandingPage) {
+        this.courseUpdateLandingPage = updateDropFromLandingPage;
+    }
 
+
+    public String getUserGroupSelectAttendanceByUsrAndGroup() {
+        return userGroupSelectAttendanceByUsrAndGroup;
+    }
+
+    public void setUserGroupSelectAttendanceByUsrAndGroup(String userGroupSelectAttendanceByUsrAndGroup) {
+        this.userGroupSelectAttendanceByUsrAndGroup = userGroupSelectAttendanceByUsrAndGroup;
+    }
 
     String getGroupeSelectAll() {
         return courseSelectAll;
@@ -227,37 +269,38 @@ public class SqlQueriesProperties {
     }
 
     String getGroupSelectById() {
-        return courseSelectById;
+        return groupSelectById;
     }
 
-    void setGroupSelectById(String courseSelectById) {
-        this.courseSelectById = courseSelectById;
+    public void setGroupSelectById(String groupSelectById) {
+        this.groupSelectById = groupSelectById;
     }
 
-    String getGroupUpdate() {
-        return courseUpdate;
+    public String getGroupUpdate() {
+        return groupUpdate;
     }
 
-    void setGroupUpdate(String courseUpdate) {
-        this.courseUpdate = courseUpdate;
+    public void setGroupUpdate(String groupUpdate) {
+        this.groupUpdate = groupUpdate;
     }
 
-    String getGroupDelete() {
-        return courseDelete;
+    public String getGroupDelete() {
+        return groupDelete;
     }
 
-    void setGroupDelete(String courseDelete) {
-        this.courseDelete = courseDelete;
+    public void setGroupDelete(String groupDelete) {
+        this.groupDelete = groupDelete;
     }
 
-    String getGroupInsert() {
-        return courseInsert;
+    public String getGroupInsert() {
+        return groupInsert;
     }
 
-    void setGroupInsert(String courseInsert) {
-        this.courseInsert = courseInsert;
-    }
 
+
+    public void setGroupInsert(String groupInsert) {
+        this.groupInsert = groupInsert;
+    }
 
     String getUsrSelectAllTrainers() {
         return usrSelectAllTrainers;
@@ -283,7 +326,10 @@ public class SqlQueriesProperties {
     String getLevelSelectById() {
         return levelSelectById;
     }
-    String getLevelSelectByName(){ return levelSelectByName;}
+
+    String getLevelSelectByName() {
+        return levelSelectByName;
+    }
 
     void setLevelSelectById(String levelSelectById) {
         this.levelSelectById = levelSelectById;
@@ -469,5 +515,55 @@ public class SqlQueriesProperties {
 
     public void setSuitabilitySelectAll(String suitabilitySelectAll) {
         this.suitabilitySelectAll = suitabilitySelectAll;
+    }
+
+
+    public String getUsrSelectUngroupedByCourseId() {
+        return usrSelectUngroupedByCourseId;
+    }
+
+    public void setUsrSelectUngroupedByCourseId(String usrSelectUngroupedByCourseId) {
+        this.usrSelectUngroupedByCourseId = usrSelectUngroupedByCourseId;
+    }
+
+
+    public String getUserGroupDeleteForGroup() {
+        return userGroupDeleteForGroup;
+    }
+
+    public void setUserGroupDeleteForGroup(String userGroupDeleteForGroup) {
+        this.userGroupDeleteForGroup = userGroupDeleteForGroup;
+    }
+
+    public String getUserGroupSelectByUsrAndCourse() {
+        return userGroupSelectByUsrAndCourse;
+    }
+
+    public void setUserGroupSelectByUsrAndCourse(String userGroupSelectByUsrAndCourse) {
+        this.userGroupSelectByUsrAndCourse = userGroupSelectByUsrAndCourse;
+    }
+
+    public String getUserGroupInsert() {
+        return userGroupInsert;
+    }
+
+    public void setUserGroupInsert(String userGroupInsert) {
+        this.userGroupInsert = userGroupInsert;
+    }
+
+    public String getUserGroupUpdate() {
+        return userGroupUpdate;
+    }
+
+    public void setUserGroupUpdate(String userGroupUpdate) {
+        this.userGroupUpdate = userGroupUpdate;
+    }
+
+    public String getUserGroupSelectByGroup() {
+        return userGroupSelectByGroup;
+    }
+
+    public void setUserGroupSelectByGroup(String userGroupSelectByGroup) {
+        this.userGroupSelectByGroup = userGroupSelectByGroup;
     }
 }

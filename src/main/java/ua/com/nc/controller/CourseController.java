@@ -6,18 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.implementation.CourseDao;
-import ua.com.nc.dao.implementation.LevelDao;
 import ua.com.nc.domain.Course;
-import ua.com.nc.domain.CourseStatus;
-import ua.com.nc.domain.Level;
 import ua.com.nc.service.CourseService;
-
-import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Stream;
 
 @Log4j
 @Controller
@@ -72,10 +62,16 @@ public class CourseController {
                 imageUrl, isOnLandingPage, desc, startDay, endDay);
         courseDao.update(course);
     }
-    @RequestMapping(value = {"/{id}/desired"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/{id}/desired/ungrouped"}, method = RequestMethod.GET)
     @ResponseBody
-    public String getDesiredScheduleForCourse(@PathVariable("id") String id) throws Exception {
-        return service.getDesiredScheduleForCourse(Integer.parseInt(id));
+    public String getDesiredScheduleForUngroupedStudentsForCourse(@PathVariable("id") String id) throws Exception {
+        return service.getDesiredScheduleForUngroupedStudentsOfCourse(Integer.parseInt(id));
+    }
+
+    @RequestMapping(value = {"/{id}/desired/grouped"}, method = RequestMethod.GET)
+    @ResponseBody
+    public String getDesiredScheduleForFormedGroupsForCourse(@PathVariable("id") String id) throws Exception {
+        return service.getDesiredScheduleForFormedGroupsForCourse(Integer.parseInt(id));
     }
 
     @RequestMapping(value = {"/desired/day-intervals"}, method = RequestMethod.GET)

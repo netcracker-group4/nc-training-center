@@ -11,6 +11,9 @@ public class ScheduleForInterval {
     private int end;
     String[] colorsForDays = new String[7];
 
+    public ScheduleForInterval() {
+    }
+
     public ScheduleForInterval(int start, int end, List<ParsedSchedule> parsedScheduleList)  {
         List<ParsedSchedule> forThisInterval = getForInterval(start, parsedScheduleList);
         this.start = start;
@@ -32,8 +35,6 @@ public class ScheduleForInterval {
             }
         }
         result.sort((a, b)-> b.getDayOfWeek().getValue() - a.getDayOfWeek().getValue());
-        System.out.println("result");
-        System.out.println(result);
         return result;
     }
 }

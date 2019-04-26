@@ -89,18 +89,9 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
 
     @Override
     public List<Group> getAllGroupsOfCourse(int courseId) {
-        List<Group> list;
         String sql = sqlQueriesProperties.getGroupSelectByCourse();
         log(sql, "find all by level");
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, courseId);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new PersistException(e);
-        }
-        return list;
+        return getFromQueryWithId(courseId, sql);
     }
 
     @Override
@@ -120,9 +111,13 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
 
     @Override
     public List<Group> getAllGroupsByStudent(int studentId) {
-        List<Group> groups;
         String sql = sqlQueriesProperties.getGroupSelectByEmployee();
         log(sql, "select all groups");
+        return getFromQueryWithId(studentId, sql);
+    }
+
+    private List<Group> getFromQueryWithId(int studentId, String sql) {
+        List<Group> groups;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, studentId);
             ResultSet rs = statement.executeQuery();
@@ -135,16 +130,8 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
     }
 
     public List<Group> getGroupByTrainerId(Integer id) {
-        List<Group> groups;
         String sql = sqlQueriesProperties.getGroupSelectByTrainerId();
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            groups = parseResultSet(rs);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new PersistException(e);
-        }
-        return groups;
+        return getFromQueryWithId(id, sql);
     }
+
 }

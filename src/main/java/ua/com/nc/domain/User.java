@@ -30,7 +30,7 @@ public class User extends Entity<Integer> implements UserDetails {
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setManagerId(managerId);
-        this.setImageUrl(imageUrl);
+        this.setImageUrl(image);
         this.setActive(isActive);
     }
 
@@ -40,7 +40,7 @@ public class User extends Entity<Integer> implements UserDetails {
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setManagerId(managerId);
-        this.setImageUrl(imageUrl);
+        this.setImageUrl(image);
         this.setActive(isActive);
     }
 

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
+import ua.com.nc.domain.schedule.GroupSchedule;
 import ua.com.nc.domain.schedule.ParsedSchedule;
 import ua.com.nc.domain.schedule.ScheduleForUser;
 import ua.com.nc.service.CourseService;
@@ -27,6 +28,10 @@ public class CourseServiceImpl implements CourseService {
     private ISuitabilityDao iSuitabilityDao;
     @Autowired
     private IUserDao iUserDao;
+    @Autowired
+    private IGroupDao iGroupDao;
+@Autowired
+    private IUserGroupDao iUserGroupDao;
 
     //TODO Create all implementations for this bean, then uncomment 1st line of add(...) mthd
     private ICourseStatus statusDao;
@@ -38,14 +43,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void update(Course course){
+    public void update(Course course) {
         courseDao.update(course);
         courseDao.commit();
     }
 
     @Override
     public Course stringToObjCourse(String name, String user, String level, String courseStatus,
-                    String imageUrl, String isOnLandingPage, String desc, String startDay,String endDay){
+                                    String imageUrl, String isOnLandingPage, String desc, String startDay, String endDay) {
         //int statusId = statusDao.getIdByName(courseStatus.getName());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         int userId = 1;
@@ -64,8 +69,13 @@ public class CourseServiceImpl implements CourseService {
         System.err.println(level.trim());
         int lvl = levelDao.getIdByName(level.trim());
 
-        return new Course(name,lvl,statusId,userId,imageUrl,
-                new java.sql.Date(startingDay.getTime()),new java.sql.Date(endingDay.getTime()),isLanding,desc);
+        return new Course(name, lvl, statusId, userId, imageUrl,
+                new java.sql.Date(startingDay.getTime()), new java.sql.Date(endingDay.getTime()), isLanding, desc);
+    }
+
+    @Override
+    public void add(String name, int userId, String lvl, CourseStatus courseStatus, String imageUrl, boolean isLanding, String desc, Date startingDay, Date endingDay) {
+
     }
 
     private int startOfDay = 8;
@@ -73,16 +83,34 @@ public class CourseServiceImpl implements CourseService {
 
 
     @Override
-    public String getDesiredScheduleForCourse(int courseId) throws Exception {
+    public String getDesiredScheduleForUngroupedStudentsOfCourse(int courseId) throws Exception {
         List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getAllForCourse(courseId);
         System.out.println(desiredScheduleList);
         List<ScheduleForUser> scheduleForUsers = new ArrayList<>();
-        for (User user : iUserDao.getAllForCourse(courseId)) {
+        for (User user : iUserDao.getUngroupedByCourse(courseId)) {
             scheduleForUsers.add(new ScheduleForUser(user,
                     parseSchedules(desiredScheduleList, iSuitabilityDao.getAll()),
                     startOfDay, endOfDay));
         }
         return new Gson().toJson(scheduleForUsers);
+    }
+
+    @Override
+    public String getDesiredScheduleForFormedGroupsForCourse(int courseId) throws Exception {
+        List<GroupSchedule> scheduleForGroupsForCourse = new ArrayList<>();
+        List<ParsedSchedule> desiredScheduleList = parseSchedules(
+                        desiredScheduleDao.getAllForCourse(courseId),
+                        iSuitabilityDao.getAll());
+        List<Group> allGroupsForCourse = iGroupDao.getAllGroupsOfCourse(courseId);
+        for (Group group : allGroupsForCourse) {
+            List<ScheduleForUser> scheduleForUsersInGroup = new ArrayList<>();
+            for (User user : iUserDao.getByGroupId(group.getId())) {
+                scheduleForUsersInGroup.add(new ScheduleForUser(user,
+                        desiredScheduleList, startOfDay, endOfDay));
+            }
+            scheduleForGroupsForCourse.add(new GroupSchedule(group.getId(), group.getTitle(),scheduleForUsersInGroup, courseId));
+        }
+        return new Gson().toJson(scheduleForGroupsForCourse);
     }
 
 

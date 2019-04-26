@@ -1,8 +1,6 @@
 package ua.com.nc.domain.schedule;
 
 import lombok.Data;
-import ua.com.nc.domain.DesiredSchedule;
-import ua.com.nc.domain.Suitability;
 import ua.com.nc.domain.User;
 
 import java.util.ArrayList;
@@ -14,6 +12,8 @@ public class ScheduleForUser {
     private String userName;
     private List<ScheduleForInterval> scheduleForIntervals = new ArrayList<>();
 
+    public ScheduleForUser() {
+    }
 
     public ScheduleForUser(User user, List<ParsedSchedule> desiredSchedules, int start, double end){
         List<ParsedSchedule> parsedSchedules = getForUser(user.getId(), desiredSchedules);

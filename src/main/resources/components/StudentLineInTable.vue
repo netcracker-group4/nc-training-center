@@ -5,65 +5,97 @@
                     v-for="n in days"
                     :key="n"
             >
-               {{ n }}
+                {{ n }}
             </v-tab>
         </v-tabs>
 
         <br/>
         <br/>
         <br/>
-        <h2>All Students for a course " {{this.course.name}} "</h2>
-        <div class="col-12">
-            <table class="zui-table ">
-                <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col" v-bind:style="{width: '30%'}">Name</th>
-                    <th v-for="dayName in dayIntervals" scope="col">{{dayName}}</th>
-                </tr>
-                </thead>
-                <draggable v-model="allSchedules" tag="tbody" group="people">
-                    <tr v-for="item in allSchedules" :key="item.userId">
-                        <td>{{ item.userId }}</td>
-                        <td v-bind:style="{width: '30%'}">{{ item.userName }}</td>
-                        <td v-for="forInterval in item.scheduleForIntervals"
-                            v-bind:style="{backgroundColor: getColor(forInterval)}">
-                        </td>
-                    </tr>
-                </draggable>
-            </table>
-        </div>
+        <v-container fluid grid-list-md>
+            <v-layout row wrap>
+                <v-flex d-flex>
+                    <div>
+                        <h2>All ungrouped students for a course " {{this.course.name}} "</h2>
+                        <table class="zui-table ">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col" v-bind:style="{width: '30%'}">Name</th>
+                                <th v-for="dayName in dayIntervals" scope="col">{{dayName}}</th>
+                            </tr>
+                            </thead>
+                            <draggable v-model="allSchedules" tag="tbody" group="people">
+                                <tr v-for="item in allSchedules" :key="item.userId">
+                                    <td>{{ item.userId }}</td>
+                                    <td v-bind:style="{width: '30%'}">{{ item.userName }}</td>
+                                    <td v-for="forInterval in item.scheduleForIntervals"
+                                        v-bind:style="{backgroundColor: getColor(forInterval)}">
+                                    </td>
+                                </tr>
+                            </draggable>
+                        </table>
+                        <v-btn alert @click="addGroup">Add group</v-btn>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <v-btn v-if="groups.length > 0" alert @click="saveAll">Save All</v-btn>
+                    </div>
+                </v-flex>
+                <v-flex d-flex>
+                    <div>
+                        <div v-for="(group, index) in groups">
+                            <h2>Drag and drop here students for a group number {{index}}</h2>
+                            <div>
+                                <table class="zui-table ">
+                                    <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Id</th>
+                                        <th scope="col" v-bind:style="{width: '30%'}">Name</th>
+                                        <th v-for="dayName in dayIntervals" scope="col">{{dayName}}</th>
+                                    </tr>
+                                    </thead>
+                                    <draggable v-model="group.groupScheduleList" tag="tbody" group="people">
+                                        <tr v-for="item in group.groupScheduleList" :key="item.userId">
+                                            <td>{{ item.userId }}</td>
+                                            <td v-bind:style="{width: '30%'}">{{ item.userName }}</td>
+                                            <td v-for="forInterval in item.scheduleForIntervals"
+                                                v-bind:style="{backgroundColor: getColor(forInterval)}">
+                                            </td>
+                                        </tr>
+                                    </draggable>
+                                </table>
+                                <v-layout >
+                                    <v-flex>
+                                        <v-text-field v-model="group.name"
+                                                      placeholder="Name"
+                                                      label="Group Name"
+                                                      required
+                                        ></v-text-field>
+                                    </v-flex>
+                                    <v-spacer></v-spacer>
+                                    <v-flex>
+                                        <v-btn alert @click="saveGroup(index)">Save Group</v-btn>
+                                    </v-flex>
+                                    <v-flex>
+                                        <v-btn alert @click="deleteGroup(index)">Delete Group</v-btn>
+                                    </v-flex>
+                                </v-layout>
 
-
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <h2>Drag and drop here students for a group</h2>
-        <div class="col-12">
-            <table class="zui-table ">
-                <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col" v-bind:style="{width: '30%'}">Name</th>
-                    <th v-for="dayName in dayIntervals" scope="col">{{dayName}}</th>
-                </tr>
-                </thead>
-                <draggable v-model="list2" tag="tbody" group="people">
-                    <tr v-for="item in list2" :key="item.userId">
-                        <td>{{ item.userId }}</td>
-                        <td v-bind:style="{width: '30%'}">{{ item.userName }}</td>
-                        <td v-for="forInterval in item.scheduleForIntervals"
-                            v-bind:style="{backgroundColor: getColor(forInterval)}">
-                        </td>
-                    </tr>
-                </draggable>
-            </table>
-        </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                        </div>
+                    </div>
+                </v-flex>
+            </v-layout>
+        </v-container>
     </div>
 </template>
 
 <script>
+    // noinspection NpmUsedModulesInstalled
     import draggable from "vuedraggable";
     import axios from 'axios';
 
@@ -88,25 +120,72 @@
                     "SUNDAY"
                 ],
                 dayIntervals: [],
-                allSchedules: []
+                allSchedules: [],
+                groups: []
             }
 
         },
         methods: {
-            addGroup() {
-                this.groups.push({name: '', students: []});
-            },
-            getColor(forInterval){
-                console.log(forInterval);
-                console.log(forInterval[this.currentDay]);
+            getColor(forInterval) {
                 return forInterval.colorsForDays[this.currentDay];
+            },
+            addGroup() {
+                this.groups.push({
+                    id: 0,
+                    name: "",
+                    courseId: this.$route.params.id,
+                    groupScheduleList: []
+                })
+            },
+            saveGroup(index) {
+                let self = this;
+                axios.post('/groups', self.groups[index])
+                    .then(function (response) {
+                        self.groups[index].id = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            deleteGroup(index) {
+                let self = this;
+                axios.delete('/groups/' + self.groups[index].id)
+                    .then(function (response) {
+                        self.allSchedules = self.allSchedules.concat(self.groups[index].groupScheduleList);
+                        self.groups.splice(index, 1);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+            },
+            saveAll() {
+                console.log("saving all groups");
+                let self = this;
+                for (let i = 0; i < this.groups.length; i++) {
+                    axios.post('/groups', self.groups[i])
+                        .then(function (response) {
+                            console.log(response);
+                            self.groups[i].id = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
             }
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired')
+            axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/ungrouped')
                 .then(function (response) {
                     self.allSchedules = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/grouped')
+                .then(function (response) {
+                    self.groups = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -118,7 +197,7 @@
                 .catch(function (error) {
                     console.log(error);
                 });
-         axios.get('http://localhost:8080/getcourses/' + self.$route.params.id)
+            axios.get('http://localhost:8080/getcourses/' + self.$route.params.id)
                 .then(function (response) {
                     self.course = response.data;
                 })
@@ -130,6 +209,7 @@
 </script>
 
 <style>
+
 
     .zui-table {
         border: solid 1px #e6e4ee;

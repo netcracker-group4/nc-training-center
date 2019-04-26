@@ -14,6 +14,7 @@ public interface CourseService {
                              String imageUrl, String isOnLandingPage, String desc, String startDay, String endDay);
     void add(String name, int userId, String lvl, CourseStatus courseStatus,
              String imageUrl, boolean isLanding, String desc, Date startingDay, Date endingDay);
-    String getDesiredScheduleForCourse(int courseId) throws Exception;
+    String getDesiredScheduleForUngroupedStudentsOfCourse(int courseId) throws Exception;
+    String getDesiredScheduleForFormedGroupsForCourse(int courseId) throws Exception;
     String getDayIntervals();
 }
