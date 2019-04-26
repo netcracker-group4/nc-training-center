@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 @Log4j
 @Controller
 @CrossOrigin(origins = "http://localhost:8000")
-@RequestMapping("/MainPage")
+@RequestMapping("/main-page")
 public class LandingPageController {
 
     @Autowired

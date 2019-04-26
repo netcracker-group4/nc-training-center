@@ -8,15 +8,17 @@
             <v-flex xs12>
                 <template>
                   <v-card>
-                        <div class = "text">
-                        Courses on landing page:
-                        </div>
+                    <div class = "text">
+                    Courses on landing page:
+                  </div>
                   </v-card>
                   <v-carousel>
                     <v-carousel-item
                       v-for="crs in courses"
                       v-bind:src="crs.imageUrl"
                       :key="crs.id">
+
+
                       <div class = "name">
                         {{crs.name}}
                       </div>
@@ -65,14 +67,14 @@
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/MainPage/courses-on-landing-page')
+            axios.get('http://localhost:8080/main-page/courses-on-landing-page')
                             .then(function (response) {
                                 self.courses = response.data;
                             })
                             .catch(function (error) {
                                 console.log(error);
                             });
-            axios.get('http://localhost:8080/MainPage/trainers-on-landing-page')
+            axios.get('http://localhost:8080/main-page/trainers-on-landing-page')
                             .then(function (response) {
                                 self.trainers = response.data;
                             })
@@ -92,9 +94,19 @@
 
 <style>
     .name{
-    }
+    position:static;
+    up:5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 2em;
+      }
     .descr{
+    background-repeat:x;
     position:absolute;
     bottom:50px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 1em;
+    padding: 5px;
     }
 </style>
