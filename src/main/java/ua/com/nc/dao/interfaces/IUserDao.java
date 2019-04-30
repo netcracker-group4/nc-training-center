@@ -7,6 +7,7 @@ import java.util.List;
 public interface IUserDao extends GenericDao<User, Integer> {
     User getByEmail(String email);
     List<User> getAllTrainers ();
+    List<User> getAllManagers();
     List<User> getLandingPageTrainers ();
     User getManagerById(Integer id);
     List<User> getAllTrainersById(Integer id);
@@ -14,4 +15,6 @@ public interface IUserDao extends GenericDao<User, Integer> {
     List<User> getUngroupedByCourse(Integer id);
     void updateTrainerLandingPage (int id, boolean isOnLandingPage);
     List<User> getAllForCourse(int courseId);
+    void updateUserByAdmin(User user);
+    void updateActive(User user);
 }

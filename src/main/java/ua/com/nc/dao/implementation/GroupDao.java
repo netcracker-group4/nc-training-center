@@ -37,7 +37,7 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
 
     @Override
     protected String getSelectQuery() {
-        return sqlQueriesProperties.getGroupeSelectAll();
+        return sqlQueriesProperties.getGroupSelectAll();
     }
 
     @Override

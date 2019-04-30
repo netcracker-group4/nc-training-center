@@ -3,7 +3,9 @@ package ua.com.nc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.domain.schedule.GroupSchedule;
@@ -19,6 +21,8 @@ public class GroupController {
 
     @Autowired
     private GroupsService  groupsService;
+
+
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -37,6 +41,11 @@ public class GroupController {
     public String  deleteGroup(@PathVariable String id) {
         groupsService.delete(Integer.parseInt(id));
         return "Group deleted";
+    }
+
+    @RequestMapping(value = "/get-all", method = RequestMethod.GET)
+    public ResponseEntity<?> getAll() {
+        return new ResponseEntity<>(groupsService.getAll(), HttpStatus.OK);
     }
 
 }

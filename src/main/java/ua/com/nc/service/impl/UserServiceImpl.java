@@ -72,6 +72,7 @@ public class UserServiceImpl implements UserService {
         DtoTeacherAndManager dtoManager = null;
         if (manager != null) {
             dtoManager = new DtoTeacherAndManager(
+                    manager.getId(),
                     manager.getFirstName(),
                     manager.getLastName()
             );
@@ -81,6 +82,7 @@ public class UserServiceImpl implements UserService {
         if (teachers != null && teachers.size() != 0) {
             for (User teacher : teachers) {
                 dtoTeachers.add(new DtoTeacherAndManager(
+                        teacher.getId(),
                         teacher.getFirstName(),
                         teacher.getLastName()
                 ));
@@ -90,7 +92,7 @@ public class UserServiceImpl implements UserService {
         List<DtoGroup> dtoGroups = new ArrayList<>();
         if (groups != null && groups.size() != 0) {
             for (Group group : groups) {
-                dtoGroups.add(new DtoGroup(group.getTitle()));
+                dtoGroups.add(new DtoGroup(group.getId(), group.getTitle()));
             }
         }
 
@@ -110,6 +112,34 @@ public class UserServiceImpl implements UserService {
             );
         }
         return dtoUserProfiles;
+    }
+
+    @Override
+    public void updateUserByAdmin(DtoUserProfiles dtoUserProfiles) {
+//        userDao.updateUserByAdmin(user);
+//        userDao.commit();
+
+    }
+
+    @Override
+    public void updateActive(User user) {
+        userDao.updateActive(user);
+        userDao.commit();
+    }
+
+    @Override
+    public List<DtoTeacherAndManager> getAllManagers() {
+        List<DtoTeacherAndManager> dtoManagers = new ArrayList<>();
+        List<User> managers = userDao.getAllManagers();
+
+        for (User manager : managers) {
+            dtoManagers.add(new DtoTeacherAndManager(
+                    manager.getId(),
+                    manager.getFirstName(),
+                    manager.getLastName()
+            ));
+        }
+        return dtoManagers;
     }
 
     @Override

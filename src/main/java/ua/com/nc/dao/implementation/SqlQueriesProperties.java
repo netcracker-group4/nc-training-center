@@ -22,6 +22,8 @@ public class SqlQueriesProperties {
     private String usrInsert;
     @Value("${usr.select-all-trainers}")
     private String usrSelectAllTrainers;
+    @Value("${usr.select-all-managers}")
+    private String usrSelectAllManagers;
     @Value("${usr.select-by-group-id}")
     private String usrSelectByGroupId;
     @Value("${usr.select-on-landing-page}")
@@ -32,6 +34,10 @@ public class SqlQueriesProperties {
     private String usrSelectManagerById;
     @Value("${usr.update-landing-page}")
     private String usrUpdateLandingPage;
+    @Value("${usr.update-usr-by-admin}")
+    private String usrUpdateUsrByAdmin;
+    @Value("${usr.update-change-active}")
+    private String usrUpdateChangeActive;
     @Value("${usr.select-ungrouped-by-course-id}")
     private String usrSelectUngroupedByCourseId;
 
@@ -302,6 +308,7 @@ public class SqlQueriesProperties {
         this.groupInsert = groupInsert;
     }
 
+
     String getUsrSelectAllTrainers() {
         return usrSelectAllTrainers;
     }
@@ -565,5 +572,29 @@ public class SqlQueriesProperties {
 
     public void setUserGroupSelectByGroup(String userGroupSelectByGroup) {
         this.userGroupSelectByGroup = userGroupSelectByGroup;
+    }
+
+    public String getUsrUpdateUsrByAdmin() {
+        return usrUpdateUsrByAdmin;
+    }
+
+    public void setUsrUpdateUsrByAdmin(String usrUpdateUsrByAdmin) {
+        this.usrUpdateUsrByAdmin = usrUpdateUsrByAdmin;
+    }
+
+    public String getUsrUpdateChangeActive() {
+        return usrUpdateChangeActive;
+    }
+
+    public void setUsrUpdateChangeActive(String usrUpdateChangeActive) {
+        this.usrUpdateChangeActive = usrUpdateChangeActive;
+    }
+
+    public String getUsrSelectAllManagers() {
+        return usrSelectAllManagers;
+    }
+
+    public void setUsrSelectAllManagers(String usrSelectAllManagers) {
+        this.usrSelectAllManagers = usrSelectAllManagers;
     }
 }

@@ -8,8 +8,10 @@ import ua.com.nc.domain.Group;
 import ua.com.nc.domain.UserGroup;
 import ua.com.nc.domain.schedule.GroupSchedule;
 import ua.com.nc.domain.schedule.ScheduleForUser;
+import ua.com.nc.dto.DtoGroup;
 import ua.com.nc.service.GroupsService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -52,6 +54,17 @@ public class GroupsServiceImpl implements GroupsService {
         updateStudentsForGroup(groupSchedule, groupToInsert);
         iUserGroupDao.commit();
         return groupToInsert.getId();
+    }
+
+    @Override
+    public List<DtoGroup> getAll() {
+        List<Group> groups = iGroupDao.getAll();
+        List<DtoGroup> dtoGroups = new ArrayList<>();
+
+        for (Group group : groups) {
+            dtoGroups.add(new DtoGroup(group.getId(), group.getTitle()));
+        }
+        return dtoGroups;
     }
 
     synchronized private void updateStudentsForGroup(GroupSchedule groupSchedule, Group group) {

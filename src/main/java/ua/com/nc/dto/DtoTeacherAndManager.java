@@ -1,19 +1,25 @@
 package ua.com.nc.dto;
 
 public class DtoTeacherAndManager {
-    private String firstname;
-    private String lastname;
+    private Integer id;
+    private String firstName;
+    private String lastName;
 
-    public DtoTeacherAndManager(String firstname, String lastname) {
-        this.firstname = firstname;
-        this.lastname = lastname;
+    public DtoTeacherAndManager(Integer id, String firstName, String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public Integer getId() {
+        return id;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 }

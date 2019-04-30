@@ -16,15 +16,15 @@
                         <v-btn smal flat><span>Page</span></v-btn>
                     </td>
                     <td>
-                        <div>{{ props.item.firstname }}</div>
+                        <div>{{ props.item.firstName }}</div>
                     </td>
                     <td>
-                        <div>{{ props.item.lastname }}</div>
+                        <div>{{ props.item.lastName }}</div>
                     </td>
                     <td>
                         <div v-for="role in props.item.roles" class="role">{{ role }}</div>
                     </td>
-                    <td class="text-xs-right">{{ props.item.isActive }}</td>
+                    <td class="text-xs-right">{{ props.item.active }}<!--<img src="../img/icon/baseline_done_black_18dp.png"/>--></td>
                 </tr>
             </template>
 

@@ -142,6 +142,24 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     }
 
     @Override
+    public List<User> getAllManagers() {
+        List<User> list;
+        String sql = sqlQueriesProperties.getUsrSelectAllManagers();
+        log(sql, "select all managers");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        return list;
+    }
+
+    @Override
     public List<User> getByGroupId(Integer id) {
         List<User> users;
         String sql = sqlQueriesProperties.getUsrSelectByGroupId();
@@ -197,6 +215,35 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             return null;
         }
         return allUsersForCourse;
+    }
+
+    @Override
+    public void updateUserByAdmin(User user) {
+        String sql = sqlQueriesProperties.getUsrUpdateUsrByAdmin();
+        log (sql, "update user by admin");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setInt(3, user.getId());
+            statement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PersistException (e);
+        }
+    }
+
+    @Override
+    public void updateActive(User user) {
+        String sql = sqlQueriesProperties.getUsrUpdateChangeActive();
+        log (sql, "change active by admin");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBoolean(1, user.isActive());
+            statement.setInt(2, user.getId());
+            statement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PersistException (e);
+        }
     }
 
 
@@ -256,6 +303,8 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             throw new PersistException(e);
         }
     }
+
+
 
 
 }

@@ -8,8 +8,8 @@ import java.util.List;
 
 public class DtoUserProfiles {
     private Integer id;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String email;
     private String image;
     private List<Role> roles;
@@ -18,10 +18,13 @@ public class DtoUserProfiles {
     private List<DtoTeacherAndManager> dtoTeachers;
     private List<DtoGroup> groups;
 
-    public DtoUserProfiles(Integer id, String firstname, String lastname, String email, String image, List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager, List<DtoTeacherAndManager> dtoTeachers, List<DtoGroup> groups) {
+    public DtoUserProfiles() {
+    }
+
+    public DtoUserProfiles(Integer id, String firstName, String lastName, String email, String image, List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager, List<DtoTeacherAndManager> dtoTeachers, List<DtoGroup> groups) {
         this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.image = image;
         this.roles = roles;
@@ -35,12 +38,12 @@ public class DtoUserProfiles {
         return id;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
     public String getEmail() {

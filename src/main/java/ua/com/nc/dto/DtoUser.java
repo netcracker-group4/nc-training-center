@@ -6,15 +6,15 @@ import java.util.List;
 
 public class DtoUser {
     private Integer id;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private List<Role> roles;
     private boolean isActive;
 
-    public DtoUser(Integer id, String firstname, String lastname, List<Role> roles, boolean isActive) {
+    public DtoUser(Integer id, String firstName, String lastName, List<Role> roles, boolean isActive) {
         this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.roles = roles;
         this.isActive = isActive;
     }
@@ -23,12 +23,12 @@ public class DtoUser {
         return id;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
     public List<Role> getRoles() {
