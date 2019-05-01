@@ -18,8 +18,9 @@
                            <td class="my-link">
                                <div>{{ props.item.title }}</div>
                            </td>
-                           <td class="text-xs-right" v-if="isAdmin">
-                                <v-btn color="error" @click="delete(props.item.id)">Delete</v-btn></td>
+                           <td>
+                                <v-btn color="error" @click="deleteReason(props.item.id)">Delete</v-btn>
+                           </td>
                         </tr>
                      </template>
                    </v-data-table>
@@ -38,6 +39,7 @@
                 </v-layout>
             </v-container>
         </v-layout>
+
     </v-container>
 
 </template>
@@ -73,22 +75,26 @@
                             });
 
 
-},
+        },
         methods: {
-            delete(id){
-                            if(confirm("Are you shure you want to delete this reason ")){
-                                axios.delete('http://localhost:8080/absence-reason/'+id)
-                                    .catch(function (error) {
-                                        console.log(error);
-                                    });
-                            }
-                        },
+            deleteReason(idReason){
+                axios.delete('http://localhost:8080/absence-reason/' + idReason)
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+            },
             add(){
-                                axios.post('http://localhost:8080/absence-reason', {
-                                    title: this.title
-                                })
-                                    .then(response => alert("Absence Reason created"))
-                        }
+                let form = new FormData();
+                let request = new XMLHttpRequest();
+                request.open('POST', 'http://localhost:8080/absence-reason');
+                form.append('title', this.title);
+                request.send(form);
+                /*axios.post('http://localhost:8080/absence-reason', {
+                    title: this.title
+                })
+                    .then(response => alert("Absence Reason created"))*/
+            }
         }
     }
 

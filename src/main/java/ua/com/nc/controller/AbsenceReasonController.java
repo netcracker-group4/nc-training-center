@@ -34,6 +34,7 @@ public class AbsenceReasonController {
     @RequestMapping(method = RequestMethod.DELETE,value="/{id}")
     public void deleteCourse(@PathVariable String id){
         absenceReasonDao.delete(Integer.parseInt(id));
+        absenceReasonDao.commit();
     }
     @RequestMapping(method = RequestMethod.POST)
     public void add(@RequestParam(name = "title")String title){
