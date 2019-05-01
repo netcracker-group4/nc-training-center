@@ -7,6 +7,7 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ILessonDao;
 import ua.com.nc.domain.Lesson;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,15 +19,27 @@ import java.util.List;
 @PropertySource("classpath:sql_queries.properties")
 public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements ILessonDao {
 
+
+    @Value("${lesson.select-all}")
+    private String lessonSelectAll;
+    @Value("${lesson.select-by-id}")
+    private String lessonSelectById;
+    @Value("${lesson.insert}")
+    private String lessonInsert;
+    @Value("${lesson.update}")
+    private String lessonUpdate;
+    @Value("${lesson.delete}")
+    private String lessonDelete;
     @Value("${lesson.select-by-group-id}")
     private String selectByGroupId;
 
-    @Value(("${lesson.select-by-group-id-and-user-id}"))
+    @Value("${lesson.select-by-group-id-and-user-id}")
     private String getSelectByGroupIdAndUserId;
 
     public LessonDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                   @Value("${spring.datasource.username}") String DATABASE_USER,
-                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD, SqlQueriesProperties sqlQueriesProperties) throws PersistException {
+                     @Value("${spring.datasource.username}") String DATABASE_USER,
+                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD, SqlQueriesProperties sqlQueriesProperties)
+            throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
         setSqlQueriesProperties(sqlQueriesProperties);
     }
@@ -40,42 +53,50 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
 
     @Override
     protected String getSelectByIdQuery() {
-        return null;
+        return lessonSelectById;
     }
 
     @Override
     protected String getSelectQuery() {
-        return null;
+        return lessonSelectAll;
     }
 
     @Override
     protected String getInsertQuery() {
-        return null;
+        return lessonInsert;
     }
 
     @Override
     protected String getDeleteQuery() {
-        return null;
+        return lessonDelete;
     }
 
     @Override
     protected String getUpdateQuery() {
-        return null;
+        return lessonUpdate;
     }
 
     @Override
     protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-
+        statement.setInt(1, id);
     }
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Lesson entity) throws SQLException {
+        setAllFields(statement, entity);
+    }
 
+    private void setAllFields(PreparedStatement statement, Lesson entity) throws SQLException {
+        statement.setInt(1, entity.getGroupId());
+        statement.setString(2, entity.getTopic());
+        statement.setInt(3, entity.getTrainerId());
+        statement.setDate(4, entity.getTimeDate());
     }
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Lesson entity) throws SQLException {
-
+        setAllFields(statement, entity);
+        statement.setInt(5, entity.getId());
     }
 
     @Override
@@ -86,7 +107,7 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
             Integer groupId = rs.getInt("group_id");
             String topic = rs.getString("topic");
             Integer trainerId = rs.getInt("trainer_id");
-            OffsetDateTime timeDate = rs.getObject("time_date", OffsetDateTime.class);
+            Date timeDate = rs.getObject("time_date", Date.class);
             String absenceReason = rs.getString("absence_reason");
             String absenceStatus = rs.getString("absence_status");
             Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate, absenceReason, absenceStatus);

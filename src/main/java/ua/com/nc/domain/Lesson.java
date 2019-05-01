@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.time.OffsetDateTime;
+import java.sql.Date;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -15,11 +16,11 @@ public class Lesson extends Entity<Integer> {
     private Integer groupId;
     private String topic;
     private Integer trainerId;
-    private OffsetDateTime timeDate;
+    private Date timeDate;
     private String absenceReason;
     private String absenceStatus;
 
-    public Lesson(Integer id, Integer groupId, String topic, Integer trainerId, OffsetDateTime timeDate) {
+    public Lesson(Integer id, Integer groupId, String topic, Integer trainerId, Date timeDate) {
         super(id);
         this.groupId = groupId;
         this.topic = topic;
@@ -27,7 +28,7 @@ public class Lesson extends Entity<Integer> {
         this.timeDate = timeDate;
     }
 
-    public Lesson(Integer id, Integer groupId, String topic, Integer trainerId, OffsetDateTime timeDate, String absenceReason, String absenceStatus) {
+    public Lesson(Integer id, Integer groupId, String topic, Integer trainerId, Date timeDate, String absenceReason, String absenceStatus) {
         super(id);
         this.groupId = groupId;
         this.topic = topic;
