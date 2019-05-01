@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ICourseDao;
@@ -11,13 +12,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@PropertySource("classpath:sql_queries.properties")
 public class CourseDao extends GenericAbstractDao<Course, Integer> implements ICourseDao {
+
+    @Value("${course.select-all}")
+    private String courseSelectAll;
+    @Value("${course.select-by-id}")
+    private String courseSelectById;
+    @Value("${course.select-by-level}")
+    private String courseSelectByLevel;
+    @Value("${course.select-by-trainer}")
+    private String courseSelectByTrainer;
+    @Value("${course.update}")
+    private String courseUpdate;
+    @Value("${course.delete}")
+    private String courseDelete;
+    @Value("${course.insert}")
+    private String courseInsert;
+    @Value("${course.select-on-landing-page}")
+    private String courseLandingPage;
+    @Value("${course.update-landing-page}")
+    private String courseUpdateLandingPage;
 
     public CourseDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
-                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD, SqlQueriesProperties sqlQueriesProperties) throws PersistException {
+                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-        setSqlQueriesProperties(sqlQueriesProperties);
     }
 
     @Override
@@ -29,27 +49,27 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
 
     @Override
     protected String getSelectByIdQuery() {
-        return sqlQueriesProperties.getCourseSelectById();
+        return courseSelectById;
     }
 
     @Override
     protected String getSelectQuery() {
-        return sqlQueriesProperties.getCourseSelectAll();
+        return courseSelectAll;
     }
 
     @Override
     protected String getInsertQuery() {
-        return sqlQueriesProperties.getCourseInsert();
+        return courseInsert;
     }
 
     @Override
     protected String getDeleteQuery() {
-        return sqlQueriesProperties.getCourseDelete();
+        return courseDelete;
     }
 
     @Override
     protected String getUpdateQuery() {
-        return sqlQueriesProperties.getCourseUpdate();
+        return courseUpdate;
     }
 
     @Override
@@ -103,7 +123,7 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
 
     @Override
     public List<Course> getAllByLevel(int levelId) {
-        String sql = sqlQueriesProperties.getCourseSelectByLevel();
+        String sql = courseSelectByLevel;
         log(sql, "find all by level");
         return getFromQueryWithId(levelId, sql);
     }
@@ -123,7 +143,7 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
 
     @Override
     public List<Course> getAllByTrainer(int trainerId) {
-        String sql = sqlQueriesProperties.getCourseSelectByTrainer();
+        String sql = courseSelectByTrainer;
         log(sql, "find all by trainer");
         return getFromQueryWithId(trainerId, sql);
     }
@@ -131,7 +151,7 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
     @Override
     public List<Course> getLandingPageCourses () {
         List <Course> landingPageCourses;
-        String sql = sqlQueriesProperties.getCourseLandingPage();
+        String sql = courseLandingPage;
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             ResultSet rs = statement.executeQuery();
             landingPageCourses = parseResultSet(rs);
@@ -145,7 +165,7 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
 
     @Override
     public void updateCourseLandingPage (int id, boolean isOnLandingPage) {
-        String sql = sqlQueriesProperties.getCourseUpdateLandingPage();
+        String sql = courseUpdateLandingPage;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, isOnLandingPage);
             statement.setInt(2, id);
