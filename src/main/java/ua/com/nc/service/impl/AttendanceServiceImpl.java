@@ -12,6 +12,7 @@ import ua.com.nc.domain.User;
 import ua.com.nc.dto.AttendanceDto;
 import ua.com.nc.service.AttendanceService;
 
+import java.sql.Date;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +79,7 @@ public class AttendanceServiceImpl implements AttendanceService {
        public Integer groupId;
        public String topic;
        public Integer trainerId;
-       public OffsetDateTime timeDate;
+       public Date timeDate;
        public String absenceReason;
        public String absenceStatus;
 
