@@ -2,6 +2,7 @@ package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.PropertySource;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IUserDao;
 import ua.com.nc.domain.User;
@@ -14,15 +15,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@PropertySource("classpath:sql_queries.properties")
 public class UserDao extends GenericAbstractDao<User, Integer> implements IUserDao {
 
     private final String USER_ID = "ID";
 
+    @Value("${usr.select-all}")
+    private String usrSelectAll;
+    @Value("${usr.select-by-id}")
+    private String usrSelectById;
+    @Value("${usr.select-by-email}")
+    private String usrSelectByEmail;
+    @Value("${usr.update}")
+    private String usrUpdate;
+    @Value("${usr.delete}")
+    private String usrDelete;
+    @Value("${usr.insert}")
+    private String usrInsert;
+    @Value("${usr.select-all-trainers}")
+    private String usrSelectAllTrainers;
+    @Value("${usr.select-all-managers}")
+    private String usrSelectAllManagers;
+    @Value("${usr.select-by-group-id}")
+    private String usrSelectByGroupId;
+    @Value("${usr.select-on-landing-page}")
+    private String usrLandingPage;
+    @Value("${usr.select-all-trainers-by-id}")
+    private String usrSelectAllTrainersById;
+    @Value("${usr.select-manager-by-id}")
+    private String usrSelectManagerById;
+    @Value("${usr.update-landing-page}")
+    private String usrUpdateLandingPage;
+    @Value("${usr.update-usr-by-admin}")
+    private String usrUpdateUsrByAdmin;
+    @Value("${usr.update-change-active}")
+    private String usrUpdateChangeActive;
+    @Value("${usr.select-ungrouped-by-course-id}")
+    private String usrSelectUngroupedByCourseId;
+    @Value("${usr.select-all-by-course}")
+    private String usrSelectAllByCourse;
+
     public UserDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
-                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD, SqlQueriesProperties sqlQueriesProperties) throws PersistException {
+                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-        setSqlQueriesProperties(sqlQueriesProperties);
     }
 
     @Override
@@ -34,27 +70,27 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     @Override
     protected String getSelectByIdQuery() {
-        return sqlQueriesProperties.getUsrSelectById();
+        return usrSelectById;
     }
 
     @Override
     protected String getSelectQuery() {
-        return sqlQueriesProperties.getUsrSelectAll();
+        return usrSelectAll;
     }
 
     @Override
     protected String getInsertQuery() {
-        return sqlQueriesProperties.getUsrInsert();
+        return usrInsert;
     }
 
     @Override
     protected String getDeleteQuery() {
-        return sqlQueriesProperties.getUsrDelete();
+        return usrDelete;
     }
 
     @Override
     protected String getUpdateQuery() {
-        return sqlQueriesProperties.getUsrUpdate();
+        return usrUpdate;
     }
 
     @Override
@@ -104,7 +140,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public User getByEmail(String email) {
         List<User> list;
-        String sql = sqlQueriesProperties.getUsrSelectByEmail();
+        String sql = usrSelectByEmail;
         log(sql, "find by email");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
@@ -126,7 +162,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public List<User> getAllTrainers() {
         List<User> list;
-        String sql = sqlQueriesProperties.getUsrSelectAllTrainers();
+        String sql = usrSelectAllTrainers;
         log(sql, "select all trainers");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
@@ -144,7 +180,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public List<User> getAllManagers() {
         List<User> list;
-        String sql = sqlQueriesProperties.getUsrSelectAllManagers();
+        String sql = usrSelectAllManagers;
         log(sql, "select all managers");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
@@ -162,7 +198,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public List<User> getByGroupId(Integer id) {
         List<User> users;
-        String sql = sqlQueriesProperties.getUsrSelectByGroupId();
+        String sql = usrSelectByGroupId;
         users = getFromQueryById(id, sql);
         return users;
     }
@@ -183,7 +219,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public List<User> getUngroupedByCourse(Integer courseId) {
         List<User> allUsersForCourse;
-        String sql = sqlQueriesProperties.getUsrSelectUngroupedByCourseId();
+        String sql = usrSelectUngroupedByCourseId;
         log(sql, "select Ungrouped users for a course");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, courseId);
@@ -202,7 +238,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public List<User> getAllForCourse(int courseId) {
         List<User> allUsersForCourse;
-        String sql = "select distinct usr.* from usr join desirable_schedule ug on usr.id = ug.user_id  where course_id = ?";
+        String sql = usrSelectAllByCourse;
         log(sql, "select all users for a course");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, courseId);
@@ -219,7 +255,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     @Override
     public void updateUserByAdmin(User user) {
-        String sql = sqlQueriesProperties.getUsrUpdateUsrByAdmin();
+        String sql = usrUpdateUsrByAdmin;
         log (sql, "update user by admin");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getFirstName());
@@ -234,7 +270,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     @Override
     public void updateActive(User user) {
-        String sql = sqlQueriesProperties.getUsrUpdateChangeActive();
+        String sql = usrUpdateChangeActive;
         log (sql, "change active by admin");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, user.isActive());
@@ -250,7 +286,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public List<User> getLandingPageTrainers() {
         List<User> landingPageTrainers;
-        String sql = sqlQueriesProperties.getUsrLandingPage();
+        String sql = usrLandingPage;
         log(sql, "select trainers on landing page");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
@@ -266,7 +302,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     @Override
     public User getManagerById(Integer id) {
-        String sql = sqlQueriesProperties.getUsrSelectManagerById();
+        String sql = usrSelectManagerById;
         log(sql, "find manager by user id");
         List<User> list = getFromQueryById(id, sql);
         if (list == null || list.size() == 0) {
@@ -280,7 +316,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     @Override
     public List<User> getAllTrainersById(Integer id) {
-        String sql = sqlQueriesProperties.getUsrSelectAllTrainersById();
+        String sql = usrSelectAllTrainersById;
         log(sql, "find all trainers by id");
         List<User> list = getFromQueryById(id, sql);
         if (list == null || list.size() == 0) {
@@ -292,7 +328,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
 
     @Override
     public void updateTrainerLandingPage(int id, boolean isOnLandingPage) {
-        String sql = sqlQueriesProperties.getUsrUpdateLandingPage();
+        String sql = usrUpdateLandingPage;
         log(sql, "update trainer on landing page");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, isOnLandingPage);
