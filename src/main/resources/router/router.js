@@ -15,6 +15,7 @@ import AttendancePage from "../pages/AttendancePage.vue";
 import AbsenceReasons from '../pages/AbsenceReasons.vue'
 import DesiredSchedulePage from "../pages/DesiredSchedulePage.vue";
 import VueDraggable from 'vuedraggable';
+import AttachmentUpload from "../pages/AttachmentUpload.vue"
 
 Vue.use(Router);
 Vue.use(VueDraggable);
@@ -33,7 +34,8 @@ const routes = [
     {path: '/userpage/:id', component: UserPage},
     {path: '/attendance', component: AttendancePage},
     {path: '/absence-reasons', component: AbsenceReasons},
-    {path: '/desired-schedule/:id', component: DesiredSchedulePage}
+    {path: '/desired-schedule/:id', component: DesiredSchedulePage},
+    {path: '/attachment-upload', component: AttachmentUpload}
 ];
 
 export default new Router({
