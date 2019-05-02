@@ -22,17 +22,17 @@ public class AbsenceReasonController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public String getCourses(){
+    public String getReasons(){
         return gson.toJson(absenceReasonDao.getAll());
     }
     @RequestMapping(method = RequestMethod.GET,value="/{id}")
     @ResponseBody
-    public String getCourse(@PathVariable String id){
+    public String getReason(@PathVariable String id){
         return gson.toJson(absenceReasonDao.getEntityById(Integer.parseInt(id)));
     }
 
     @RequestMapping(method = RequestMethod.DELETE,value="/{id}")
-    public void deleteCourse(@PathVariable String id){
+    public void deleteReason(@PathVariable String id){
         absenceReasonDao.delete(Integer.parseInt(id));
         absenceReasonDao.commit();
     }
