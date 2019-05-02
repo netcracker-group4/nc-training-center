@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ua.com.nc.dao.PersistException;
@@ -16,13 +17,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@PropertySource("classpath:sql_queries.properties")
 public class LevelDao  extends GenericAbstractDao<Level, Integer> implements ILevelDao {
+
+    @Value("${level.select-all}")
+    private String levelSelectAll;
+    @Value("${level.select-by-id}")
+    private String levelSelectById;
+    @Value("${level.select-by-name}")
+    private String levelSelectByName;
+    @Value("${level.update}")
+    private String levelUpdate;
+    @Value("${level.delete}")
+    private String levelDelete;
+    @Value("${level.insert}")
+    private String levelInsert;
+    @Value("${level.select-by-trainer}")
+    private String levelSelectByTrainer;
 
     public LevelDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                      @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD, SqlQueriesProperties sqlQueriesProperties) throws PersistException {
+                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-        setSqlQueriesProperties(sqlQueriesProperties);
     }
 
 
@@ -35,27 +51,27 @@ public class LevelDao  extends GenericAbstractDao<Level, Integer> implements ILe
 
     @Override
     protected String getSelectByIdQuery() {
-        return sqlQueriesProperties.getLevelSelectById();
+        return levelSelectById;
     }
 
     @Override
     protected String getSelectQuery() {
-        return sqlQueriesProperties.getLevelSelectAll();
+        return levelSelectAll;
     }
 
     @Override
     protected String getInsertQuery() {
-        return sqlQueriesProperties.getLevelInsert();
+        return levelInsert;
     }
 
     @Override
     protected String getDeleteQuery() {
-        return sqlQueriesProperties.getLevelDelete();
+        return levelDelete;
     }
 
     @Override
     protected String getUpdateQuery() {
-        return sqlQueriesProperties.getLevelUpdate();
+        return levelUpdate;
     }
 
     @Override
@@ -90,7 +106,7 @@ public class LevelDao  extends GenericAbstractDao<Level, Integer> implements ILe
     @Override
     public List<Level> getAllByTrainer(int trainerId) {
         List<Level> list;
-        String sql = sqlQueriesProperties.getLevelSelectByTrainer();
+        String sql = levelSelectByTrainer;
         log(sql, "find all by level");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, trainerId);
@@ -105,7 +121,7 @@ public class LevelDao  extends GenericAbstractDao<Level, Integer> implements ILe
 
     @Override
     public int getIdByName(String name) {
-        String sql = sqlQueriesProperties.getLevelSelectByName();
+        String sql = levelSelectByName;
         try(PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1,name);
             ResultSet rs = statement.executeQuery();
