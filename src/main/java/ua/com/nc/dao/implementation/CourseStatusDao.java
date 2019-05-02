@@ -6,6 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ICourseStatus;
+import ua.com.nc.domain.CourseStatus;
 
 import java.sql.*;
 
@@ -13,6 +14,9 @@ import java.sql.*;
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class CourseStatusDao implements ICourseStatus {
+
+    @Value("${status.select-id-by-name")
+    private String getStatusByName;
     @Value("${status.select-name-by-id}")
     private String getStatusById;
 
@@ -32,9 +36,26 @@ public class CourseStatusDao implements ICourseStatus {
     }
 
     @Override
+    public CourseStatus getCourseStatusById(int id) {
+        String name;
+        String sql = getStatusById;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            name = rs.getString("NAME");
+            System.err.println(name);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new PersistException(e);
+        }
+        return CourseStatus.valueOf(name.toUpperCase());
+    }
+
+    @Override
     public int getIdByName(String name) {
         int id;
-        String sql = getStatusById;
+        String sql = getStatusByName;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
             ResultSet rs = statement.executeQuery();

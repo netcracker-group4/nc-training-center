@@ -26,7 +26,7 @@ const routes = [
     {path: '/login', component: LoginPage},
     {path: '/dashboard', component: DashBoardPage},
     {path: '/groups/:id', component: GroupPage},
-    {path: '/courses/:id', component: CoursePage},
+    {path: '/courses/:id', component: CoursePage, props: true},
     {path: '/trainers/:id', component: TrainerPage},
     {path: '/admincourses', component: AdminCourses},
     {path: '/coursecreate', component: CreateCourse},

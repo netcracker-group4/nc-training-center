@@ -86,7 +86,7 @@
                     console.log(error);
                 });*/
             }catch (e) {
-
+                console.log(e);
             }
         },
         methods:{
