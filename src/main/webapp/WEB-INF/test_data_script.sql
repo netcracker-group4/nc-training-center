@@ -83,7 +83,25 @@ values
 	'Java Standart Edition For Middle Java Developers'),
 	(3, 'Java Senior', 4, 4, 5, '2019-02-28', '2019-08-14', false,
 	'https://cdn-images-1.medium.com/max/1200/1*5T57bx4OS6o6lPe1ryU9oQ.png',
-	'Java Programming Course For Advanced Java Developers');
+	'Java Programming Course For Advanced Java Developers'),
+	(4, 'C# Beginner Course', 1, 2, 4, '2019-08-29', '2019-12-05', true,
+	'https://cdn-images-1.medium.com/max/1200/1*5T57bx4OS6o6lPe1ryU9oQ.png',
+	'C# Programming Course For Complete Beginners'),
+	(5, 'C# Standard Edition', 2, 3, 4, '2019-07-23', '2019-10-25', true,
+	'https://cdn-images-1.medium.com/max/1200/1*5T57bx4OS6o6lPe1ryU9oQ.png',
+	'C# Standard Edition For Middle C# Developers'),
+	(6, 'C# Senior', 4, 4, 5, '2019-02-28', '2019-08-14', false,
+	'https://cdn-images-1.medium.com/max/1200/1*5T57bx4OS6o6lPe1ryU9oQ.png',
+	'C# Programming Course For Advanced C# Developers'),
+	(7, 'C++ Beginner Course', 1, 2, 4, '2019-08-29', '2019-12-05', true,
+	'https://cdn-images-1.medium.com/max/1200/1*5T57bx4OS6o6lPe1ryU9oQ.png',
+	'C++ Programming Course For Complete Beginners'),
+	(8, 'C++ Standard Edition', 2, 3, 4, '2019-07-23', '2019-10-25', true,
+	'https://cdn-images-1.medium.com/max/1200/1*5T57bx4OS6o6lPe1ryU9oQ.png',
+	'C++ Standard Edition For Middle C# Developers'),
+	(9, 'C++ Senior', 4, 4, 5, '2019-02-28', '2019-08-14', false,
+	'https://cdn-images-1.medium.com/max/1200/1*5T57bx4OS6o6lPe1ryU9oQ.png',
+	'C++ Programming Course For Advanced C# Developers');
 
 alter sequence course_seq restart with 5;
 
@@ -120,7 +138,12 @@ alter sequence attendance_status_seq restart with 5;
 
 insert into grup (id, course_id, title)
 values
-	(1, 3, 'Java Seniors');
+	(1, 3, 'Java Seniors'),
+	(2, 4, 'C# Beginner'),
+	(3, 7, 'C++ Beginner'),
+	(4, 6, 'C# Seniors'),
+	(5, 2, 'Java Standard'),
+	(6, 1, 'Java Beginner');
 
 alter sequence grup_seq restart with 2;
 
@@ -128,8 +151,15 @@ alter sequence grup_seq restart with 2;
 insert into usr_group (user_id, group_id, is_attending)
 values
 	(2, 1, true),
-	(6, 1, true),
-	(7, 1, true);
+	(2, 5, true),
+	(2, 6, true),
+	(6, 3, true),
+	(6, 4, true),
+	(6, 6, true),
+	(7, 1, true),
+	(7, 4, true),
+	(7, 5, true),
+	(7, 6, true);
 
 
 insert into lesson (id, group_id, topic, user_id, time_date)
