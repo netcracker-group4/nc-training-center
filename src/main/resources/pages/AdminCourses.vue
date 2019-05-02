@@ -16,8 +16,8 @@
         >
             <template v-slot:items="props">
                 <tr>
-                    <td @click="goToCoursePage(props.item.course.id)" class="my-link">
-                        <div>{{ props.item.course.name }}</div>
+                    <td class="my-link">
+                        <div @click="goToCoursePage(props.item.course.id)" >{{ props.item.course.name }}</div>
                     </td>
                     <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
                     <td class="text-xs-right" v-if="isAdmin">
@@ -73,6 +73,9 @@
             });
     },
     methods: {
+        goToCoursePage(id){
+          this.$router.push('/courses/'+ id);
+        },
         search(){
 
         },

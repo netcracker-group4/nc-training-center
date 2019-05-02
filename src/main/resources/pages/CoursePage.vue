@@ -1,13 +1,44 @@
 <template>
     <div>
-        <v-flex xs5>
-            <div class="title mb-1">{{name}}</div>
-            <v-layout column>
-                <div class="subheading pt-3"> <b>{{courseStatus}}</b> <p>{{imageUrl}}</p></div>
-                <v-img src="https://picsum.photos/510/300?random" aspect-ratio="2"></v-img>
-                <!--<v-img :src="require(imageUrl)" aspect-ratio="2"></v-img> &lt;!&ndash; Something wrong here, try to fix it &ndash;&gt;-->
-            </v-layout>
-        </v-flex>
+        <div class="title mb-1">{{name}}</div>
+
+            <v-container
+                    fluid
+                    grid-list-md
+            >
+                <v-layout row wrap>
+                    <v-flex xs7>
+                        <v-card>
+                        <v-layout column>
+                            <div class="subheading pt-3"> <b>{{courseStatus}}</b> <p>{{imageUrl}}</p></div>
+                            <v-img sizes="" src="https://picsum.photos/510/300?random" aspect-ratio="2" wight="100%"></v-img>
+                            <!--<v-img :src="require(imageUrl)" aspect-ratio="2"></v-img> &lt;!&ndash; Something wrong here, try to fix it &ndash;&gt;-->
+                        </v-layout>
+                        </v-card>
+                    </v-flex>
+                    <v-flex  xs5 offset-xs8 offset-lg0>
+                        <v-card>
+                            <div class="div_avatar">
+                                <v-avatar
+                                        size="180"
+                                        class="avatar"
+                                >
+                                    <img src="https://99px.ru/sstorage/53/2017/03/tmb_193520_3284.jpg" alt="avatar" class="avatar_img">
+                                </v-avatar>
+                                <!--<v-container fluid style="display:block;">
+                                    <v-switch v-model="user.active" @change="isActive" label="Active"></v-switch>
+                                </v-container>-->
+                            </div>
+                        </v-card>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+
+
+
+
+
+
         <v-flex xs8>
 
         </v-flex>
