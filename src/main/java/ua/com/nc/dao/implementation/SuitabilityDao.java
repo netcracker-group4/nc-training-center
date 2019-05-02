@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ISuitabilityDao;
@@ -12,13 +13,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 @Component
+@PropertySource("classpath:sql_queries.properties")
 public class SuitabilityDao extends GenericAbstractDao<Suitability, Integer> implements ISuitabilityDao {
+
+    @Value("${suitability.select-all}")
+    private String suitabilitySelectAll;
 
     public SuitabilityDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                      @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD, SqlQueriesProperties sqlQueriesProperties) throws PersistException {
+                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-        setSqlQueriesProperties(sqlQueriesProperties);
     }
 
 
@@ -37,7 +41,7 @@ public class SuitabilityDao extends GenericAbstractDao<Suitability, Integer> imp
 
     @Override
     protected String getSelectQuery() {
-        return sqlQueriesProperties.getSuitabilitySelectAll();
+        return suitabilitySelectAll;
     }
 
     @Override
