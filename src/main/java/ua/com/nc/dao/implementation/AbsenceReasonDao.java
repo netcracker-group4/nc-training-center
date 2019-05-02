@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IAbsenceReasonDao;
@@ -13,13 +14,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@PropertySource("classpath:sql_queries.properties")
 public class AbsenceReasonDao extends GenericAbstractDao<AbsenceReason, Integer> implements IAbsenceReasonDao {
+
+    @Value("${absence_reason.select-all}")
+    private String absenceReasonSelectAll;
+    @Value("${absence_reason.select-by-id}")
+    private String absenceReasonSelectById;
+    @Value("${absence_reason.update}")
+    private String absenceReasonUpdate;
+    @Value("${absence_reason.delete}")
+    private String absenceReasonDelete;
+    @Value("${absence_reason.insert}")
+    private String absenceReasonInsert;
+
 
     public AbsenceReasonDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                      @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD, SqlQueriesProperties sqlQueriesProperties) throws PersistException {
+                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-        setSqlQueriesProperties(sqlQueriesProperties);
     }
 
     @Override
@@ -31,27 +44,26 @@ public class AbsenceReasonDao extends GenericAbstractDao<AbsenceReason, Integer>
 
     @Override
     protected String getSelectByIdQuery() {
-        return sqlQueriesProperties.getAbsenceReasonSelectById();
+        return absenceReasonSelectById;
     }
 
     @Override
     protected String getSelectQuery() {
-        return sqlQueriesProperties.getAbsenceReasonSelectAll();
+        return absenceReasonSelectAll;
     }
 
     @Override
-    protected String getInsertQuery() {
-        return sqlQueriesProperties.getAbsenceReasonInsert();
+    protected String getInsertQuery() { return absenceReasonInsert;
     }
 
     @Override
     protected String getDeleteQuery() {
-        return sqlQueriesProperties.getAbsenceReasonDelete();
+        return absenceReasonDelete;
     }
 
     @Override
     protected String getUpdateQuery() {
-        return sqlQueriesProperties.getAbsenceReasonUpdate();
+        return absenceReasonUpdate;
     }
 
     @Override

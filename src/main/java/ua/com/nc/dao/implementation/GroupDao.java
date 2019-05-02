@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IGroupDao;
@@ -14,13 +15,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@PropertySource("classpath:sql_queries.properties")
 public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGroupDao {
+
+
+    @Value("${group.select-all}")
+    private String groupSelectAll;
+    @Value("${group.select-by-id}")
+    private String groupSelectById;
+    @Value("${group.update}")
+    private String groupUpdate;
+    @Value("${group.delete}")
+    private String groupDelete;
+    @Value("${group.insert}")
+    private String groupInsert;
+    @Value("${group.select-by-course}")
+    private String groupSelectByCourse;
+    @Value("${group.select-number-of-employees}")
+    private String groupSelectNumberOfEmployees;
+    @Value("${group.select-by-employee}")
+    private String groupSelectByEmployee;
+    @Value("${group.select-by-trainer-id}")
+    private String groupSelectByTrainerId;
+
+
 
     public GroupDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                      @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD, SqlQueriesProperties sqlQueriesProperties) throws PersistException {
+                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-        setSqlQueriesProperties(sqlQueriesProperties);
     }
 
     @Override
@@ -32,27 +55,27 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
 
     @Override
     protected String getSelectByIdQuery() {
-        return sqlQueriesProperties.getGroupSelectById();
+        return groupSelectById;
     }
 
     @Override
     protected String getSelectQuery() {
-        return sqlQueriesProperties.getGroupSelectAll();
+        return groupSelectAll;
     }
 
     @Override
     protected String getInsertQuery() {
-        return sqlQueriesProperties.getGroupInsert();
+        return groupInsert;
     }
 
     @Override
     protected String getDeleteQuery() {
-        return sqlQueriesProperties.getGroupDelete();
+        return groupDelete;
     }
 
     @Override
     protected String getUpdateQuery() {
-        return sqlQueriesProperties.getGroupUpdate();
+        return groupUpdate;
     }
 
     @Override
@@ -89,14 +112,14 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
 
     @Override
     public List<Group> getAllGroupsOfCourse(int courseId) {
-        String sql = sqlQueriesProperties.getGroupSelectByCourse();
+        String sql = groupSelectByCourse;
         log(sql, "find all by level");
         return getFromQueryWithId(courseId, sql);
     }
 
     @Override
     public int getNumberOfEmployeesInGroup(int groupId) {
-        String sql = sqlQueriesProperties.getGroupSelectNumberOfEmployees();
+        String sql = groupSelectNumberOfEmployees;
         log(sql, "select number of emp for a group");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, groupId);
@@ -111,7 +134,7 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
 
     @Override
     public List<Group> getAllGroupsByStudent(int studentId) {
-        String sql = sqlQueriesProperties.getGroupSelectByEmployee();
+        String sql = groupSelectByEmployee;
         log(sql, "select all groups");
         return getFromQueryWithId(studentId, sql);
     }
@@ -130,7 +153,7 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
     }
 
     public List<Group> getGroupByTrainerId(Integer id) {
-        String sql = sqlQueriesProperties.getGroupSelectByTrainerId();
+        String sql = groupSelectByTrainerId;
         return getFromQueryWithId(id, sql);
     }
 
