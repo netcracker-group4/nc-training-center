@@ -24,7 +24,7 @@ public class AbsenceReason extends Entity<Integer> {
         if (!(o instanceof Course)) return false;
         if (!super.equals(o)) return false;
         AbsenceReason reason = (AbsenceReason) o;
-        return title == reason.title;
+        return title.equals( reason.title);
     }
     @Override
     public int hashCode() {

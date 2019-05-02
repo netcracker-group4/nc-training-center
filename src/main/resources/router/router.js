@@ -32,7 +32,7 @@ const routes = [
     {path: '/userpage', component: AllUsersPage},
     {path: '/userpage/:id', component: UserPage},
     {path: '/attendance', component: AttendancePage},
-    {path: '/absencereasons', component: AbsenceReasons},
+    {path: '/absence-reasons', component: AbsenceReasons},
     {path: '/desired-schedule/:id', component: DesiredSchedulePage}
 ];
 

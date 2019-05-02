@@ -14,10 +14,12 @@ public class AbsenceReasonServiceImpl implements AbsenceReasonService {
     @Override
     public void add(AbsenceReason reason) {
         absenceReasonDao.insert(reason);
+        absenceReasonDao.commit();
     }
 
     @Override
     public void add(String title) {
-        add(new AbsenceReason(title));
+        AbsenceReason reason = new AbsenceReason(title);
+        add(reason);
     }
 }
