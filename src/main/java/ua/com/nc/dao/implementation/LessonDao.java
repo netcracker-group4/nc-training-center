@@ -38,10 +38,9 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
 
     public LessonDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                      @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD, SqlQueriesProperties sqlQueriesProperties)
+                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD)
             throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-        setSqlQueriesProperties(sqlQueriesProperties);
     }
 
     @Override

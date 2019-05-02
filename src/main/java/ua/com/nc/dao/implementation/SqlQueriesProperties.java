@@ -7,6 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 @SuppressWarnings("unused")
 @Configuration
 @PropertySource("classpath:sql_queries.properties")
+@Deprecated
 public class SqlQueriesProperties {
     @Value("${usr.select-all}")
     private String usrSelectAll;
