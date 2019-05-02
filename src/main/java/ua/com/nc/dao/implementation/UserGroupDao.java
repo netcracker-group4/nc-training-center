@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IUserGroupDao;
@@ -14,13 +15,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@PropertySource("classpath:sql_queries.properties")
 public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> implements IUserGroupDao {
+
+    @Value("${usr_group.delete-all-for-group}")
+    private String userGroupDeleteForGroup;
+    @Value("${usr_group.select-by-usr-and-course}")
+    private String userGroupSelectByUsrAndCourse;
+    @Value("${usr_group.insert}")
+    private String userGroupInsert;
+    @Value("${usr_group.update}")
+    private String userGroupUpdate;
+    @Value("${usr_group.select-by-group}")
+    private String userGroupSelectByGroup;
+    @Value("${usr_group.select-by-usr-and-group}")
+    private String userGroupSelectAttendanceByUsrAndGroup;
 
     public UserGroupDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                           @Value("${spring.datasource.username}") String DATABASE_USER,
-                          @Value("${spring.datasource.password}") String DATABASE_PASSWORD, SqlQueriesProperties sqlQueriesProperties) throws PersistException {
+                          @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-        setSqlQueriesProperties(sqlQueriesProperties);
     }
 
 
@@ -41,7 +55,7 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
 
     @Override
     protected String getInsertQuery() {
-        return sqlQueriesProperties.getUserGroupInsert();
+        return userGroupInsert;
     }
 
     @Override
@@ -51,7 +65,7 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
 
     @Override
     protected String getUpdateQuery() {
-        return sqlQueriesProperties.getUserGroupUpdate();
+        return userGroupUpdate;
     }
 
     @Override
@@ -89,7 +103,7 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
 
     @Override
     public void deleteAllForGroup(int groupId) {
-        String sql = sqlQueriesProperties.getUserGroupDeleteForGroup();
+        String sql = userGroupDeleteForGroup;
         log(sql, "LOG deleteAllForGroup");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, groupId);
@@ -102,7 +116,7 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
 
     @Override
     public UserGroup getByUserAndCourse(int userId, int courseId) {
-        String sql = sqlQueriesProperties.getUserGroupSelectByUsrAndCourse();
+        String sql = userGroupSelectByUsrAndCourse;
         log(sql, "getByUserAndCourse");
         List<UserGroup> list;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
