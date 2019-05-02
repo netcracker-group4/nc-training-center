@@ -106,7 +106,7 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
             Integer groupId = rs.getInt("group_id");
             String topic = rs.getString("topic");
             Integer trainerId = rs.getInt("trainer_id");
-            Date timeDate = rs.getObject("time_date", Date.class);
+            Date timeDate = rs.getDate("time_date");
             String absenceReason = rs.getString("absence_reason");
             String absenceStatus = rs.getString("absence_status");
             Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate, absenceReason, absenceStatus);

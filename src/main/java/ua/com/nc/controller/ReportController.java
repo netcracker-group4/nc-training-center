@@ -17,13 +17,13 @@ import java.io.IOException;
 @Log4j
 @Controller
 @CrossOrigin(origins = "http://localhost:8000")
-@RequestMapping("/download-report") //    /download-report/attendance-report.xlsx
-public class ReportController {     //    /download-report/dashboard-report.xlsx
+@RequestMapping("/download-report") //    /download-report/attendance-report
+public class ReportController {     //    /download-report/dashboard-report
 
     @Autowired
     private ReportServiceImpl reportService;
 
-    @RequestMapping(value = "/attendance-report.xlsx", method = RequestMethod.GET)
+    @RequestMapping(value = "/attendance-report", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> excelAttendanceReport() throws IOException {
 
         ByteArrayInputStream in = reportService.getAttendanceExcel();
@@ -35,7 +35,7 @@ public class ReportController {     //    /download-report/dashboard-report.xlsx
         return ResponseEntity.ok().headers(headers).body(new InputStreamResource(in));
     }
 
-    @RequestMapping(value = "/dashboard-report.xlsx", method = RequestMethod.GET)
+    @RequestMapping(value = "/dashboard-report", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> excelDashboardReport() throws IOException {
 
         ByteArrayInputStream in = reportService.getDashboardExcel();
