@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IDesiredScheduleDao;
@@ -14,14 +15,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@PropertySource("classpath:sql_queries.properties")
 public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Integer> implements IDesiredScheduleDao {
+
+    @Value("${desirable.schedule.select-all}")
+    private String desirableScheduleSelectAll;
+    @Value("${desirable.schedule.insert}")
+    private String desirableScheduleInsert;
+    @Value("${desirable.schedule.select-by-course-id}")
+    private String desirableScheduleSelectByCourseId;
 
     public DesiredScheduleDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                      @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD,
-                              SqlQueriesProperties sqlQueriesProperties) throws PersistException {
+                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-        setSqlQueriesProperties(sqlQueriesProperties);
     }
 
 
@@ -40,12 +47,12 @@ public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Inte
 
     @Override
     protected String getSelectQuery() {
-        return sqlQueriesProperties.getDesirableScheduleSelectAll();
+        return desirableScheduleSelectAll;
     }
 
     @Override
     protected String getInsertQuery() {
-        return sqlQueriesProperties.getDesirableScheduleInsert();
+        return desirableScheduleInsert;
     }
 
     @Override
@@ -96,7 +103,7 @@ public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Inte
     @Override
     public List<DesiredSchedule> getAllForCourse(int courseId) {
         List<DesiredSchedule> list;
-        String sql = sqlQueriesProperties.getDesirableScheduleSelectByCourseId();
+        String sql = desirableScheduleSelectByCourseId;
         log(sql, "find all by level");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, courseId);
