@@ -1,6 +1,7 @@
 package ua.com.nc.service.impl;
 
 import com.google.gson.Gson;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.ICourseDao;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Service
 public class DashBoardServiceImpl implements DashBoardService {
+    private static final Logger log = Logger.getLogger(DashBoardServiceImpl.class);
     @Autowired
     private
     ILevelDao iLevelDao;
@@ -47,8 +49,7 @@ public class DashBoardServiceImpl implements DashBoardService {
             }
                 dtoLevels.add(new DTOLevel(level, dtoCourseGroups.size(), dtoCourseGroups));
         }
-        System.out.println("log response to get level and quantity");
-        System.out.println(new Gson().toJson(dtoLevels));
+        log.info("response to get level and quantity " + new Gson().toJson(dtoLevels));
         return new Gson().toJson(dtoLevels);
     }
 
@@ -66,8 +67,7 @@ public class DashBoardServiceImpl implements DashBoardService {
             }
             dtoTrainers.add(new DTOTrainer(trainer, courseAndLevels.size(), courseAndLevels));
         }
-        System.out.println("log response to get level and trainers");
-        System.out.println(new Gson().toJson(dtoTrainers));
+        log.info("response to get level and trainers " + new Gson().toJson(dtoTrainers) );
         return new Gson().toJson(dtoTrainers);
     }
 
@@ -86,8 +86,7 @@ public class DashBoardServiceImpl implements DashBoardService {
             }
             courseAndGroups.add(new CourseAndGroups(course, numberOfEmployeesInCourse, groupAndQuantities));
         }
-        System.out.println("log response to get level and trainers");
-        System.out.println(new Gson().toJson(courseAndGroups));
+        log.info("response to get level and trainers " + new Gson().toJson(courseAndGroups));
         return new Gson().toJson(courseAndGroups);
     }
 

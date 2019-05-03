@@ -85,7 +85,6 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public String getDesiredScheduleForUngroupedStudentsOfCourse(int courseId) throws Exception {
         List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getAllForCourse(courseId);
-        System.out.println(desiredScheduleList);
         List<ScheduleForUser> scheduleForUsers = new ArrayList<>();
         for (User user : iUserDao.getUngroupedByCourse(courseId)) {
             scheduleForUsers.add(new ScheduleForUser(user,

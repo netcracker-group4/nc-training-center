@@ -7,7 +7,10 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ICourseDao;
 import ua.com.nc.domain.Course;
 
-import java.sql.*;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +39,8 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
 
 
     public CourseDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                   @Value("${spring.datasource.username}") String DATABASE_USER,
-                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+                     @Value("${spring.datasource.username}") String DATABASE_USER,
+                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
@@ -125,7 +128,7 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
     @Override
     public List<Course> getAllByLevel(int levelId) {
         String sql = courseSelectByLevel;
-        log(sql, "find all by level");
+        log.info(sql + "find all by level " + levelId);
         return getFromQueryWithId(levelId, sql);
     }
 
@@ -145,27 +148,27 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
     @Override
     public List<Course> getAllByTrainer(int trainerId) {
         String sql = courseSelectByTrainer;
-        log(sql, "find all by trainer");
+        log.info(sql + " find all by trainer " + trainerId);
         return getFromQueryWithId(trainerId, sql);
     }
 
     @Override
-    public List<Course> getLandingPageCourses () {
-        List <Course> landingPageCourses;
+    public List<Course> getLandingPageCourses() {
+        List<Course> landingPageCourses;
         String sql = courseLandingPage;
-        try (PreparedStatement statement = connection.prepareStatement(sql)){
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             landingPageCourses = parseResultSet(rs);
         } catch (Exception e) {
             e.printStackTrace();
             throw new PersistException(e);
         }
-        log (sql, "find all on landing page");
+        log.info(sql + " find all on landing page");
         return landingPageCourses;
     }
 
     @Override
-    public void updateCourseLandingPage (int id, boolean isOnLandingPage) {
+    public void updateCourseLandingPage(int id, boolean isOnLandingPage) {
         String sql = courseUpdateLandingPage;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, isOnLandingPage);

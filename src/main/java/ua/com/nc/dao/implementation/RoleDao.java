@@ -42,11 +42,11 @@ public class RoleDao implements IRoleDao {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 Role role = Role.valueOf(rs.getString("role"));
                 roles.add(role);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             log.error("Sql exception in role DAO ", e);
         }
         return roles;

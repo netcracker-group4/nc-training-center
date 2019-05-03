@@ -37,8 +37,7 @@ public class CourseDaoTest {
         sqlQueriesProperties.setCourseSelectById(properties.getProperty("course.select-by-id"));
         sqlQueriesProperties.setCourseUpdate(properties.getProperty("course.update"));
         sqlQueriesProperties.setCourseSelectByLevel(properties.getProperty("course.select-by-level"));
-        iCourseDao = new CourseDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019", sqlQueriesProperties);
-        System.out.println("instantiated COURSE DAO");
+        iCourseDao = new CourseDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019");
         newCourse = new Course("courseName", 1, 1, 1, "url", new Date(65465465L), new Date(654L), true, "desc");
     }
 

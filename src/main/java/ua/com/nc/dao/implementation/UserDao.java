@@ -1,8 +1,8 @@
 package ua.com.nc.dao.implementation;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IUserDao;
 import ua.com.nc.domain.User;
@@ -143,13 +143,13 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     public User getByEmail(String email) {
         List<User> list;
         String sql = usrSelectByEmail;
-        log(sql, "find by email");
+        log.info(sql + " find by email " + email);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
         if (list == null || list.size() == 0) {
@@ -184,12 +184,12 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     public List<User> getAllTrainers() {
         List<User> list;
         String sql = usrSelectAllTrainers;
-        log(sql, "select all trainers");
+        log.info(sql + "select all trainers");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
         if (list == null || list.size() == 0) {
@@ -202,12 +202,12 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     public List<User> getAllManagers() {
         List<User> list;
         String sql = usrSelectAllManagers;
-        log(sql, "select all managers");
+        log.info(sql + "select all managers");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
         if (list == null || list.size() == 0) {
@@ -231,7 +231,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             ResultSet rs = statement.executeQuery();
             users = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
         return users;
@@ -241,7 +241,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     public List<User> getUngroupedByCourse(Integer courseId) {
         List<User> allUsersForCourse;
         String sql = usrSelectUngroupedByCourseId;
-        log(sql, "select Ungrouped users for a course");
+        log.info(sql + " select Ungrouped users for a course " + courseId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, courseId);
             statement.setInt(2, courseId);
@@ -260,7 +260,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     public List<User> getAllForCourse(int courseId) {
         List<User> allUsersForCourse;
         String sql = usrSelectAllByCourse;
-        log(sql, "select all users for a course");
+        log.info(sql + " select all users for a course " + courseId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, courseId);
             ResultSet rs = statement.executeQuery();
@@ -277,7 +277,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public void updateUserByAdmin(User user) {
         String sql = usrUpdateUsrByAdmin;
-        log (sql, "update user by admin");
+        log.info(sql + " update user by admin user= " + user.toString());
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
@@ -285,21 +285,21 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new PersistException (e);
+            throw new PersistException(e);
         }
     }
 
     @Override
     public void updateActive(User user) {
         String sql = usrUpdateChangeActive;
-        log (sql, "change active by admin");
+        log.info(sql + "change active by admin user= " + user.toString());
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, user.isActive());
             statement.setInt(2, user.getId());
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new PersistException (e);
+            throw new PersistException(e);
         }
     }
 
@@ -308,7 +308,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     public List<User> getLandingPageTrainers() {
         List<User> landingPageTrainers;
         String sql = usrLandingPage;
-        log(sql, "select trainers on landing page");
+        log.info(sql + "select trainers on landing page");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             landingPageTrainers = parseResultSet(rs);
@@ -324,7 +324,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public User getManagerById(Integer id) {
         String sql = usrSelectManagerById;
-        log(sql, "find manager by user id");
+        log.info(sql + " find manager by user id = " + id);
         List<User> list = getFromQueryById(id, sql);
         if (list == null || list.size() == 0) {
             return null;
@@ -338,7 +338,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public List<User> getAllTrainersById(Integer id) {
         String sql = usrSelectAllTrainersById;
-        log(sql, "find all trainers by id");
+        log.info(sql + " find all trainers by id = " + id);
         List<User> list = getFromQueryById(id, sql);
         if (list == null || list.size() == 0) {
             return null;
@@ -350,7 +350,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Override
     public void updateTrainerLandingPage(int id, boolean isOnLandingPage) {
         String sql = usrUpdateLandingPage;
-        log(sql, "update trainer on landing page");
+        log.info(sql + " update trainer on landing page id = " + id + " isOnLandingPage = " + isOnLandingPage);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, isOnLandingPage);
             statement.setInt(2, id);
@@ -360,8 +360,6 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             throw new PersistException(e);
         }
     }
-
-
 
 
 }

@@ -3,13 +3,10 @@ package ua.com.nc.dao.implementation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ILevelDao;
-import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Level;
 
-import javax.annotation.Resource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class LevelDao  extends GenericAbstractDao<Level, Integer> implements ILevelDao {
+public class LevelDao extends GenericAbstractDao<Level, Integer> implements ILevelDao {
 
     @Value("${level.select-all}")
     private String levelSelectAll;
@@ -36,8 +33,8 @@ public class LevelDao  extends GenericAbstractDao<Level, Integer> implements ILe
     private String levelSelectByTrainer;
 
     public LevelDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                     @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+                    @Value("${spring.datasource.username}") String DATABASE_USER,
+                    @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
@@ -93,7 +90,7 @@ public class LevelDao  extends GenericAbstractDao<Level, Integer> implements ILe
     @Override
     protected List<Level> parseResultSet(ResultSet rs) throws SQLException {
         List<Level> levels = new ArrayList<>();
-        while (rs.next()){
+        while (rs.next()) {
             int id = rs.getInt("ID");
             String title = rs.getString("TITLE");
             Level level = new Level(id, title);
@@ -107,7 +104,7 @@ public class LevelDao  extends GenericAbstractDao<Level, Integer> implements ILe
     public List<Level> getAllByTrainer(int trainerId) {
         List<Level> list;
         String sql = levelSelectByTrainer;
-        log(sql, "find all by level");
+        log.info(sql + " find all by trainer " + trainerId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, trainerId);
             ResultSet rs = statement.executeQuery();
@@ -122,14 +119,14 @@ public class LevelDao  extends GenericAbstractDao<Level, Integer> implements ILe
     @Override
     public int getIdByName(String name) {
         String sql = levelSelectByName;
-        try(PreparedStatement statement = connection.prepareStatement(sql)){
-            statement.setString(1,name);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, name);
             ResultSet rs = statement.executeQuery();
             rs.next();
             return rs.getInt("ID");
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
-            throw  new RuntimeException(new SQLException("Level "+name+" not found"));
+            throw new RuntimeException(new SQLException("Level " + name + " not found"));
         }
 
 

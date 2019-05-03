@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface IAttachmentDao extends GenericDao<Attachment, Integer> {
     List<Attachment> getByLessonId(Integer lessonId);
+
     Attachment getByUrl(String url) throws PersistException;
 }
