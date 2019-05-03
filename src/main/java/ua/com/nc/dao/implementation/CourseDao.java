@@ -34,6 +34,7 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
     @Value("${course.update-landing-page}")
     private String courseUpdateLandingPage;
 
+
     public CourseDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
                    @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {

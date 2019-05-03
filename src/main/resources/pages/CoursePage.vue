@@ -16,19 +16,18 @@
                         </v-layout>
                         </v-card>
                     </v-flex>
-                    <v-flex  xs5 offset-xs8 offset-lg0>
+                    <v-flex  xs5 offset-xs0 offset-lg0>
+                        <v-layout column>
+                        <v-card >
+                            <div class="subheading pt-3"> <b>Trainers</b></div>
+                            <div v-for="trainer in trainers" @click="goTrainerPage(trainer.id)"> <b> {{trainer.firstName }}   {{trainer.lastName}} </b> </div>
+                        </v-card>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex  xs5 offset-xs0 offset-lg7>
                         <v-card>
-                            <div class="div_avatar">
-                                <v-avatar
-                                        size="180"
-                                        class="avatar"
-                                >
-                                    <img src="https://99px.ru/sstorage/53/2017/03/tmb_193520_3284.jpg" alt="avatar" class="avatar_img">
-                                </v-avatar>
-                                <!--<v-container fluid style="display:block;">
-                                    <v-switch v-model="user.active" @change="isActive" label="Active"></v-switch>
-                                </v-container>-->
-                            </div>
+                            <div class="subheading pt-3"> <b>Groups</b></div>
+                            <div v-for="group in groups" @click="goGroupPage(group.id)">{{group.title}}</div>
                         </v-card>
                     </v-flex>
                 </v-layout>
@@ -38,11 +37,23 @@
 
 
 
-
-        <v-flex xs8>
-
-        </v-flex>
-
+        <v-container
+                fluid
+                grid-list-md
+        >
+            <v-layout row wrap>
+            <v-flex xs7>
+                <v-textarea
+                        name="input-7-1"
+                        box
+                        label="Description"
+                        auto-grow
+                        :value="description"
+                        readonly="True"
+                ></v-textarea>
+            </v-flex>
+            </v-layout>
+        </v-container>
     </div>
 </template>
 
@@ -62,7 +73,8 @@
                 description: null,
                 startDay: null,
                 endDay: null,
-                trainer: null
+                trainers: null,
+                groups: null,
             }
         },
         methods:{
@@ -77,6 +89,9 @@
                         self.getStatus(dat.courseStatusId);
                         self.isOnLandingPage = dat.isOnLandingPage;
                         self.imageUrl = dat.imageUrl;
+                        self.description = dat.description;
+                        self.getTrainer();
+                        self.getGroups();
                         console.log(self);
                     })
                     .catch(function (error) {
@@ -92,13 +107,39 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+            },
+            getTrainer(){
+                let self = this;
+                axios.get('http://localhost:8080/getcourses/'+this.$route.params.id+'/trainer')
+                    .then(function (response) {
+                        self.trainers = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            goTrainerPage(id){
+                this.$router.push('/trainers/' + id);
+            },
+            goGroupPage(id){
+                this.$router.push('/groups/' + id);
+            },
+            getGroups(){
+                let self = this;
+                axios.get('http://localhost:8080/groups/get-groups/'+this.$route.params.id)
+                    .then(function (response) {
+                        self.groups = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
         },
         mounted() {
             try {
                 let self = this;
                 self.setCourse();
-                /*axios.get('http://localhost:8080/getInfo/getStatus/'+this.data.courseStatusId)
+                /*axios.get('http://localhost:8080/getcourses/{id}/trainer)
                     .then(function (response) {
                         self.courseStatus = response.data;
                     })

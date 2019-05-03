@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.implementation.CourseDao;
+import ua.com.nc.dao.interfaces.IUserDao;
 import ua.com.nc.domain.Course;
 import ua.com.nc.service.CourseService;
 
@@ -18,6 +19,8 @@ public class CourseController {
     private CourseDao courseDao;
     @Autowired
     private CourseService service;
+    @Autowired
+    private IUserDao userDao;
 
     private final Gson gson = new Gson();
 
@@ -81,6 +84,10 @@ public class CourseController {
         return service.getDayIntervals();
     }
 
-
+    @RequestMapping(value = "/{id}/trainer", method = RequestMethod.GET)
+    @ResponseBody
+    public String getTrainer(@PathVariable String id){
+        return gson.toJson(userDao.getTrainersOnCourse(Integer.parseInt(id)));
+    }
 
 }
