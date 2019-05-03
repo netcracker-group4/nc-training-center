@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class AttachmentDao extends GenericAbstractDao<Attachment, Integer> implements IAttachmentDao {
@@ -30,10 +31,9 @@ public class AttachmentDao extends GenericAbstractDao<Attachment, Integer> imple
     private String attachmentSelectByLessonId;
 
 
-
     public AttachmentDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                    @Value("${spring.datasource.username}") String DATABASE_USER,
-                    @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+                         @Value("${spring.datasource.username}") String DATABASE_USER,
+                         @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
@@ -74,8 +74,8 @@ public class AttachmentDao extends GenericAbstractDao<Attachment, Integer> imple
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Attachment entity) throws SQLException {
-        setAllFields(statement,entity);
-     }
+        setAllFields(statement, entity);
+    }
 
     private void setAllFields(PreparedStatement statement, Attachment entity) throws SQLException {
         statement.setString(1, entity.getUrl());
@@ -101,17 +101,18 @@ public class AttachmentDao extends GenericAbstractDao<Attachment, Integer> imple
 
         return attachments;
     }
+
     @Override
     public Attachment getByUrl(String url) throws PersistException {
         List<Attachment> list;
         String sql = attachmentSelectByUrl;
-        log(sql, "LOG SelectByUrlQuery");
+        log.info(sql + " SelectByUrlQuery " + url);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1,url);
+            statement.setString(1, url);
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
         if (list == null || list.size() == 0) {
@@ -132,7 +133,7 @@ public class AttachmentDao extends GenericAbstractDao<Attachment, Integer> imple
             ResultSet rs = statement.executeQuery();
             attachments = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
         return attachments;

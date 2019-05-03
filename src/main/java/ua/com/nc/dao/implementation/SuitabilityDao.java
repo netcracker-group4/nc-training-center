@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class SuitabilityDao extends GenericAbstractDao<Suitability, Integer> implements ISuitabilityDao {
@@ -20,8 +21,8 @@ public class SuitabilityDao extends GenericAbstractDao<Suitability, Integer> imp
     private String suitabilitySelectAll;
 
     public SuitabilityDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                     @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+                          @Value("${spring.datasource.username}") String DATABASE_USER,
+                          @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
@@ -85,7 +86,7 @@ public class SuitabilityDao extends GenericAbstractDao<Suitability, Integer> imp
             String title = rs.getString("title");
             int priority = rs.getInt("priority");
             String color = rs.getString("color");
-            list.add(new Suitability(id, title, color,priority));
+            list.add(new Suitability(id, title, color, priority));
         }
         return list;
     }

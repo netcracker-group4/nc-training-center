@@ -11,7 +11,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,7 +125,7 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
             ResultSet rs = statement.executeQuery();
             lessons = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
         return lessons;

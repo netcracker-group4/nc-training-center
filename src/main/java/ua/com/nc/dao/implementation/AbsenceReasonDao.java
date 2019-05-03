@@ -30,8 +30,8 @@ public class AbsenceReasonDao extends GenericAbstractDao<AbsenceReason, Integer>
 
 
     public AbsenceReasonDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                     @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+                            @Value("${spring.datasource.username}") String DATABASE_USER,
+                            @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
@@ -53,7 +53,8 @@ public class AbsenceReasonDao extends GenericAbstractDao<AbsenceReason, Integer>
     }
 
     @Override
-    protected String getInsertQuery() { return absenceReasonInsert;
+    protected String getInsertQuery() {
+        return absenceReasonInsert;
     }
 
     @Override
@@ -85,10 +86,10 @@ public class AbsenceReasonDao extends GenericAbstractDao<AbsenceReason, Integer>
     @Override
     protected List<AbsenceReason> parseResultSet(ResultSet rs) throws SQLException {
         List<AbsenceReason> list = new ArrayList<>();
-        while (rs.next()){
+        while (rs.next()) {
             Integer id = rs.getInt("ID");
             String title = rs.getString("TITLE");
-            AbsenceReason reason = new  AbsenceReason(id, title);
+            AbsenceReason reason = new AbsenceReason(id, title);
             list.add(reason);
         }
         return list;

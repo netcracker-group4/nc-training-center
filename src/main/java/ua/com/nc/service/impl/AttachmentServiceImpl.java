@@ -1,5 +1,6 @@
 package ua.com.nc.service.impl;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 @Service
 public class AttachmentServiceImpl implements AttachmentService {
+    private static final Logger log = Logger.getLogger(AttachmentServiceImpl.class);
     @Autowired
     private IAttachmentDao iAttachmentDao;
     @Autowired
@@ -62,7 +64,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                 String filePath = dir.getAbsolutePath() + File.separator + name;
 
                 if (iAttachmentDao.getByUrl(filePath) == null) {
-                    System.out.println("File is not in base");
+                    log.info("File is not in base");
                     File uploadedFile = new File(filePath);
 
                     BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));
@@ -72,7 +74,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                 }
  //               add(lessonId,filePath,null);
             } catch (Exception e) {
-                System.out.println( e.getMessage());
+                log.trace(e);
             }
         }
     }

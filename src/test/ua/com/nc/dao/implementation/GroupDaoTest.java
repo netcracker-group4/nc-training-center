@@ -34,8 +34,7 @@ public class GroupDaoTest {
         sqlQueriesProperties.setGroupSelectAll(properties.getProperty("group.select-all"));
         sqlQueriesProperties.setGroupSelectById(properties.getProperty("group.select-by-id"));
         sqlQueriesProperties.setGroupUpdate(properties.getProperty("group.update"));
-        iGroupDao = new GroupDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019", sqlQueriesProperties);
-        System.out.println("instantiated COURSE DAO");
+        iGroupDao = new GroupDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019");
         newGroup = new Group(1, "groupName");
     }
 

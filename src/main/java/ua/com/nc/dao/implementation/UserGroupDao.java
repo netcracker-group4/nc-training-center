@@ -5,7 +5,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IUserGroupDao;
-import ua.com.nc.domain.User;
 import ua.com.nc.domain.UserGroup;
 
 import java.sql.PreparedStatement;
@@ -32,14 +31,14 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
     private String userGroupSelectAttendanceByUsrAndGroup;
 
     public UserGroupDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                          @Value("${spring.datasource.username}") String DATABASE_USER,
-                          @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+                        @Value("${spring.datasource.username}") String DATABASE_USER,
+                        @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
 
     @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
+    protected Integer parseId(ResultSet rs) {
         return null;
     }
 
@@ -70,7 +69,7 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
 
     @Override
     protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-    statement.setInt(1, id);
+        statement.setInt(1, id);
     }
 
     @Override
@@ -104,7 +103,7 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
     @Override
     public void deleteAllForGroup(int groupId) {
         String sql = userGroupDeleteForGroup;
-        log(sql, "LOG deleteAllForGroup");
+        log.info(sql + " LOG deleteAllForGroup " + groupId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, groupId);
             statement.executeUpdate();
@@ -117,7 +116,7 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
     @Override
     public UserGroup getByUserAndCourse(int userId, int courseId) {
         String sql = userGroupSelectByUsrAndCourse;
-        log(sql, "getByUserAndCourse");
+        log.info(sql + " getByUserAndCourse usr = " + userId + " course= " + courseId);
         List<UserGroup> list;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, courseId);
@@ -127,10 +126,10 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
         } catch (Exception e) {
             throw new PersistException(e);
         }
-        if (list.size() > 1){
+        if (list.size() > 1) {
             throw new PersistException("Returned more than one record");
         }
-        if (list.size() == 0 ){
+        if (list.size() == 0) {
             return null;
         }
         return list.iterator().next();

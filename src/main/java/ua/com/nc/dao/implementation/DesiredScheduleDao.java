@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IDesiredScheduleDao;
 import ua.com.nc.domain.DesiredSchedule;
-import ua.com.nc.domain.Group;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,8 +25,8 @@ public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Inte
     private String desirableScheduleSelectByCourseId;
 
     public DesiredScheduleDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                     @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+                              @Value("${spring.datasource.username}") String DATABASE_USER,
+                              @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
@@ -89,7 +88,7 @@ public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Inte
     @Override
     protected List<DesiredSchedule> parseResultSet(ResultSet rs) throws SQLException {
         List<DesiredSchedule> list = new ArrayList<>();
-        while (rs.next()){
+        while (rs.next()) {
             int id = rs.getInt("id");
             int userId = rs.getInt("user_id");
             int courseId = rs.getInt("course_id");
@@ -104,7 +103,7 @@ public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Inte
     public List<DesiredSchedule> getAllForCourse(int courseId) {
         List<DesiredSchedule> list;
         String sql = desirableScheduleSelectByCourseId;
-        log(sql, "find all by level");
+        log.info(sql + "" + "find all by courseid " + courseId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, courseId);
             ResultSet rs = statement.executeQuery();

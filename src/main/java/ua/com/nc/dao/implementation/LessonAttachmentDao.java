@@ -11,17 +11,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class LessonAttachmentDao extends GenericAbstractDao<LessonAttachment,Integer> implements ILessonAttachmentDao {
+public class LessonAttachmentDao extends GenericAbstractDao<LessonAttachment, Integer> implements ILessonAttachmentDao {
     @Value("${lesson_attachment.insert}")
     private String lessonAttachmentInsert;
     @Value("${lesson_attachment.delete-by-attachment-id}")
     private String lessonAttachmentDeleteByAttachmentId;
 
     public LessonAttachmentDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                         @Value("${spring.datasource.username}") String DATABASE_USER,
-                         @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+                               @Value("${spring.datasource.username}") String DATABASE_USER,
+                               @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
@@ -79,12 +80,12 @@ public class LessonAttachmentDao extends GenericAbstractDao<LessonAttachment,Int
     @Override
     public void deleteByAttachmentId(Integer attachmentId) throws PersistException {
         String sql = lessonAttachmentDeleteByAttachmentId;
-        log(sql, "LOG DeleteQuery");
+        log.info(sql + "LOG DeleteQuery " + attachmentId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1,attachmentId);
+            statement.setInt(1, attachmentId);
             int count = statement.executeUpdate();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
     }

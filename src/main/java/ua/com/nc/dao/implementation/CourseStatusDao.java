@@ -46,7 +46,7 @@ public class CourseStatusDao implements ICourseStatus {
             name = rs.getString("NAME");
             System.err.println(name);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
         return CourseStatus.valueOf(name.toUpperCase());
@@ -62,7 +62,7 @@ public class CourseStatusDao implements ICourseStatus {
             rs.next();
             id = rs.getInt("ID");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
         return id;

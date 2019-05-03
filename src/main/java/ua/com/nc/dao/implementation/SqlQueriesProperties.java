@@ -99,7 +99,6 @@ public class SqlQueriesProperties {
     private String userGroupSelectAttendanceByUsrAndGroup;
 
 
-
     @Value("${level.select-all}")
     private String levelSelectAll;
     @Value("${level.select-by-id}")
@@ -302,7 +301,6 @@ public class SqlQueriesProperties {
     public String getGroupInsert() {
         return groupInsert;
     }
-
 
 
     public void setGroupInsert(String groupInsert) {

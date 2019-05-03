@@ -5,7 +5,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IGroupDao;
-import ua.com.nc.domain.Course;
 import ua.com.nc.domain.Group;
 
 import java.sql.PreparedStatement;
@@ -16,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGroupDao {
+public class GroupDao extends GenericAbstractDao<Group, Integer> implements IGroupDao {
 
 
     @Value("${group.select-all}")
@@ -39,10 +38,9 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
     private String groupSelectByTrainerId;
 
 
-
     public GroupDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                     @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+                    @Value("${spring.datasource.username}") String DATABASE_USER,
+                    @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
@@ -85,26 +83,26 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Group entity) throws SQLException {
-        statement.setInt(1,entity.getCourseId());
-        statement.setString(2,entity.getTitle());
+        statement.setInt(1, entity.getCourseId());
+        statement.setString(2, entity.getTitle());
     }
 
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Group entity) throws SQLException {
-        statement.setInt(1,entity.getCourseId());
-        statement.setString(2,entity.getTitle());
-        statement.setInt(3,entity.getId());
+        statement.setInt(1, entity.getCourseId());
+        statement.setString(2, entity.getTitle());
+        statement.setInt(3, entity.getId());
     }
 
     @Override
     protected List<Group> parseResultSet(ResultSet rs) throws SQLException {
         List<Group> groups = new ArrayList<>();
-        while (rs.next()){
+        while (rs.next()) {
             int id = rs.getInt(1);
             int courseId = rs.getInt(2);
             String title = rs.getString(3);
-            Group group = new Group(id,courseId,title);
+            Group group = new Group(id, courseId, title);
             groups.add(group);
         }
         return groups;
@@ -113,19 +111,19 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
     @Override
     public List<Group> getAllGroupsOfCourse(int courseId) {
         String sql = groupSelectByCourse;
-        log(sql, "find all by level");
+        log.info(sql + "find all by courseid" + courseId);
         return getFromQueryWithId(courseId, sql);
     }
 
     @Override
     public int getNumberOfEmployeesInGroup(int groupId) {
         String sql = groupSelectNumberOfEmployees;
-        log(sql, "select number of emp for a group");
+        log.info(sql + " select number of emp for a group" + groupId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, groupId);
             ResultSet rs = statement.executeQuery();
             //although it is not an id, this query returns only one number, so this method can parse it
-             return parseId(rs);
+            return parseId(rs);
         } catch (Exception e) {
             e.printStackTrace();
             throw new PersistException(e);
@@ -135,7 +133,7 @@ public class GroupDao extends GenericAbstractDao<Group,Integer> implements IGrou
     @Override
     public List<Group> getAllGroupsByStudent(int studentId) {
         String sql = groupSelectByEmployee;
-        log(sql, "select all groups");
+        log.info(sql + "select all groups for student " + studentId);
         return getFromQueryWithId(studentId, sql);
     }
 

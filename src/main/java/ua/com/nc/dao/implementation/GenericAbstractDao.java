@@ -1,5 +1,6 @@
 package ua.com.nc.dao.implementation;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.GenericDao;
@@ -10,19 +11,20 @@ import java.util.List;
 
 /**
  * @param <E> entity typesqlQueriesProperties
- * @param <K>  type of entity's primary key
+ * @param <K> type of entity's primary key
  */
 
 
 public abstract class GenericAbstractDao<E extends Entity<K>, K> implements GenericDao<E, K> {
 
     Connection connection;
-    SqlQueriesProperties sqlQueriesProperties;
-
-    @Autowired
-    public void setSqlQueriesProperties(SqlQueriesProperties sqlQueriesProperties) {
-        this.sqlQueriesProperties = sqlQueriesProperties;
-    }
+    protected static final Logger log = Logger.getLogger(GenericAbstractDao.class);
+//    SqlQueriesProperties sqlQueriesProperties;
+//
+//    @Autowired
+//    public void setSqlQueriesProperties(SqlQueriesProperties sqlQueriesProperties) {
+//        this.sqlQueriesProperties = sqlQueriesProperties;
+//    }
 
     GenericAbstractDao() {
     }
@@ -36,7 +38,7 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
                     DATABASE_USER, DATABASE_PASSWORD);
             connection.setAutoCommit(false);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.trace("Error while setting autocommit false", e);
             throw new PersistException("Error while setting autocommit false", e);
         }
     }
@@ -45,12 +47,12 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
     public List<E> getAll() throws PersistException {
         List<E> list;
         String sql = getSelectQuery();
-        log(sql, "find all");
+        log.info(sql + "   find all");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace("Error while getting all", e);
             throw new PersistException(e);
         }
         return list;
@@ -60,33 +62,29 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
     public E getEntityById(K id) throws PersistException {
         List<E> list;
         String sql = getSelectByIdQuery();
-        log(sql, "LOG SelectByIdQuery");
+        log.info(sql + " select by id with id " + id.toString());
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, id);
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace("Error while getting by id", e);
             throw new PersistException(e);
         }
         if (list == null || list.size() == 0) {
             return null;
         }
         if (list.size() > 1) {
+            log.trace("Received more than one record.");
             throw new PersistException("Received more than one record.");
         }
         return list.iterator().next();
     }
 
-    void log(String sql, String msg) {
-        System.out.println(msg);
-        System.out.println(sql);
-    }
-
     @Override
     public void update(E entity) throws PersistException {
         String sql = getUpdateQuery();
-        log(sql, "LOG UpdateQuery");
+        log.info(sql + "  update with arguments " + entity.toString());
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForUpdate(statement, entity); // заполнение аргументов запроса оставим на совесть потомков
             int count = statement.executeUpdate();
@@ -94,7 +92,7 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
                 throw new PersistException("On update modify more then 1 record: " + count);
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
     }
@@ -102,7 +100,7 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
     @Override
     public void delete(K id) throws PersistException {
         String sql = getDeleteQuery();
-        log(sql, "LOG DeleteQuery");
+        log.info(sql + " delete with id " + id.toString());
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, id); // заполнение аргументов запроса оставим на совесть потомков
             int count = statement.executeUpdate();
@@ -110,7 +108,7 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
                 throw new PersistException("On delete modify more then 1 record: " + count);
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
     }
@@ -121,13 +119,13 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
             throw new PersistException("Object is already persist.");
         }
         String sql = getInsertQuery();
-        log(sql, "LOG InsertQuery");
+        log.info(sql + " insert with parameters" + entity.toString());
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForInsert(statement, entity);
             ResultSet rs = statement.executeQuery();
             entity.setId(parseId(rs));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.trace(e);
             throw new PersistException(e);
         }
     }
@@ -139,15 +137,17 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
         try {
             connection.rollback();
         } catch (SQLException e) {
+            log.trace("Error while rolling back", e);
             throw new PersistException("Error while rolling back", e);
         }
     }
 
 
-    public void commit() throws PersistException{
+    public void commit() throws PersistException {
         try {
             connection.commit();
         } catch (SQLException e) {
+            log.trace("Error while committing back", e);
             throw new PersistException("Error while committing back", e);
         }
     }
@@ -157,7 +157,7 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
         try {
             this.connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.trace("Error while closing connection", e);
             throw new PersistException("Error while closing connection", e);
         }
     }
