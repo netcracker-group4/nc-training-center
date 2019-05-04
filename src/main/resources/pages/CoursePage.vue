@@ -11,8 +11,8 @@
                         <v-card>
                         <v-layout column>
                             <div class="subheading pt-3"> <b>{{courseStatus}}</b> <p>{{imageUrl}}</p></div>
-                            <v-img sizes="" src="https://picsum.photos/510/300?random" aspect-ratio="2" wight="100%"></v-img>
-                            <!--<v-img :src="require(imageUrl)" aspect-ratio="2"></v-img> &lt;!&ndash; Something wrong here, try to fix it &ndash;&gt;-->
+                            <!--<v-img sizes="" src="https://picsum.photos/510/300?random" aspect-ratio="2" wight="100%"></v-img>-->
+                            <v-img :src="''+imageUrl" aspect-ratio="2"></v-img> <!-- Something wrong here, try to fix it &ndash;&gt;-->
                         </v-layout>
                         </v-card>
                     </v-flex>
@@ -49,7 +49,7 @@
                         label="Description"
                         auto-grow
                         :value="description"
-                        readonly="True"
+                        readonly=true
                 ></v-textarea>
             </v-flex>
             </v-layout>
