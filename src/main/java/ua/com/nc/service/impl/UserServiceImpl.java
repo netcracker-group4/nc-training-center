@@ -1,6 +1,5 @@
 package ua.com.nc.service.impl;
 
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -131,7 +130,6 @@ public class UserServiceImpl implements UserService {
     public List<DtoTeacherAndManager> getAllManagers() {
         List<DtoTeacherAndManager> dtoManagers = new ArrayList<>();
         List<User> managers = userDao.getAllManagers();
-
         for (User manager : managers) {
             dtoManagers.add(new DtoTeacherAndManager(
                     manager.getId(),
@@ -143,12 +141,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<DtoTeacherAndManager> getAllTrainers() {
+        List<DtoTeacherAndManager> dtoTrainers = new ArrayList<>();
+        List<User> trainers = userDao.getAllTrainers();
+        for (User trainer : trainers) {
+            dtoTrainers.add(new DtoTeacherAndManager(
+                    trainer.getId(),
+                    trainer.getFirstName(),
+                    trainer.getLastName()
+            ));
+        }
+        return dtoTrainers;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.getByEmail(username);
 
-        if(user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("User with such email not exist");
-        }else{
+        } else {
             return user;
         }
 

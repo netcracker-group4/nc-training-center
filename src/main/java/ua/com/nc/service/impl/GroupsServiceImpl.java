@@ -6,9 +6,9 @@ import ua.com.nc.dao.interfaces.IGroupDao;
 import ua.com.nc.dao.interfaces.IUserGroupDao;
 import ua.com.nc.domain.Group;
 import ua.com.nc.domain.UserGroup;
-import ua.com.nc.domain.schedule.GroupSchedule;
-import ua.com.nc.domain.schedule.ScheduleForUser;
 import ua.com.nc.dto.DtoGroup;
+import ua.com.nc.dto.schedule.GroupSchedule;
+import ua.com.nc.dto.schedule.ScheduleForUser;
 import ua.com.nc.service.GroupsService;
 
 import java.util.ArrayList;

@@ -1,6 +1,7 @@
-package ua.com.nc.domain.schedule;
+package ua.com.nc.dto.schedule;
 
 import lombok.Data;
+
 import java.util.List;
 
 @Data

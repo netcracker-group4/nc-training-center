@@ -195,6 +195,8 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         return list;
     }
 
+
+
     @Override
     public List<User> getByGroupId(Integer id) {
         List<User> users;

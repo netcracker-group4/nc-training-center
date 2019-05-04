@@ -1,8 +1,6 @@
 package ua.com.nc.dto;
 
-import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Role;
-import ua.com.nc.service.impl.UserServiceImpl;
 
 import java.util.List;
 

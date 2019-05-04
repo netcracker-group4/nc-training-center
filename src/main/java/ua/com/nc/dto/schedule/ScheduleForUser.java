@@ -1,4 +1,4 @@
-package ua.com.nc.domain.schedule;
+package ua.com.nc.dto.schedule;
 
 import lombok.Data;
 import ua.com.nc.domain.User;

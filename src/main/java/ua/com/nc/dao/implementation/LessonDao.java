@@ -106,9 +106,7 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
             String topic = rs.getString("topic");
             Integer trainerId = rs.getInt("trainer_id");
             Date timeDate = rs.getDate("time_date");
-            String absenceReason = rs.getString("absence_reason");
-            String absenceStatus = rs.getString("absence_status");
-            Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate, absenceReason, absenceStatus);
+            Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate);
             lessons.add(lesson);
         }
         return lessons;
@@ -119,9 +117,26 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
     public List<Lesson> getByGroupIdAndUserId(Integer groupId, Integer userId) {
         List<Lesson> lessons;
         String sql = getSelectByGroupIdAndUserId;
+        log.info("getByGroupIdAndUserId groupId " + groupId + " userId " + userId + "   " + sql);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, groupId);
             statement.setInt(2, userId);
+            ResultSet rs = statement.executeQuery();
+            lessons = parseResultSetForAttendance(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        return lessons;
+    }
+
+    @Override
+    public List<Lesson> getByGroupId(Integer groupId) {
+        List<Lesson> lessons;
+        String sql = selectByGroupId;
+        log.info("getByGroupId groupId " + groupId + "  " + sql);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, groupId);
             ResultSet rs = statement.executeQuery();
             lessons = parseResultSet(rs);
         } catch (Exception e) {
@@ -131,4 +146,23 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
         return lessons;
     }
 
+    protected List<Lesson> parseResultSetForAttendance(ResultSet rs) throws SQLException {
+        List<Lesson> lessons = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id");
+            Integer groupId = rs.getInt("group_id");
+            String topic = rs.getString("topic");
+            Integer trainerId = rs.getInt("trainer_id");
+            Date timeDate = rs.getDate("time_date");
+            String absenceReason = rs.getString("absence_reason");
+            String absenceStatus = rs.getString("absence_status");
+            Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate, absenceReason, absenceStatus);
+            lessons.add(lesson);
+        }
+        return lessons;
+    }
+
+
 }
+
+

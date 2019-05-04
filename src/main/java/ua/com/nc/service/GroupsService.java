@@ -1,8 +1,8 @@
 package ua.com.nc.service;
 
 
-import ua.com.nc.domain.schedule.GroupSchedule;
 import ua.com.nc.dto.DtoGroup;
+import ua.com.nc.dto.schedule.GroupSchedule;
 
 import java.util.List;
 

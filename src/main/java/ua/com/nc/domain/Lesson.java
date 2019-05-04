@@ -5,8 +5,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.time.OffsetDateTime;
 import java.sql.Date;
+
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -28,6 +31,13 @@ public class Lesson extends Entity<Integer> {
         this.timeDate = timeDate;
     }
 
+    public Lesson(Integer groupId, String topic, Integer trainerId, Date timeDate) {
+        this.groupId = groupId;
+        this.topic = topic;
+        this.trainerId = trainerId;
+        this.timeDate = timeDate;
+    }
+
     public Lesson(Integer id, Integer groupId, String topic, Integer trainerId, Date timeDate, String absenceReason, String absenceStatus) {
         super(id);
         this.groupId = groupId;
@@ -37,4 +47,5 @@ public class Lesson extends Entity<Integer> {
         this.absenceReason = absenceReason;
         this.absenceStatus = absenceStatus;
     }
+
 }

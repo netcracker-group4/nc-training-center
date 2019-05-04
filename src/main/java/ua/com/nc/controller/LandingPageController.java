@@ -4,13 +4,7 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.dao.interfaces.IUserDao;
-import ua.com.nc.service.DashBoardService;
 import ua.com.nc.service.LandingPageService;
-import ua.com.nc.service.impl.DashBoardServiceImpl;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 @Log4j
