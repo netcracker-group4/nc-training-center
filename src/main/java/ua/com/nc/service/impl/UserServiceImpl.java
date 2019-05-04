@@ -1,6 +1,7 @@
 package ua.com.nc.service.impl;
 
 import com.google.gson.Gson;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,9 +18,13 @@ import ua.com.nc.dto.DtoUser;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.service.UserService;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+@Log4j
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -149,6 +154,8 @@ public class UserServiceImpl implements UserService {
         if(user == null){
             throw new UsernameNotFoundException("User with such email not exist");
         }else{
+            Set<Role> roles = new HashSet<>(roleDao.findAllByUserId(user.getId()));
+            user.setRoles(roles);
             return user;
         }
 

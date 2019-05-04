@@ -8,6 +8,8 @@
             <v-btn @click="forwardToDashboardPage" flat>dashboard</v-btn>
             <v-btn @click="forwardToAttendancePage" flat>attendance</v-btn>
             <v-btn @click="forwardToCoursePage" flat>courses</v-btn>
+            <v-btn @click="forwardToUsersPage" flat>users</v-btn>
+            <v-btn @click="forwardToSchedulePage" flat>schedule</v-btn>
         </v-toolbar-items>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down" v-if="!this.$store.getters.isAuthorized">
@@ -37,6 +39,12 @@
             },
             forwardToCoursePage(){
                 this.$router.push('/admincourses')
+            },
+            forwardToUsersPage(){
+                this.$router.push('/userpage')
+            },
+            forwardToSchedulePage(){
+                this.$router.push('/desired-schedule/1')
             }
         },
         data(){

@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 public class User extends Entity<Integer> implements UserDetails {
     private String email;
@@ -19,6 +20,7 @@ public class User extends Entity<Integer> implements UserDetails {
     private boolean isActive;
     private boolean isOnLandingPage;
     private String description;
+    private Set<Role> roles;
 
     public User() {
     }
@@ -170,5 +172,13 @@ public class User extends Entity<Integer> implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isActive;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

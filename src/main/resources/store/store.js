@@ -3,12 +3,12 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-
 export default new Vuex.Store({
     state:{
         isAuthorized: isAuthorized,
         user: user,
         userRoles: userRoles,
+        error: true
     },
     getters: {
         userRoles: state => {
@@ -25,6 +25,14 @@ export default new Vuex.Store({
                 state.isAuthorized != undefined){
                 return true
             }else return false
+        },
+        getError: state => {
+            return state.error
+        }
+    },
+    mutations: {
+        setError(){
+            state.error = true
         }
     }
 })
