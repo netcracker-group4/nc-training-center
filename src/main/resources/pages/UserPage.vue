@@ -1,131 +1,161 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+    <div>
+        <v-navigation-drawer class="drawer grey lighten-5"
+                             fixed
+                             v-model="drawer"
+                             width="180"
+                             hide-overlay
+                             stateless
+        >
+            <v-list class="pt-0" dense>
+                <v-list-tile to="/">
+                    <v-list-tile-action>
+                        <v-icon>dashboard</v-icon>
+                    </v-list-tile-action>
+
+                    <v-list-tile-content>
+                        <v-list-tile-title>Main</v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+            </v-list>
+        </v-navigation-drawer>
+
     <v-container>
-        <v-toolbar flat color="white">
-            <v-toolbar-title>User</v-toolbar-title>
-            <v-divider
-                    class="mx-2"
-                    inset
-                    vertical
-            ></v-divider>
-            <v-spacer></v-spacer>
+        <v-layout row wrap>
+            <v-flex xs12 sm10 offset-sm2>
+                <v-toolbar flat color="white">
+                    <v-toolbar-title>User</v-toolbar-title>
+                    <v-divider
+                            class="mx-2"
+                            inset
+                            vertical
+                    ></v-divider>
+                    <v-spacer></v-spacer>
 
-            <v-dialog v-model="dialog" max-width="500px">
-                <template v-slot:activator="{ on }">
-                    <v-icon
-                            class="mr-4"
-                            @click="editItem(user)"
-                    >
-                        edit
-                    </v-icon>
-                </template>
-                <v-card>
-                    <v-card-title>
-                        <span class="headline">Edit user</span>
-                    </v-card-title>
+                    <v-dialog v-model="dialog" max-width="500px">
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                                    class="mr-4"
+                                    @click="editItem(user)"
+                            >
+                                edit
+                            </v-icon>
+                        </template>
+                        <v-card>
+                            <v-card-title>
+                                <span class="headline">Edit user</span>
+                            </v-card-title>
 
-                    <v-card-text>
-                        <v-container grid-list-md>
-                            <v-layout wrap>
-                                <v-flex xs5>
-                                    <v-text-field v-model="editUser.firstName" label="Name"></v-text-field>
-                                </v-flex>
-                                <v-flex xs5>
-                                    <v-text-field v-model="editUser.lastName" label="Surname"></v-text-field>
-                                </v-flex>
-                                <v-flex xs10 v-if="editUser.dtoManager != null">
-                                    <v-select
-                                            v-model="editUser.dtoManager"
-                                            :items="managers"
-                                            label="Change manager"
-                                    >
-                                        <template slot="selection" slot-scope="managers">
-                                            {{ managers.item.firstName }} {{ managers.item.lastName }}
-                                        </template>
-                                        <template slot="item" slot-scope="managers">
-                                            {{ managers.item.firstName }} {{ managers.item.lastName }}
-                                        </template>
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs10>
-                                    <v-select
-                                            v-model="editUser.groups"
-                                            item-value="id"
-                                            :items="groups"
-                                            item-text="title"
-                                            :menu-props="{ maxHeight: '300' }"
-                                            label="Change groups"
-                                            multiple
-                                    ></v-select>
-                                </v-flex>
-                            </v-layout>
+                            <v-card-text>
+                                <v-container grid-list-md>
+                                    <v-layout wrap>
+                                        <v-flex xs5>
+                                            <v-text-field v-model="editUser.firstName" label="Name"></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs5>
+                                            <v-text-field v-model="editUser.lastName" label="Surname"></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs10 v-if="editUser.dtoManager != null">
+                                            <v-select
+                                                    v-model="editUser.dtoManager"
+                                                    :items="managers"
+                                                    label="Change manager"
+                                            >
+                                                <template slot="selection" slot-scope="managers">
+                                                    {{ managers.item.firstName }} {{ managers.item.lastName }}
+                                                </template>
+                                                <template slot="item" slot-scope="managers">
+                                                    {{ managers.item.firstName }} {{ managers.item.lastName }}
+                                                </template>
+                                            </v-select>
+                                        </v-flex>
+                                        <v-flex xs10>
+                                            <v-select
+                                                    v-model="editUser.groups"
+                                                    item-value="id"
+                                                    :items="groups"
+                                                    item-text="title"
+                                                    :menu-props="{ maxHeight: '300' }"
+                                                    label="Change groups"
+                                                    multiple
+                                            ></v-select>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-container>
+                            </v-card-text>
+
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
+                                <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-toolbar>
+                <v-container class="con_wrapper">
+
+                    <div class="div_avatar">
+                        <v-avatar
+                                size="180"
+                                class="avatar"
+                        >
+                            <img src="https://99px.ru/sstorage/53/2017/03/tmb_193520_3284.jpg" alt="avatar" class="avatar_img">
+                        </v-avatar>
+                        <v-container fluid style="display:block;">
+                            <v-switch v-model="user.active" @change="isActive" label="Active"></v-switch>
                         </v-container>
-                    </v-card-text>
-
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-                        <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-        </v-toolbar>
-        <v-container class="con_wrapper">
-
-            <div class="div_avatar">
-                <v-avatar
-                        size="180"
-                        class="avatar"
-                >
-                    <img src="https://99px.ru/sstorage/53/2017/03/tmb_193520_3284.jpg" alt="avatar" class="avatar_img">
-                </v-avatar>
-                <v-container fluid style="display:block;">
-                    <v-switch v-model="user.active" @change="isActive" label="Active"></v-switch>
+                    </div>
+                    <div class="div_table">
+                        <table class="table_user">
+                            <tr>
+                                <td>Name</td>
+                                <td>{{ user.firstName }}</td>
+                            </tr>
+                            <tr>
+                                <td>Surname</td>
+                                <td>{{ user.lastName }}</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                                <td>Role</td>
+                                <td><span v-for="role in user.roles">{{ role + ' ' }}</span></td>
+                            </tr>
+                            <tr>
+                                <td>Teachers</td>
+                                <td><p v-for="teacher in user.dtoTeachers" class="p">{{ getFullName(teacher) }}</p></td>
+                            </tr>
+                            <tr>
+                                <td>Groups</td>
+                                <td><p v-for="group in user.groups" class="p">{{ group.title }}</p></td>
+                            </tr>
+                            <tr>
+                                <td>Manager</td>
+                                <td><span class="p" v-if="user.dtoManager">{{ user.dtoManager.firstName + ' ' + user.dtoManager.lastName}}</span></td>
+                            </tr>
+                        </table>
+                    </div>
                 </v-container>
-            </div>
-            <div class="div_table">
-                <table class="table_user">
-                    <tr>
-                        <td>Name</td>
-                        <td>{{ user.firstName }}</td>
-                    </tr>
-                    <tr>
-                        <td>Surname</td>
-                        <td>{{ user.lastName }}</td>
-                    </tr>
-                    <tr>
-                        <td>Email</td>
-                        <td>{{ user.email }}</td>
-                    </tr>
-                    <tr>
-                        <td>Role</td>
-                        <td><span v-for="role in user.roles">{{ role }}</span></td>
-                    </tr>
-                    <tr>
-                        <td>Teachers</td>
-                        <td><p v-for="teacher in user.dtoTeachers" class="p">{{ getFullName(teacher) }}</p></td>
-                    </tr>
-                    <tr>
-                        <td>Groups</td>
-                        <td><p v-for="group in user.groups" class="p">{{ group.title }}</p></td>
-                    </tr>
-                    <tr>
-                        <td>Manager</td>
-                        <td><p class="p" v-if="user.dtoManager != null">{{ user.dtoManager.firstName + ' ' + user.dtoManager.lastName}}</p></td>
-                    </tr>
-                </table>
-            </div>
-        </v-container>
+            </v-flex>
+        </v-layout>
+
     </v-container>
+    </div>
 </template>
 
 <script>
     import axios from 'axios'
-
     export default {
         data() {
             return {
                 dialog: false,
                 user: '',
+                drawer: true,
+                mini: true,
+                right: null,
+                prevId: null,
                 editUser: {
                     id: 0,
                     firstName: '',
@@ -136,14 +166,13 @@
                     dtoManager: '',
                     dtoTeachers: [],
                     groups: [],
-                    active: false
+                    active: false,
                 },
                 groups: [],
                 managers: []
             }
         },
         computed: {
-
         },
         methods: {
             getFullName (value) {
@@ -158,7 +187,6 @@
             editItem (user) {
                 this.editUser = Object.assign({}, user)
                 this.dialog = true
-
                 let self = this;
                 axios.get('http://localhost:8080/groups/get-all')
                     .then(function (response) {
@@ -182,14 +210,13 @@
                 setTimeout(() => {
                 }, 300)
             },
-
             save () {
                 if(this.editUser.firstName != null & this.editUser.lastName != null){
                     Object.assign(this.user, this.editUser)
                     console.log(this.editUser.firstName + " " +
                         this.editUser.lastName + " " +
                         this.editUser.dtoManager + " " +
-                    this.editUser.groups + "\n" + this.user.groups)
+                        this.editUser.groups + "\n" + this.user.groups)
                     axios.put('http://localhost:8080/users/update', {
                         id: this.user.id,
                         firstName: this.editUser.firstName,
@@ -201,11 +228,12 @@
                     alert("Incorrect information in fields")
                 }
                 this.close()
-            }
+            },
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/users/7')
+            let id = this.$route.params.id
+            axios.get('http://localhost:8080/users/' + id)
                 .then(function (response) {
                     self.user = response.data;
                     console.log(self.user)
@@ -213,7 +241,7 @@
                 .catch(function (error) {
                     console.log(error);
                 });
-        }
+        },
     }
 </script>
 
@@ -269,5 +297,11 @@
     }
     .select {
         width: 300px;
+    }
+    .drawer{
+        margin-top: 64px !important;
+    }
+    .pointer{
+        cursor: pointer;
     }
 </style>

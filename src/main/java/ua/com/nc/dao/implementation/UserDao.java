@@ -165,7 +165,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     public List<User> getTrainersOnCourse(int id){
         List<User> list;
         String sql = getSelectTrainerByCourseId;
-        log(sql, "find by course");
+        //log(sql, "find by course");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();

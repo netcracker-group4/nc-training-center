@@ -19,7 +19,7 @@ import java.util.List;
 @Log4j
 @Controller
 @RequestMapping("/")
-@CrossOrigin(origins = "http://localhost:8000")
+//@CrossOrigin(origins = "http://localhost:8000")
 public class IndexPageController {
 
     @Autowired

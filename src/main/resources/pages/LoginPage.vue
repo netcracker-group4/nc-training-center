@@ -5,7 +5,7 @@
                 <v-container>
                     <v-layout row wrap>
                         <v-flex xs12 sm12>
-                            <v-text-field v-model="email" label="Email"></v-text-field>
+                            <v-text-field v-model="email" placeholder="Email"></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm12>
                             <v-text-field
@@ -13,7 +13,7 @@
                                     v-model="password"
                                     :type="pass_show ? 'text' : 'password'"
                                     name="input-10-2"
-                                    label="Password"
+                                    placeholder="Password"
                                     class="input-group--focused"
                                     @click:append="pass_show = !pass_show"
                             ></v-text-field>
@@ -29,10 +29,10 @@
         <div class="text-xs-center">
             <v-dialog v-model="dialog" width="500" height="300">
                 <v-card>
-                    <v-card-title class="headline red lighten-4" primary-title>
-                        Entered data is incorrect
+                    <v-card-title class="headline grey lighten-4" primary-title>
+                       {{this.modalMessage}}
                     </v-card-title>
-                    <v-card-actions class="red lighten-4">
+                    <v-card-actions class="grey lighten-4">
                         <v-spacer></v-spacer>
                         <v-btn class="error-button light-blue lighten-3" @click="dialog = false">
                             submit
@@ -46,7 +46,6 @@
 
 <script>
     import ModalPage from './ModalPage.vue'
-
     export default {
         name: "LoginPage",
         components: {ModalPage},
@@ -62,6 +61,7 @@
         },
         methods:{
             login(){
+                let self = this
                 if(this.emailValidation(this.email) && this.passwordValidation(this.password)){
                     let form = new FormData();
                     let request = new XMLHttpRequest();
@@ -69,14 +69,19 @@
                     form.append('username', this.email);
                     form.append('password', this.password);
                     request.send(form);
-                    request.onreadystatechange = function () {
-                        location.replace(location.origin)
+                    request.onloadend = function () {
+                        if(request.status == 200){
+                            location.replace(location.origin)
+                        }
+                        if(request.status == 404){
+                            self.modalMessage = "There is no user with such email and password"
+                            self.dialog = true
+                        }
                     }
                 }else{
-                    //this.modalMessage = "Incorrect data"
+                    this.modalMessage = "Entered data is incorrect"
                     this.dialog = true
                 }
-
             },
             forwardToRegistrationPage(){
                 this.$router.push('/registration')
@@ -91,12 +96,6 @@
                     password.replace(/\s/g, '') != ''){
                     return true
                 }else return false
-            },
-            closeModal(){
-                this.isModalVisible = false
-            },
-            showModal(){
-                this.isModalVisible = true
             }
         },
     }

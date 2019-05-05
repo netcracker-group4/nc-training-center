@@ -7,24 +7,35 @@
                         <v-flex xs12 sm12>
                             <v-text-field v-model="name" label="name" clearable></v-text-field>
                         </v-flex>
-                        <v-flex xs12 sm12>
+                        <!--<v-flex xs12 sm12>
                             <v-text-field v-model="imageUrl" label="image url" clearable></v-text-field>
+                            <v-btn @click="uploadFile">Upload</v-btn>
+                        </v-flex>-->
+                        <v-flex xs12 sm12 class="text-xs-center text-sm-center text-md-center text-lg-center">
+                            <img :src="imageUrl" height="150" v-if="imageUrl"/>
+                            <v-text-field label="Select Image" @click='pickFile' v-model='imageUrl' prepend-icon='attach_file'></v-text-field>
+                            <input
+                                    type="file"
+                                    style="display: none"
+                                    ref="image"
+                                    accept="image/*"
+                                    @change="onFilePicked"
+                            >
                         </v-flex>
                         <v-flex xs12 sm12>
-                            <div v-for="lvl in levels">
-                                <input type="radio" id="two" value="Два" v-on:click="setLevel(lvl.title)">
-                                <label for="two">{{lvl.title}}</label>
-                            </div>
+                            <v-radio-group v-model="level">
+                                <v-radio
+                                        v-for="lvl in levels"
+                                        :key="lvl.id"
+                                        :label="lvl.title"
+                                        :value="lvl.title"
+                                ></v-radio>
+                            </v-radio-group>
                         </v-flex>
                         <v-flex>
-                            <p style="margin-top: 3%">Is on landing page?</p>
-                            <input type="radio" @click="setOnLandingPage(true)" v-model="picked" >
-                            <label>yes</label>
-                            <input type="radio" @click="setOnLandingPage(false)" v-model="picked" >
-                            <label>no</label>
+                            <p style="margin-top: 3%"><v-checkbox v-model="isOnLandingPage" :label="`Is on landing page? `"></v-checkbox></p>
                         </v-flex>
-                        <v-flex xs12 sm12>
-                            <v-flex xs6 style="width: 30%">
+                            <v-flex xs12 style="width: 30%">
                                 <v-textarea
                                         id="course-descr-text"
                                         box
@@ -33,7 +44,6 @@
                                         auto-grow
                                 ></v-textarea>
                             </v-flex>
-                        </v-flex>
                         <ChooserDate/>
                         <v-spacer></v-spacer>
                         <v-flex xs12 sm12>
@@ -51,6 +61,7 @@
     import ChooserDate from "../components/ChooserDate.vue";
 
     export default {
+        props:['id'],
         name: "CreateCourse",
         components: {ChooserDate},
         data(){
@@ -59,12 +70,13 @@
                 level: null,
                 courseStatus: null,
                 imageUrl: null,
+                imageFile: null,
                 isOnLandingPage: null,
                 description: null,
                 startDay: null,
                 endDay: null,
                 levels: [],
-                courseStatuses: []
+                courseStatuses: [],
             }
         },
 
@@ -78,25 +90,13 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-                /*axios.get('http://localhost:8080/getInfo/getStatuses')
-                .then(function (response) {
-                    self.courseStatuses = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });*/
+
             }catch (e) {
                 console.log(e);
             }
         },
         methods:{
 
-            setLevel(lvl){
-                this.level = lvl;
-            },
-            setOnLandingPage(is){
-                this.isOnLandingPage = is;
-            },
             setData(){
                 this.description=document.querySelector('#course-descr-text')._value;
                 this.startDay = ChooserDate.data().date1;
@@ -107,27 +107,48 @@
                     this.setData();
                 let form = new FormData();
                 let request = new XMLHttpRequest();
-                request.open('POST', 'http://localhost:8080/getcourses/create');
-                form.append('name', this.name);
-                form.append('level',this.level);
-                form.append('courseStatus',this.courseStatus);
-                form.append('imageUrl',this.imageUrl);
-                form.append('isOnLandingPage',this.isOnLandingPage);
-                form.append('description',this.description);
-                form.append('startDay',this.startDay);
-                form.append('endDay',this.endDay);
-                request.send(form);
-                    /*axios.post('http://localhost:8080/getcourses/create', {
-                        name: this.name,
-                        level: this.level,
-                        courseStatus: this.courseStatus,
-                        imageUrl: this.imageUrl,
-                        isOnLandingPage: this.isOnLandingPage,
-                        description: this.description,
-                        startDay: this.startDay,
-                        endDay: this.endDay
+                try {
+                    if(this.id===undefined){
+                        request.open('POST', 'http://localhost:8080/getcourses/create');
+                    } else{
+                        request.open('PUT', 'http://localhost:8080/getcourses/create');
+                    }
+                    form.append('name', this.name);
+                    form.append('level', this.level);
+                    form.append('courseStatus', this.courseStatus);
+                    form.append('imageUrl', this.imageUrl);
+                    form.append('image', this.imageFile);
+                    form.append('isOnLandingPage', this.isOnLandingPage);
+                    form.append('description', this.description);
+                    form.append('startDay', this.startDay);
+                    form.append('endDay', this.endDay);
+                    request.send(form);
+                }catch (e) {
+                    alert(e.toString());
+                }
+                if(this.id===undefined){
+                    alert('Course updated');
+                }else {
+                    alert('Course created');
+                }
+                this.$router.push("/admincourses");
+            },
+            pickFile () {
+                this.$refs.image.click ()
+            },
+            onFilePicked (e) {
+                const files = e.target.files;
+                if(files[0] !== undefined) {
+                    const fr = new FileReader ();
+                    fr.readAsDataURL(files[0]);
+                    fr.addEventListener('load', () => {
+                        this.imageUrl = fr.result;
+                        this.imageFile = files[0]
                     })
-                        .then(response => alert("Course created"))*/
+                } else {
+                    this.imageFile = '';
+                    this.imageUrl = '';
+                }
             }
 
         }

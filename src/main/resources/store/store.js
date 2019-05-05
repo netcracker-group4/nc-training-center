@@ -3,12 +3,12 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-
 export default new Vuex.Store({
     state:{
         isAuthorized: isAuthorized,
         user: user,
         userRoles: userRoles,
+        imgFolder: '/img/'
     },
     getters: {
         userRoles: state => {
@@ -25,6 +25,7 @@ export default new Vuex.Store({
                 state.isAuthorized != undefined){
                 return true
             }else return false
-        }
-    }
+        },
+    },
+
 })

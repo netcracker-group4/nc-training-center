@@ -3,13 +3,21 @@ package ua.com.nc.service.impl;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.domain.schedule.GroupSchedule;
 import ua.com.nc.domain.schedule.ParsedSchedule;
 import ua.com.nc.domain.schedule.ScheduleForUser;
 import ua.com.nc.service.CourseService;
+import org.apache.log4j.Logger;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,6 +26,7 @@ import java.util.List;
 
 @Service
 public class CourseServiceImpl implements CourseService {
+    private static final Logger log = Logger.getLogger(AttachmentServiceImpl.class);
     @Autowired
     private ICourseDao courseDao;
     @Autowired
@@ -133,4 +142,38 @@ public class CourseServiceImpl implements CourseService {
         return new Gson().toJson(dayIntervals);
     }
 
+
+    /**
+     *
+     * @return local image link;
+     */
+    @Override
+    public String uploadImage(MultipartFile image) {
+        StringBuilder name;
+        if(!image.isEmpty() && image.getOriginalFilename()!=null){
+            try {
+                byte[] bytes = image.getBytes();
+
+                name = new StringBuilder(image.getOriginalFilename());
+
+                String rootPath = "src/main/resources/img";
+                Path path = Paths.get(rootPath + File.separator + name);
+                int i=1;
+                while (Files.exists(path)){
+                    name.append(i);
+                    path = Paths.get(rootPath + File.separator + name);
+                    i++;
+                }
+                File uploadedFile = Files.createFile(path).toFile();
+                try(BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile))) {
+                    stream.write(bytes);
+                    stream.flush();
+                }
+                return path.normalize().toString();
+            } catch (Exception e) {
+                log.trace(e);
+            }
+        }
+        return "";
+    }
 }
