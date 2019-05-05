@@ -148,6 +148,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAllTrainers() {
+        return userDao.getAllTrainers();
+       /* for (User trainer : trainers) {
+            trainers.add(new DtoTeacherAndManager(
+                    trainer.getId(),
+                    trainer.getFirstName(),
+                    trainer.getLastName()
+            ));
+        }*/
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.getByEmail(username);
 
@@ -158,6 +170,5 @@ public class UserServiceImpl implements UserService {
             user.setRoles(roles);
             return user;
         }
-
     }
 }

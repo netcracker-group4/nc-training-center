@@ -32,6 +32,17 @@
                                 ></v-radio>
                             </v-radio-group>
                         </v-flex>
+                        <v-flex xs12 sm12>
+                            <v-select
+                                    v-model="trainer"
+                                    item-value="id"
+                                    :items="trainers"
+                                    :item-text="trainerName"
+                                    :menu-props="{ maxHeight: '300' }"
+                                    label="Set trainer"
+
+                            ></v-select>
+                        </v-flex>
                         <v-flex>
                             <p style="margin-top: 3%"><v-checkbox v-model="isOnLandingPage" :label="`Is on landing page? `"></v-checkbox></p>
                         </v-flex>
@@ -71,12 +82,14 @@
                 courseStatus: null,
                 imageUrl: null,
                 imageFile: null,
+                trainer: null,
                 isOnLandingPage: null,
                 description: null,
                 startDay: null,
                 endDay: null,
                 levels: [],
                 courseStatuses: [],
+                trainers: []
             }
         },
 
@@ -86,6 +99,13 @@
                 axios.get('http://localhost:8080/getInfo/getLevels')
                     .then(function (response) {
                         self.levels = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                axios.get('http://localhost:8080/users/get-all-trainers')
+                    .then(function (response) {
+                        self.trainers = response.data;
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -118,6 +138,7 @@
                     form.append('courseStatus', this.courseStatus);
                     form.append('imageUrl', this.imageUrl);
                     form.append('image', this.imageFile);
+                    form.append('trainer', this.trainer);
                     form.append('isOnLandingPage', this.isOnLandingPage);
                     form.append('description', this.description);
                     form.append('startDay', this.startDay);
@@ -149,8 +170,8 @@
                     this.imageFile = '';
                     this.imageUrl = '';
                 }
-            }
-
+            },
+            trainerName: item => item.firstName +" "+ item.lastName
         }
     }
 </script>

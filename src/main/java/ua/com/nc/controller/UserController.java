@@ -59,4 +59,8 @@ public class UserController {
     public ResponseEntity<?> getAllManagers() {
         return new ResponseEntity<>(userService.getAllManagers(), HttpStatus.OK);
     }
+    @RequestMapping(value = "/get-all-trainers", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllTrainers() {
+        return new ResponseEntity<>(userService.getAllTrainers(), HttpStatus.OK);
+    }
 }

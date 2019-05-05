@@ -3,7 +3,7 @@ package ua.com.nc.service.impl;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.nc.dao.interfaces.IAttendanceDao;
+//import ua.com.nc.dao.interfaces.IAttendanceDao;
 import ua.com.nc.dao.interfaces.IGroupDao;
 import ua.com.nc.dao.interfaces.ILessonDao;
 import ua.com.nc.dao.interfaces.IUserDao;
@@ -23,8 +23,8 @@ import java.util.List;
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
 
-    @Autowired
-    private IAttendanceDao attendanceDao;
+    /*@Autowired
+    private IAttendanceDao attendanceDao;*/
 
     @Autowired
     private IUserDao userDao;
@@ -126,7 +126,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public List<Attendance> getAttendanceByStudentIdAndCourseId(Integer studentId, Integer courseId) {
-        return attendanceDao.getAttendanceByStudentIdAndCourseId(studentId, courseId);
+        return null;//attendanceDao.getAttendanceByStudentIdAndCourseId(studentId, courseId);
     }
 
 

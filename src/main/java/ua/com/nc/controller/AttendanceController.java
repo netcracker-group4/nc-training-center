@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.domain.Attendance;
 import ua.com.nc.dto.AttendanceDto;
-import ua.com.nc.dto.UserAttendanceDto;
 import ua.com.nc.service.AttendanceService;
 
 import java.util.List;

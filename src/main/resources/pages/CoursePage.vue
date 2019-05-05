@@ -7,49 +7,36 @@
                     grid-list-md
             >
                 <v-layout row wrap>
-                    <v-flex xs7>
-                        <v-card>
+                    <v-flex xs5>
                         <v-layout column>
-                            <div class="subheading pt-3"> <b>{{courseStatus}}</b> <p>{{imageUrl}}</p></div>
+                            <div class="subheading pt-3"> <b>{{courseStatus}}</b></div>
                             <!--<v-img sizes="" src="https://picsum.photos/510/300?random" aspect-ratio="2" wight="100%"></v-img>-->
                             <v-img :src="''+imageUrl" aspect-ratio="2"></v-img> <!-- Something wrong here, try to fix it &ndash;&gt;-->
                         </v-layout>
-                        </v-card>
                     </v-flex>
-                    <v-flex  xs5 offset-xs0 offset-lg0>
+                    <v-flex  xs5 offset-xs0 offset-lg0 style="margin-left: 2%">
                         <v-layout column>
-                        <v-card >
                             <div class="subheading pt-3"> <b>Trainers</b></div>
                             <div v-for="trainer in trainers" @click="goTrainerPage(trainer.id)"> <b> {{trainer.firstName }}   {{trainer.lastName}} </b> </div>
-                        </v-card>
-                        </v-layout>
-                    </v-flex>
-                    <v-flex  xs5 offset-xs0 offset-lg7>
-                        <v-card>
                             <div class="subheading pt-3"> <b>Groups</b></div>
                             <div v-for="group in groups" @click="goGroupPage(group.id)">{{group.title}}</div>
-                        </v-card>
+                        </v-layout>
                     </v-flex>
                 </v-layout>
             </v-container>
-
-
-
-
-
         <v-container
                 fluid
                 grid-list-md
         >
             <v-layout row wrap>
-            <v-flex xs7>
+            <v-flex xs5>
                 <v-textarea
                         name="input-7-1"
                         box
                         label="Description"
                         auto-grow
                         :value="description"
-                        readonly=true
+                        :readonly="read"
                 ></v-textarea>
             </v-flex>
             </v-layout>
@@ -64,6 +51,7 @@
         name: "CoursePage",
         data() {
             return{
+                read: true,
                 name: null,
                 level: null,
                 courseStatus: null,

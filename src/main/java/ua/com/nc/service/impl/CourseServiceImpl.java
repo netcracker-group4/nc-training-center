@@ -75,7 +75,6 @@ public class CourseServiceImpl implements CourseService {
             System.err.println(e.getMessage());
         }
         int statusId = 1;
-        System.err.println(level.trim());
         int lvl = levelDao.getIdByName(level.trim());
 
         return new Course(name, lvl, statusId, userId, imageUrl,
@@ -155,13 +154,16 @@ public class CourseServiceImpl implements CourseService {
                 byte[] bytes = image.getBytes();
 
                 name = new StringBuilder(image.getOriginalFilename());
+                int dot = name.lastIndexOf(".");
+                String imgFormat = name.substring(dot-1);
+                name = new StringBuilder(name.subSequence(0,dot));
 
                 String rootPath = "src/main/resources/img";
-                Path path = Paths.get(rootPath + File.separator + name);
+                Path path = Paths.get(rootPath + File.separator + name + imgFormat);
                 int i=1;
                 while (Files.exists(path)){
                     name.append(i);
-                    path = Paths.get(rootPath + File.separator + name);
+                    path = Paths.get(rootPath + File.separator + name + imgFormat);
                     i++;
                 }
                 File uploadedFile = Files.createFile(path).toFile();
