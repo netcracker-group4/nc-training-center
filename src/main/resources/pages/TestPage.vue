@@ -9,23 +9,25 @@
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-layout wrap>
-                            <v-flex xs12 sm6 md4>
-                                <!--<v-select
-                                        v-model="editUser.dtoManager"
-                                        :items="managers"
-                                        label="Change manager"
-                                >
-                                    <template slot="selection" slot-scope="managers">
-                                        {{ managers.item.firstName }} {{ managers.item.lastName }}
+                            <v-flex xs6 sm6 md4>
+                                <v-select v-model="editedItem.status" :items="statuses" label="Change status">
+                                    <template slot="selection" slot-scope="status">
+                                        {{ status.item.title}}
                                     </template>
-                                    <template slot="item" slot-scope="managers">
-                                        {{ managers.item.firstName }} {{ managers.item.lastName }}
+                                    <template slot="item" slot-scope="status">
+                                        {{ status.item.title }}
                                     </template>
-                                </v-select>-->
-                                <v-text-field v-model="editedItem.status" label="Status"></v-text-field>
+                                </v-select>
                             </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                <v-text-field v-model="editedItem.reason" label="Reason"></v-text-field>
+                            <v-flex xs6 sm6 md4>
+                                <v-select v-model="editedItem.reason" :items="reasons" label="Change reason" :disabled="editedItem.status == null || editedItem.status.id != 2">
+                                    <template slot="selection" slot-scope="status">
+                                            {{ status.item.title}}
+                                    </template>
+                                    <template slot="item" slot-scope="status">
+                                            {{ status.item.title }}
+                                    </template>
+                                </v-select>
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -53,9 +55,6 @@
                     <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
                 </td>
             </template>
-            <template v-slot:no-data>
-                <v-btn color="primary" @click="initialize">Reset</v-btn>
-            </template>
         </v-data-table>
     </div>
 </template>
@@ -79,30 +78,16 @@
                 { text: 'Reason', value: 'reason', sortable: false, },
                 { text: 'Actions', value: 'name', sortable: false }
             ],
-            desserts: [],
+            statuses: [],
+            reasons: [],
             attendances: [],
             editedIndex: -1,
             editedItem: {
-                name: '',
-                calories: 0,
-                fat: 0,
-                carbs: 0,
-                protein: 0
+                attendanceId: null,
+                status: null,
+                reason: null
             },
-            defaultItem: {
-                name: '',
-                calories: 0,
-                fat: 0,
-                carbs: 0,
-                protein: 0
-            }
         }),
-
-        computed: {
-            formTitle () {
-                return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-            }
-        },
 
         watch: {
             dialog (val) {
@@ -110,34 +95,47 @@
             }
         },
 
-        created () {
-            this.initialize()
-        },
-
         methods: {
-            initialize () {
-
-            },
-
             editItem (item) {
-                this.editedIndex = this.desserts.indexOf(item)
-                this.editedItem = Object.assign({}, item)
+                this.editedItem.attendanceId = item.attendanceId
                 this.dialog = true
             },
             close () {
+                this.editedItem = []
                 this.dialog = false
-                setTimeout(() => {
-                    this.editedItem = Object.assign({}, this.defaultItem)
-                    this.editedIndex = -1
-                }, 300)
             },
 
             save () {
-                if (this.editedIndex > -1) {
-                    Object.assign(this.desserts[this.editedIndex], this.editedItem)
-                } else {
-                    this.desserts.push(this.editedItem)
+                let self = this
+                let attendanceId = self.editedItem.attendanceId
+                let statusId = self.editedItem.status.id
+                let reasonId = null
+                if(self.editedItem.reason == null || self.editedItem.reason == undefined){
+                    reasonId = null
+                }else{
+                    reasonId = self.editedItem.reason.id
                 }
+                let form = new FormData();
+                let request = new XMLHttpRequest();
+                request.open('PUT', 'http://localhost:8080/attendances')
+                form.append('attendanceId', attendanceId)
+                form.append('statusId', statusId)
+                form.append('absenceId', reasonId)
+                request.send(form);
+                request.onloadend = function () {
+                    if(request.status == 200){
+                        let userId = 13;
+                        let groupId = 1;
+                        axios.get('http://localhost:8080/attendances?userId='+ userId + '&groupId=' + groupId)
+                            .then(response => self.attendances = response.data)
+                            .catch(error => console.log(error))
+                    }
+                    if(request.status == 404){
+                        //self.modalMessage = "There is no user with such email and password"
+                        //self.dialog = true
+                    }
+                }
+                console.log(this.editedItem)
                 this.close()
             },
         },
@@ -148,7 +146,14 @@
                 .then(response => this.attendances = response.data)
                 .catch(error => console.log(error))
 
-            console.log(this.attendances)
+            axios.get('http://localhost:8080/attendance-status')
+                .then(response => this.statuses = response.data)
+                .catch(error => console.log(error))
+
+            axios.get('http://localhost:8080/absence-reason')
+                .then(response => this.reasons = response.data)
+                .catch(error => console.log(error))
+
         }
     }
 </script>

@@ -40,4 +40,33 @@ public class AttendanceController {
         return ResponseEntity.ok().body(new Gson().toJson(attendanceDto));
         }
     }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity<?> updateAttendance(@RequestParam String attendanceId,
+                                              @RequestParam String statusId,
+                                              @RequestParam String absenceId){
+        Integer integerAttendanceId;
+        Integer integerStatusId;
+        Integer integerAbsenceId;
+
+        if(attendanceId.trim().equals("null")){
+            integerAttendanceId = null;
+        }else{
+            integerAttendanceId = Integer.parseInt(attendanceId);
+        }
+        if(statusId.trim().equals("null")){
+            integerStatusId = null;
+        }else{
+            integerStatusId = Integer.parseInt(statusId);
+        }
+        if(absenceId.trim().equals("null")){
+            integerAbsenceId = null;
+        }else{
+            integerAbsenceId = Integer.parseInt(absenceId);
+        }
+
+        log.debug(integerAttendanceId + " " + integerStatusId + " " + integerAbsenceId);
+        attendanceService.attendanceUpdate(integerAttendanceId, integerStatusId, integerAbsenceId);
+        return ResponseEntity.ok().body("Ok");
+    }
 }

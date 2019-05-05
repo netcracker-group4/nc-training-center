@@ -4,9 +4,11 @@ import ua.com.nc.domain.Attendance;
 
 import java.util.List;
 
-public interface IAttendanceDao {
+public interface IAttendanceDao extends GenericDao<Attendance, Integer> {
     List<Attendance> getAttendanceByStudentIdAndCourseId(Integer studentId, Integer courseId);
 
     List<Attendance> getAttendanceByStudentIdAndGroupId(Integer studentId, Integer groupId);
+
+    void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId);
 }
 
