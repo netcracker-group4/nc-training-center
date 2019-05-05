@@ -1,5 +1,5 @@
 <template>
-    <v-toolbar app v-if="">
+    <v-toolbar flat  class="grey lighten-2" app v-if="">
         <v-toolbar-items class="hidden-sm-and-down" v-if="this.$store.getters.isAuthorized">
             <v-btn @click="forwardToMainPage" flat>Main</v-btn>
         </v-toolbar-items>
