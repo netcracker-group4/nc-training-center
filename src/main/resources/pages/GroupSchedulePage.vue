@@ -1,19 +1,17 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <v-container>
-            <v-layout>
-                <v-flex>
-                    <v-radio-group v-model="calendarView" row>
-                        <v-radio :key="1" :label="'Calendar'" :value="true"></v-radio>
-                        <v-radio :key="2" :label="'List'" :value="false"></v-radio>
-                    </v-radio-group>
-                </v-flex>
-
+            <v-layout style="margin-bottom: 20px;">
+                <v-radio-group v-model="calendarView" row>
+                    <v-radio :key="1" :label="'Calendar'" :value="true"></v-radio>
+                    <v-radio :key="2" :label="'List'" :value="false"></v-radio>
+                </v-radio-group>
                 <v-spacer></v-spacer>
+                <v-btn flat v-on:click="$router.push('/groups/' + group.id)">{{group.title}}</v-btn>
                 <v-btn color="info" v-on:click="addLesson">Add lesson</v-btn>
             </v-layout>
             <!--        buttons-->
-            <v-layout>
+            <v-layout style="margin-bottom: 20px">
                 <v-flex sm4 xs12 class="text-sm-left text-xs-center">
                     <v-btn @click="$refs.calendar.prev()">
                         <v-icon dark left>
@@ -130,12 +128,12 @@
                 </div>
             </div>
 
-            <lesson-editing-component v-if="editing" @saving-event="save" @delete-event="deleteLesson"
+            <lesson-editing-component ref='form' style="margin-bottom: 20px" v-if="editing" @saving-event="save"
+                                      @delete-event="deleteLesson"
                                       @cancel-event="cancel"
                                       :attachments="allAttachments" :currentLesson="currentEditingLesson"
                                       :trainers="allTrainers"></lesson-editing-component>
         </v-container>
-
     </div>
 </template>
 
@@ -148,6 +146,7 @@
         name: "GroupSchedulePage",
         data: function () {
             return {
+                group: [],
                 lessons: [],
                 currentEditingLesson: {},
                 start: new Date().toISOString().slice(0, 10),
@@ -165,6 +164,13 @@
                     self.lessons.forEach(function (one) {
                         one.open = false;
                     })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            axios.get('http://localhost:8080/groups/' + self.$route.params.id)
+                .then(function (response) {
+                    self.group = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -215,6 +221,7 @@
             editLesson(lesson) {
                 this.currentEditingLesson = Object.assign({}, lesson);
                 this.editing = true;
+                window.scrollTo(0, document.body.scrollHeight);
             },
             addLesson() {
                 this.editing = true;
@@ -227,7 +234,8 @@
                         "timeDate": new Date().toISOString(),
                         "attachments": [],
                         "isCanceled": false
-                    }
+                    };
+                window.scrollTo(0, document.body.scrollHeight);
             },
             cancelLesson(lesson) {
                 axios.post('/schedule/' + lesson.id)
@@ -299,7 +307,6 @@
                 minutes = +minutes === 0 ? '' : `:${minutes}`;
                 return hours + minutes + modifier
             }
-
         },
         components: {
             LessonEditingComponent
@@ -321,11 +328,13 @@
         margin-bottom: 1px;
     }
 
+    /*noinspection ALL*/
     .active-lesson {
         background-color: #1867c0;
         border: 1px solid #1867c0;
     }
 
+    /*noinspection ALL*/
     .canceled-lesson {
         background-color: #656266;
         border: 1px solid #656266;

@@ -1,5 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
+    <div style="margin-top: 50px;">
         <form>
             <v-text-field
                     v-model="lesson.topic"
@@ -12,7 +12,6 @@
                     item-value="id"
                     :item-text="getName"
                     required
-                    @change="handleChange"
             ></v-select>
             <v-layout row wrap>
                 <v-flex>
@@ -73,8 +72,10 @@
                 </v-flex>
             </v-layout>
             <v-layout>
-                <div class="text-xs-left">
-                    <v-chip close @input="remove(attachment)" v-for="attachment in lesson.attachments" :key="attachment.id">{{attachment.description}}</v-chip>
+                <div class="text-xs-left" style="margin-bottom: 20px;">
+                    <v-chip close @input="remove(attachment)" v-for="attachment in selectedAttachments"
+                            :key="attachment.id">{{attachment.description}}
+                    </v-chip>
                 </div>
             </v-layout>
             <v-data-table
@@ -122,10 +123,14 @@
                     </tr>
                 </template>
             </v-data-table>
-            <v-btn @click="deleteLesson">delete</v-btn>
-            <v-btn @click="save">save</v-btn>
-            <v-btn @click="cancel">cancel</v-btn>
-{{selectedAttachments}}
+            <v-layout style="margin-top: 20px">
+                <v-spacer></v-spacer>
+                <v-btn color="error" @click="deleteLesson">delete</v-btn>
+                <v-btn color="success" @click="save">save</v-btn>
+                <v-btn color="warning" @click="cancel">cancel</v-btn>
+            </v-layout>
+
+
         </form>
     </div>
 
@@ -164,6 +169,11 @@
             save() {
                 this.lesson.timeDate = this.date + ' ' + this.time + this.appendix;
                 this.lesson.attachments = this.selectedAttachments;
+                let trainer = this.trainers.filter(e => {
+                    return e.id === this.lesson.trainerId;
+                })[0];
+                console.log(trainer);
+                this.lesson.trainerName = trainer.firstName + ' ' + trainer.lastName;
                 this.$emit('saving-event', this.lesson);
             },
             deleteLesson() {
@@ -185,13 +195,8 @@
                     this.pagination.descending = false
                 }
             },
-            handleChange(e) {
-                if (e.target.options.selectedIndex > -1) {
-                    this.lesson.trainerName = e.target.options[e.target.options.selectedIndex].dataset.foo;
-                }
-            },
-            remove(attachment){
-                this.selectedAttachments =  this.selectedAttachments.filter(el => el.id !== attachment.id);
+            remove(attachment) {
+                this.selectedAttachments = this.selectedAttachments.filter(el => el.id !== attachment.id);
             }
         },
         computed: {

@@ -14,7 +14,7 @@
         <br/>
         <v-container fluid grid-list-md>
             <v-layout row wrap>
-                <v-flex d-flex>
+                <v-flex d-flex style="margin-bottom: 50px">
                     <div>
                         <h2>All ungrouped students for a course " {{this.course.name}} "</h2>
                         <table class="zui-table ">
@@ -35,16 +35,16 @@
                                 </tr>
                             </draggable>
                         </table>
-                        <v-btn alert @click="addGroup">Add group</v-btn>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <v-btn v-if="groups.length > 0" alert @click="saveAll">Save All</v-btn>
+                        <v-layout>
+                            <v-btn alert @click="addGroup">Add group</v-btn>
+                            <v-spacer></v-spacer>
+                            <v-btn v-if="groups.length > 0" alert @click="saveAll">Save All</v-btn>
+                        </v-layout>
                     </div>
                 </v-flex>
                 <v-flex d-flex>
                     <div>
-                        <div v-for="(group, index) in groups">
+                        <div style="margin-bottom: 30px" v-for="(group, index) in groups">
                             <h2>Drag and drop here students for a group number {{index}}</h2>
                             <div>
                                 <table class="zui-table ">
@@ -65,7 +65,7 @@
                                         </tr>
                                     </draggable>
                                 </table>
-                                <v-layout >
+                                <v-layout>
                                     <v-flex>
                                         <v-text-field v-model="group.name"
                                                       placeholder="Name"
@@ -74,12 +74,8 @@
                                         ></v-text-field>
                                     </v-flex>
                                     <v-spacer></v-spacer>
-                                    <v-flex>
-                                        <v-btn alert @click="saveGroup(index)">Save Group</v-btn>
-                                    </v-flex>
-                                    <v-flex>
-                                        <v-btn alert @click="deleteGroup(index)">Delete Group</v-btn>
-                                    </v-flex>
+                                    <v-btn alert color="error" @click="deleteGroup(index)">Delete Group</v-btn>
+                                    <v-btn alert  color="success" @click="saveGroup(index)">Save Group</v-btn>
                                 </v-layout>
 
                             </div>
