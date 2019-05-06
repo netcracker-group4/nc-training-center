@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
-import ua.com.nc.domain.schedule.GroupSchedule;
-import ua.com.nc.domain.schedule.ParsedSchedule;
-import ua.com.nc.domain.schedule.ScheduleForUser;
+import ua.com.nc.dto.schedule.GroupSchedule;
+import ua.com.nc.dto.schedule.ParsedSchedule;
+import ua.com.nc.dto.schedule.ScheduleForUser;
 import ua.com.nc.service.CourseService;
 
 import java.io.BufferedOutputStream;

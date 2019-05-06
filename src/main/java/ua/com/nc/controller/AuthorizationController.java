@@ -19,7 +19,7 @@ public class AuthorizationController {
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public String login(@RequestParam(required = false, name="error") String error){
         if(error != null){
-           // throw new NoSuchUserException("There is no user with such email and password");
+//            throw new NoSuchUserException("There is no user with such email and password");
         }
         return "index";
     }
