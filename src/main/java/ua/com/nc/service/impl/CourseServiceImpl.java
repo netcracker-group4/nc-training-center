@@ -1,6 +1,7 @@
 package ua.com.nc.service.impl;
 
 import com.google.gson.Gson;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,7 +11,6 @@ import ua.com.nc.domain.schedule.GroupSchedule;
 import ua.com.nc.domain.schedule.ParsedSchedule;
 import ua.com.nc.domain.schedule.ScheduleForUser;
 import ua.com.nc.service.CourseService;
-import org.apache.log4j.Logger;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -61,6 +61,8 @@ public class CourseServiceImpl implements CourseService {
     public Course stringToObjCourse(String name, String user, String level, String courseStatus,
                                     String imageUrl, String isOnLandingPage, String desc, String startDay, String endDay) {
         //int statusId = statusDao.getIdByName(courseStatus.getName());
+
+
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         int userId = 1;
 //        CourseStatus status = CourseStatus.valueOf(courseStatus);

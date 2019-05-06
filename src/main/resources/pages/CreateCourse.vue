@@ -121,7 +121,6 @@
                 this.description=document.querySelector('#course-descr-text')._value;
                 this.startDay = ChooserDate.data().date1;
                 this.endDay = ChooserDate.data().date2;
-                console.log(this);
             },
             submit(){
                     this.setData();
@@ -147,11 +146,7 @@
                 }catch (e) {
                     alert(e.toString());
                 }
-                if(this.id===undefined){
-                    alert('Course updated');
-                }else {
-                    alert('Course created');
-                }
+                alert('Course created');
                 this.$router.push("/admincourses");
             },
             pickFile () {
