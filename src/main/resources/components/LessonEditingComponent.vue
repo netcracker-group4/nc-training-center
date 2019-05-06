@@ -12,32 +12,33 @@
                     item-value="id"
                     :item-text="getName"
                     required
+                    @change="handleChange"
             ></v-select>
             <v-layout row wrap>
                 <v-flex>
-                <v-menu
-                        v-model="menu"
-                        :close-on-content-click="false"
-                        :nudge-right="40"
-                        lazy
-                        transition="scale-transition"
-                        offset-y
-                        full-width
-                        max-width="290px"
-                        min-width="290px"
-                >
-                    <template v-slot:activator="{ on }">
-                        <v-text-field
-                                v-model="date"
-                                label="Date (read only text field)"
-                                persistent-hint
-                                prepend-icon="event"
-                                readonly
-                                v-on="on"
-                        ></v-text-field>
-                    </template>
-                    <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
-                </v-menu>
+                    <v-menu
+                            v-model="menu"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            lazy
+                            transition="scale-transition"
+                            offset-y
+                            full-width
+                            max-width="290px"
+                            min-width="290px"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    v-model="date"
+                                    label="Date (read only text field)"
+                                    persistent-hint
+                                    prepend-icon="event"
+                                    readonly
+                                    v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
+                    </v-menu>
                 </v-flex>
                 <v-flex md12 lg6>
                     <v-menu
@@ -70,6 +71,11 @@
                         ></v-time-picker>
                     </v-menu>
                 </v-flex>
+            </v-layout>
+            <v-layout>
+                <div class="text-xs-left">
+                    <v-chip close @input="remove(attachment)" v-for="attachment in lesson.attachments" :key="attachment.id">{{attachment.description}}</v-chip>
+                </div>
             </v-layout>
             <v-data-table
                     v-model="selectedAttachments"
@@ -116,9 +122,10 @@
                     </tr>
                 </template>
             </v-data-table>
+            <v-btn @click="deleteLesson">delete</v-btn>
             <v-btn @click="save">save</v-btn>
             <v-btn @click="cancel">cancel</v-btn>
-
+{{selectedAttachments}}
         </form>
     </div>
 
@@ -132,7 +139,8 @@
             return {
                 lesson: this.currentLesson,
                 date: this.currentLesson.timeDate.substr(0, 10),
-                time: this.currentLesson.timeDate.substr(11, 20),
+                time: this.currentLesson.timeDate.substr(11, 5),
+                appendix: this.currentLesson.timeDate.substr(16, 6),
                 selectedAttachments: this.currentLesson.attachments,
                 headers: [
                     {
@@ -148,15 +156,18 @@
                 pagination: {
                     sortBy: 'description'
                 },
-                menu : false,
-                menu2 : false
+                menu: false,
+                menu2: false
             }
         },
         methods: {
             save() {
-                this.lesson.timeDate = this.date + ' ' + this.time;
+                this.lesson.timeDate = this.date + ' ' + this.time + this.appendix;
                 this.lesson.attachments = this.selectedAttachments;
                 this.$emit('saving-event', this.lesson);
+            },
+            deleteLesson() {
+                this.$emit('delete-event', this.lesson);
             },
             cancel() {
                 this.$emit('cancel-event', this.lesson);
@@ -173,10 +184,18 @@
                     this.pagination.sortBy = column;
                     this.pagination.descending = false
                 }
+            },
+            handleChange(e) {
+                if (e.target.options.selectedIndex > -1) {
+                    this.lesson.trainerName = e.target.options[e.target.options.selectedIndex].dataset.foo;
+                }
+            },
+            remove(attachment){
+                this.selectedAttachments =  this.selectedAttachments.filter(el => el.id !== attachment.id);
             }
         },
-        computed:{
-            computedTime : function () {
+        computed: {
+            computedTime: function () {
                 let [hours, minutes] = this.time.split(':');
                 let modifier = +hours < 12 ? 'am' : 'pm';
                 hours = +hours % 12 || 12;

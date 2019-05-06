@@ -7,10 +7,7 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ILessonDao;
 import ua.com.nc.domain.Lesson;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +31,9 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
 
     @Value("${lesson.select-by-group-id-and-user-id}")
     private String getSelectByGroupIdAndUserId;
+
+    @Value("${lesson.archive}")
+    private String archiveLessonQuery;
 
     public LessonDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                      @Value("${spring.datasource.username}") String DATABASE_USER,
@@ -88,13 +88,14 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
         statement.setInt(1, entity.getGroupId());
         statement.setString(2, entity.getTopic());
         statement.setInt(3, entity.getTrainerId());
-        statement.setDate(4, entity.getTimeDate());
+        statement.setTimestamp(4, entity.getTime());
+        statement.setBoolean(5, entity.isCanceled());
     }
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Lesson entity) throws SQLException {
         setAllFields(statement, entity);
-        statement.setInt(5, entity.getId());
+        statement.setInt(6, entity.getId());
     }
 
     @Override
@@ -106,7 +107,9 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
             String topic = rs.getString("topic");
             Integer trainerId = rs.getInt("trainer_id");
             Date timeDate = rs.getDate("time_date");
-            Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate);
+            Timestamp time = rs.getTimestamp("time_date");
+            boolean isCanceled = rs.getBoolean("is_canceled");
+            Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate, time, isCanceled);
             lessons.add(lesson);
         }
         return lessons;
@@ -144,6 +147,22 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
             throw new PersistException(e);
         }
         return lessons;
+    }
+
+    @Override
+    public void archiveLesson(Integer lessonId) {
+        String sql = archiveLessonQuery;
+        log.info(sql + "  archiveLesson " + lessonId);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            setId(statement, lessonId);
+            int count = statement.executeUpdate();
+            if (count > 1) {
+                throw new PersistException("On update modify more then 1 record: " + count);
+            }
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
     }
 
     protected List<Lesson> parseResultSetForAttendance(ResultSet rs) throws SQLException {

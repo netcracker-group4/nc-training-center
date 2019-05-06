@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@EqualsAndHashCode(of = {"id"})
 @AllArgsConstructor
 @ToString
 public class LessonAttachment extends Entity<Integer> {

@@ -8,4 +8,5 @@ public interface LessonsService {
     String addLesson(DtoLesson toAdd);
     String deleteLesson(int toDelete);
 
+    String cancelLesson(int parseInt);
 }

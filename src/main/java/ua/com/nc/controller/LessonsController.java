@@ -10,7 +10,7 @@ import ua.com.nc.dto.DateDeserializer;
 import ua.com.nc.dto.DtoLesson;
 import ua.com.nc.service.LessonsService;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 
 @Controller
@@ -31,7 +31,7 @@ public class LessonsController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String addLesson(@RequestBody String toAdd) {
         System.out.println(toAdd);
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeserializer()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new DateDeserializer()).create();
         DtoLesson toAdd1 = gson.fromJson(toAdd, DtoLesson.class);
         System.out.println(toAdd1);
         if (toAdd1.getId() == null || toAdd1.getId() == 0) {
@@ -48,6 +48,13 @@ public class LessonsController {
     public String deleteLesson(@PathVariable String id) {
 //        return "deleting lesson";
         return lessonsService.deleteLesson(Integer.parseInt(id));
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/{id}")
+    public String cancelLesson(@PathVariable String id) {
+//        return "deleting lesson";
+        return lessonsService.cancelLesson(Integer.parseInt(id));
     }
 
 }
