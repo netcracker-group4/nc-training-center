@@ -16,8 +16,8 @@
         >
             <template v-slot:items="props">
                 <tr>
-                    <td @click="goToCoursePage(props.item.course.id)" class="my-link">
-                        <div>{{ props.item.course.name }}</div>
+                    <td class="my-link">
+                        <div @click="goToCoursePage(props.item.course.id)" >{{ props.item.course.name }}</div>
                     </td>
                     <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
                     <td class="text-xs-right" v-if="isAdmin">
@@ -73,11 +73,13 @@
             });
     },
     methods: {
+        goToCoursePage(id){
+          this.$router.push('/courses/'+ id);
+        },
         search(){
 
         },
         deleteCourse(courseId){
-            alert(courseId);
             if(confirm("Are you shure you want to delete "+this.findCourseById(courseId).name)){
                 axios.delete('http://localhost:8080/getcourses/'+courseId)
                     .catch(function (error) {
@@ -89,7 +91,7 @@
             return this.coursesAndQuantities.find(c => c.course.id===id).course;
         },
         update(courseId){
-            this.$router.push('/courses/'+ courseId);
+            this.$router.push('/coursecreate/'+ courseId);
         },
         createCourse(){
             this.$router.push('/coursecreate');

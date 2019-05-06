@@ -1,5 +1,6 @@
 package ua.com.nc.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.CourseStatus;
 
@@ -17,4 +18,6 @@ public interface CourseService {
     String getDesiredScheduleForUngroupedStudentsOfCourse(int courseId) throws Exception;
     String getDesiredScheduleForFormedGroupsForCourse(int courseId) throws Exception;
     String getDayIntervals();
+
+    String uploadImage(MultipartFile image);
 }

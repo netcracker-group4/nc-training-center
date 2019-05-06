@@ -28,4 +28,5 @@ public interface IUserDao extends GenericDao<User, Integer> {
     void updateUserByAdmin(User user);
 
     void updateActive(User user);
+    List<User> getTrainersOnCourse(int id);
 }
