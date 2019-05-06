@@ -129,5 +129,10 @@ public class AttendanceServiceImpl implements AttendanceService {
         return null;//attendanceDao.getAttendanceByStudentIdAndCourseId(studentId, courseId);
     }
 
+    @Override
+    public List<Attendance> getAttendanceByStudentIdAndGroupId(Integer studentId, Integer groupId) {
+        return attendanceDao.getAttendanceByStudentIdAndGroupId(studentId, groupId);
+    }
+
 
 }

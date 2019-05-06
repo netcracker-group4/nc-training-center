@@ -8,7 +8,7 @@ export default new Vuex.Store({
         isAuthorized: isAuthorized,
         user: user,
         userRoles: userRoles,
-        error: true
+        imgFolder: '/img/'
     },
     getters: {
         userRoles: state => {
@@ -26,13 +26,6 @@ export default new Vuex.Store({
                 return true
             }else return false
         },
-        getError: state => {
-            return state.error
-        }
     },
-    mutations: {
-        setError(){
-            state.error = true
-        }
-    }
+
 })

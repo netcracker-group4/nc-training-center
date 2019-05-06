@@ -15,6 +15,7 @@ import java.util.List;
 @Log4j
 @Controller
 @RequestMapping("/attendances")
+@CrossOrigin(origins = "http://localhost:8000")
 public class AttendanceController {
 
     @Autowired
@@ -23,10 +24,14 @@ public class AttendanceController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getAttendance(@RequestParam(required = false, name="userId") Integer userId,
-                                        @RequestParam(required = false, name="courseId") Integer courseId){
+                                        @RequestParam(required = false, name="courseId") Integer courseId,
+                                        @RequestParam(required = false, name="groupId") Integer groupId){
 
         if(userId != null && courseId != null){
             List<Attendance> attendances = attendanceService.getAttendanceByStudentIdAndCourseId(userId, courseId);
+            return ResponseEntity.ok().body(new Gson().toJson(attendances));
+        }if(userId != null && groupId != null){
+            List<Attendance> attendances = attendanceService.getAttendanceByStudentIdAndGroupId(userId, groupId);
             return ResponseEntity.ok().body(new Gson().toJson(attendances));
         }
         else{
