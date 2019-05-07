@@ -35,6 +35,9 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
     @Value("${lesson.archive}")
     private String archiveLessonQuery;
 
+    @Value("${lesson.select-by-user-id}")
+    private String selectByUserId;
+
     public LessonDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                      @Value("${spring.datasource.username}") String DATABASE_USER,
                      @Value("${spring.datasource.password}") String DATABASE_PASSWORD)
@@ -166,6 +169,22 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
             log.trace(e);
             throw new PersistException(e);
         }
+    }
+
+    @Override
+    public List<Lesson> getByUser(int userId) {
+        List<Lesson> lessons;
+        String sql = selectByUserId;
+        log.info("getByUserId userId " + userId + "  " + sql);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            ResultSet rs = statement.executeQuery();
+            lessons = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        return lessons;
     }
 
     protected List<Lesson> parseResultSetForAttendance(ResultSet rs) throws SQLException {

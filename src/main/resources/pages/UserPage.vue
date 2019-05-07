@@ -118,31 +118,44 @@
                         </table>
                     </div>
                 </v-container>
-                <div class="attendance" v-for="group in user.groups" >
-                    <v-card>
-                        <v-card-title>
-                            Attendance of user {{user.firstName + ' ' + user.lastName}}  in group {{group.title}}
-                        </v-card-title>
-
-                        <attendance-table :user-id="user.id"
-                                          :group-id="group.id"
-                                          :key="group.id"/>
-                    </v-card>
-                </div>
             </v-flex>
         </v-layout>
 
+        <div>
+            <v-expansion-panel  class="margin" >
+                <v-expansion-panel-content>
+                    <!--suppress HtmlUnknownBooleanAttribute -->
+                    <template v-slot:header>
+                        <div>Employee's attendance</div>
+                    </template>
+                    <div class="attendance" v-for="group in user.groups" >
+                        <v-card>
+                            <v-card-title>
+                                Attendance of user {{user.firstName + ' ' + user.lastName}}  in group {{group.title}}
+                            </v-card-title>
 
+                            <attendance-table :user-id="user.id"
+                                              :group-id="group.id"
+                                              :key="group.id"/>
+                        </v-card>
+                    </div>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </div>
+
+        <calendar-list-schedule-component class="margin" :groups-list="user.groups" :lessons-list="lessons"></calendar-list-schedule-component>
 
     </v-container>
+        {{user}}
     </div>
 </template>
 
 <script>
     import axios from 'axios'
     import AttendanceTable from "../components/AttendanceTable.vue";
+    import CalendarListScheduleComponent from "../components/CalendarListScheduleComponent.vue";
     export default {
-        components: {AttendanceTable},
+        components: {AttendanceTable, CalendarListScheduleComponent},
         data() {
             return {
                 dialog: false,
@@ -162,10 +175,9 @@
                     active: false,
                 },
                 groups: [],
-                managers: []
+                managers: [],
+                lessons : []
             }
-        },
-        computed: {
         },
         methods: {
             getFullName (value) {
@@ -221,7 +233,7 @@
                     alert("Incorrect information in fields")
                 }
                 this.close()
-            },
+            }
         },
         mounted() {
             let self = this;
@@ -234,7 +246,17 @@
                 .catch(function (error) {
                     console.log(error);
                 });
-
+            axios.get('http://localhost:8080/schedule/employee/' + id)
+                .then(function (response) {
+                    console.log(response.data);
+                    self.lessons = response.data;
+                    self.lessons.forEach(function (one) {
+                        one.open = false;
+                    })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
     }
 </script>
@@ -294,5 +316,9 @@
     .attendance{
         margin-bottom: 20px;
         margin-top: 20px;
+    }
+    .margin{
+        margin-top: 30px;
+        margin-bottom: 30px;
     }
 </style>
