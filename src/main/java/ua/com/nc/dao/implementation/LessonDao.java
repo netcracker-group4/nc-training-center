@@ -89,13 +89,15 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
         statement.setString(2, entity.getTopic());
         statement.setInt(3, entity.getTrainerId());
         statement.setTimestamp(4, entity.getTime());
-        statement.setBoolean(5, entity.isCanceled());
+        String[] intervalElems =  entity.getDuration().split(":");
+        statement.setString(5, intervalElems[0]+"h "+ intervalElems[1]+"m");
+        statement.setBoolean(6, entity.isCanceled());
     }
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Lesson entity) throws SQLException {
         setAllFields(statement, entity);
-        statement.setInt(6, entity.getId());
+        statement.setInt(7, entity.getId());
     }
 
     @Override
@@ -109,7 +111,8 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
             Date timeDate = rs.getDate("time_date");
             Timestamp time = rs.getTimestamp("time_date");
             boolean isCanceled = rs.getBoolean("is_canceled");
-            Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate, time, isCanceled);
+            String  duration = rs.getString("duration");
+            Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate, time,duration, isCanceled);
             lessons.add(lesson);
         }
         return lessons;

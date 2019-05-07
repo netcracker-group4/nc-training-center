@@ -233,7 +233,8 @@
                         "trainerId": a.state.user.id,
                         "timeDate": new Date().toISOString(),
                         "attachments": [],
-                        "isCanceled": false
+                        "isCanceled": false,
+                        "duration" : '01:00'
                     };
                 window.scrollTo(0, document.body.scrollHeight);
             },
@@ -272,7 +273,6 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-                console.log(newLesson);
             },
             cancel() {
                 this.currentEditingLesson = null;

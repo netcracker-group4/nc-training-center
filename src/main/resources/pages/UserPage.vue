@@ -1,28 +1,8 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <v-navigation-drawer class="drawer grey lighten-5"
-                             fixed
-                             v-model="drawer"
-                             width="180"
-                             hide-overlay
-                             stateless
-        >
-            <v-list class="pt-0" dense>
-                <v-list-tile to="/">
-                    <v-list-tile-action>
-                        <v-icon>dashboard</v-icon>
-                    </v-list-tile-action>
-
-                    <v-list-tile-content>
-                        <v-list-tile-title>Main</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
-            </v-list>
-        </v-navigation-drawer>
-
     <v-container>
         <v-layout row wrap>
-            <v-flex xs12 sm10 offset-sm2>
+            <v-flex xs12 sm12>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>User</v-toolbar-title>
                     <v-divider
@@ -138,8 +118,21 @@
                         </table>
                     </div>
                 </v-container>
+                <div class="attendance" v-for="group in user.groups" >
+                    <v-card>
+                        <v-card-title>
+                            Attendance of user {{user.firstName + ' ' + user.lastName}}  in group {{group.title}}
+                        </v-card-title>
+
+                        <attendance-table :user-id="user.id"
+                                          :group-id="group.id"
+                                          :key="group.id"/>
+                    </v-card>
+                </div>
             </v-flex>
         </v-layout>
+
+
 
     </v-container>
     </div>
@@ -147,13 +140,13 @@
 
 <script>
     import axios from 'axios'
+    import AttendanceTable from "../components/AttendanceTable.vue";
     export default {
+        components: {AttendanceTable},
         data() {
             return {
                 dialog: false,
                 user: '',
-                drawer: true,
-                mini: true,
                 right: null,
                 prevId: null,
                 editUser: {
@@ -185,8 +178,8 @@
                 })
             },
             editItem (user) {
-                this.editUser = Object.assign({}, user)
-                this.dialog = true
+                this.editUser = Object.assign({}, user);
+                this.dialog = true;
                 let self = this;
                 axios.get('http://localhost:8080/groups/get-all')
                     .then(function (response) {
@@ -206,17 +199,17 @@
                     });
             },
             close () {
-                this.dialog = false
+                this.dialog = false;
                 setTimeout(() => {
                 }, 300)
             },
             save () {
-                if(this.editUser.firstName != null & this.editUser.lastName != null){
-                    Object.assign(this.user, this.editUser)
+                if(this.editUser.firstName != null && this.editUser.lastName != null){
+                    Object.assign(this.user, this.editUser);
                     console.log(this.editUser.firstName + " " +
                         this.editUser.lastName + " " +
                         this.editUser.dtoManager + " " +
-                        this.editUser.groups + "\n" + this.user.groups)
+                        this.editUser.groups + "\n" + this.user.groups);
                     axios.put('http://localhost:8080/users/update', {
                         id: this.user.id,
                         firstName: this.editUser.firstName,
@@ -232,7 +225,7 @@
         },
         mounted() {
             let self = this;
-            let id = this.$route.params.id
+            let id = this.$route.params.id;
             axios.get('http://localhost:8080/users/' + id)
                 .then(function (response) {
                     self.user = response.data;
@@ -241,6 +234,7 @@
                 .catch(function (error) {
                     console.log(error);
                 });
+
         },
     }
 </script>
@@ -249,8 +243,7 @@
     .con_wrapper {
         background: #eeecec;
         display: flex;
-        margin: 40px auto 0;
-        width: 90%;
+
     }
     .div_avatar {
         padding: 30px 0 0 5%;
@@ -298,10 +291,8 @@
     .select {
         width: 300px;
     }
-    .drawer{
-        margin-top: 64px !important;
-    }
-    .pointer{
-        cursor: pointer;
+    .attendance{
+        margin-bottom: 20px;
+        margin-top: 20px;
     }
 </style>

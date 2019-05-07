@@ -173,7 +173,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            log.trace(e);
             throw new PersistException(e);
         }
         if (list == null || list.size() == 0) {

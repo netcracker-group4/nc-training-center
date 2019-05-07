@@ -1,5 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <v-container>
+    <!--<v-container>
         <v-layout row wrap>
             <v-flex xs12 sm6>
             </v-flex>
@@ -50,6 +50,29 @@
                 </template>
             </v-flex>
         </v-layout>
+    </v-container>-->
+    <v-container>
+        <v-layout wrap row>
+            <v-flex xs10 sm10 md10 offset-xs1 offset-sm1 offset-md1>
+                <v-card v-for="course in courses" :key="course.id" class="course">
+                    <v-img
+                            :src="course.imageUrl"
+                            aspect-ratio="2.00"
+                    ></v-img>
+
+                    <v-card-title primary-title>
+                        <div>
+                            <h3 class="headline mb-0">{{course.name}}</h3>
+                            <div> {{ course.description}} </div>
+                        </div>
+                    </v-card-title>
+
+                    <v-card-actions>
+                        <v-btn flat @click="forwardToCoursePage(course.id)">More</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-flex>
+        </v-layout>
     </v-container>
 </template>
 
@@ -81,7 +104,8 @@
                 });
         },
         methods: {
-            search(){
+            forwardToCoursePage(id){
+                this.$router.push('/courses/' + id)
             }
         }
     }
@@ -103,5 +127,8 @@
         color: white;
         font-size: 1em;
         padding: 5px;
+    }
+    .course{
+        margin-bottom: 40px;
     }
 </style>

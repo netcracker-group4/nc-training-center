@@ -156,7 +156,6 @@
 
             },
             saveAll() {
-                console.log("saving all groups");
                 let self = this;
                 for (let i = 0; i < this.groups.length; i++) {
                     axios.post('/groups', self.groups[i])

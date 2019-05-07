@@ -484,5 +484,5 @@ alter sequence suitability_seq restart with 5;
 
 update lesson set is_archived = false;
 update lesson set is_canceled = false;
-
+update lesson set duration = '1h';
 commit;

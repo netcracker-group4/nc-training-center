@@ -8,10 +8,7 @@ import ua.com.nc.dao.interfaces.IAttendanceDao;
 import ua.com.nc.domain.Attendance;
 import ua.com.nc.dto.UserAttendanceDto;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +21,9 @@ public class AttendanceDao extends GenericAbstractDao<Attendance, Integer> imple
 
     @Value("${attendance.select-by-student-id-and-course-id}")
     private String selectAttendanceByStudentIdAndCourseId;
+
+    @Value("${attendance.update}")
+    private String attendanceUpdate;
 
     public AttendanceDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
@@ -86,12 +86,13 @@ public class AttendanceDao extends GenericAbstractDao<Attendance, Integer> imple
             String firstName = rs.getString("first_name");
             String lastName = rs.getString("last_name");
             Integer courseId = rs.getInt("course_id");
+            String courseName = rs.getString("course_name");
             Date timeDate = rs.getDate("time_date");
             String topic = rs.getString("topic");
             String status = rs.getString("status");
             String reason = rs.getString("reason");
             attendances.add(new UserAttendanceDto(  id, lessonId, userId, reason, status, firstName,
-                                                    lastName, courseId, timeDate, topic));
+                                                    lastName, courseId, courseName, timeDate, topic));
 
         }
         return attendances;
@@ -129,5 +130,35 @@ public class AttendanceDao extends GenericAbstractDao<Attendance, Integer> imple
             throw new PersistException(e);
         }
         return list;
+    }
+
+    @Override
+    public void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId) {
+        String sql = attendanceUpdate;
+        log.info(sql + " attendance update");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            if(statusId == null){
+                statement.setNull(1, Types.INTEGER);
+            }else{
+                statement.setInt(1, statusId);
+            }
+            if(reasonId == null){
+                statement.setNull(2, Types.INTEGER);
+            }else{
+                statement.setInt(2, reasonId);
+            }
+            statement.setInt(3, attendanceId);
+
+            statement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PersistException(e);
+        }
+
+    }
+
+    @Override
+    public void commit() throws PersistException {
+        super.commit();
     }
 }

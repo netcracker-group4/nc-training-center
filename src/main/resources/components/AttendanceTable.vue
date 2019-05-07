@@ -22,10 +22,10 @@
                             <v-flex xs12 sm12 md10>
                                 <v-select v-model="editedItem.reason" :items="reasons" label="Change reason" :disabled="editedItem.status == null || editedItem.status.id != 2">
                                     <template slot="selection" slot-scope="status">
-                                            {{ status.item.title}}
+                                        {{ status.item.title}}
                                     </template>
                                     <template slot="item" slot-scope="status">
-                                            {{ status.item.title }}
+                                        {{ status.item.title }}
                                     </template>
                                 </v-select>
                             </v-flex>
@@ -43,7 +43,6 @@
         <v-data-table
                 :headers="headers"
                 :items="attendances"
-                class="elevation-1"
                 :rows-per-page-items="[10, 5, 20]"
         >
             <template v-slot:items="props">
@@ -63,7 +62,8 @@
 <script>
     import axios from 'axios'
     export default {
-        name: "TestPage",
+        name: "AttendanceTable",
+        props: ['userId', 'groupId'],
         data: () => ({
             dialog: false,
             headers: [
@@ -99,15 +99,14 @@
         methods: {
             editItem (item) {
                 this.editedItem.attendanceId = item.attendanceId
-               //this.editedItem.status = this.statuses.find(status => status.title == item.status)
-               // this.editedItem.reason = this.reasons.find(reason => reason.title == item.reason)
+                //this.editedItem.status = this.statuses.find(status => status.title == item.status)
+                // this.editedItem.reason = this.reasons.find(reason => reason.title == item.reason)
                 this.dialog = true
             },
             close () {
                 this.editedItem = []
                 this.dialog = false
             },
-
             save () {
                 let self = this
                 let attendanceId = self.editedItem.attendanceId
@@ -127,9 +126,7 @@
                 request.send(form);
                 request.onloadend = function () {
                     if(request.status == 200){
-                        let userId = 13;
-                        let groupId = 1;
-                        axios.get('http://localhost:8080/attendances?userId='+ userId + '&groupId=' + groupId)
+                        axios.get('http://localhost:8080/attendances?userId='+ self.userId + '&groupId=' + self.groupId)
                             .then(response => self.attendances = response.data)
                             .catch(error => console.log(error))
                     }
@@ -143,9 +140,7 @@
             },
         },
         mounted() {
-            let userId = 13;
-            let groupId = 1;
-            axios.get('http://localhost:8080/attendances?userId='+ userId + '&groupId=' + groupId)
+            axios.get('http://localhost:8080/attendances?userId='+ this.userId + '&groupId=' + this.groupId)
                 .then(response => this.attendances = response.data)
                 .catch(error => console.log(error))
 
