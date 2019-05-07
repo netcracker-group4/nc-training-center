@@ -1,6 +1,5 @@
 package ua.com.nc.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.interfaces.IGroupDao;
-import ua.com.nc.domain.schedule.GroupSchedule;
+import ua.com.nc.dto.schedule.GroupSchedule;
 import ua.com.nc.service.GroupsService;
-
-import java.io.IOException;
 
 @Log4j
 @Controller
@@ -25,7 +22,6 @@ public class GroupController {
     @Autowired
     private GroupsService  groupsService;
     private final Gson gson = new Gson();
-
 
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -56,6 +52,12 @@ public class GroupController {
     @ResponseBody
     public String getGroupsInCourse(@PathVariable String id){
         return gson.toJson(groupDao.getAllGroupsOfCourse(Integer.parseInt(id)));
+    }
+
+    @RequestMapping(value = "/{id}")
+    @ResponseBody
+    public String getGroup(@PathVariable String id) {
+        return gson.toJson(groupDao.getEntityById(Integer.parseInt(id)));
     }
 
 }

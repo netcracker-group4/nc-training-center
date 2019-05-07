@@ -28,6 +28,12 @@ public class AttachmentController {
         return gson.toJson(attachmentDao.getByLessonId(Integer.parseInt(id)));
     }
 
+    @RequestMapping(method = RequestMethod.GET,value="/all")
+    @ResponseBody
+    public String getAllAttachments() {
+        return gson.toJson(attachmentDao.getAll());
+    }
+
     @RequestMapping(method = RequestMethod.GET,value="/{id}")
     @ResponseBody
     public String getReason(@PathVariable String id){

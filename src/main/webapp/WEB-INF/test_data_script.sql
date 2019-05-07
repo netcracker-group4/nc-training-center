@@ -1,3 +1,8 @@
+-- noinspection SpellCheckingInspectionForFile
+
+-- noinspection SqlResolveForFile
+
+-- noinspection SqlNoDataSourceInspectionForFile
 
 insert into usr (id, email, password, first_name, last_name, token, created,
 				manager_id, is_active, is_on_landing_page, description)
@@ -476,3 +481,8 @@ values
 	(3, 'normal', 3);
 
 alter sequence suitability_seq restart with 5;
+
+update lesson set is_archived = false;
+update lesson set is_canceled = false;
+
+commit;

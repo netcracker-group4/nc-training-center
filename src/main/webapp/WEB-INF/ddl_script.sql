@@ -252,4 +252,12 @@ CREATE TABLE CHAT_USER
     USER_ID INTEGER REFERENCES USR (ID)
 );
 
+
+alter table lesson
+  add column is_canceled boolean;
+
+alter table lesson
+  add column is_archived boolean;
+
+
 COMMIT;

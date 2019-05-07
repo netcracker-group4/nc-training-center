@@ -3,7 +3,6 @@ package ua.com.nc.service.impl;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import ua.com.nc.dao.interfaces.ICourseDao;
 import ua.com.nc.dao.interfaces.IUserDao;
 import ua.com.nc.domain.Course;

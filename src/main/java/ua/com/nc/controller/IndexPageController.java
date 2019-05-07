@@ -8,12 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ua.com.nc.dao.interfaces.IUserDao;
 import ua.com.nc.domain.Role;
 import ua.com.nc.domain.User;
 import ua.com.nc.service.RoleService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Log4j
