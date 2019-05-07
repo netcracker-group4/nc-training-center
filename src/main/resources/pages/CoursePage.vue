@@ -33,7 +33,7 @@
                                 </v-dialog>
                             </div>
                             <!--<v-img sizes="" src="https://picsum.photos/510/300?random" aspect-ratio="2" wight="100%"></v-img>-->
-                            <v-img :src="''+imageUrl" aspect-ratio="2"></v-img> <!-- Something wrong here, try to fix it &ndash;&gt;-->
+                            <v-img :src="''+'img/'+imageUrl+'.jpg'" aspect-ratio="2"></v-img> <!-- Something wrong here, try to fix it &ndash;&gt;-->
                         </v-layout>
                     </v-flex>
                     <v-flex  xs5 offset-xs0 offset-lg0 style="margin-left: 2%">
@@ -96,6 +96,7 @@
                 courseStatus: null,
                 courseStatusId: null,
                 imageUrl: null,
+                img: null,
                 isOnLandingPage: null,
                 description: null,
                 startDay: null,
@@ -218,6 +219,10 @@
             try {
                 let self = this;
                 self.setCourse();
+                    axios.get('http://localhost:8080/img/'+self.imageUrl+'.jpg')
+                        .then(function (response) {
+                            self.img = response.data;
+                        })
                 /*axios.get('http://localhost:8080/getcourses/{id}/trainer)
                     .then(function (response) {
                         self.courseStatus = response.data;

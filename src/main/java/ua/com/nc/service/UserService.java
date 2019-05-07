@@ -21,6 +21,4 @@ public interface UserService extends UserDetailsService {
 
     List<DtoTeacherAndManager> getAllManagers();
     List<DtoTeacherAndManager> getAllTrainers();
-
-    List<User> getAllTrainers();
 }

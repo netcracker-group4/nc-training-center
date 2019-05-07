@@ -36,6 +36,8 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
     private String courseLandingPage;
     @Value("${course.update-landing-page}")
     private String courseUpdateLandingPage;
+    @Value("$course.select-course}")
+    private String selectCourseByGroupId;
 
 
     public CourseDao(@Value("${spring.datasource.url}") String DATABASE_URL,
@@ -178,6 +180,22 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
             e.printStackTrace();
             throw new PersistException(e);
         }
+    }
+
+
+
+    public Course getCourseByGroup(int id){
+        String sql = selectCourseByGroupId;
+        Course course;
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setInt(1,id);
+            ResultSet rs = statement.executeQuery();
+            course = parseResultSet(rs).get(0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new PersistException(e);
+        }
+        return course;
     }
 
 }

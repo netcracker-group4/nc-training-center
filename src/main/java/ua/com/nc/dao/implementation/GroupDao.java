@@ -5,6 +5,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IGroupDao;
+import ua.com.nc.domain.Course;
 import ua.com.nc.domain.Group;
 
 import java.sql.PreparedStatement;
@@ -36,6 +37,7 @@ public class GroupDao extends GenericAbstractDao<Group, Integer> implements IGro
     private String groupSelectByEmployee;
     @Value("${group.select-by-trainer-id}")
     private String groupSelectByTrainerId;
+
 
 
     public GroupDao(@Value("${spring.datasource.url}") String DATABASE_URL,
@@ -154,5 +156,7 @@ public class GroupDao extends GenericAbstractDao<Group, Integer> implements IGro
         String sql = groupSelectByTrainerId;
         return getFromQueryWithId(id, sql);
     }
+
+
 
 }
