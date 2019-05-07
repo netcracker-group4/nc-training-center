@@ -56,6 +56,8 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     private String usrSelectAllByCourse;
     @Value("${course.select-trainer}")
     private String getSelectTrainerByCourseId;
+    @Value("$(usr.select-trainer-by-group-id)")
+    private String getSelectTrainerByGroupId;
 
     public UserDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
@@ -165,7 +167,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     public List<User> getTrainersOnCourse(int id){
         List<User> list;
         String sql = getSelectTrainerByCourseId;
-        //log(sql, "find by course");
+        log.info(sql + "find by course");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
@@ -363,5 +365,18 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         }
     }
 
+    @Override
+    public User getTrainerByGroupId(Integer groupId){
+        String sql = getSelectTrainerByCourseId;
+        log.info(sql + "trainer by group id = " + groupId);
+        List<User> list = getFromQueryById(groupId, sql);
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
 
 }

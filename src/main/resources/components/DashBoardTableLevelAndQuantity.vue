@@ -23,6 +23,7 @@
         <div>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Levels and quantity of groups</v-toolbar-title>
+                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel report</v-btn>
                 <v-spacer></v-spacer>
             </v-toolbar>
             <v-data-table
@@ -107,6 +108,9 @@
             },
             goToCoursePage(levelId) {
                 this.$router.push('/courses/' + levelId);
+            },
+            downloadDashboardReport(){
+                window.open("http://localhost:8080/download-report/dashboard-report", "_blank");
             }
         },
         mounted() {

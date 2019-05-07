@@ -23,6 +23,7 @@
         <div>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Trainings and quantity of employees</v-toolbar-title>
+                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel report</v-btn>
                 <v-spacer></v-spacer>
             </v-toolbar>
 
@@ -106,6 +107,9 @@
             },
             goToCoursePage(courseId) {
                 this.$router.push('/courses/' + courseId);
+            },
+            downloadDashboardReport(){
+                window.open("http://localhost:8080/download-report/dashboard-report", "_blank");
             }
         },
         mounted() {
