@@ -12,7 +12,7 @@
                     </v-list-tile-avatar>
 
                     <v-list-tile-content>
-                        <v-list-tile-title>{{this.$store.state.user.firstName + ' ' +
+                        <v-list-tile-title v-if="this.$store.getters.isAuthorized">{{this.$store.state.user.firstName + ' ' +
                                             this.$store.state.user.lastName}}</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
@@ -37,7 +37,7 @@
                 </v-list-tile>
             </v-list>
         </v-navigation-drawer>
-        <v-toolbar class="grey lighten-2" app v-if="">
+        <v-toolbar class="grey lighten-4" app v-if="">
             <v-toolbar-items class="hidden-sm-and-down" v-if="this.$store.getters.isAuthorized">
                 <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
                 <v-btn @click="forwardToMainPage" flat>Main</v-btn>
@@ -103,5 +103,7 @@
 </script>
 
 <style scoped>
-
+    .cursor-pointer{
+        cursor: pointer;
+    }
 </style>

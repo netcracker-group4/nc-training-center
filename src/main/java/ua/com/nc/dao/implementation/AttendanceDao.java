@@ -86,12 +86,13 @@ public class AttendanceDao extends GenericAbstractDao<Attendance, Integer> imple
             String firstName = rs.getString("first_name");
             String lastName = rs.getString("last_name");
             Integer courseId = rs.getInt("course_id");
+            String courseName = rs.getString("course_name");
             Date timeDate = rs.getDate("time_date");
             String topic = rs.getString("topic");
             String status = rs.getString("status");
             String reason = rs.getString("reason");
             attendances.add(new UserAttendanceDto(  id, lessonId, userId, reason, status, firstName,
-                                                    lastName, courseId, timeDate, topic));
+                                                    lastName, courseId, courseName, timeDate, topic));
 
         }
         return attendances;

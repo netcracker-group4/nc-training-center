@@ -1,6 +1,7 @@
 package ua.com.nc.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,9 @@ public class AttendanceController {
             List<Attendance> attendances = attendanceService.getAttendanceByStudentIdAndCourseId(userId, courseId);
             return ResponseEntity.ok().body(new Gson().toJson(attendances));
         }if(userId != null && groupId != null){
+            Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
             List<Attendance> attendances = attendanceService.getAttendanceByStudentIdAndGroupId(userId, groupId);
-            return ResponseEntity.ok().body(new Gson().toJson(attendances));
+            return ResponseEntity.ok().body(gson.toJson(attendances));
         }
         else{
             AttendanceDto attendanceDto = attendanceService.getAttendance();
@@ -49,23 +51,22 @@ public class AttendanceController {
         Integer integerStatusId;
         Integer integerAbsenceId;
 
-        if(attendanceId.trim().equals("null")){
+        if(attendanceId.trim().equals("null") || attendanceId.equals("undefined")){
             integerAttendanceId = null;
         }else{
             integerAttendanceId = Integer.parseInt(attendanceId);
         }
-        if(statusId.trim().equals("null")){
+        if(statusId.trim().equals("null") || statusId.equals("undefined")){
             integerStatusId = null;
         }else{
             integerStatusId = Integer.parseInt(statusId);
         }
-        if(absenceId.trim().equals("null")){
+        if(absenceId.trim().equals("null") || absenceId.equals("undefined")){
             integerAbsenceId = null;
         }else{
             integerAbsenceId = Integer.parseInt(absenceId);
         }
 
-        log.debug(integerAttendanceId + " " + integerStatusId + " " + integerAbsenceId);
         attendanceService.attendanceUpdate(integerAttendanceId, integerStatusId, integerAbsenceId);
         return ResponseEntity.ok().body("Ok");
     }
