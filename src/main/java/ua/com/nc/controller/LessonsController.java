@@ -28,12 +28,18 @@ public class LessonsController {
     }
 
     @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/employee/{userId}")
+    public String getAllForUser(@PathVariable String userId) {
+        String allForUser = lessonsService.getAllForUser(Integer.parseInt(userId));
+        System.out.println(allForUser);
+        return allForUser;
+    }
+
+    @ResponseBody
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String addLesson(@RequestBody String toAdd) {
-        System.out.println(toAdd);
         Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new DateDeserializer()).create();
         DtoLesson toAdd1 = gson.fromJson(toAdd, DtoLesson.class);
-        System.out.println(toAdd1);
         if (toAdd1.getId() == null || toAdd1.getId() == 0) {
 //            return "adding lesson";
             return lessonsService.addLesson(toAdd1);

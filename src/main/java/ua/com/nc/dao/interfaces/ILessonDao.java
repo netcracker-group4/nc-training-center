@@ -8,4 +8,6 @@ public interface ILessonDao extends GenericDao<Lesson, Integer> {
     List<Lesson> getByGroupIdAndUserId(Integer groupId, Integer userId);
     List<Lesson> getByGroupId(Integer groupId);
     void archiveLesson(Integer lessonId);
+
+    List<Lesson> getByUser(int userId);
 }

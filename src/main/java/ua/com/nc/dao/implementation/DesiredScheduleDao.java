@@ -23,6 +23,8 @@ public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Inte
     private String desirableScheduleInsert;
     @Value("${desirable.schedule.select-by-course-id}")
     private String desirableScheduleSelectByCourseId;
+    @Value("${desirable.schedule.select-by-group-id}")
+    private String desirableScheduleSelectByGroupId;
 
     public DesiredScheduleDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                               @Value("${spring.datasource.username}") String DATABASE_USER,
@@ -101,11 +103,22 @@ public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Inte
 
     @Override
     public List<DesiredSchedule> getAllForCourse(int courseId) {
-        List<DesiredSchedule> list;
         String sql = desirableScheduleSelectByCourseId;
-        log.info(sql + "" + "find all by courseid " + courseId);
+        log.info(sql + "" + "find all by courseId " + courseId);
+        return getFromSqlById(courseId, sql);
+    }
+
+    @Override
+    public List<DesiredSchedule> getAllForGroup(int groupId) {
+        String sql = desirableScheduleSelectByGroupId;
+        log.info(sql + "" + "find all by groupId " + groupId);
+        return getFromSqlById(groupId, sql);
+    }
+
+    private List<DesiredSchedule> getFromSqlById(int groupId, String sql) {
+        List<DesiredSchedule> list;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, courseId);
+            statement.setInt(1, groupId);
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {

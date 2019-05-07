@@ -1,5 +1,16 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div style="margin-top: 50px;">
+        <v-layout style="margin-bottom: 20px">
+            <v-expansion-panel>
+                <v-expansion-panel-content>
+                    <!--suppress HtmlUnknownBooleanAttribute -->
+                    <template v-slot:header>
+                        <div>Desired schedule for group</div>
+                    </template>
+                    <group-schedule :group-id="lesson.groupId"></group-schedule>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </v-layout>
         <form>
             <v-text-field
                     v-model="lesson.topic"
@@ -29,7 +40,7 @@
                         <template v-slot:activator="{ on }">
                             <v-text-field
                                     v-model="date"
-                                    label="Date (read only text field)"
+                                    label="Date"
                                     persistent-hint
                                     prepend-icon="event"
                                     readonly
@@ -39,7 +50,7 @@
                         <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
                     </v-menu>
                 </v-flex>
-                <v-flex md12 lg6>
+                <v-flex>
                     <v-menu
                             ref="menu"
                             v-model="menu2"
@@ -56,7 +67,7 @@
                         <template v-slot:activator="{ on }">
                             <v-text-field
                                     v-model="computedTime"
-                                    label="Picker in menu"
+                                    label="Start time"
                                     prepend-icon="access_time"
                                     readonly
                                     v-on="on"
@@ -68,6 +79,59 @@
                                 full-width
                                 @click:minute="$refs.menu.save(time)"
                         ></v-time-picker>
+                    </v-menu>
+                </v-flex>
+                <v-flex>
+                    <v-menu
+                            ref="menu2"
+                            v-model="menu3"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            :return-value.sync="lesson.duration"
+                            lazy
+                            transition="scale-transition"
+                            offset-y
+                            full-width
+                            max-width="290px"
+                            min-width="290px"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    v-model="lesson.duration"
+                                    label="Duration"
+                                    prepend-icon="access_time"
+                                    readonly
+                                    v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-time-picker
+                                v-if="menu3"
+                                format="24hr"
+                                v-model="lesson.duration"
+                                full-width
+                                @click:minute="$refs.menu2.save(lesson.duration)"
+                        ></v-time-picker>
+                    </v-menu>
+                </v-flex>
+                <v-flex>
+                    <v-menu
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            lazy
+                            offset-y
+                            full-width
+                            max-width="290px"
+                            min-width="290px"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    v-model="approximateEndTime"
+                                    label="Approximate end time"
+                                    persistent-hint
+                                    prepend-icon="event"
+                                    readonly
+                            ></v-text-field>
+                        </template>
                     </v-menu>
                 </v-flex>
             </v-layout>
@@ -129,14 +193,13 @@
                 <v-btn color="success" @click="save">save</v-btn>
                 <v-btn color="warning" @click="cancel">cancel</v-btn>
             </v-layout>
-
-
         </form>
     </div>
 
 </template>
 
 <script>
+    import groupSchedule from './groupSchedule.vue';
     export default {
         name: "LessonEditingComponent",
         props: ['currentLesson', 'trainers', 'attachments'],
@@ -162,7 +225,9 @@
                     sortBy: 'description'
                 },
                 menu: false,
-                menu2: false
+                menu2: false,
+                menu3: false,
+
             }
         },
         methods: {
@@ -172,7 +237,6 @@
                 let trainer = this.trainers.filter(e => {
                     return e.id === this.lesson.trainerId;
                 })[0];
-                console.log(trainer);
                 this.lesson.trainerName = trainer.firstName + ' ' + trainer.lastName;
                 this.$emit('saving-event', this.lesson);
             },
@@ -197,18 +261,53 @@
             },
             remove(attachment) {
                 this.selectedAttachments = this.selectedAttachments.filter(el => el.id !== attachment.id);
-            }
-        },
-        computed: {
-            computedTime: function () {
-                let [hours, minutes] = this.time.split(':');
+            },
+            toDateFunction(str, format) {
+                var normalized = str.replace(/[^a-zA-Z0-9]/g, '-');
+                var normalizedFormat = format.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-');
+                var formatItems = normalizedFormat.split('-');
+                var dateItems = normalized.split('-');
+
+                var monthIndex = formatItems.indexOf("mm");
+                var dayIndex = formatItems.indexOf("dd");
+                var yearIndex = formatItems.indexOf("yyyy");
+                var hourIndex = formatItems.indexOf("hh");
+                var minutesIndex = formatItems.indexOf("ii");
+                var secondsIndex = formatItems.indexOf("ss");
+
+                var today = new Date();
+
+                var year = yearIndex > -1 ? dateItems[yearIndex] : today.getFullYear();
+                var month = monthIndex > -1 ? dateItems[monthIndex] - 1 : today.getMonth() - 1;
+                var day = dayIndex > -1 ? dateItems[dayIndex] : today.getDate();
+
+                var hour = hourIndex > -1 ? dateItems[hourIndex] : today.getHours();
+                var minute = minutesIndex > -1 ? dateItems[minutesIndex] : today.getMinutes();
+                var second = secondsIndex > -1 ? dateItems[secondsIndex] : today.getSeconds();
+
+                return new Date(year, month, day, hour, minute, second);
+            },
+            ampmTime(time) {
+                let [hours, minutes] = time.split(':');
                 let modifier = +hours < 12 ? 'am' : 'pm';
                 hours = +hours % 12 || 12;
                 minutes = +minutes === 0 ? '' : `:${minutes}`;
                 return hours + minutes + modifier
             }
-        }
-
+        },
+        computed: {
+            computedTime: function () {
+                return this.ampmTime(this.time);
+            },
+            approximateEndTime: function () {
+                let [hours, minutes] = this.currentLesson.duration.split(':');
+                let date = this.toDateFunction(this.date + ' ' + this.time, "yyyy-mm-dd hh:ii");
+                date.setHours(date.getHours() + parseInt(hours));
+                date.setMinutes(date.getMinutes() + parseInt(minutes));
+                return date.toDateString() + '  ' + this.ampmTime(date.toTimeString());
+            }
+        },
+        components: {groupSchedule}
     }
 </script>
 

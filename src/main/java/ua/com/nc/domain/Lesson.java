@@ -19,26 +19,29 @@ public class Lesson extends Entity<Integer> {
     private Integer trainerId;
     private Date timeDate;
     private Timestamp time;
+    private String duration;
     private boolean isCanceled;
     private String absenceReason;
     private String absenceStatus;
 
-    public Lesson(Integer groupId, String topic, Integer trainerId, Date timeDate, Timestamp time, boolean isCanceled) {
+    public Lesson(Integer groupId, String topic, Integer trainerId, Date timeDate, Timestamp time, String duration, boolean isCanceled) {
         this.groupId = groupId;
         this.topic = topic;
         this.trainerId = trainerId;
         this.timeDate = timeDate;
+        this.duration = duration;
         this.time = time;
         this.isCanceled = isCanceled;
     }
 
-    public Lesson(Integer id, Integer groupId, String topic, Integer trainerId, Date timeDate, Timestamp time, boolean isCanceled) {
+    public Lesson(Integer id, Integer groupId, String topic, Integer trainerId, Date timeDate, Timestamp time, String duration, boolean isCanceled) {
         super(id);
         this.groupId = groupId;
         this.topic = topic;
         this.trainerId = trainerId;
         this.timeDate = timeDate;
         this.time = time;
+        this.duration = duration;
         this.isCanceled = isCanceled;
     }
 

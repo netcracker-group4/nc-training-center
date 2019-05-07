@@ -28,40 +28,39 @@ public class CourseController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public String getCourses(){
-       return gson.toJson(courseDao.getAll());
-    }
-    @RequestMapping(method = RequestMethod.GET,value="/{id}")
-    @ResponseBody
-    public String getCourse(@PathVariable String id){
-       return gson.toJson(courseDao.getEntityById(Integer.parseInt(id)));
+    public String getCourses() {
+        return gson.toJson(courseDao.getAll());
     }
 
-    @RequestMapping(method = RequestMethod.DELETE,value="/{id}")
-    public void deleteCourse(@PathVariable String id){
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    @ResponseBody
+    public String getCourse(@PathVariable String id) {
+        return gson.toJson(courseDao.getEntityById(Integer.parseInt(id)));
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    public void deleteCourse(@PathVariable String id) {
         courseDao.delete(Integer.parseInt(id));
         courseDao.commit();
     }
 
-    @RequestMapping(method = RequestMethod.POST,value = "/create")
+    @RequestMapping(method = RequestMethod.POST, value = "/create")
     @ResponseBody
-    public void add(@RequestParam(name = "name") String name, @RequestParam(name="level" ) String level,
+    public void add(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                     @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
-                    @RequestParam(name = "startDay") String startDay,@RequestParam(name = "endDay") String endDay,
+                    @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
                     @RequestParam(name = "image") MultipartFile image) {
         imageUrl = service.uploadImage(image);
-        System.err.println(imageUrl);
         service.add(service.stringToObjCourse(name, "1", level, courseStatus,
                 imageUrl, isOnLandingPage, desc, startDay, endDay));
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT,value = "{id}/create")
+    @RequestMapping(method = RequestMethod.PUT, value = "{id}/create")
     @ResponseBody
     public void update(@RequestParam(name = "name") String name, @RequestParam(name="level" ) String level,
                     @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
-
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
                     @RequestParam(name = "startDay") String startDay,@RequestParam(name = "endDay") String endDay,
                        @PathVariable int id){
@@ -70,6 +69,7 @@ public class CourseController {
         course.setId(id);
         courseDao.update(course);
     }
+
     @RequestMapping(value = {"/{id}/desired/ungrouped"}, method = RequestMethod.GET)
     @ResponseBody
     public String getDesiredScheduleForUngroupedStudentsForCourse(@PathVariable("id") String id) throws Exception {
@@ -82,6 +82,12 @@ public class CourseController {
         return service.getDesiredScheduleForFormedGroupsForCourse(Integer.parseInt(id));
     }
 
+    @RequestMapping(value = {"/desired/{groupId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public String getDesiredScheduleForGroup(@PathVariable("groupId") String groupId) throws Exception {
+        return service.getDesiredScheduleForGroup(Integer.parseInt(groupId));
+    }
+
     @RequestMapping(value = {"/desired/day-intervals"}, method = RequestMethod.GET)
     @ResponseBody
     public String getDayIntervals() {
@@ -90,7 +96,7 @@ public class CourseController {
 
     @RequestMapping(value = "/{id}/trainer", method = RequestMethod.GET)
     @ResponseBody
-    public String getTrainer(@PathVariable String id){
+    public String getTrainer(@PathVariable String id) {
         return gson.toJson(userDao.getTrainersOnCourse(Integer.parseInt(id)));
     }
 

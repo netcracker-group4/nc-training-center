@@ -1,3 +1,5 @@
+-- noinspection SqlNoDataSourceInspectionForFile
+
 DROP TABLE IF EXISTS USR CASCADE;
 DROP TABLE IF EXISTS ROLE_R CASCADE;
 DROP TABLE IF EXISTS ASSIGNED_ROLE CASCADE;
@@ -258,6 +260,9 @@ alter table lesson
 
 alter table lesson
   add column is_archived boolean;
+
+alter table lesson
+    add column duration interval;
 
 
 COMMIT;

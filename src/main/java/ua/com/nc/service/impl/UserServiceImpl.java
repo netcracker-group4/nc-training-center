@@ -5,6 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ua.com.nc.dao.implementation.GenericAbstractDao;
+import ua.com.nc.dao.interfaces.ICourseDao;
+import ua.com.nc.dao.interfaces.IGroupDao;
+import ua.com.nc.dao.interfaces.IRoleDao;
+import ua.com.nc.dao.interfaces.IUserDao;
+import ua.com.nc.domain.Group;
+import ua.com.nc.domain.Role;
+import ua.com.nc.domain.User;
+import ua.com.nc.dto.DtoGroup;
+import ua.com.nc.dto.DtoTeacherAndManager;
+import ua.com.nc.dto.DtoUser;
+import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.dto.*;
@@ -28,6 +40,8 @@ public class UserServiceImpl implements UserService {
     private IUserGroupDao userGroupDao;
     @Autowired
     private IFeedbackDao feedbackDao;
+    @Autowired
+    private ICourseDao iCourseDao;
 
     @Override
     public void add(DtoUserSave dtoUserSave) {
@@ -101,7 +115,9 @@ public class UserServiceImpl implements UserService {
         List<DtoGroup> dtoGroups = new ArrayList<>();
         if (groups != null && groups.size() != 0) {
             for (Group group : groups) {
-                dtoGroups.add(new DtoGroup(group.getId(), group.getTitle()));
+                int courseId = group.getCourseId();
+                String courseName = iCourseDao.getEntityById(courseId).getName();
+                dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId, courseName));
             }
         }
 
