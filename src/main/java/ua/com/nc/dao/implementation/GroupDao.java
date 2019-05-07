@@ -37,6 +37,8 @@ public class GroupDao extends GenericAbstractDao<Group, Integer> implements IGro
     private String groupSelectByEmployee;
     @Value("${group.select-by-trainer-id}")
     private String groupSelectByTrainerId;
+    @Value("${group.delete-student}")
+    private String deleteUserFromGroup;
 
 
 
@@ -157,6 +159,14 @@ public class GroupDao extends GenericAbstractDao<Group, Integer> implements IGro
         return getFromQueryWithId(id, sql);
     }
 
-
-
+    @Override
+    public void deleteUserFromGroup(String id, String userId) {
+        try(PreparedStatement statement = connection.prepareStatement(deleteUserFromGroup)){
+            statement.setInt(1, Integer.parseInt(id));
+            statement.setInt(2, Integer.parseInt(userId));
+            statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

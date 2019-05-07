@@ -15,7 +15,9 @@
                 <td class="text-xs-right" v-if="isAdmin">
                     {{props.item.email}}
                 </td>
-
+                <td class="text-xs-right" v-if="isAdmin">
+                    <v-btn color="error" @click="deleteStudent(props.item.id)" v-if="isAdmin">Delete</v-btn>
+                </td>
             </tr>
         </template>
     </v-data-table>
@@ -49,7 +51,19 @@
                         width: "30", align: 'right'
                     }
                 ],
-
+                isAdmin: this.$store.getters.isAdmin,
+            }
+        },
+        methods:{
+            deleteStudent(id) {
+                if (confirm("Are you sure you want to delete " + this.findUserById(id).firstName +' '+ this.findUserById(id).lastName)) {
+                    axios.delete('http://localhost:8080/groups/' + self.id + '/user' + id)
+                        .then(function (response) {
+                        });
+                }
+            },
+            findUserById(id){
+                return this.students.find(s => s.id === id);
             }
         },
         mounted(){

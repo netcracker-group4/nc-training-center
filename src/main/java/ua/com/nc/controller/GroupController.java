@@ -76,6 +76,13 @@ public class GroupController {
         return userDao.getByGroupId(Integer.parseInt(id));
     }
 
+    @RequestMapping(value = "/{id}/user/{userId}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public void deleteStudent(@PathVariable String id,@PathVariable String userId){
+        //userDao.getByGroupId(Integer.parseInt(id));
+        groupDao.deleteUserFromGroup(id,userId);
+    }
+
     @RequestMapping(value = "/{id}/course", method = RequestMethod.GET)
     @ResponseBody
     public Course getCourseByGroup(@PathVariable String id){
