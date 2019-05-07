@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.interfaces.ICourseDao;
 import ua.com.nc.dao.interfaces.IGroupDao;
 import ua.com.nc.dao.interfaces.IUserDao;
+import ua.com.nc.domain.Course;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.schedule.GroupSchedule;
 import ua.com.nc.service.GroupsService;
@@ -76,8 +77,9 @@ public class GroupController {
     }
 
     @RequestMapping(value = "/{id}/course", method = RequestMethod.GET)
-    public String getCourseByGroup(@PathVariable String id){
-        return gson.toJson(courseDao.getCourseByGroup(Integer.parseInt(id)));
+    @ResponseBody
+    public Course getCourseByGroup(@PathVariable String id){
+        return courseDao.getCourseByGroup(Integer.parseInt(id));
     }
 
 }

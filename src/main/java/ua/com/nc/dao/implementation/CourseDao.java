@@ -36,7 +36,7 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
     private String courseLandingPage;
     @Value("${course.update-landing-page}")
     private String courseUpdateLandingPage;
-    @Value("$course.select-course}")
+    @Value("${course.select-course-by-group}")
     private String selectCourseByGroupId;
 
 
