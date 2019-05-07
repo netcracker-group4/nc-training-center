@@ -72,10 +72,9 @@ public class CourseServiceImpl implements CourseService {
             startingDay = format.parse(startDay);
             endingDay = format.parse(endDay);
         } catch (ParseException e) {
-            System.err.println(e.getMessage());
+            log.trace(e);
         }
         int statusId = 1;
-        System.err.println(level.trim());
         int lvl = levelDao.getIdByName(level.trim());
 
         return new Course(name, lvl, statusId, userId, imageUrl,
@@ -175,5 +174,17 @@ public class CourseServiceImpl implements CourseService {
             }
         }
         return "";
+    }
+
+    @Override
+    public String getDesiredScheduleForGroup(int groupId) throws Exception {
+        List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getAllForGroup(groupId);
+        List<ScheduleForUser> scheduleForUsers = new ArrayList<>();
+        for (User user : iUserDao.getByGroupId(groupId)) {
+            scheduleForUsers.add(new ScheduleForUser(user,
+                    parseSchedules(desiredScheduleList, iSuitabilityDao.getAll()),
+                    startOfDay, endOfDay));
+        }
+        return new Gson().toJson(scheduleForUsers);
     }
 }

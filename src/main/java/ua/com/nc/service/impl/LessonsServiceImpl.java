@@ -36,7 +36,6 @@ public class LessonsServiceImpl implements LessonsService {
     public String getAllForGroup(int groupId) {
         List<DtoLesson> dtoLessons = new ArrayList<>();
         List<Lesson> lessons = iLessonDao.getByGroupId(groupId);
-        System.out.println(lessons);
         for (Lesson lesson : lessons) {
             User trainer = iUserDao.getEntityById(lesson.getTrainerId());
             String trainerName = trainer.getFirstName() + " " + trainer.getLastName();
@@ -64,7 +63,6 @@ public class LessonsServiceImpl implements LessonsService {
     @Override
     public String addLesson(DtoLesson toAdd) {
         Lesson domainLesson = toAdd.getDomainLesson();
-        System.out.println("domain    to insert    " + domainLesson);
         iLessonDao.insert(domainLesson);
         iLessonDao.commit();
         for (LessonAttachment attachment : toAdd.getAttachmentsForNewLesson(domainLesson.getId())) {
@@ -86,13 +84,10 @@ public class LessonsServiceImpl implements LessonsService {
     @Override
     public String cancelLesson(int parseInt) {
         Lesson lesson = iLessonDao.getEntityById(parseInt);
-        System.out.println(lesson);
         boolean newCanceled = !lesson.isCanceled();
         lesson.setCanceled(newCanceled);
-        System.out.println(lesson);
         iLessonDao.update(lesson);
         iLessonDao.commit();
-        System.out.println("ok");
         return Boolean.toString(newCanceled);
     }
 }

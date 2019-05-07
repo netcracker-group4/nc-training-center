@@ -44,7 +44,6 @@ public class CourseStatusDao implements ICourseStatus {
             ResultSet rs = statement.executeQuery();
             rs.next();
             name = rs.getString("NAME");
-            System.err.println(name);
         } catch (Exception e) {
             log.trace(e);
             throw new PersistException(e);

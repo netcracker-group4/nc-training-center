@@ -125,7 +125,7 @@ public class LevelDao extends GenericAbstractDao<Level, Integer> implements ILev
             rs.next();
             return rs.getInt("ID");
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            log.trace(e);
             throw new RuntimeException(new SQLException("Level " + name + " not found"));
         }
 

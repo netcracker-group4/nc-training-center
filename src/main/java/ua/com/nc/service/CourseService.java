@@ -20,4 +20,6 @@ public interface CourseService {
     String getDayIntervals();
 
     String uploadImage(MultipartFile image);
+
+    String getDesiredScheduleForGroup(int groupId) throws Exception;
 }

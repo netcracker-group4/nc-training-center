@@ -185,8 +185,8 @@
                 })
             },
             editItem (user) {
-                this.editUser = Object.assign({}, user)
-                this.dialog = true
+                this.editUser = Object.assign({}, user);
+                this.dialog = true;
                 let self = this;
                 axios.get('http://localhost:8080/groups/get-all')
                     .then(function (response) {
@@ -206,17 +206,17 @@
                     });
             },
             close () {
-                this.dialog = false
+                this.dialog = false;
                 setTimeout(() => {
                 }, 300)
             },
             save () {
-                if(this.editUser.firstName != null & this.editUser.lastName != null){
-                    Object.assign(this.user, this.editUser)
+                if(this.editUser.firstName != null && this.editUser.lastName != null){
+                    Object.assign(this.user, this.editUser);
                     console.log(this.editUser.firstName + " " +
                         this.editUser.lastName + " " +
                         this.editUser.dtoManager + " " +
-                        this.editUser.groups + "\n" + this.user.groups)
+                        this.editUser.groups + "\n" + this.user.groups);
                     axios.put('http://localhost:8080/users/update', {
                         id: this.user.id,
                         firstName: this.editUser.firstName,
@@ -232,7 +232,7 @@
         },
         mounted() {
             let self = this;
-            let id = this.$route.params.id
+            let id = this.$route.params.id;
             axios.get('http://localhost:8080/users/' + id)
                 .then(function (response) {
                     self.user = response.data;
