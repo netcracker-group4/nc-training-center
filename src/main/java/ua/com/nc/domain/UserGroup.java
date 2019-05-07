@@ -8,6 +8,9 @@ public class UserGroup extends Entity<Integer> {
     private int groupId;
     private boolean attending ;
 
+    public UserGroup() {
+    }
+
     public UserGroup(int userId, int groupId, boolean attending) {
         this.userId = userId;
         this.groupId = groupId;

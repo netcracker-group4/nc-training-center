@@ -4,6 +4,9 @@ public class DtoGroup {
     private Integer id;
     private String title;
 
+    public DtoGroup() {
+    }
+
     public DtoGroup(Integer id, String title) {
         this.id = id;
         this.title = title;

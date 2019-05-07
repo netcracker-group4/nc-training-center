@@ -1,8 +1,10 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-    <v-container>
+        <NavigationDrawer></NavigationDrawer>
+
+        <v-container>
         <v-layout row wrap>
-            <v-flex xs12 sm12>
+            <v-flex xs12 sm10 offset-sm2>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>User</v-toolbar-title>
                     <v-divider
@@ -38,6 +40,7 @@
                                         <v-flex xs10 v-if="editUser.dtoManager != null">
                                             <v-select
                                                     v-model="editUser.dtoManager"
+                                                    item-value="id"
                                                     :items="managers"
                                                     label="Change manager"
                                             >
@@ -118,21 +121,8 @@
                         </table>
                     </div>
                 </v-container>
-                <div class="attendance" v-for="group in user.groups" >
-                    <v-card>
-                        <v-card-title>
-                            Attendance of user {{user.firstName + ' ' + user.lastName}}  in group {{group.title}}
-                        </v-card-title>
-
-                        <attendance-table :user-id="user.id"
-                                          :group-id="group.id"
-                                          :key="group.id"/>
-                    </v-card>
-                </div>
             </v-flex>
         </v-layout>
-
-
 
     </v-container>
     </div>
@@ -140,13 +130,14 @@
 
 <script>
     import axios from 'axios'
-    import AttendanceTable from "../components/AttendanceTable.vue";
+    import NavigationDrawer from "../components/NavigationDrawer.vue"
+
     export default {
-        components: {AttendanceTable},
         data() {
             return {
                 dialog: false,
                 user: '',
+                mini: true,
                 right: null,
                 prevId: null,
                 editUser: {
@@ -162,11 +153,11 @@
                     active: false,
                 },
                 groups: [],
-                managers: []
+                managers: [],
+                userGroupsId: []
             }
         },
-        computed: {
-        },
+
         methods: {
             getFullName (value) {
                 return value.firstName + ' ' + value.lastName;
@@ -179,7 +170,10 @@
             },
             editItem (user) {
                 this.editUser = Object.assign({}, user)
+                this.userGroupsId = []
+                this.getEditUserGroupsId
                 this.dialog = true
+
                 let self = this;
                 axios.get('http://localhost:8080/groups/get-all')
                     .then(function (response) {
@@ -203,18 +197,21 @@
                 setTimeout(() => {
                 }, 300)
             },
+
             save () {
                 if(this.editUser.firstName != null & this.editUser.lastName != null){
-                    Object.assign(this.user, this.editUser)
+                    // Object.assign(this.user, this.editUser)
                     console.log(this.editUser.firstName + " " +
                         this.editUser.lastName + " " +
-                        this.editUser.dtoManager + " " +
-                        this.editUser.groups + "\n" + this.user.groups)
+                    this.userGroupsId + "\n" + this.getEditUserGroupsById)
                     axios.put('http://localhost:8080/users/update', {
                         id: this.user.id,
                         firstName: this.editUser.firstName,
                         lastName: this.editUser.lastName,
-                        dtoManager: this.editUser.dtoManager
+                        dtoManager: this.editUser.dtoManager,
+                        groups: this.editUser.groups
+                    }).then(() => {
+                        this.getUser();
                     })
                     // .then(response => alert("User updated"))
                 }else{
@@ -222,28 +219,51 @@
                 }
                 this.close()
             },
+            getUser() {
+                let self = this;
+                let id = this.$route.params.id
+                axios.get('http://localhost:8080/users/' + id)
+                    .then(function (response) {
+                        self.user = response.data;
+                        console.log(self.user)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+        },
+        computed: {
+            getEditUserGroupsId() {
+                this.editUser.groups.forEach((group) => {
+                    this.userGroupsId.push(group.id);
+                })
+            },
+            getEditUserGroupsById() {
+                return this.groups.filter((group) => {
+                    this.userGroupsId.forEach((id) => {
+                        if (id === group.id) return true;
+                    })
+                })
+            }
+        },
+        components: {
+            NavigationDrawer
         },
         mounted() {
-            let self = this;
-            let id = this.$route.params.id
-            axios.get('http://localhost:8080/users/' + id)
-                .then(function (response) {
-                    self.user = response.data;
-                    console.log(self.user)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-
+            this.getUser();
         },
     }
 </script>
 
 <style scoped>
     .con_wrapper {
-        background: #eeecec;
+        background: white;
         display: flex;
-
+        margin: 40px auto 0;
+        width: 100%;
+    }
+    .div_wrapper {
+        display: flex;
     }
     .div_avatar {
         padding: 30px 0 0 5%;
@@ -271,8 +291,8 @@
         box-sizing: border-box;
     }
     .table_user td:first-child {
-        background: #e6e4ee;
-        /*border-bottom: 2px solid #e6e4ee;*/
+        background: #efefef;
+        border-bottom: 2px solid white;
         border-left: none;
     }
     .table_user td {
@@ -291,8 +311,8 @@
     .select {
         width: 300px;
     }
-    .attendance{
-        margin-bottom: 20px;
-        margin-top: 20px;
+
+    .pointer{
+        cursor: pointer;
     }
 </style>

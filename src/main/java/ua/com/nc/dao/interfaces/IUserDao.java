@@ -1,6 +1,7 @@
 package ua.com.nc.dao.interfaces;
 
 import ua.com.nc.domain.User;
+import ua.com.nc.dto.DtoUserProfiles;
 
 import java.util.List;
 
@@ -29,4 +30,7 @@ public interface IUserDao extends GenericDao<User, Integer> {
 
     void updateActive(User user);
     List<User> getTrainersOnCourse(int id);
+    User getTrainerByFeedback(Integer id);
+
+    void addUserRole(Integer userId, String roleName);
 }

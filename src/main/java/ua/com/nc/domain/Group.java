@@ -9,6 +9,9 @@ public class Group extends Entity<Integer> {
     private int courseId;
     private String title;
 
+    public Group() {
+    }
+
     public Group(int id, int courseId, String title) {
         super(id);
         this.courseId = courseId;

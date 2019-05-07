@@ -1,11 +1,11 @@
-package ua.com.nc.domain;
+package ua.com.nc.dto;
 
-public class MailSender {
+public class DtoMailSender {
     private String to;
     private String subject;
     private String text;
 
-    public MailSender() {
+    public DtoMailSender() {
     }
 
     public String getTo() {

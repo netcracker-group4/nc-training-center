@@ -11,6 +11,7 @@ import AdminCourses from "../pages/AdminCourses.vue";
 import CreateCourse from "../pages/CreateCourse.vue";
 import AllUsersPage from "../pages/AllUsersPage.vue";
 import UserPage from "../pages/UserPage.vue";
+import NewUserPage from "../pages/NewUserPage.vue";
 import AttendancePage from "../pages/AttendancePage.vue";
 import AbsenceReasons from '../pages/AbsenceReasons.vue'
 import DesiredSchedulePage from "../pages/DesiredSchedulePage.vue";
@@ -36,6 +37,7 @@ const routes = [
     {path: '/coursecreate/:id', component: CreateCourse,props: true},
     {path: '/userpage', component: AllUsersPage},
     {path: '/userpage/:id', component: UserPage},
+    {path: '/add-user', component: NewUserPage},
     {path: '/attendance', component: AttendancePage},
     {path: '/absence-reasons', component: AbsenceReasons},
     {path: '/desired-schedule/:id', component: DesiredSchedulePage},

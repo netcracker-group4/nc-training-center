@@ -11,6 +11,9 @@ public class DtoUser {
     private List<Role> roles;
     private boolean isActive;
 
+    public DtoUser() {
+    }
+
     public DtoUser(Integer id, String firstName, String lastName, List<Role> roles, boolean isActive) {
         this.id = id;
         this.firstName = firstName;

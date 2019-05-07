@@ -4,9 +4,13 @@ import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.com.nc.domain.Role;
 import ua.com.nc.domain.User;
+import ua.com.nc.dto.DtoTeacherAndManager;
+import ua.com.nc.dto.DtoUser;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.service.UserService;
 
@@ -19,16 +23,21 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private EmailService emailService;
 
-    @PostMapping()
-    public ResponseEntity<?> save(@RequestBody User user) {
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<?> save(@RequestBody DtoUserSave dtoUserSave) {
 //        log.debug(user);
-        if(     user != null &&
-                user.getEmail() != null &&
-                user.getFirstName() != null &&
-                user.getLastName() != null &&
-                user.getPassword() != null){
-            userService.add(user);
+
+
+        if(     dtoUserSave != null &&
+                dtoUserSave.getEmail() != null &&
+                dtoUserSave.getFirstName() != null &&
+                dtoUserSave.getLastName() != null &&
+                dtoUserSave.getPassword() != null &&
+                dtoUserSave.getRole() != null){
+            userService.add(dtoUserSave);
             return ResponseEntity.ok().body("User saved");
         }else{
             return ResponseEntity.badRequest().body("Incorrectly entered fields");
@@ -60,5 +69,11 @@ public class UserController {
     @RequestMapping(value = "/get-all-trainers", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTrainers() {
         return new ResponseEntity<>(userService.getAllTrainers(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/main-send", method = RequestMethod.POST)
+    public ResponseEntity<?> mailSend(@RequestBody DtoMailSender dtoMailSender) {
+        emailService.sendSimpleMessage(dtoMailSender);
+        return ResponseEntity.ok().body("Send mail");
     }
 }

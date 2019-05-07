@@ -5,6 +5,9 @@ public class DtoTeacherAndManager {
     private String firstName;
     private String lastName;
 
+    public DtoTeacherAndManager() {
+    }
+
     public DtoTeacherAndManager(Integer id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
