@@ -9,7 +9,7 @@
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-layout wrap>
-                            <v-flex xs6 sm6 md4>
+                            <v-flex xs12 sm12 md10>
                                 <v-select v-model="editedItem.status" :items="statuses" label="Change status">
                                     <template slot="selection" slot-scope="status">
                                         {{ status.item.title}}
@@ -19,7 +19,7 @@
                                     </template>
                                 </v-select>
                             </v-flex>
-                            <v-flex xs6 sm6 md4>
+                            <v-flex xs12 sm12 md10>
                                 <v-select v-model="editedItem.reason" :items="reasons" label="Change reason" :disabled="editedItem.status == null || editedItem.status.id != 2">
                                     <template slot="selection" slot-scope="status">
                                             {{ status.item.title}}
@@ -98,6 +98,8 @@
         methods: {
             editItem (item) {
                 this.editedItem.attendanceId = item.attendanceId
+               //this.editedItem.status = this.statuses.find(status => status.title == item.status)
+               // this.editedItem.reason = this.reasons.find(reason => reason.title == item.reason)
                 this.dialog = true
             },
             close () {

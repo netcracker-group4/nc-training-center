@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <v-navigation-drawer class="drawer grey lighten-5"
+        <!--<v-navigation-drawer class="drawer grey lighten-5"
                              fixed
                              v-model="drawer"
                              width="180"
@@ -18,7 +18,7 @@
                     </v-list-tile-content>
                 </v-list-tile>
             </v-list>
-        </v-navigation-drawer>
+        </v-navigation-drawer>-->
 
     <v-container>
         <v-layout row wrap>
