@@ -1,10 +1,9 @@
 <template>
     <div>
+    <div>Group with  {{ $route.params.id }}  number</div>
 
-        Group with  {{ $route.params.id }}  number
 
     </div>
-
 </template>
 
 <script>

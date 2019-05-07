@@ -3,7 +3,9 @@ package ua.com.nc.service.impl;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.com.nc.dao.implementation.AttendanceDao;
 import ua.com.nc.dao.interfaces.IAttendanceDao;
+//import ua.com.nc.dao.interfaces.IAttendanceDao;
 import ua.com.nc.dao.interfaces.IGroupDao;
 import ua.com.nc.dao.interfaces.ILessonDao;
 import ua.com.nc.dao.interfaces.IUserDao;
@@ -131,6 +133,13 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public List<Attendance> getAttendanceByStudentIdAndGroupId(Integer studentId, Integer groupId) {
         return attendanceDao.getAttendanceByStudentIdAndGroupId(studentId, groupId);
+    }
+
+    @Override
+    public void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId) {
+        attendanceDao.attendanceUpdate(attendanceId, statusId, reasonId);
+        attendanceDao.commit();
+
     }
 
 

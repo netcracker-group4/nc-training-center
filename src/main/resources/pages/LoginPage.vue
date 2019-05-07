@@ -73,7 +73,7 @@
                         if(request.status == 200){
                             location.replace(location.origin)
                         }
-                        if(request.status == 404){
+                        if(request.status == 401){
                             self.modalMessage = "There is no user with such email and password"
                             self.dialog = true
                         }
