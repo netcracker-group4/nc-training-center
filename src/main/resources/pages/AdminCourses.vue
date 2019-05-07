@@ -4,7 +4,6 @@
             <v-toolbar-title>Courses</v-toolbar-title>
             <span class="text-xs-right">
                 <v-btn flat color="primary" @click="createCourse">Create new course</v-btn>
-                <v-btn icon light/>
             </span>
 
         </v-toolbar>

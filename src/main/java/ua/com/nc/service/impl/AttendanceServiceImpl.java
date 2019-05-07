@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.implementation.AttendanceDao;
 import ua.com.nc.dao.interfaces.IAttendanceDao;
+//import ua.com.nc.dao.interfaces.IAttendanceDao;
 import ua.com.nc.dao.interfaces.IGroupDao;
 import ua.com.nc.dao.interfaces.ILessonDao;
 import ua.com.nc.dao.interfaces.IUserDao;
@@ -16,7 +17,6 @@ import ua.com.nc.dto.AttendanceDto;
 import ua.com.nc.service.AttendanceService;
 
 import java.sql.Date;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

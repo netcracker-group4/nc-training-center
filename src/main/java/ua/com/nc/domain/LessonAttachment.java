@@ -5,14 +5,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@EqualsAndHashCode(of = {"id"})
 @AllArgsConstructor
 @ToString
-
 public class LessonAttachment extends Entity<Integer> {
     private Integer attachmentId;
     private Integer lessonId;
+
     public LessonAttachment(Integer id, Integer attachmentId, Integer lessonId){
         super(id);
         this.attachmentId = attachmentId;

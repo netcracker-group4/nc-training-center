@@ -1,14 +1,12 @@
 package ua.com.nc.controller;
 
+import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.domain.User;
-import ua.com.nc.dto.DtoTeacherAndManager;
-import ua.com.nc.dto.DtoUser;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.service.UserService;
 
@@ -58,5 +56,9 @@ public class UserController {
     @RequestMapping(value = "/get-all-managers", method = RequestMethod.GET)
     public ResponseEntity<?> getAllManagers() {
         return new ResponseEntity<>(userService.getAllManagers(), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/get-all-trainers", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllTrainers() {
+        return new ResponseEntity<>(userService.getAllTrainers(), HttpStatus.OK);
     }
 }

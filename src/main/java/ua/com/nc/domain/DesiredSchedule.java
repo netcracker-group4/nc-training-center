@@ -1,7 +1,9 @@
 package ua.com.nc.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class DesiredSchedule extends Entity<Integer>{
     private int userId;

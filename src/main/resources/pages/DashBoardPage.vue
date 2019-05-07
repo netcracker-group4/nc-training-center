@@ -1,25 +1,24 @@
 <template>
-    <form class="table">
-    <div>
-        <v-layout row wrap class="text-xs-center">
-            <v-flex xs12 sm12 md4>
-                <v-btn flat v-on:click="showTrainingAndQuantity" :class="{active: shownTable === 1}">Trainings and quantity of employee</v-btn>
-            </v-flex>
-            <v-flex xs12 sm12 md4>
-                <v-btn flat v-on:click="showLevelAndQuantity" :class="{active: shownTable === 2}">Training level and quantity of groups</v-btn>
-            </v-flex>
-            <v-flex xs12 sm12 md4>
-                <v-btn flat v-on:click="showLevelAndTrainers" :class="{active: shownTable === 3}">Training level and trainers</v-btn>
-            </v-flex>
-        </v-layout>
+    <form class="table" style="margin-top: 20px">
+        <div class="row">
+                <v-tabs v-model="shownTable" centered>
+                    <v-tab v-on:click="showTrainingAndQuantity" >
+                        Trainings and quantity of employee
+                    </v-tab>
+                    <v-tab v-on:click="showLevelAndQuantity" >
+                        raining level and quantity of groups
+                    </v-tab>
+                    <v-tab v-on:click="showLevelAndTrainers" >
+                        Training level and trainers
+                    </v-tab>
+                </v-tabs>
+        </div>
 
-        <v-container>
-            <DashBoardTableTrainingAndQuantity v-show="shownTable===1"></DashBoardTableTrainingAndQuantity>
-            <DashBoardTableLevelAndQuantity  v-show="shownTable===2"></DashBoardTableLevelAndQuantity>
-            <DashBoardTableLevelAndTrainers  v-show="shownTable===3"></DashBoardTableLevelAndTrainers>
-        </v-container>
-
-    </div>
+            <v-container style="margin-top: 50px">
+                <DashBoardTableTrainingAndQuantity v-show="shownTable===0"></DashBoardTableTrainingAndQuantity>
+                <DashBoardTableLevelAndQuantity v-show="shownTable===1"></DashBoardTableLevelAndQuantity>
+                <DashBoardTableLevelAndTrainers v-show="shownTable===2"></DashBoardTableLevelAndTrainers>
+            </v-container>
     </form>
 </template>
 

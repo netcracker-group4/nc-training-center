@@ -2,6 +2,7 @@ package ua.com.nc.domain;
 
 
 import lombok.Data;
+
 import java.util.Objects;
 
 @Data

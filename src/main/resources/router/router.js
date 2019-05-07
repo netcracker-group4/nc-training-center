@@ -17,6 +17,7 @@ import DesiredSchedulePage from "../pages/DesiredSchedulePage.vue";
 import VueDraggable from 'vuedraggable';
 import AttachmentUpload from "../pages/AttachmentUpload.vue"
 import TestPage from '../pages/TestPage.vue'
+import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
 
 Vue.use(Router);
 Vue.use(VueDraggable);
@@ -27,6 +28,7 @@ const routes = [
     {path: '/login', component: LoginPage},
     {path: '/dashboard', component: DashBoardPage},
     {path: '/groups/:id', component: GroupPage},
+    {path: '/groups/:id/schedule', component: GroupSchedulePage},
     {path: '/courses/:id', component: CoursePage, props: true},
     {path: '/trainers/:id', component: TrainerPage},
     {path: '/admincourses', component: AdminCourses},

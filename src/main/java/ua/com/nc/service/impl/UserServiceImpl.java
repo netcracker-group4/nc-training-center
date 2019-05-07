@@ -1,6 +1,5 @@
 package ua.com.nc.service.impl;
 
-import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +17,6 @@ import ua.com.nc.dto.DtoUser;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.service.UserService;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -136,7 +134,6 @@ public class UserServiceImpl implements UserService {
     public List<DtoTeacherAndManager> getAllManagers() {
         List<DtoTeacherAndManager> dtoManagers = new ArrayList<>();
         List<User> managers = userDao.getAllManagers();
-
         for (User manager : managers) {
             dtoManagers.add(new DtoTeacherAndManager(
                     manager.getId(),
@@ -148,12 +145,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<DtoTeacherAndManager> getAllTrainers() {
+        List<DtoTeacherAndManager> dtoTrainers = new ArrayList<>();
+        List<User> trainers = userDao.getAllTrainers();
+        for (User trainer : trainers) {
+            dtoTrainers.add(new DtoTeacherAndManager(
+                    trainer.getId(),
+                    trainer.getFirstName(),
+                    trainer.getLastName()
+            ));
+        }
+        return dtoTrainers;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.getByEmail(username);
 
-        if(user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("User with such email not exist");
-        }else{
+        } else {
             Set<Role> roles = new HashSet<>(roleDao.findAllByUserId(user.getId()));
             user.setRoles(roles);
             return user;

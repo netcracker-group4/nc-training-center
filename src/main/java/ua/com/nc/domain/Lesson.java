@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.time.OffsetDateTime;
 import java.sql.Date;
+
+import java.sql.Timestamp;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -17,15 +18,28 @@ public class Lesson extends Entity<Integer> {
     private String topic;
     private Integer trainerId;
     private Date timeDate;
+    private Timestamp time;
+    private boolean isCanceled;
     private String absenceReason;
     private String absenceStatus;
 
-    public Lesson(Integer id, Integer groupId, String topic, Integer trainerId, Date timeDate) {
+    public Lesson(Integer groupId, String topic, Integer trainerId, Date timeDate, Timestamp time, boolean isCanceled) {
+        this.groupId = groupId;
+        this.topic = topic;
+        this.trainerId = trainerId;
+        this.timeDate = timeDate;
+        this.time = time;
+        this.isCanceled = isCanceled;
+    }
+
+    public Lesson(Integer id, Integer groupId, String topic, Integer trainerId, Date timeDate, Timestamp time, boolean isCanceled) {
         super(id);
         this.groupId = groupId;
         this.topic = topic;
         this.trainerId = trainerId;
         this.timeDate = timeDate;
+        this.time = time;
+        this.isCanceled = isCanceled;
     }
 
     public Lesson(Integer id, Integer groupId, String topic, Integer trainerId, Date timeDate, String absenceReason, String absenceStatus) {
@@ -37,4 +51,5 @@ public class Lesson extends Entity<Integer> {
         this.absenceReason = absenceReason;
         this.absenceStatus = absenceStatus;
     }
+
 }
