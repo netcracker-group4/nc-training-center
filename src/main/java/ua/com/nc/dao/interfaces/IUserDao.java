@@ -36,6 +36,8 @@ public interface IUserDao extends GenericDao<User, Integer> {
 
     void addUserRole(Integer userId, String roleName);
 
+    void addUserByAdmin(User user);
+
     public TreeMap<User, User> getStudentsAbsentWitNoReason (int lessonId);
 
     User getAdmin();

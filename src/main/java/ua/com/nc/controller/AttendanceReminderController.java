@@ -5,7 +5,7 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.domain.MailSender;
+import ua.com.nc.dto.DtoMailSender;
 import ua.com.nc.domain.User;
 import ua.com.nc.service.AttendanceReminderService;
 import ua.com.nc.service.EmailService;
@@ -51,7 +51,7 @@ public class AttendanceReminderController {
     }
 
     private void sendEmail (String to, String subject, String text) {
-        MailSender mailSender = new MailSender();
+        DtoMailSender mailSender = new DtoMailSender();
         mailSender.setTo(to);
         mailSender.setSubject(subject);
         mailSender.setText(text);

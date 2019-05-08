@@ -64,6 +64,8 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     private String usrSelectTrainerByFeedback;
     @Value("${urs.insert-user-role}")
     private String usrInsertUserRole;
+    @Value("${usr.insert-user-by-admin}")
+    private String usrInsertUserByAdmin;
 
     public UserDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
@@ -217,6 +219,23 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             statement.setString(2, roleName);
+            statement.executeUpdate();
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+    }
+
+    @Override
+    public void addUserByAdmin(User user) {
+        String sql = usrInsertUserByAdmin;
+        log.info(sql + " insert user " + user.getEmail() + " by admin");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getToken());
+            statement.setString(3, "firstname");
+            statement.setString(4, "lastname");
+            statement.setString(5, "ss");
             statement.executeUpdate();
         } catch (Exception e) {
             log.trace(e);

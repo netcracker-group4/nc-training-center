@@ -1,9 +1,8 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <NavigationDrawer></NavigationDrawer>
         <v-container>
             <v-layout row wrap>
-                <v-flex xs12 sm10 offset-sm2>
+                <v-flex xs12 sm12>
                     <v-toolbar flat color="white">
                         <v-toolbar-title>Users</v-toolbar-title>
                         <v-spacer></v-spacer>
@@ -41,7 +40,7 @@
 
 <script>
     import axios from 'axios'
-    import NavigationDrawer from "../components/NavigationDrawer.vue"
+    // import NavigationDrawer from "../components/NavigationDrawer.vue"
 
 
     export default {
@@ -91,7 +90,7 @@
                 });
         },
         components: {
-            NavigationDrawer
+            // NavigationDrawer
         }
     }
 </script>

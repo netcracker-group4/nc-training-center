@@ -5,23 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ua.com.nc.dao.implementation.GenericAbstractDao;
-import ua.com.nc.dao.interfaces.ICourseDao;
-import ua.com.nc.dao.interfaces.IGroupDao;
-import ua.com.nc.dao.interfaces.IRoleDao;
-import ua.com.nc.dao.interfaces.IUserDao;
-import ua.com.nc.domain.Group;
-import ua.com.nc.domain.Role;
-import ua.com.nc.domain.User;
-import ua.com.nc.dto.DtoGroup;
-import ua.com.nc.dto.DtoTeacherAndManager;
-import ua.com.nc.dto.DtoUser;
-import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.dto.*;
+import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +32,8 @@ public class UserServiceImpl implements UserService {
     private IFeedbackDao feedbackDao;
     @Autowired
     private ICourseDao iCourseDao;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public void add(DtoUserSave dtoUserSave) {
@@ -97,7 +89,8 @@ public class UserServiceImpl implements UserService {
             dtoManager = new DtoTeacherAndManager(
                     manager.getId(),
                     manager.getFirstName(),
-                    manager.getLastName()
+                    manager.getLastName(),
+                    manager.getImageUrl()
             );
         }
 
@@ -107,7 +100,8 @@ public class UserServiceImpl implements UserService {
                 dtoTeachers.add(new DtoTeacherAndManager(
                         teacher.getId(),
                         teacher.getFirstName(),
-                        teacher.getLastName()
+                        teacher.getLastName(),
+                        teacher.getImageUrl()
                 ));
             }
         }
@@ -128,7 +122,8 @@ public class UserServiceImpl implements UserService {
                 DtoTeacherAndManager dtoTeacher = new DtoTeacherAndManager(
                         teacher.getId(),
                         teacher.getFirstName(),
-                        teacher.getLastName()
+                        teacher.getLastName(),
+                        teacher.getImageUrl()
                 );
 
                 dtoFeedbacks.add(new DtoFeedback(
@@ -198,7 +193,8 @@ public class UserServiceImpl implements UserService {
             dtoManagers.add(new DtoTeacherAndManager(
                     manager.getId(),
                     manager.getFirstName(),
-                    manager.getLastName()
+                    manager.getLastName(),
+                    manager.getImageUrl()
             ));
         }
         return dtoManagers;
@@ -212,10 +208,27 @@ public class UserServiceImpl implements UserService {
             dtoTrainers.add(new DtoTeacherAndManager(
                     trainer.getId(),
                     trainer.getFirstName(),
-                    trainer.getLastName()
+                    trainer.getLastName(),
+                    trainer.getImageUrl()
             ));
         }
         return dtoTrainers;
+    }
+
+    @Override
+    public void addEmployeeByAdmin(DtoMailSender dtoMailSender) {
+        User user = new User();
+        user.setEmail(dtoMailSender.getTo());
+
+        SecureRandom random = new SecureRandom();
+        byte bytes[] = new byte[20];
+        random.nextBytes(bytes);
+        String token = bytes.toString();
+        user.setToken(token);
+
+        userDao.addUserByAdmin(user);
+        emailService.sendSimpleMessage(dtoMailSender);
+        userDao.commit();
     }
 
     @Override

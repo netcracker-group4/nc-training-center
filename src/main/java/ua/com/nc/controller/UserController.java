@@ -9,9 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.domain.Role;
 import ua.com.nc.domain.User;
-import ua.com.nc.dto.DtoTeacherAndManager;
-import ua.com.nc.dto.DtoUser;
-import ua.com.nc.dto.DtoUserProfiles;
+import ua.com.nc.dto.*;
+import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
 
 import java.util.List;
@@ -23,8 +22,6 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private EmailService emailService;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> save(@RequestBody DtoUserSave dtoUserSave) {
@@ -66,14 +63,21 @@ public class UserController {
     public ResponseEntity<?> getAllManagers() {
         return new ResponseEntity<>(userService.getAllManagers(), HttpStatus.OK);
     }
+
     @RequestMapping(value = "/get-all-trainers", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTrainers() {
         return new ResponseEntity<>(userService.getAllTrainers(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/main-send", method = RequestMethod.POST)
-    public ResponseEntity<?> mailSend(@RequestBody DtoMailSender dtoMailSender) {
-        emailService.sendSimpleMessage(dtoMailSender);
+    public ResponseEntity<?> addEmployeeByAdmin(@RequestBody DtoMailSender dtoMailSender) {
+        userService.addEmployeeByAdmin(dtoMailSender);
+        return ResponseEntity.ok().body("Send mail");
+    }
+
+    @RequestMapping(value = "/registration/{token}", method = RequestMethod.GET)
+    public ResponseEntity<?> registration(@PathVariable String token) {
+
         return ResponseEntity.ok().body("Send mail");
     }
 }

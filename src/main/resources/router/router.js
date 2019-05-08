@@ -24,7 +24,8 @@ Vue.use(Router);
 Vue.use(VueDraggable);
 const routes = [
     {path: '/', component: MainPage},
-    {path: '/registration', component: RegistrationPage},
+    {path: '/registration/:token', component: RegistrationPage},
+    {path: '/dashboard', component: DashBoardPage},
     {path: '/login', component: LoginPage},
     {path: '/dashboard', component: DashBoardPage},
     {path: '/groups/:id', component: GroupPage},
