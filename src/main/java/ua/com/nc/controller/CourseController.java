@@ -61,7 +61,6 @@ public class CourseController {
     @ResponseBody
     public void update(@RequestParam(name = "name") String name, @RequestParam(name="level" ) String level,
                     @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
-
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
                     @RequestParam(name = "startDay") String startDay,@RequestParam(name = "endDay") String endDay,
                        @PathVariable int id){

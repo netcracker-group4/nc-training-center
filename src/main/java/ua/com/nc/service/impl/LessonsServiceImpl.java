@@ -3,10 +3,7 @@ package ua.com.nc.service.impl;
 import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.nc.dao.interfaces.IAttachmentDao;
-import ua.com.nc.dao.interfaces.ILessonAttachmentDao;
-import ua.com.nc.dao.interfaces.ILessonDao;
-import ua.com.nc.dao.interfaces.IUserDao;
+import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.Lesson;
 import ua.com.nc.domain.LessonAttachment;
 import ua.com.nc.domain.User;
@@ -27,6 +24,8 @@ public class LessonsServiceImpl implements LessonsService {
     ILessonAttachmentDao iLessonAttachmentDao;
 
     @Autowired
+    ICourseDao iCourseDao;
+    @Autowired
     IUserDao iUserDao;
 
     private Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, (JsonSerializer<Timestamp>)
@@ -34,11 +33,16 @@ public class LessonsServiceImpl implements LessonsService {
 
     @Override
     public String getAllForGroup(int groupId) {
-        List<DtoLesson> dtoLessons = new ArrayList<>();
         List<Lesson> lessons = iLessonDao.getByGroupId(groupId);
+        return createDtoForLessons(lessons);
+    }
+
+    private String createDtoForLessons(List<Lesson> lessons) {
+        List<DtoLesson> dtoLessons = new ArrayList<>();
         for (Lesson lesson : lessons) {
             User trainer = iUserDao.getEntityById(lesson.getTrainerId());
             String trainerName = trainer.getFirstName() + " " + trainer.getLastName();
+
             DtoLesson dtoLesson = new DtoLesson(lesson, trainerName,
                     iAttachmentDao.getByLessonId(lesson.getId()));
             dtoLessons.add(dtoLesson);
@@ -82,12 +86,18 @@ public class LessonsServiceImpl implements LessonsService {
     }
 
     @Override
-    public String cancelLesson(int parseInt) {
-        Lesson lesson = iLessonDao.getEntityById(parseInt);
+    public String cancelLesson(int lessonId) {
+        Lesson lesson = iLessonDao.getEntityById(lessonId);
         boolean newCanceled = !lesson.isCanceled();
         lesson.setCanceled(newCanceled);
         iLessonDao.update(lesson);
         iLessonDao.commit();
         return Boolean.toString(newCanceled);
+    }
+
+    @Override
+    public String getAllForUser(int userId) {
+        List<Lesson> lessons = iLessonDao.getByUser(userId);
+        return createDtoForLessons(lessons);
     }
 }

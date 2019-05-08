@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ua.com.nc.dao.implementation.GenericAbstractDao;
+import ua.com.nc.dao.interfaces.ICourseDao;
 import ua.com.nc.dao.interfaces.IGroupDao;
 import ua.com.nc.dao.interfaces.IRoleDao;
 import ua.com.nc.dao.interfaces.IUserDao;
@@ -31,6 +33,8 @@ public class UserServiceImpl implements UserService {
     private IGroupDao groupDao;
     @Autowired
     private IRoleDao roleDao;
+    @Autowired
+    private ICourseDao iCourseDao;
 
     @Override
     public void add(User user) {
@@ -95,7 +99,9 @@ public class UserServiceImpl implements UserService {
         List<DtoGroup> dtoGroups = new ArrayList<>();
         if (groups != null && groups.size() != 0) {
             for (Group group : groups) {
-                dtoGroups.add(new DtoGroup(group.getId(), group.getTitle()));
+                int courseId = group.getCourseId();
+                String courseName = iCourseDao.getEntityById(courseId).getName();
+                dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId, courseName));
             }
         }
 
