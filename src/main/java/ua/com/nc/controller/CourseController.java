@@ -51,25 +51,25 @@ public class CourseController {
                     @RequestParam(name = "startDay") String startDay,@RequestParam(name = "endDay") String endDay,
                     @RequestParam(name = "image") MultipartFile image) {
         imageUrl = service.uploadImage(image);
-        System.err.println(imageUrl);
         service.add(service.stringToObjCourse(name, "1", level, courseStatus,
                 imageUrl, isOnLandingPage, desc, startDay, endDay));
     }
 
 
     @RequestMapping(method = RequestMethod.PUT,value = "{id}/create")
-    @ResponseBody
     public void update(@RequestParam(name = "name") String name, @RequestParam(name="level" ) String level,
                     @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
-
+                       @RequestParam(name = "image") MultipartFile image,
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
                     @RequestParam(name = "startDay") String startDay,@RequestParam(name = "endDay") String endDay,
                        @PathVariable int id){
+        imageUrl = service.uploadImage(image);
         Course course = service.stringToObjCourse(name, "1", level, courseStatus,
                 imageUrl, isOnLandingPage, desc, startDay, endDay);
         course.setId(id);
         courseDao.update(course);
     }
+
     @RequestMapping(value = {"/{id}/desired/ungrouped"}, method = RequestMethod.GET)
     @ResponseBody
     public String getDesiredScheduleForUngroupedStudentsForCourse(@PathVariable("id") String id) throws Exception {

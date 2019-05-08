@@ -10,7 +10,8 @@
                     <v-flex xs5>
                         <v-layout column>
                             <div class="subheading pt-3"> <b>{{courseStatus}}</b>
-                                <v-dialog v-model="dialog" max-width="500px">
+                             <b>{{level.title}}</b>
+                                <<!--v-dialog v-model="dialog" max-width="500px">
                                     <template v-slot:activator="{ on }">
                                         <v-icon
                                                 class="mr-4"
@@ -30,10 +31,20 @@
                                                     label="Change status"
                                             ></v-select>
                                     </v-card>
-                                </v-dialog>
+                                </v-dialog>-->
                             </div>
                             <!--<v-img sizes="" src="https://picsum.photos/510/300?random" aspect-ratio="2" wight="100%"></v-img>-->
-                            <v-img :src="''+'img/'+imageUrl+'.jpg'" aspect-ratio="2"></v-img> <!-- Something wrong here, try to fix it &ndash;&gt;-->
+                            <v-img :src="'../'+'img/'+imageUrl+'.jpg'" aspect-ratio="2"></v-img>
+                            <div v-if="isAdmin">
+                                <v-text-field label="Select Image" @click='pickFile' v-model='imageUrl' prepend-icon='attach_file'></v-text-field>
+                                <input
+                                        type="file"
+                                        style="display: none"
+                                        ref="image"
+                                        accept="image/*"
+                                        @change="onFilePicked"
+                                >
+                            </div>
                         </v-layout>
                     </v-flex>
                     <v-flex  xs5 offset-xs0 offset-lg0 style="margin-left: 2%">
@@ -92,6 +103,7 @@
         data() {
             return{
                 name: null,
+                levelId: null,
                 level: null,
                 courseStatus: null,
                 courseStatusId: null,
@@ -117,7 +129,8 @@
                         //self.levels = response.data;
                         let dat = response.data;
                         self.name = dat.name;
-                        self.level = dat.level;
+                        self.levelId = dat.level;
+                        self.setLevel(dat.level);
                         self.getStatus(dat.courseStatusId);
                         self.isOnLandingPage = dat.isOnLandingPage;
                         self.imageUrl = dat.imageUrl;
@@ -197,15 +210,26 @@
                     });
             }
             },
+            setLevel(levelId){
+                let self = this;
+                axios.get('http://localhost:8080/getInfo/getLevel/'+levelId)
+                    .then(function (response) {
+                        self.level = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
             submit() {
                 this.description=document.querySelector('#course-descr-text')._value;
                 let form = new FormData();
                 let request = new XMLHttpRequest();
-                    request.open('PUT', 'http://localhost:8080/getcourses/create');
+                    request.open('PUT', 'http://localhost:8080/getcourses/'+this.$route.params.id+'/create');
                     form.append('name', this.name);
-                    form.append('level', this.level);
+                    form.append('level', this.level.title);
                     form.append('courseStatus', this.courseStatus);
                     form.append('imageUrl', this.imageUrl);
+                    form.append('image',this.img);
                     form.append('trainer', this.trainer);
                     form.append('isOnLandingPage', this.isOnLandingPage);
                     form.append('description', this.description);
@@ -213,6 +237,23 @@
                     form.append('endDay', this.endDay);
                     request.send(form);
 
+            },
+            pickFile () {
+                this.$refs.image.click ()
+            },
+            onFilePicked (e) {
+                const files = e.target.files;
+                if(files[0] !== undefined) {
+                    const fr = new FileReader ();
+                    fr.readAsDataURL(files[0]);
+                    fr.addEventListener('load', () => {
+                        this.imageUrl = fr.result;
+                        this.img = files[0]
+                    })
+                } else {
+                    this.img = '';
+                    this.imageUrl = '';
+                }
             }
         },
         mounted() {

@@ -64,24 +64,40 @@
             },
             findUserById(id){
                 return this.students.find(s => s.id === id);
+            },
+            setUsers(self){
+                axios.get('http://localhost:8080/groups/'+self.id+'/users')
+                    .then(function (response) {
+                        self.students = response.data;
+                    });
+            },
+            setTeacher(self){
+                axios.get('http://localhost:8080/getcourses/'+self.course.id+'/trainer')
+                    .then(function (response) {
+                        self.teacher = response.data;
+                    });
+            },
+            setCourse(self){
+                axios.get('http://localhost:8080/groups/'+self.id+'/course')
+                    .then(function (response) {
+                        self.course = response.data;
+                    });
             }
+
         },
         mounted(){
             let self = this;
-            axios.get('http://localhost:8080/groups/'+self.id+'/users')
-                .then(function (response) {
-                    self.students = response.data;
-                });
-            axios.get('http://localhost:8080/groups/'+self.id+'/users')
-                .then(function (response) {
-                    self.students = response.data;
-                });
-            axios.get('http://localhost:8080/groups/'+self.id+'/course')
-                .then(function (response) {
-                    self.course = response.data;
-                });
-            console.log(self);
-        }
+            self.setUsers(self);
+            self.setCourse(self);
+            self.setTeacher(self);
+            //alert((self.$store.state.userRoles.find(r => r === "TRAINER")));
+            alert("TTT");
+            if(!((self.$store.state.userRoles.find(r => r === "TRAINER")) || self.isAdmin)){
+                alert("You don`t have permission");
+                self.$router.push("/");
+            }
+        },
+
     }
 </script>
 
