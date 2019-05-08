@@ -38,11 +38,12 @@
                         :key="trainer.id"
                       >
                         <template v-slot:header>
-                          <div>{{trainer.last_name}} {{trainer.first_name}}</div>
+                          <div>{{trainer.lastName}} {{trainer.firstName}}</div>
                         </template>
                         <v-card>
                           <v-card-text>
-                            Here will be info about this trainer
+                            <div>Email: {{trainer.email}}</div>
+                            <div>Description: {{trainer.description}}</div>
                           </v-card-text>
                         </v-card>
                       </v-expansion-panel-content>
