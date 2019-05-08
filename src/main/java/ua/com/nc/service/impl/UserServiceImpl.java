@@ -52,7 +52,6 @@ public class UserServiceImpl implements UserService {
         userDao.commit();
     }
 
-
     @Override
     public List<DtoUser> getAll() {
         List<DtoUser> dtoUsers = new ArrayList<>();
@@ -185,6 +184,7 @@ public class UserServiceImpl implements UserService {
         user.setManagerId(dtoUserProfiles.getDtoManager().getId());
         userDao.update(user);
         userDao.commit();
+
     }
 
     @Override
