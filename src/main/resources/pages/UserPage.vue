@@ -79,7 +79,8 @@
                                 size="180"
                                 class="avatar"
                         >
-                            <img src="https://99px.ru/sstorage/53/2017/03/tmb_193520_3284.jpg" alt="avatar" class="avatar_img">
+                            <img v-if="user.image != null" src="https://99px.ru/sstorage/53/2017/03/tmb_193520_3284.jpg" alt="avatar" class="avatar_img">
+                            <v-icon v-if="user.image == null" alt="avatar" class="avatar_img avatar_icon">account_circle</v-icon>
                         </v-avatar>
                         <v-container fluid style="display:block;">
                             <v-switch v-model="user.active" @change="isActive" label="Active"></v-switch>
@@ -105,7 +106,7 @@
                             </tr>
                             <tr>
                                 <td>Teachers</td>
-                                <td><p v-for="teacher in user.dtoTeachers" class="p">{{ getFullName(teacher) }}</p></td>
+                                <td><p v-for="teacher in user.dtoTeachers" @click="forwardToUserPage(teacher.id)" class="p cursor">{{ getFullName(teacher) }}</p></td>
                             </tr>
                             <tr>
                                 <td>Groups</td>
@@ -113,7 +114,7 @@
                             </tr>
                             <tr>
                                 <td>Manager</td>
-                                <td><span class="p" v-if="user.dtoManager">{{ user.dtoManager.firstName + ' ' + user.dtoManager.lastName}}</span></td>
+                                <td><span @click="forwardToUserPage(user.dtoManager.id)" class="p cursor" v-if="user.dtoManager">{{ user.dtoManager.firstName + ' ' + user.dtoManager.lastName}}</span></td>
                             </tr>
                         </table>
                     </div>
@@ -129,7 +130,7 @@
                         <div>Employee's attendance</div>
                     </template>
                     <div class="attendance" v-for="group in user.groups" >
-                        <v-card>
+                        <v-card flat>
                             <v-card-title>
                                 Attendance of user {{user.firstName + ' ' + user.lastName}}  in group {{group.title}}
                             </v-card-title>
@@ -215,6 +216,9 @@
                 setTimeout(() => {
                 }, 300)
             },
+            forwardToUserPage(id){
+                this.$router.push('/userpage/' + id)
+            },
             save () {
                 if(this.editUser.firstName != null && this.editUser.lastName != null){
                     Object.assign(this.user, this.editUser);
@@ -258,6 +262,31 @@
                     console.log(error);
                 });
         },
+        watch:{
+            '$route' (to, from){
+                let self = this;
+                let id = this.$route.params.id;
+                axios.get('http://localhost:8080/users/' + id)
+                    .then(function (response) {
+                        self.user = response.data;
+                        console.log(self.user)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                axios.get('http://localhost:8080/schedule/employee/' + id)
+                    .then(function (response) {
+                        console.log(response.data);
+                        self.lessons = response.data;
+                        self.lessons.forEach(function (one) {
+                            one.open = false;
+                        })
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        }
     }
 </script>
 
@@ -320,5 +349,11 @@
     .margin{
         margin-top: 30px;
         margin-bottom: 30px;
+    }
+    .avatar_icon{
+        font-size: 150px;
+    }
+    .cursor{
+        cursor: pointer;
     }
 </style>

@@ -1,54 +1,45 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container>
-        <v-layout row wrap>
-            <v-flex xs12 sm6>
-            </v-flex>
-        </v-layout>
-        <v-layout row wrap>
-            <v-flex xs12>
-                <template>
-                  <v-card>
-                    <div class = "text">
-                    Courses on landing page:
-                  </div>
-                  </v-card>
-                  <v-carousel>
-                    <v-carousel-item
-                      v-for="crs in courses"
-                      v-bind:src="crs.imageUrl"
-                      :key="crs.id">
+        <v-layout wrap row>
+            <v-flex xs10 sm10 md10 offset-xs1 offset-sm1 offset-md1>
+                <v-card v-for="course in courses" :key="course.id" class="course">
+                    <v-img
+                            :src="course.imageUrl"
+                            aspect-ratio="2.00"
+                    ></v-img>
 
-
-                      <div class = "name">
-                          <a href="'/courses/' + crs.id" style="color:white"> {{crs.name}} </a>
-                      </div>
-                      <div class = "descr">
-                      Description: {{crs.description}}
-                      </div>
-                    </v-carousel-item>
-                  </v-carousel>
-                  <v-card>
-                        <div class = "text">
-                        Trainers on landing page:
+                    <v-card-title primary-title>
+                        <div>
+                            <h3 class="headline mb-0">{{course.name}}</h3>
+                            <div> {{ course.description}} </div>
                         </div>
-                  </v-card>
-                  <v-expansion-panel>
-                      <v-expansion-panel-content
-                        v-for="trainer in trainers"
-                        :key="trainer.id"
-                      >
+                    </v-card-title>
+
+                    <v-card-actions>
+                        <v-btn flat @click="forwardToCoursePage(course.id)">More</v-btn>
+                    </v-card-actions>
+                </v-card>
+                <!--<v-card>
+                    <div class = "text">
+                        Trainers on landing page:
+                    </div>
+                </v-card>
+                <v-expansion-panel>
+                    <v-expansion-panel-content
+                            v-for="trainer in trainers"
+                            :key="trainer.id"
+                    >
                         <template v-slot:header>
-                          <div>{{trainer.lastName}} {{trainer.firstName}}</div>
+                            <div>{{trainer.lastName}} {{trainer.firstName}}</div>
                         </template>
                         <v-card>
-                          <v-card-text>
-                            <div>Email: {{trainer.email}}</div>
-                            <div>Description: {{trainer.description}}</div>
-                          </v-card-text>
+                            <v-card-text>
+                                <div>Email: {{trainer.email}}</div>
+                                <div>Description: {{trainer.description}}</div>
+                            </v-card-text>
                         </v-card>
-                      </v-expansion-panel-content>
-                    </v-expansion-panel>
-                </template>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>-->
             </v-flex>
         </v-layout>
     </v-container>
@@ -85,8 +76,8 @@
 
 },
         methods: {
-            search(){
-
+            forwardToCoursePage(id){
+                this.$router.push('/courses/' + id)
             }
         }
     }
@@ -102,12 +93,15 @@
     font-size: 2em;
       }
     .descr{
-    background-repeat:x;
+
     position:absolute;
     bottom:50px;
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
     font-size: 1em;
     padding: 5px;
+    }
+    .course{
+        margin-bottom: 40px;
     }
 </style>
