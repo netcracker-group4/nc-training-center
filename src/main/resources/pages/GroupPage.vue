@@ -1,13 +1,18 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-    <div>Group with  {{ $route.params.id }}  number</div><v-data-table
+        <div class="subheading pt-3">
+            <b>{{course.name}}</b>
+            <b>{{teacher.firstName}} {{teacher.lastName}}</b>
+        </div>
+        <div>Group with  {{ $route.params.id }}  number</div>
+        <v-data-table
             :headers="headers"
             :items="students"
             :expand="true"
             item-key="id"
-    >
-        <template v-slot:items="props">
-            <tr>
+        >
+        <template v-slot:items="props" >
+            <tr @click="forwardToUserPage(props.item.id)">
                 <td class="my-link">
                     <div>{{ props.item.id }}</div>
                 </td>
@@ -34,8 +39,8 @@
             return{
                 id: this.$route.params.id,
                 students: [],
-                teacher: null,
-                course: null,
+                teacher: [],
+                course: [],
                 headers: [
                     {
                         text: 'Student Id',
@@ -82,16 +87,33 @@
                     .then(function (response) {
                         self.course = response.data;
                     });
+            },
+            setGroup(){
+                let self = this;
+                let c;
+                axios.get('http://localhost:8080/groups/'+self.id+'/course')
+                    .then(function (response) {
+                        c = response.data;
+                        self.course = c;
+                    });
+                /*axios.get('http://localhost:8080/getcourses/'+c.id+'/trainer')
+                    .then(function (response) {
+                        self.teacher = response.data;
+                    });*/
+                axios.get('http://localhost:8080/groups/'+self.id+'/users')
+                    .then(function (response) {
+                        self.students = response.data;
+                    });
+            },
+            forwardToUserPage(id){
+                this.$router.push('/userpage/' + id)
             }
 
         },
         mounted(){
             let self = this;
-            self.setUsers(self);
-            self.setCourse(self);
-            self.setTeacher(self);
+            self.setGroup();
             //alert((self.$store.state.userRoles.find(r => r === "TRAINER")));
-            alert("TTT");
             if(!((self.$store.state.userRoles.find(r => r === "TRAINER")) || self.isAdmin)){
                 alert("You don`t have permission");
                 self.$router.push("/");

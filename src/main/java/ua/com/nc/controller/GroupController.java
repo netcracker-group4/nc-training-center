@@ -88,4 +88,10 @@ public class GroupController {
         return courseDao.getCourseByGroup(Integer.parseInt(id));
     }
 
+    @RequestMapping(value = {"/groups-and-quantity"}, method = RequestMethod.GET)
+    @ResponseBody
+    public String getLevelAndQuantity() {
+        return groupsService.getGroupsAndQuantity();
+    }
+
 }

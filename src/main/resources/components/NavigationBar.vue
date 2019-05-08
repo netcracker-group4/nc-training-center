@@ -70,9 +70,11 @@
                 drawer: false,
                 items: [
                     { title: 'Main', icon: 'home', link: '/' },
-                    { title: 'Users', icon: 'supervisor_account', link: '/userpage'},
+                    { title: 'Users', icon: 'person', link: '/userpage'},
                     { title: 'Courses', icon: 'view_list', link: '/admincourses'},
-                    { title: 'Dashboard', icon: 'dashboard', link: '/dashboard'}
+                    { title: 'Groups', icon: 'group', link: '/allgroups'},
+                    { title: 'Dashboard', icon: 'dashboard', link: '/dashboard'},
+
                 ]
             }
         },

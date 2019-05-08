@@ -19,6 +19,7 @@ import VueDraggable from 'vuedraggable';
 import AttachmentsPage from "../pages/AttachmentsPage.vue"
 import TestPage from '../pages/TestPage.vue'
 import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
+import AllGroups from "../pages/AllGroups.vue";
 
 Vue.use(Router);
 Vue.use(VueDraggable);
@@ -28,7 +29,7 @@ const routes = [
     {path: '/dashboard', component: DashBoardPage},
     {path: '/login', component: LoginPage},
     {path: '/dashboard', component: DashBoardPage},
-    {path: '/groups/:id', component: GroupPage},
+    {path: '/group/:id', component: GroupPage},
     {path: '/groups/:id/schedule', component: GroupSchedulePage},
     {path: '/courses/:id', component: CoursePage, props: true},
     {path: '/trainers/:id', component: TrainerPage},
@@ -43,6 +44,7 @@ const routes = [
     {path: '/desired-schedule/:id', component: DesiredSchedulePage},
     {path: '/attachments-page', component: AttachmentsPage},
     {path: '/test', component: TestPage},
+    {path: '/allgroups', component: AllGroups}
 ];
 
 export default new Router({
