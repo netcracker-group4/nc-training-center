@@ -1,6 +1,9 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container>
         <v-layout row wrap>
+            <v-flex xs12 sm6>
+                <v-text-field v-model="lessonId" label="Lesson Id" clearable></v-text-field>
+            </v-flex>
             <v-flex xs12 sm4>
 
                 <form id="uploadForm" name="uploadForm" enctype="multipart/form-data">
@@ -8,9 +11,7 @@
                     <input type="file" id="file" name="file" ><br>
                 </form>
             </v-flex>
-            <v-flex xs12 sm6>
-                <v-text-field v-model="lessonId" label="Lesson Id" clearable></v-text-field>
-            </v-flex>
+
             <v-flex xs12 sm12>
                 <v-btn @click="uploadFile">Upload</v-btn>
             </v-flex>
@@ -22,14 +23,11 @@
 
 
 
-
 <script>
     import axios from 'axios'
-    import ChooserDate from "../components/ChooserDate.vue";
 
     export default {
-        name: "CreateCourse",
-        components: {ChooserDate},
+        name: "AttachmentUpload",
         data(){
             return{
                 lessonId: null
@@ -50,7 +48,6 @@
                 request.send(form);
 
             }
-
         }
     }
 </script>

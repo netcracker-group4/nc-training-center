@@ -7,12 +7,10 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IUserDao;
 import ua.com.nc.domain.User;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
@@ -56,6 +54,12 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     private String usrSelectAllByCourse;
     @Value("${course.select-trainer}")
     private String getSelectTrainerByCourseId;
+    @Value("${usr.select-students-absent-on-lesson-with-no-reason}")
+    private String selectStudentsAbsentOnLessonWithNoReason;
+    @Value("${usr.select-admin")
+    private String getAdmin;
+    @Value("${lesson.select-lesson-trainer}")
+    private String getLessonTrainer;
     @Value("${usr.select-trainer-by-feedback}")
     private String usrSelectTrainerByFeedback;
     @Value("${urs.insert-user-role}")
@@ -404,5 +408,64 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         }
     }
 
+    public TreeMap<User, User> getStudentsAbsentWitNoReason (int lessonId) {
+        List <User> students = new ArrayList ();
+        String sql = selectStudentsAbsentOnLessonWithNoReason;
+        log.info (sql + " selectStudentsAbsentOnLessonWithNoReason " + lessonId);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            setId (statement, lessonId);
+            ResultSet rs = statement.executeQuery();
+            students = parseResultSet (rs);
+        } catch (Exception e) {
+            log.trace(e);
+        }
+        TreeMap <User, User> absentUsersAndTheirManagers = new TreeMap ();
+        for (User student : students) {
+            User manager = getManagerById(student.getId());
+            absentUsersAndTheirManagers.put(student, manager);
+        }
+        return absentUsersAndTheirManagers;
+    }
+
+    public User getAdmin () {
+        List <User> admin = new ArrayList<>();
+        String sql = getAdmin;
+        log.info (sql + " getAdmin");
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            admin = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+        }
+        if (admin == null || admin.size() == 0) {
+            return null;
+        }
+        if (admin.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return admin.get(0);
+    }
+
+    public User getLessonTrainer (int lessonId) {
+        String sql = this.getLessonTrainer;
+        List<User> trainer;
+        log.info ("get Trainer of lesson " + lessonId);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt (1, lessonId);
+            ResultSet rs = statement.executeQuery();
+            trainer = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace (e);
+            throw new PersistException(e.getMessage());
+        }
+        if (trainer == null || trainer.size() == 0) {
+            return null;
+        }
+        if (trainer.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return trainer.get(0);
+    }
 
 }

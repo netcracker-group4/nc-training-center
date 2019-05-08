@@ -16,7 +16,7 @@ import AttendancePage from "../pages/AttendancePage.vue";
 import AbsenceReasons from '../pages/AbsenceReasons.vue'
 import DesiredSchedulePage from "../pages/DesiredSchedulePage.vue";
 import VueDraggable from 'vuedraggable';
-import AttachmentUpload from "../pages/AttachmentUpload.vue"
+import AttachmentsPage from "../pages/AttachmentsPage.vue"
 import TestPage from '../pages/TestPage.vue'
 import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
 
@@ -41,7 +41,7 @@ const routes = [
     {path: '/attendance', component: AttendancePage},
     {path: '/absence-reasons', component: AbsenceReasons},
     {path: '/desired-schedule/:id', component: DesiredSchedulePage},
-    {path: '/attachment-upload', component: AttachmentUpload},
+    {path: '/attachments-page', component: AttachmentsPage},
     {path: '/test', component: TestPage},
 ];
 

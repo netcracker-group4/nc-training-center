@@ -10,9 +10,8 @@ import ua.com.nc.domain.Attachment;
 import ua.com.nc.domain.LessonAttachment;
 import ua.com.nc.service.AttachmentService;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
+
 @Service
 public class AttachmentServiceImpl implements AttachmentService {
     private static final Logger log = Logger.getLogger(AttachmentServiceImpl.class);
@@ -24,18 +23,23 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public void add(Integer lessonId, Attachment attachment) {
+
         if (iAttachmentDao.getByUrl(attachment.getUrl()) == null) {
+
             iAttachmentDao.insert(attachment);
             iAttachmentDao.commit();
         }
         LessonAttachment lessonAttachment = new LessonAttachment(iAttachmentDao.getByUrl(attachment.getUrl()).getId() ,lessonId);
+        System.out.print(iAttachmentDao.getByUrl(attachment.getUrl()).getId());
         iLessonAttachmentDao.insert(lessonAttachment);
         iLessonAttachmentDao.commit();
     }
 
     @Override
     public void add(Integer lessonId, String url, String description) {
+        System.out.println("Add method 2 used");
         Attachment attachment = new Attachment(url,description);
+        add(lessonId, attachment);
     }
 
     @Override
@@ -64,6 +68,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                 String filePath = dir.getAbsolutePath() + File.separator + name;
 
                 if (iAttachmentDao.getByUrl(filePath) == null) {
+
                     log.info("File is not in base");
                     File uploadedFile = new File(filePath);
 
@@ -72,10 +77,26 @@ public class AttachmentServiceImpl implements AttachmentService {
                     stream.flush();
                     stream.close();
                 }
- //               add(lessonId,filePath,null);
+                add(lessonId,name,null);
             } catch (Exception e) {
                 log.trace(e);
             }
         }
     }
+
+    @Override
+    public FileInputStream downloadFile(Integer id) {
+        System.out.println("Service called");
+        String path = "src/main/resources/attachments/";
+        Attachment attachment = iAttachmentDao.getEntityById(id);
+        path = path + attachment.getUrl();
+        try {
+            FileInputStream fin = new FileInputStream(path);
+            return fin;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
