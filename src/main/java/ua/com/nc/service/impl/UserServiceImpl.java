@@ -18,10 +18,7 @@ import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Log4j
 @Service
@@ -32,8 +29,6 @@ public class UserServiceImpl implements UserService {
     private IGroupDao groupDao;
     @Autowired
     private IRoleDao roleDao;
-    @Autowired
-    private IUserGroupDao userGroupDao;
     @Autowired
     private IFeedbackDao feedbackDao;
     @Autowired
@@ -56,6 +51,7 @@ public class UserServiceImpl implements UserService {
 
         userDao.commit();
     }
+
 
     @Override
     public List<DtoUser> getAll() {
@@ -100,8 +96,6 @@ public class UserServiceImpl implements UserService {
                     manager.getId(),
                     manager.getFirstName(),
                     manager.getLastName(),
-                    manager.getImageUrl()
-                    manager.getLastName(),
                     manager.getImageUrl(),
                     manager.isActive(),
                     manager.getEmail()
@@ -115,8 +109,8 @@ public class UserServiceImpl implements UserService {
                         teacher.getId(),
                         teacher.getFirstName(),
                         teacher.getLastName(),
-                        teacher.getImageUrl()
-                        teacher.getLastName(), teacher.isActive(),
+                        teacher.getImageUrl(),
+                        teacher.isActive(),
                         teacher.getEmail()
                 ));
             }
@@ -141,6 +135,7 @@ public class UserServiceImpl implements UserService {
                         teacher.getId(),
                         teacher.getFirstName(),
                         teacher.getLastName(),
+                        teacher.isActive(),
                         teacher.getImageUrl()
                 );
 
@@ -207,10 +202,9 @@ public class UserServiceImpl implements UserService {
                     manager.getId(),
                     manager.getFirstName(),
                     manager.getLastName(),
+                    manager.getImageUrl(),
                     manager.isActive(),
                     manager.getEmail()
-                    manager.getLastName(),
-                    manager.getImageUrl()
             ));
         }
         return dtoManagers;
@@ -225,11 +219,9 @@ public class UserServiceImpl implements UserService {
                     trainer.getId(),
                     trainer.getFirstName(),
                     trainer.getLastName(),
+                    trainer.getImageUrl(),
                     trainer.isActive(),
-                    trainer.getEmail(),
-
-                    trainer.getLastName(),
-                    trainer.getImageUrl()
+                    trainer.getEmail()
             ));
         }
         return dtoTrainers;
@@ -241,9 +233,9 @@ public class UserServiceImpl implements UserService {
         user.setEmail(dtoMailSender.getTo());
 
         SecureRandom random = new SecureRandom();
-        byte bytes[] = new byte[20];
+        byte[] bytes = new byte[20];
         random.nextBytes(bytes);
-        String token = bytes.toString();
+        String token = Arrays.toString(bytes);
         user.setToken(token);
 
         userDao.addUserByAdmin(user);

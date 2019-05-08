@@ -2,15 +2,12 @@ package ua.com.nc.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ua.com.nc.domain.User;
-import ua.com.nc.dto.DtoMailSender;
-import ua.com.nc.dto.DtoTeacherAndManager;
-import ua.com.nc.dto.DtoUser;
-import ua.com.nc.dto.DtoUserProfiles;
+import ua.com.nc.dto.*;
 
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    void add(User user);
+    void add(DtoUserSave user);
 
     List<DtoUser> getAll();
 
