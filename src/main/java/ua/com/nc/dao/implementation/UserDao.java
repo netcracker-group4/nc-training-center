@@ -60,6 +60,12 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     private String getAdmin;
     @Value("${lesson.select-lesson-trainer}")
     private String getLessonTrainer;
+    @Value("${usr.select-trainer-by-feedback}")
+    private String usrSelectTrainerByFeedback;
+    @Value("${urs.insert-user-role}")
+    private String usrInsertUserRole;
+    @Value("${usr.insert-user-by-admin}")
+    private String usrInsertUserByAdmin;
 
     public UserDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
@@ -185,6 +191,59 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     }
 
     @Override
+    public User getTrainerByFeedback(Integer id) {
+        List<User> list;
+        String sql = usrSelectTrainerByFeedback;
+        log.info(sql + " find trainer by feedback " + id);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
+
+    @Override
+    public void addUserRole(Integer userId, String roleName) {
+        String sql = usrInsertUserRole;
+        log.info(sql + " insert user " + userId + " role " + roleName);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            statement.setString(2, roleName);
+            statement.executeUpdate();
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+    }
+
+    @Override
+    public void addUserByAdmin(User user) {
+        String sql = usrInsertUserByAdmin;
+        log.info(sql + " insert user " + user.getEmail() + " by admin");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getToken());
+            statement.setString(3, "firstname");
+            statement.setString(4, "lastname");
+            statement.setString(5, "ss");
+            statement.executeUpdate();
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+    }
+
+    @Override
     public List<User> getAllTrainers() {
         List<User> list;
         String sql = usrSelectAllTrainers;
@@ -287,7 +346,8 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
-            statement.setInt(3, user.getId());
+            statement.setInt(3,user.getManagerId());
+            statement.setInt(4, user.getId());
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

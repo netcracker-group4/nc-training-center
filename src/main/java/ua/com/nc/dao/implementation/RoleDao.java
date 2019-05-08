@@ -51,4 +51,5 @@ public class RoleDao implements IRoleDao {
         }
         return roles;
     }
+
 }

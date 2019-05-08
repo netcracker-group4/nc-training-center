@@ -1,7 +1,7 @@
 package ua.com.nc.service;
 
-import ua.com.nc.domain.MailSender;
+import ua.com.nc.dto.DtoMailSender;
 
 public interface EmailService {
-    void sendSimpleMessage(MailSender mailSender);
+    void sendSimpleMessage(DtoMailSender dtoMailSender);
 }

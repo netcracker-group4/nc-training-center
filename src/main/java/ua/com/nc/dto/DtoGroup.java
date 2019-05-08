@@ -6,6 +6,9 @@ public class DtoGroup {
     private String title;
     private String courseName;
 
+    public DtoGroup() {
+    }
+
     public DtoGroup(Integer id, String title) {
         this.id = id;
         this.title = title;
