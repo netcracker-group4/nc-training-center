@@ -4,14 +4,15 @@
             <b>{{course.name}}</b>
             <b>{{teacher.firstName}} {{teacher.lastName}}</b>
         </div>
-    <div>Group with  {{ $route.params.id }}  number</div><v-data-table
+        <div>Group with  {{ $route.params.id }}  number</div>
+        <v-data-table
             :headers="headers"
             :items="students"
             :expand="true"
             item-key="id"
-    >
-        <template v-slot:items="props">
-            <tr>
+        >
+        <template v-slot:items="props" >
+            <tr @click="forwardToUserPage(props.item.id)">
                 <td class="my-link">
                     <div>{{ props.item.id }}</div>
                 </td>
@@ -38,8 +39,8 @@
             return{
                 id: this.$route.params.id,
                 students: [],
-                teacher: null,
-                course: null,
+                teacher: [],
+                course: [],
                 headers: [
                     {
                         text: 'Student Id',
@@ -95,14 +96,17 @@
                         c = response.data;
                         self.course = c;
                     });
-                axios.get('http://localhost:8080/getcourses/'+c.id+'/trainer')
+                /*axios.get('http://localhost:8080/getcourses/'+c.id+'/trainer')
                     .then(function (response) {
                         self.teacher = response.data;
-                    });
+                    });*/
                 axios.get('http://localhost:8080/groups/'+self.id+'/users')
                     .then(function (response) {
                         self.students = response.data;
                     });
+            },
+            forwardToUserPage(id){
+                this.$router.push('/userpage/' + id)
             }
 
         },

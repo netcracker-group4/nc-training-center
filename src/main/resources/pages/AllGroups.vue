@@ -54,7 +54,7 @@
         },
         methods: {
             goToGroupPage(id){
-                this.$router.push("/groups/"+id)
+                this.$router.push("/group/"+id)
             }
         },
         mounted(){
