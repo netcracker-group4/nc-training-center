@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailService emailService;
 
-    @Override
+
     public void add(DtoUserSave dtoUserSave) {
         User user = new User();
         user.setFirstName(dtoUserSave.getFirstName());
@@ -47,6 +47,11 @@ public class UserServiceImpl implements UserService {
         userDao.addUserRole(user.getId(), dtoUserSave.getRole().name());
 
         userDao.commit();
+    }
+
+
+    public void add(User user) {
+
     }
 
     @Override
