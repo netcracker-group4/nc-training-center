@@ -13,6 +13,23 @@
                             <v-radio :key="2" :label="'List'" :value="false"></v-radio>
                         </v-radio-group>
                         <v-spacer></v-spacer>
+                        <v-select v-model="selectedGroups"
+                                  item-value="id"
+                                  :items="groupsList"
+                                  item-text="title"
+                                  label="Select groups"
+                                  multiple
+                        >
+                            <template v-slot:selection="{ item, index }">
+                                <v-chip v-if="index === 0">
+                                    <span>{{ item.title}}</span>
+                                </v-chip>
+                                <span
+                                        v-if="index === 1"
+                                        class="grey--text caption"
+                                >(+{{ selectedGroups.length - 1 }} others)</span>
+                            </template>
+                        </v-select>
                     </v-layout>
                     <!--        buttons-->
                     <v-layout style="margin-bottom: 20px">
@@ -71,14 +88,19 @@
                                                         </v-card-title>
 
                                                         <v-card-text>
-                                                            <span class="clickable" v-on:click="goToTrainerPage(lesson.trainerId)">
+                                                            <span class="clickable"
+                                                                  v-on:click="goToTrainerPage(lesson.trainerId)">
                                                                 Trainer : {{lesson.trainerName}}</span>
                                                             <v-divider></v-divider>
-                                                            <div class="clickable" v-on:click="goToGroupPage(lesson.groupId)">
-                                                                Group  : {{getGroupName(lesson.groupId)}}</div>
+                                                            <div class="clickable"
+                                                                 v-on:click="goToGroupPage(lesson.groupId)">
+                                                                Group : {{getGroupName(lesson.groupId)}}
+                                                            </div>
                                                             <v-divider></v-divider>
-                                                            <div class="clickable" v-on:click="goToCoursePage(getCourseId(lesson.groupId))">
-                                                                Course : {{getCourseName(lesson.groupId)}}</div>
+                                                            <div class="clickable"
+                                                                 v-on:click="goToCoursePage(getCourseId(lesson.groupId))">
+                                                                Course : {{getCourseName(lesson.groupId)}}
+                                                            </div>
                                                         </v-card-text>
                                                     </v-card>
                                                 </v-menu>
@@ -116,18 +138,20 @@
                                 <v-card-actions>
                                     <span class="clickable title" v-on:click="goToTrainerPage(lesson.trainerId)">
                                                                 Trainer : {{lesson.trainerName}}</span>
-                                    <v-divider vertical inset  class="mx-3"></v-divider>
-                                    <div class="clickable title" v-on:click="goToGroupPage(lesson.groupId)">
-                                        Group  : {{getGroupName(lesson.groupId)}}</div>
                                     <v-divider vertical inset class="mx-3"></v-divider>
-                                    <div class="clickable title" v-on:click="goToCoursePage(getCourseId(lesson.groupId))">
-                                        Course : {{getCourseName(lesson.groupId)}}</div>
+                                    <div class="clickable title" v-on:click="goToGroupPage(lesson.groupId)">
+                                        Group : {{getGroupName(lesson.groupId)}}
+                                    </div>
+                                    <v-divider vertical inset class="mx-3"></v-divider>
+                                    <div class="clickable title"
+                                         v-on:click="goToCoursePage(getCourseId(lesson.groupId))">
+                                        Course : {{getCourseName(lesson.groupId)}}
+                                    </div>
                                 </v-card-actions>
                             </v-card>
                         </div>
                     </div>
                 </div>
-
             </v-expansion-panel-content>
         </v-expansion-panel>
     </div>
@@ -136,22 +160,29 @@
 <script>
     export default {
         name: "CalendarListScheduleComponent",
-        props: ['lessonsList', 'groupsList'],
+        props: ['lessonsList', 'groupsList', "previouslySelected"],
         data: function () {
             return {
                 start: new Date().toISOString().slice(0, 10),
-                calendarView: true
+                calendarView: true,
+                selectedGroups: this.previouslySelected
             }
         },
         computed: {
             lessonsMap() {
                 const map = {};
-                this.lessonsList.forEach(e => (map[e.timeDate.substr(0, 10)] = map[e.timeDate.substr(0, 10)] || []).push(e));
+                let l = this.lessonsList.filter((i) => {
+                    return this.selectedGroups.includes(i.groupId);
+                });
+                l.forEach(e => (map[e.timeDate.substr(0, 10)] = map[e.timeDate.substr(0, 10)] || []).push(e));
                 return map;
             },
             lessonsMapMonthlyGrouped() {
                 const map = {};
-                this.lessonsList.forEach(e => (map[e.timeDate.substr(0, 7)] = map[e.timeDate.substr(0, 7)] || []).sort(this.compare).push(e));
+                let l = this.lessonsList.filter((i) => {
+                    return this.selectedGroups.includes(i.groupId);
+                });
+                l.forEach(e => (map[e.timeDate.substr(0, 7)] = map[e.timeDate.substr(0, 7)] || []).sort(this.compare).push(e));
                 return map;
             },
             startMonth() {
@@ -171,6 +202,7 @@
             }
         },
         methods: {
+
             getDate(strDate) {
                 return new Date(strDate).toDateString().slice(0, 20);
             },
@@ -270,7 +302,7 @@
         color: white;
     }
 
-    .clickable{
+    .clickable {
         cursor: pointer;
         margin-bottom: 5px;
         margin-top: 5px;

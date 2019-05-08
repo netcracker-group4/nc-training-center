@@ -16,7 +16,7 @@
             <feedback-component class="margin" :lorem="lorem" :user="user"/>
 
             <calendar-list-schedule-component class="margin" :groups-list="user.groups"
-                                              :lessons-list="lessons"></calendar-list-schedule-component>
+                                              :lessons-list="lessons" :previously-selected="getArray(user.groups)"></calendar-list-schedule-component>
 
             <users-groups-and-courses class="margin" :groups="user.groups"
                                       :trainers="user.dtoTeachers"></users-groups-and-courses>
@@ -122,6 +122,13 @@
                     alert("Incorrect information in fields")
                 }
                 this.close()
+            },
+            getArray(groupsList) {
+                let selectedCourses = [];
+                groupsList.forEach(function (value) {
+                    selectedCourses.push(value.id)
+                });
+                return selectedCourses;
             }
         },
         mounted() {
