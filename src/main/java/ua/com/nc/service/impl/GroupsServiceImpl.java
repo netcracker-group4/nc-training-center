@@ -1,5 +1,6 @@
 package ua.com.nc.service.impl;
 
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.ICourseDao;
@@ -82,5 +83,33 @@ public class GroupsServiceImpl implements GroupsService {
                 iUserGroupDao.update(oldUserGroupForThisCourse);
             }
         }
+    }
+    private class DTOGroup{
+        private Group group;
+        private int numberOfEmployees;
+
+        public DTOGroup(Group group, int numberOfEmploers) {
+            this.group = group;
+            this.numberOfEmployees = numberOfEmploers;
+        }
+
+        public Group getGroupInDTO() {
+            return group;
+        }
+
+        public int getNumberOfEmployees() {
+            return numberOfEmployees;
+        }
+    }
+    @Override
+    public String getGroupsAndQuantity() {
+        List<Group> groups = iGroupDao.getAll();
+        List<DTOGroup> dtos = new ArrayList<>();
+        groups.forEach(g -> {
+            int n = iGroupDao.getNumberOfEmployeesInGroup(g.getId());
+            dtos.add(new DTOGroup(g,n));
+        });
+
+        return new Gson().toJson(dtos);
     }
 }

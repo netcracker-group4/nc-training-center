@@ -11,4 +11,6 @@ public interface GroupsService {
     boolean delete(int groupId);
     int add(GroupSchedule groupSchedule);
     List<DtoGroup> getAll();
+
+    String getGroupsAndQuantity();
 }
