@@ -173,7 +173,7 @@ public class CourseServiceImpl implements CourseService {
                     stream.write(bytes);
                     stream.flush();
                 }
-                return path.normalize().toString();
+                return name.toString();
             } catch (Exception e) {
                 log.trace(e);
             }
