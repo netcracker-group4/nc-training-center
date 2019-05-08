@@ -3,6 +3,7 @@ package ua.com.nc.dao.interfaces;
 import ua.com.nc.domain.User;
 
 import java.util.List;
+import java.util.TreeMap;
 
 public interface IUserDao extends GenericDao<User, Integer> {
     User getByEmail(String email);
@@ -28,5 +29,13 @@ public interface IUserDao extends GenericDao<User, Integer> {
     void updateUserByAdmin(User user);
 
     void updateActive(User user);
+
     List<User> getTrainersOnCourse(int id);
+
+    public TreeMap<User, User> getStudentsAbsentWitNoReason (int lessonId);
+
+    User getAdmin();
+
+    User getLessonTrainer (int lessonId);
+
 }

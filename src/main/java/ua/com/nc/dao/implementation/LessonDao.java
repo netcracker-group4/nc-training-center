@@ -203,7 +203,6 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
         return lessons;
     }
 
-
 }
 
 
