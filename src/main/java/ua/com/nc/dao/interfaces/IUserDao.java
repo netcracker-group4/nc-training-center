@@ -9,6 +9,8 @@ import java.util.TreeMap;
 public interface IUserDao extends GenericDao<User, Integer> {
     User getByEmail(String email);
 
+    User getByToken(String token);
+
     List<User> getAllTrainers();
 
     List<User> getAllManagers();

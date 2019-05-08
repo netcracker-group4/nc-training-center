@@ -36,7 +36,7 @@ public class UserController {
                 dtoUserSave.getRole() != null){
             userService.add(dtoUserSave);
             return ResponseEntity.ok().body("User saved");
-        }else{
+        } else {
             return ResponseEntity.badRequest().body("Incorrectly entered fields");
         }
 
@@ -69,15 +69,15 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllTrainers(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/main-send", method = RequestMethod.POST)
+    @RequestMapping(value = "/mail-send", method = RequestMethod.POST)
     public ResponseEntity<?> addEmployeeByAdmin(@RequestBody DtoMailSender dtoMailSender) {
         userService.addEmployeeByAdmin(dtoMailSender);
         return ResponseEntity.ok().body("Send mail");
     }
 
-    @RequestMapping(value = "/registration/{token}", method = RequestMethod.GET)
-    public ResponseEntity<?> registration(@PathVariable String token) {
-
-        return ResponseEntity.ok().body("Send mail");
+    @RequestMapping(value = "/activate/{token}", method = RequestMethod.GET)
+    public ResponseEntity<?> activate(@PathVariable String token) {
+        boolean isActivated = userService.activateUser(token);
+        return new ResponseEntity<>(isActivated, HttpStatus.OK);
     }
 }

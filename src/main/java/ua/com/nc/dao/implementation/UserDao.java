@@ -68,6 +68,8 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     private String usrInsertUserByAdmin;
     @Value("$(usr.select-trainer-by-group-id)")
     private String getSelectTrainerByGroupId;
+    @Value("${usr.select-by-token}")
+    private String usrSelectByToken;
 
     public UserDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
@@ -158,6 +160,28 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         log.info(sql + " find by email " + email);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
+
+    @Override
+    public User getByToken(String token) {
+        List<User> list;
+        String sql = usrSelectByToken;
+        log.info(sql + " find by token " + token);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, token);
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {

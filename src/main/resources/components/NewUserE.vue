@@ -43,12 +43,12 @@
         name: "NewUserE",
         data: () => ({
             mailSender: {
-                email: 'vitaliy3.hryhorenko@gmail.com',
+                email: '',
                 subject: 'Invite',
                 text: 'http://localhost:8080/registration',
             },
             defaultMailSender: {
-                email: 'vitaliy3.hryhorenko@gmail.com',
+                email: '',
                 subject: 'Invite',
                 text: 'http://localhost:8080/registration',
             },
@@ -60,7 +60,7 @@
         methods: {
             submitMailSender () {
                 this.$validator.validateAll()
-                axios.post('http://localhost:8080/users/main-send', {
+                axios.post('http://localhost:8080/users/mail-send', {
                     to: this.mailSender.email,
                     subject: this.mailSender.subject,
                     text: this.mailSender.text,
