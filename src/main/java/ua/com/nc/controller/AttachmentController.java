@@ -52,6 +52,11 @@ public class AttachmentController {
     public void uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("lessonId") String lessonId){
         service.uploadFile(Integer.parseInt(lessonId),file);
     }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/link")
+    public void linkFile(@RequestParam("lessonId") String lessonId, @RequestParam("attachmentId") String attachmentId){
+        service.link(Integer.parseInt(lessonId), Integer.parseInt(attachmentId));
+    }
     @RequestMapping(value = "/download/{fileId}", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileId) throws IOException {
         Integer attachmentId = Integer.parseInt(fileId);

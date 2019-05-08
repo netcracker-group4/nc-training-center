@@ -16,48 +16,43 @@ import java.io.*;
 public class AttachmentServiceImpl implements AttachmentService {
     private static final Logger log = Logger.getLogger(AttachmentServiceImpl.class);
     @Autowired
-    private IAttachmentDao iAttachmentDao;
+    private IAttachmentDao attachmentDao;
     @Autowired
-    private ILessonAttachmentDao iLessonAttachmentDao;
+    private ILessonAttachmentDao lessonAttachmentDao;
 
 
     @Override
     public void add(Integer lessonId, Attachment attachment) {
 
-        if (iAttachmentDao.getByUrl(attachment.getUrl()) == null) {
+        if (attachmentDao.getByUrl(attachment.getUrl()) == null) {
 
-            iAttachmentDao.insert(attachment);
-            iAttachmentDao.commit();
+            attachmentDao.insert(attachment);
+            attachmentDao.commit();
         }
-        LessonAttachment lessonAttachment = new LessonAttachment(iAttachmentDao.getByUrl(attachment.getUrl()).getId() ,lessonId);
-        System.out.print(iAttachmentDao.getByUrl(attachment.getUrl()).getId());
-        iLessonAttachmentDao.insert(lessonAttachment);
-        iLessonAttachmentDao.commit();
+        link(lessonId,attachmentDao.getByUrl(attachment.getUrl()).getId());
     }
 
     @Override
     public void add(Integer lessonId, String url, String description) {
-        System.out.println("Add method 2 used");
         Attachment attachment = new Attachment(url,description);
         add(lessonId, attachment);
     }
 
     @Override
     public void delete(Integer id) {
-        iAttachmentDao.delete(id);
-        iAttachmentDao.commit();
-        iLessonAttachmentDao.deleteByAttachmentId(id);
-        iLessonAttachmentDao.commit();
+        attachmentDao.delete(id);
+        attachmentDao.commit();
+        lessonAttachmentDao.deleteByAttachmentId(id);
+        lessonAttachmentDao.commit();
     }
 
     @Override
     public void uploadFile(Integer lessonId, MultipartFile file) {
-        String name = null;
         if(!file.isEmpty()){
             try {
                 byte[] bytes = file.getBytes();
 
-                name = file.getOriginalFilename();
+                String name = file.getOriginalFilename();
 
                 String rootPath = "src/main/resources";
                 File dir = new File(rootPath + File.separator + "attachments");
@@ -67,15 +62,14 @@ public class AttachmentServiceImpl implements AttachmentService {
                 }
                 String filePath = dir.getAbsolutePath() + File.separator + name;
 
-                if (iAttachmentDao.getByUrl(filePath) == null) {
+                if (attachmentDao.getByUrl(filePath) == null) {
 
                     log.info("File is not in base");
                     File uploadedFile = new File(filePath);
-
-                    BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));
-                    stream.write(bytes);
-                    stream.flush();
-                    stream.close();
+                    try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));
+                    ){
+                        stream.write(bytes);
+                    }
                 }
                 add(lessonId,name,null);
             } catch (Exception e) {
@@ -88,15 +82,22 @@ public class AttachmentServiceImpl implements AttachmentService {
     public FileInputStream downloadFile(Integer id) {
         System.out.println("Service called");
         String path = "src/main/resources/attachments/";
-        Attachment attachment = iAttachmentDao.getEntityById(id);
+        Attachment attachment = attachmentDao.getEntityById(id);
         path = path + attachment.getUrl();
         try {
             FileInputStream fin = new FileInputStream(path);
             return fin;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.trace(e);
         }
         return null;
+    }
+
+    @Override
+    public void link(Integer lessonId, Integer attachmentId) {
+        LessonAttachment lessonAttachment = new LessonAttachment(attachmentId ,lessonId);
+        lessonAttachmentDao.insertAttachment(lessonAttachment);
+        lessonAttachmentDao.commit();
     }
 
 }
