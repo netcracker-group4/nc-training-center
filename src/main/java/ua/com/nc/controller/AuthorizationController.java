@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ua.com.nc.exceptions.NoSuchUserException;
 //import ua.com.nc.exceptions.NoSuchUserException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ public class AuthorizationController {
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public String login(@RequestParam(required = false, name="error") String error){
         if(error != null){
-//            throw new NoSuchUserException("There is no user with such email and password");
+            throw new NoSuchUserException("There is no user with such email and password");
         }
         return "index";
     }
