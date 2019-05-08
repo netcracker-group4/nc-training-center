@@ -86,6 +86,8 @@ public class SqlQueriesProperties {
     //
     @Value("${usr_group.delete-all-for-group}")
     private String userGroupDeleteForGroup;
+    @Value("${usr_group.delete-all-for-user}")
+    private String userGroupDeleteForUser;
     @Value("${usr_group.select-by-usr-and-course}")
     private String userGroupSelectByUsrAndCourse;
     @Value("${usr_group.insert}")
@@ -595,5 +597,13 @@ public class SqlQueriesProperties {
 
     public void setUsrSelectAllManagers(String usrSelectAllManagers) {
         this.usrSelectAllManagers = usrSelectAllManagers;
+    }
+
+    public String getUserGroupDeleteForUser() {
+        return userGroupDeleteForUser;
+    }
+
+    public void setUserGroupDeleteForUser(String userGroupDeleteForUser) {
+        this.userGroupDeleteForUser = userGroupDeleteForUser;
     }
 }

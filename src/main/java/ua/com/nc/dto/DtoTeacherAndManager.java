@@ -20,9 +20,6 @@ public class DtoTeacherAndManager {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.photoUrl = photoUrl;
-        this.isActive = isActive;
-        this.email = email;
     }
 
 

@@ -1,6 +1,8 @@
 package ua.com.nc.dto;
 
 import lombok.Data;
+import ua.com.nc.domain.Feedback;
+import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Role;
 
 import java.util.List;
@@ -17,11 +19,12 @@ public class DtoUserProfiles {
     private DtoTeacherAndManager dtoManager;
     private List<DtoTeacherAndManager> dtoTeachers;
     private List<DtoGroup> groups;
+    private List<DtoFeedback> dtoFeedbacks;
 
     DtoUserProfiles(){
     }
 
-    public DtoUserProfiles(Integer id, String firstName, String lastName, String email, String image, List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager, List<DtoTeacherAndManager> dtoTeachers, List<DtoGroup> groups) {
+    public DtoUserProfiles(Integer id, String firstName, String lastName, String email, String image, List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager, List<DtoTeacherAndManager> dtoTeachers, List<DtoGroup> groups, List<DtoFeedback> dtoFeedbacks) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -32,6 +35,46 @@ public class DtoUserProfiles {
         this.dtoManager = dtoManager;
         this.dtoTeachers = dtoTeachers;
         this.groups = groups;
+        this.dtoFeedbacks = dtoFeedbacks;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public DtoTeacherAndManager getDtoManager() {
+        return dtoManager;
+    }
+
+    public List<DtoTeacherAndManager> getDtoTeachers() {
+        return dtoTeachers;
+    }
+
+    public List<DtoGroup> getGroups() {
+        return groups;
+    }
 }

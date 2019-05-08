@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+//import static jdk.nashorn.internal.objects.NativeMath.log;
+
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> implements IUserGroupDao {
@@ -29,6 +31,8 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
     private String userGroupSelectByGroup;
     @Value("${usr_group.select-by-usr-and-group}")
     private String userGroupSelectAttendanceByUsrAndGroup;
+    @Value("${usr_group.delete-all-for-user}")
+    private String userGroupDeleteForUser;
 
     public UserGroupDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                         @Value("${spring.datasource.username}") String DATABASE_USER,
@@ -106,6 +110,19 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
         log.info(sql + " LOG deleteAllForGroup " + groupId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, groupId);
+            statement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PersistException(e);
+        }
+    }
+
+    @Override
+    public void deleteAllForUser(Integer userId) {
+        String sql = userGroupDeleteForUser;
+        log.info(sql + " delete all for user " + userId);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            setId(statement, userId);
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

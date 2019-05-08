@@ -1,28 +1,33 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <v-toolbar>
-            <v-select
-                    v-model="selectedTrainers"
-                    item-value="trainer.id"
-                    :items="trainersAndLevels"
-                    :item-text="trainerName"
-                    label="Select Trainers"
-                    multiple
-            >
-                <template v-slot:selection="{ item, index }">
-                    <v-chip v-if="index === 0">
-                        <span>{{ item.trainer.firstName  + ' ' + item.trainer.lastName}}</span>
-                    </v-chip>
-                    <span
-                            v-if="index === 1"
-                            class="grey--text caption"
-                    >(+{{ selectedTrainers.length - 1 }} others)</span>
-                </template>
-            </v-select>
-        </v-toolbar>
+        <v-toolbar-items class="hidden-sm-and-down" v-if="  this.$store.getters.isAuthorized &&
+                                                            (this.$store.getters.isAdmin ||
+                                                            this.$store.getters.isTrainer)">
+            <v-toolbar>
+                <v-select
+                        v-model="selectedTrainers"
+                        item-value="trainer.id"
+                        :items="trainersAndLevels"
+                        :item-text="trainerName"
+                        label="Select Trainers"
+                        multiple
+                >
+                    <template v-slot:selection="{ item, index }">
+                        <v-chip v-if="index === 0">
+                            <span>{{ item.trainer.firstName  + ' ' + item.trainer.lastName}}</span>
+                        </v-chip>
+                        <span
+                                v-if="index === 1"
+                                class="grey--text caption"
+                        >(+{{ selectedTrainers.length - 1 }} others)</span>
+                    </template>
+                </v-select>
+            </v-toolbar>
+        </v-toolbar-items>
         <div>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Training level and trainers</v-toolbar-title>
+                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel report</v-btn>
                 <v-spacer></v-spacer>
             </v-toolbar>
             <v-data-table
@@ -102,6 +107,9 @@
             },
             goToCoursePage(trainerId) {
                 this.$router.push('/courses/' + trainerId);
+            },
+            downloadDashboardReport(){
+                window.open("http://localhost:8080/download-report/dashboard-report", "_blank");
             },
             trainerName: item => item.trainer.firstName + ' ' + item.trainer.lastName
         },

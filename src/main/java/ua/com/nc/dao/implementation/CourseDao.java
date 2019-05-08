@@ -36,6 +36,8 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
     private String courseLandingPage;
     @Value("${course.update-landing-page}")
     private String courseUpdateLandingPage;
+    @Value("${course.select-course-by-group}")
+    private String selectCourseByGroupId;
 
 
     public CourseDao(@Value("${spring.datasource.url}") String DATABASE_URL,
@@ -126,6 +128,28 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
     }
 
     @Override
+    public Course getCourseById (int id) {
+
+        String sql = getSelectByIdQuery ();
+        List <Course> list = new ArrayList ();
+        log.info (sql + " get course by id " + id);
+        try (PreparedStatement statement = connection.prepareStatement (sql)) {
+            statement.setInt (1, id);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet (rs);
+        } catch (Exception e) {
+            log.trace(e);
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record with id " + id);
+        }
+        if (list.size () == 0) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    @Override
     public List<Course> getAllByLevel(int levelId) {
         String sql = courseSelectByLevel;
         log.info(sql + "find all by level " + levelId);
@@ -139,7 +163,7 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.trace(e);
             throw new PersistException(e);
         }
         return list;
@@ -160,7 +184,7 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
             ResultSet rs = statement.executeQuery();
             landingPageCourses = parseResultSet(rs);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.trace(e);
             throw new PersistException(e);
         }
         log.info(sql + " find all on landing page");
@@ -175,9 +199,25 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
             statement.setInt(2, id);
             statement.executeUpdate();
         } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+    }
+
+
+
+    public Course getCourseByGroup(int id){
+        String sql = selectCourseByGroupId;
+        Course course;
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setInt(1,id);
+            ResultSet rs = statement.executeQuery();
+            course = parseResultSet(rs).get(0);
+        } catch (SQLException e) {
             e.printStackTrace();
             throw new PersistException(e);
         }
+        return course;
     }
 
 }

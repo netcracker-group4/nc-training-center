@@ -66,6 +66,12 @@
                 }
 
             }
+        },
+        mounted () {
+            let token = this.$route.params.token;
+            axios.get('http://localhost:8080/users/registration/' + token, {
+
+            })
         }
     }
 </script>

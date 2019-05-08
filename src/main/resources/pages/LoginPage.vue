@@ -77,6 +77,9 @@
                             self.modalMessage = "There is no user with such email and password"
                             self.dialog = true
                         }
+                        /*if(request.status == 404){
+                            request.send(form)
+                        }*/
                     }
                 }else{
                     this.modalMessage = "Entered data is incorrect"

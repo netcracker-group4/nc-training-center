@@ -2,7 +2,7 @@
     <div>
         <v-navigation-drawer
                 v-model="drawer"
-                absolute
+                fixed
                 temporary
         >
             <v-list class="pa-1">
@@ -40,15 +40,15 @@
         <v-toolbar class="grey lighten-4" app v-if="">
             <v-toolbar-items class="hidden-sm-and-down" v-if="this.$store.getters.isAuthorized">
                 <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
-                <v-btn @click="forwardToMainPage" flat>Main</v-btn>
+                <!--<v-btn @click="forwardToMainPage" flat>Main</v-btn>-->
             </v-toolbar-items>
             <v-toolbar-items class="hidden-sm-and-down" v-if="  this.$store.getters.isAuthorized &&
                                                             this.$store.getters.isAdmin">
-                <v-btn @click="forwardToDashboardPage" flat>dashboard</v-btn>
+                <!--<v-btn @click="forwardToDashboardPage" flat>dashboard</v-btn>
                 <v-btn @click="forwardToAttendancePage" flat>attendance</v-btn>
                 <v-btn @click="forwardToCoursePage" flat>courses</v-btn>
                 <v-btn @click="forwardToUsersPage" flat>users</v-btn>
-                <v-btn @click="forwardToSchedulePage" flat>schedule</v-btn>
+                <v-btn @click="forwardToSchedulePage" flat>schedule</v-btn>-->
             </v-toolbar-items>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down" v-if="!this.$store.getters.isAuthorized">
@@ -69,8 +69,10 @@
             return {
                 drawer: false,
                 items: [
-                    { title: 'Main', icon: 'dashboard', link: '/' },
-                    { title: 'About', icon: 'question_answer' },
+                    { title: 'Main', icon: 'home', link: '/' },
+                    { title: 'Users', icon: 'supervisor_account', link: '/userpage'},
+                    { title: 'Courses', icon: 'view_list', link: '/admincourses'},
+                    { title: 'Dashboard', icon: 'dashboard', link: '/dashboard'}
                 ]
             }
         },

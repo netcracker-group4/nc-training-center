@@ -11,8 +11,13 @@ import ua.com.nc.dto.DtoGroup;
 import ua.com.nc.dto.DtoTeacherAndManager;
 import ua.com.nc.dto.DtoUser;
 import ua.com.nc.dto.DtoUserProfiles;
+import ua.com.nc.dao.interfaces.*;
+import ua.com.nc.domain.*;
+import ua.com.nc.dto.*;
+import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,13 +33,27 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private IRoleDao roleDao;
     @Autowired
+    private IUserGroupDao userGroupDao;
+    @Autowired
+    private IFeedbackDao feedbackDao;
+    @Autowired
     private ICourseDao iCourseDao;
     @Autowired
     private ILevelDao iLevelDao;
+    @Autowired
+    private EmailService emailService;
 
     @Override
-    public void add(User user) {
+    public void add(DtoUserSave dtoUserSave) {
+        User user = new User();
+        user.setFirstName(dtoUserSave.getFirstName());
+        user.setLastName(dtoUserSave.getLastName());
+        user.setPassword(dtoUserSave.getPassword());
+        user.setEmail(dtoUserSave.getEmail());
+
         userDao.insert(user);
+        userDao.addUserRole(user.getId(), dtoUserSave.getRole().name());
+
         userDao.commit();
     }
 
@@ -72,6 +91,7 @@ public class UserServiceImpl implements UserService {
         User manager = userDao.getManagerById(id);
         List<User> teachers = userDao.getAllTrainersById(id);
         List<Group> groups = groupDao.getAllGroupsByStudent(id);
+        List<Feedback> feedbacks = feedbackDao.getAllByUserId(id);
         List<Level> levels = iLevelDao.getAll();
 
         DtoTeacherAndManager dtoManager = null;
@@ -79,6 +99,8 @@ public class UserServiceImpl implements UserService {
             dtoManager = new DtoTeacherAndManager(
                     manager.getId(),
                     manager.getFirstName(),
+                    manager.getLastName(),
+                    manager.getImageUrl()
                     manager.getLastName(),
                     manager.getImageUrl(),
                     manager.isActive(),
@@ -92,6 +114,8 @@ public class UserServiceImpl implements UserService {
                 dtoTeachers.add(new DtoTeacherAndManager(
                         teacher.getId(),
                         teacher.getFirstName(),
+                        teacher.getLastName(),
+                        teacher.getImageUrl()
                         teacher.getLastName(), teacher.isActive(),
                         teacher.getEmail()
                 ));
@@ -109,6 +133,27 @@ public class UserServiceImpl implements UserService {
             }
         }
 
+        List<DtoFeedback> dtoFeedbacks = new ArrayList<>();
+        if (feedbacks != null && feedbacks.size() != 0) {
+            for (Feedback feedback : feedbacks) {
+                User teacher = userDao.getTrainerByFeedback(feedback.getId());
+                DtoTeacherAndManager dtoTeacher = new DtoTeacherAndManager(
+                        teacher.getId(),
+                        teacher.getFirstName(),
+                        teacher.getLastName(),
+                        teacher.getImageUrl()
+                );
+
+                dtoFeedbacks.add(new DtoFeedback(
+                        feedback.getId(),
+                        dtoTeacher,
+                        feedback.getText(),
+                        feedback.getTimeDate()
+                ));
+
+            }
+        }
+
         DtoUserProfiles dtoUserProfiles = null;
         if (user != null) {
             dtoUserProfiles = new DtoUserProfiles(
@@ -121,7 +166,8 @@ public class UserServiceImpl implements UserService {
                     user.isActive(),
                     dtoManager,
                     dtoTeachers,
-                    dtoGroups
+                    dtoGroups,
+                    dtoFeedbacks
             );
         }
         return dtoUserProfiles;
@@ -163,6 +209,8 @@ public class UserServiceImpl implements UserService {
                     manager.getLastName(),
                     manager.isActive(),
                     manager.getEmail()
+                    manager.getLastName(),
+                    manager.getImageUrl()
             ));
         }
         return dtoManagers;
@@ -178,11 +226,29 @@ public class UserServiceImpl implements UserService {
                     trainer.getFirstName(),
                     trainer.getLastName(),
                     trainer.isActive(),
-                    trainer.getEmail()
+                    trainer.getEmail(),
 
+                    trainer.getLastName(),
+                    trainer.getImageUrl()
             ));
         }
         return dtoTrainers;
+    }
+
+    @Override
+    public void addEmployeeByAdmin(DtoMailSender dtoMailSender) {
+        User user = new User();
+        user.setEmail(dtoMailSender.getTo());
+
+        SecureRandom random = new SecureRandom();
+        byte bytes[] = new byte[20];
+        random.nextBytes(bytes);
+        String token = bytes.toString();
+        user.setToken(token);
+
+        userDao.addUserByAdmin(user);
+        emailService.sendSimpleMessage(dtoMailSender);
+        userDao.commit();
     }
 
     @Override

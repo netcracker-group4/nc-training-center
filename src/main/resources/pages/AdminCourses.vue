@@ -58,7 +58,7 @@
                 },
             ],
                 coursesAndQuantities: [],
-                    isAdmin: 'true'
+                    isAdmin: this.$store.getters.isAdmin
             }
     },
     mounted() {
@@ -79,7 +79,7 @@
 
         },
         deleteCourse(courseId){
-            if(confirm("Are you shure you want to delete "+this.findCourseById(courseId).name)){
+            if(confirm("Are you sure you want to delete "+this.findCourseById(courseId).name)){
                 axios.delete('http://localhost:8080/getcourses/'+courseId)
                     .catch(function (error) {
                         console.log(error);

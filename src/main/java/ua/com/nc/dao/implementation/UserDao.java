@@ -7,12 +7,10 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IUserDao;
 import ua.com.nc.domain.User;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
@@ -56,6 +54,20 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     private String usrSelectAllByCourse;
     @Value("${course.select-trainer}")
     private String getSelectTrainerByCourseId;
+    @Value("${usr.select-students-absent-on-lesson-with-no-reason}")
+    private String selectStudentsAbsentOnLessonWithNoReason;
+    @Value("${usr.select-admin")
+    private String getAdmin;
+    @Value("${lesson.select-lesson-trainer}")
+    private String getLessonTrainer;
+    @Value("${usr.select-trainer-by-feedback}")
+    private String usrSelectTrainerByFeedback;
+    @Value("${urs.insert-user-role}")
+    private String usrInsertUserRole;
+    @Value("${usr.insert-user-by-admin}")
+    private String usrInsertUserByAdmin;
+    @Value("$(usr.select-trainer-by-group-id)")
+    private String getSelectTrainerByGroupId;
 
     public UserDao(@Value("${spring.datasource.url}") String DATABASE_URL,
                    @Value("${spring.datasource.username}") String DATABASE_USER,
@@ -165,7 +177,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     public List<User> getTrainersOnCourse(int id){
         List<User> list;
         String sql = getSelectTrainerByCourseId;
-        //log(sql, "find by course");
+        log.info(sql + "find by course");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
@@ -178,6 +190,59 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
             return null;
         }
         return list;
+    }
+
+    @Override
+    public User getTrainerByFeedback(Integer id) {
+        List<User> list;
+        String sql = usrSelectTrainerByFeedback;
+        log.info(sql + " find trainer by feedback " + id);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
+
+    @Override
+    public void addUserRole(Integer userId, String roleName) {
+        String sql = usrInsertUserRole;
+        log.info(sql + " insert user " + userId + " role " + roleName);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            statement.setString(2, roleName);
+            statement.executeUpdate();
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+    }
+
+    @Override
+    public void addUserByAdmin(User user) {
+        String sql = usrInsertUserByAdmin;
+        log.info(sql + " insert user " + user.getEmail() + " by admin");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getToken());
+            statement.setString(3, "firstname");
+            statement.setString(4, "lastname");
+            statement.setString(5, "ss");
+            statement.executeUpdate();
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
     }
 
     @Override
@@ -283,7 +348,8 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
-            statement.setInt(3, user.getId());
+            statement.setInt(3,user.getManagerId());
+            statement.setInt(4, user.getId());
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -363,5 +429,77 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         }
     }
 
+    @Override
+    public User getTrainerByGroupId(Integer groupId){
+        String sql = getSelectTrainerByCourseId;
+        log.info(sql + "trainer by group id = " + groupId);
+        List<User> list = getFromQueryById(groupId, sql);
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
+    public TreeMap<User, User> getStudentsAbsentWitNoReason (int lessonId) {
+        List <User> students = new ArrayList ();
+        String sql = selectStudentsAbsentOnLessonWithNoReason;
+        log.info (sql + " selectStudentsAbsentOnLessonWithNoReason " + lessonId);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            setId (statement, lessonId);
+            ResultSet rs = statement.executeQuery();
+            students = parseResultSet (rs);
+        } catch (Exception e) {
+            log.trace(e);
+        }
+        TreeMap <User, User> absentUsersAndTheirManagers = new TreeMap ();
+        for (User student : students) {
+            User manager = getManagerById(student.getId());
+            absentUsersAndTheirManagers.put(student, manager);
+        }
+        return absentUsersAndTheirManagers;
+    }
+
+    public User getAdmin () {
+        List <User> admin = new ArrayList<>();
+        String sql = getAdmin;
+        log.info (sql + " getAdmin");
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            admin = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+        }
+        if (admin == null || admin.size() == 0) {
+            return null;
+        }
+        if (admin.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return admin.get(0);
+    }
+
+    public User getLessonTrainer (int lessonId) {
+        String sql = this.getLessonTrainer;
+        List<User> trainer;
+        log.info ("get Trainer of lesson " + lessonId);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt (1, lessonId);
+            ResultSet rs = statement.executeQuery();
+            trainer = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace (e);
+            throw new PersistException(e.getMessage());
+        }
+        if (trainer == null || trainer.size() == 0) {
+            return null;
+        }
+        if (trainer.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return trainer.get(0);
+    }
 
 }

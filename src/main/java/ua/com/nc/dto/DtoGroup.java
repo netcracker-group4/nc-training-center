@@ -11,6 +11,9 @@ public class DtoGroup {
     private int trainerId;
     private String level;
 
+    public DtoGroup() {
+    }
+
     public DtoGroup(Integer id, String title) {
         this.id = id;
         this.title = title;

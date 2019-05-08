@@ -99,6 +99,22 @@ public class User extends Entity<Integer> implements UserDetails {
         }
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public OffsetDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(OffsetDateTime created) {
+        this.created = created;
+    }
+
     public boolean isActive() {
         return isActive;
     }

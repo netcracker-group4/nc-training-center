@@ -1,6 +1,9 @@
 <template>
     <v-container>
-        <h1>Attendance</h1>
+        <h1>Attendance
+        <span class="text-xs-right">
+            <v-btn flat color="primary" @click="downloadAttendance" class="download-button">download attendance report</v-btn>
+        </span></h1>
         <v-stepper v-model="e6" vertical>
             <v-stepper-step :complete="e6 > 1" step="1" class="">
                 Choose trainer
@@ -74,6 +77,9 @@
                     console.log(this.lessons)
                 }
             },
+            downloadAttendance(){
+                window.open("http://localhost:8080/download-report/attendance-report", "_blank");
+            },
         }
     }
 </script>
@@ -84,5 +90,7 @@
     }
     h1{
         margin-bottom: 40px;
+    }
+    .download-button{
     }
 </style>
