@@ -4,7 +4,7 @@
             <v-flex xs10 sm10 md10 offset-xs1 offset-sm1 offset-md1>
                 <v-card v-for="course in courses" :key="course.id" class="course">
                     <v-img
-                            :src="course.imageUrl"
+                            :src="'/img/' + course.imageUrl + '.jpg'"
                             aspect-ratio="2.00"
                     ></v-img>
 

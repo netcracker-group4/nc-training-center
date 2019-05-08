@@ -1,34 +1,37 @@
 package ua.com.nc.dto;
 
+import lombok.Data;
+
+@Data
 public class DtoTeacherAndManager {
+    private boolean isActive;
     private Integer id;
     private String firstName;
     private String lastName;
-    private String imageUrl;
+    private String photoUrl;
+    private String email;
 
-    public DtoTeacherAndManager() {
+
+    DtoTeacherAndManager(){
+
     }
 
-    public DtoTeacherAndManager(Integer id, String firstName, String lastName, String imageUrl) {
+    public DtoTeacherAndManager(Integer id, String firstName, String lastName, String photoUrl, boolean isActive, String email) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.imageUrl = imageUrl;
+        this.photoUrl = photoUrl;
+        this.isActive = isActive;
+        this.email = email;
     }
 
-    public Integer getId() {
-        return id;
+
+    public DtoTeacherAndManager(Integer id, String firstName, String lastName, boolean isActive, String email) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.isActive = isActive;
+        this.email = email;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
 }

@@ -7,15 +7,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
+import ua.com.nc.dto.DtoGroup;
+import ua.com.nc.dto.DtoTeacherAndManager;
+import ua.com.nc.dto.DtoUser;
+import ua.com.nc.dto.DtoUserProfiles;
+import ua.com.nc.dao.interfaces.*;
+import ua.com.nc.domain.*;
 import ua.com.nc.dto.*;
 import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Log4j
 @Service
@@ -27,11 +30,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private IRoleDao roleDao;
     @Autowired
-    private IUserGroupDao userGroupDao;
-    @Autowired
     private IFeedbackDao feedbackDao;
     @Autowired
     private ICourseDao iCourseDao;
+    @Autowired
+    private ILevelDao iLevelDao;
     @Autowired
     private EmailService emailService;
 
@@ -54,22 +57,23 @@ public class UserServiceImpl implements UserService {
         List<DtoUser> dtoUsers = new ArrayList<>();
         List<User> users = userDao.getAll();
 
-        for (User user : users) {
+        if (!users.isEmpty()) {
+            for (User user : users) {
 //            List<DTOGroup> dtoGroups = new ArrayList<>();
 //            List<Group> groups = groupDao.getAllGroupsByStudent(user.getId());
-            List<Role> roles = roleDao.findAllByUserId(user.getId());
+                List<Role> roles = roleDao.findAllByUserId(user.getId());
 //            User manager = userDao.getManagerByUser(user.getId());
 //            DtoManager dtoManager = null;
 //            if (manager != null) {
 //                dtoManager = new DtoManager(manager.getFirstName(), manager.getLastName());
 //            }
-            if (user != null) {
                 dtoUsers.add(new DtoUser(
                         user.getId(),
                         user.getFirstName(),
                         user.getLastName(),
                         roles,
-                        user.isActive()));
+                        user.isActive(),
+                        user.getImageUrl()));
             }
         }
         return dtoUsers;
@@ -83,6 +87,7 @@ public class UserServiceImpl implements UserService {
         List<User> teachers = userDao.getAllTrainersById(id);
         List<Group> groups = groupDao.getAllGroupsByStudent(id);
         List<Feedback> feedbacks = feedbackDao.getAllByUserId(id);
+        List<Level> levels = iLevelDao.getAll();
 
         DtoTeacherAndManager dtoManager = null;
         if (manager != null) {
@@ -90,7 +95,9 @@ public class UserServiceImpl implements UserService {
                     manager.getId(),
                     manager.getFirstName(),
                     manager.getLastName(),
-                    manager.getImageUrl()
+                    manager.getImageUrl(),
+                    manager.isActive(),
+                    manager.getEmail()
             );
         }
 
@@ -101,7 +108,9 @@ public class UserServiceImpl implements UserService {
                         teacher.getId(),
                         teacher.getFirstName(),
                         teacher.getLastName(),
-                        teacher.getImageUrl()
+                        teacher.getImageUrl(),
+                        teacher.isActive(),
+                        teacher.getEmail()
                 ));
             }
         }
@@ -110,8 +119,10 @@ public class UserServiceImpl implements UserService {
         if (groups != null && groups.size() != 0) {
             for (Group group : groups) {
                 int courseId = group.getCourseId();
-                String courseName = iCourseDao.getEntityById(courseId).getName();
-                dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId, courseName));
+                Course course = iCourseDao.getEntityById(courseId);
+                String courseName = course.getName();
+                dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId,
+                        courseName, course.getUserId(), getLevelName(levels,course.getLevel() )));
             }
         }
 
@@ -123,6 +134,7 @@ public class UserServiceImpl implements UserService {
                         teacher.getId(),
                         teacher.getFirstName(),
                         teacher.getLastName(),
+                        teacher.isActive(),
                         teacher.getImageUrl()
                 );
 
@@ -155,26 +167,22 @@ public class UserServiceImpl implements UserService {
         return dtoUserProfiles;
     }
 
+    private String getLevelName(List<Level> levels, int levelId){
+        for (Level level : levels) {
+            if(level.getId() == levelId){
+                return level.getTitle();
+            }
+        }
+        return "Unknown";
+    }
+
     @Override
     public void updateUserByAdmin(DtoUserProfiles dtoUserProfiles) {
-        User user = new User();
-        user.setId(dtoUserProfiles.getId());
+        User user = userDao.getEntityById(dtoUserProfiles.getId());
         user.setFirstName(dtoUserProfiles.getFirstName());
         user.setLastName(dtoUserProfiles.getLastName());
         user.setManagerId(dtoUserProfiles.getDtoManager().getId());
-
-        userGroupDao.deleteAllForUser(user.getId());
-
-        for (DtoGroup dtoGroup : dtoUserProfiles.getGroups()) {
-            UserGroup userGroup = new UserGroup();
-            userGroup.setUserId(user.getId());
-            userGroup.setGroupId(dtoGroup.getId());
-
-            userGroupDao.insert(userGroup);
-        }
-        userDao.updateUserByAdmin(user);
-
-        userGroupDao.commit();
+        userDao.update(user);
         userDao.commit();
 
     }
@@ -194,7 +202,9 @@ public class UserServiceImpl implements UserService {
                     manager.getId(),
                     manager.getFirstName(),
                     manager.getLastName(),
-                    manager.getImageUrl()
+                    manager.getImageUrl(),
+                    manager.isActive(),
+                    manager.getEmail()
             ));
         }
         return dtoManagers;
@@ -209,7 +219,9 @@ public class UserServiceImpl implements UserService {
                     trainer.getId(),
                     trainer.getFirstName(),
                     trainer.getLastName(),
-                    trainer.getImageUrl()
+                    trainer.getImageUrl(),
+                    trainer.isActive(),
+                    trainer.getEmail()
             ));
         }
         return dtoTrainers;
@@ -221,9 +233,9 @@ public class UserServiceImpl implements UserService {
         user.setEmail(dtoMailSender.getTo());
 
         SecureRandom random = new SecureRandom();
-        byte bytes[] = new byte[20];
+        byte[] bytes = new byte[20];
         random.nextBytes(bytes);
-        String token = bytes.toString();
+        String token = Arrays.toString(bytes);
         user.setToken(token);
 
         userDao.addUserByAdmin(user);

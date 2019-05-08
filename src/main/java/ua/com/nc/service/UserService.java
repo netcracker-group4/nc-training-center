@@ -7,7 +7,7 @@ import ua.com.nc.dto.*;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    void add(DtoUserSave dtoUserSave);
+    void add(DtoUserSave user);
 
     List<DtoUser> getAll();
 

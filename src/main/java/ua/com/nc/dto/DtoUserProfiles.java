@@ -1,11 +1,13 @@
 package ua.com.nc.dto;
 
+import lombok.Data;
 import ua.com.nc.domain.Feedback;
 import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Role;
 
 import java.util.List;
 
+@Data
 public class DtoUserProfiles {
     private Integer id;
     private String firstName;
@@ -19,7 +21,7 @@ public class DtoUserProfiles {
     private List<DtoGroup> groups;
     private List<DtoFeedback> dtoFeedbacks;
 
-    public DtoUserProfiles() {
+    DtoUserProfiles(){
     }
 
     public DtoUserProfiles(Integer id, String firstName, String lastName, String email, String image, List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager, List<DtoTeacherAndManager> dtoTeachers, List<DtoGroup> groups, List<DtoFeedback> dtoFeedbacks) {
@@ -74,9 +76,5 @@ public class DtoUserProfiles {
 
     public List<DtoGroup> getGroups() {
         return groups;
-    }
-
-    public List<DtoFeedback> getDtoFeedbacks() {
-        return dtoFeedbacks;
     }
 }
