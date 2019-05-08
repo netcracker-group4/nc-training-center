@@ -2,6 +2,7 @@ package ua.com.nc.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.com.nc.dao.interfaces.ICourseDao;
 import ua.com.nc.dao.interfaces.IGroupDao;
 import ua.com.nc.dao.interfaces.IUserGroupDao;
 import ua.com.nc.domain.Group;
@@ -20,6 +21,8 @@ public class GroupsServiceImpl implements GroupsService {
     IGroupDao iGroupDao;
     @Autowired
     IUserGroupDao iUserGroupDao;
+    @Autowired
+    ICourseDao iCourseDao;
 
     @Override
     synchronized public int update(GroupSchedule groupSchedule) {
@@ -60,7 +63,6 @@ public class GroupsServiceImpl implements GroupsService {
     public List<DtoGroup> getAll() {
         List<Group> groups = iGroupDao.getAll();
         List<DtoGroup> dtoGroups = new ArrayList<>();
-
         for (Group group : groups) {
             dtoGroups.add(new DtoGroup(group.getId(), group.getTitle()));
         }

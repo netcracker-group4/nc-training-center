@@ -34,6 +34,7 @@ public class DtoLesson {
         this.attachments = attachments;
     }
 
+
     public Lesson getDomainLesson() {
 //        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.Z");
         String dateString = timeDate.toString().substring(0, 10);

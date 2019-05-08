@@ -8,9 +8,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ua.com.nc.dao.interfaces.ICourseDao;
 import ua.com.nc.dao.interfaces.IGroupDao;
+import ua.com.nc.dao.interfaces.IUserDao;
+import ua.com.nc.domain.Course;
+import ua.com.nc.domain.User;
 import ua.com.nc.dto.schedule.GroupSchedule;
 import ua.com.nc.service.GroupsService;
+
+import java.util.List;
 
 @Log4j
 @Controller
@@ -19,6 +25,10 @@ import ua.com.nc.service.GroupsService;
 public class GroupController {
     @Autowired
     private IGroupDao groupDao;
+    @Autowired
+    private IUserDao userDao;
+    @Autowired
+    private ICourseDao courseDao;
     @Autowired
     private GroupsService  groupsService;
     private final Gson gson = new Gson();
@@ -58,6 +68,24 @@ public class GroupController {
     @ResponseBody
     public String getGroup(@PathVariable String id) {
         return gson.toJson(groupDao.getEntityById(Integer.parseInt(id)));
+    }
+
+    @RequestMapping(value = "/{id}/users",method = RequestMethod.GET)
+    @ResponseBody
+    public List<User> getStudents(@PathVariable String id){
+        return userDao.getByGroupId(Integer.parseInt(id));
+    }
+
+    @RequestMapping(value = "/{id}/user/{userId}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public void deleteStudent(@PathVariable String id,@PathVariable String userId){
+        groupDao.deleteUserFromGroup(id,userId);
+    }
+
+    @RequestMapping(value = "/{id}/course", method = RequestMethod.GET)
+    @ResponseBody
+    public Course getCourseByGroup(@PathVariable String id){
+        return courseDao.getCourseByGroup(Integer.parseInt(id));
     }
 
 }

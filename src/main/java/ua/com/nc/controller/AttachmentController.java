@@ -4,11 +4,19 @@ package ua.com.nc.controller;
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.implementation.AttachmentDao;
+import ua.com.nc.domain.Attachment;
 import ua.com.nc.service.AttachmentService;
+
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 
 @Log4j
@@ -43,5 +51,18 @@ public class AttachmentController {
     @RequestMapping(method = RequestMethod.POST,value = "/upload-file")
     public void uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("lessonId") String lessonId){
         service.uploadFile(Integer.parseInt(lessonId),file);
+    }
+    @RequestMapping(value = "/download/{fileId}", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileId) throws IOException {
+        Integer attachmentId = Integer.parseInt(fileId);
+        FileInputStream in = service.downloadFile(attachmentId);
+
+        HttpHeaders headers = new HttpHeaders();
+        Attachment attachment = attachmentDao.getEntityById(attachmentId);
+        String headerValue = "attachment; filename = " + attachment.getUrl();
+        headers.add("Content-Disposition",
+                headerValue);
+
+        return ResponseEntity.ok().headers(headers).body(new InputStreamResource(in));
     }
 }

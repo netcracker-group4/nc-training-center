@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.implementation.LevelDao;
 import ua.com.nc.dao.interfaces.ICourseStatus;
 import ua.com.nc.domain.CourseStatus;
+import ua.com.nc.domain.Level;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +28,13 @@ public class InfoController {
     public String getLevels(){
         return gson.toJson(levelDao.getAll());
     }
+
+    @RequestMapping(value="/getLevel/{id}",method = RequestMethod.GET)
+    @ResponseBody
+    public Level getLevel(@PathVariable String id){
+        return levelDao.getEntityById(Integer.parseInt(id));
+    }
+
 
     @RequestMapping(value = "/getStatus/{id}",method = RequestMethod.GET)
     @ResponseBody

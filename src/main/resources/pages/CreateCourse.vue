@@ -5,7 +5,7 @@
                 <v-container>
                     <v-layout row wrap>
                         <v-flex xs12 sm12>
-                            <v-text-field v-model="name" label="name" clearable></v-text-field>
+                            <v-text-field v-model="name" label="name"></v-text-field>
                         </v-flex>
                         <!--<v-flex xs12 sm12>
                             <v-text-field v-model="imageUrl" label="image url" clearable></v-text-field>

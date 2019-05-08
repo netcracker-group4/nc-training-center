@@ -60,7 +60,7 @@ public class User extends Entity<Integer> implements UserDetails {
         return firstName;
     }
 
-    private void setFirstName(String firstName) {
+    public void setFirstName(String firstName) {
         if (firstName != null) {
             this.firstName = firstName.trim();
         }
@@ -70,7 +70,7 @@ public class User extends Entity<Integer> implements UserDetails {
         return lastName;
     }
 
-    private void setLastName(String lastName) {
+    public void setLastName(String lastName) {
         if (lastName != null) {
             this.lastName = lastName.trim();
         }
@@ -80,7 +80,7 @@ public class User extends Entity<Integer> implements UserDetails {
         return managerId;
     }
 
-    private void setManagerId(Integer managerId) {
+    public void setManagerId(Integer managerId) {
         if (managerId != null) {
             this.managerId = managerId;
         }
@@ -97,11 +97,27 @@ public class User extends Entity<Integer> implements UserDetails {
         }
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public OffsetDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(OffsetDateTime created) {
+        this.created = created;
+    }
+
     public boolean isActive() {
         return isActive;
     }
 
-    private void setActive(boolean active) {
+    public void setActive(boolean active) {
         isActive = active;
     }
 

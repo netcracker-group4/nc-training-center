@@ -11,11 +11,12 @@ import AdminCourses from "../pages/AdminCourses.vue";
 import CreateCourse from "../pages/CreateCourse.vue";
 import AllUsersPage from "../pages/AllUsersPage.vue";
 import UserPage from "../pages/UserPage.vue";
+import NewUserPage from "../pages/NewUserPage.vue";
 import AttendancePage from "../pages/AttendancePage.vue";
 import AbsenceReasons from '../pages/AbsenceReasons.vue'
 import DesiredSchedulePage from "../pages/DesiredSchedulePage.vue";
 import VueDraggable from 'vuedraggable';
-import AttachmentUpload from "../pages/AttachmentUpload.vue"
+import AttachmentsPage from "../pages/AttachmentsPage.vue"
 import TestPage from '../pages/TestPage.vue'
 import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
 
@@ -23,7 +24,7 @@ Vue.use(Router);
 Vue.use(VueDraggable);
 const routes = [
     {path: '/', component: MainPage},
-    {path: '/registration', component: RegistrationPage},
+    {path: '/registration/:token', component: RegistrationPage},
     {path: '/dashboard', component: DashBoardPage},
     {path: '/login', component: LoginPage},
     {path: '/dashboard', component: DashBoardPage},
@@ -36,10 +37,11 @@ const routes = [
     {path: '/coursecreate/:id', component: CreateCourse,props: true},
     {path: '/userpage', component: AllUsersPage},
     {path: '/userpage/:id', component: UserPage},
+    {path: '/add-user', component: NewUserPage},
     {path: '/attendance', component: AttendancePage},
     {path: '/absence-reasons', component: AbsenceReasons},
     {path: '/desired-schedule/:id', component: DesiredSchedulePage},
-    {path: '/attachment-upload', component: AttachmentUpload},
+    {path: '/attachments-page', component: AttachmentsPage},
     {path: '/test', component: TestPage},
 ];
 

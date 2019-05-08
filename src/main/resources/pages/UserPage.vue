@@ -79,7 +79,8 @@
                                 size="180"
                                 class="avatar"
                         >
-                            <img src="https://99px.ru/sstorage/53/2017/03/tmb_193520_3284.jpg" alt="avatar" class="avatar_img">
+                            <img v-if="user.image != null" src="https://99px.ru/sstorage/53/2017/03/tmb_193520_3284.jpg" alt="avatar" class="avatar_img">
+                            <v-icon v-if="user.image == null" alt="avatar" class="avatar_img avatar_icon">account_circle</v-icon>
                         </v-avatar>
                         <v-container fluid style="display:block;">
                             <v-switch v-model="user.active" @change="isActive" label="Active"></v-switch>
@@ -105,7 +106,7 @@
                             </tr>
                             <tr>
                                 <td>Teachers</td>
-                                <td><p v-for="teacher in user.dtoTeachers" class="p">{{ getFullName(teacher) }}</p></td>
+                                <td><p v-for="teacher in user.dtoTeachers" @click="forwardToUserPage(teacher.id)" class="p cursor">{{ getFullName(teacher) }}</p></td>
                             </tr>
                             <tr>
                                 <td>Groups</td>
@@ -113,36 +114,108 @@
                             </tr>
                             <tr>
                                 <td>Manager</td>
-                                <td><span class="p" v-if="user.dtoManager">{{ user.dtoManager.firstName + ' ' + user.dtoManager.lastName}}</span></td>
+                                <td><span @click="forwardToUserPage(user.dtoManager.id)" class="p cursor" v-if="user.dtoManager">{{ user.dtoManager.firstName + ' ' + user.dtoManager.lastName}}</span></td>
                             </tr>
                         </table>
                     </div>
                 </v-container>
-                <div class="attendance" v-for="group in user.groups" >
-                    <v-card>
-                        <v-card-title>
-                            Attendance of user {{user.firstName + ' ' + user.lastName}}  in group {{group.title}}
-                        </v-card-title>
-
-                        <attendance-table :user-id="user.id"
-                                          :group-id="group.id"
-                                          :key="group.id"/>
-                    </v-card>
-                </div>
             </v-flex>
         </v-layout>
 
+        <div>
+            <v-expansion-panel  class="margin" >
+                <v-expansion-panel-content>
+                    <!--suppress HtmlUnknownBooleanAttribute -->
+                    <template v-slot:header>
+                        <div>Employee's attendance</div>
+                    </template>
+                    <div class="attendance" v-for="group in user.groups" >
+                        <v-card flat>
+                            <v-card-title>
+                                Attendance of user {{user.firstName + ' ' + user.lastName}}  in group {{group.title}}
+                            </v-card-title>
 
+                            <attendance-table :user-id="user.id"
+                                              :group-id="group.id"
+                                              :key="group.id"/>
+                        </v-card>
+                    </div>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </div>
+        <div>
+            <v-expansion-panel  class="margin" >
+                <v-expansion-panel-content>
+                    <template v-slot:header>
+                        <div>Feedback</div>
+                    </template>
+                        <v-expansion-panel popout>
+                            <v-expansion-panel-content
+                                    v-for="(feedback, i) in user.dtoFeedbacks"
+                                    :key="i"
+                                    hide-actions
+                            >
+                                <template v-slot:header>
+                                    <v-layout
+                                            align-center
+                                            row
+                                            spacer
+                                    >
+                                        <v-flex xs4 sm2 md1>
+                                            <v-avatar
+                                                    size="36px"
+                                            >
+                                                <img
+                                                        src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+                                                        alt="Avatar"
+                                                >
+                                            </v-avatar>
+                                        </v-flex>
+
+                                        <v-flex sm5 md3 hidden-xs-only>
+                                            <strong v-html="feedback.teacher.firstName"></strong>
+<!--                                            <span-->
+<!--                                                    v-if="message.total"-->
+<!--                                                    class="grey&#45;&#45;text"-->
+<!--                                            >-->
+<!--                                              &nbsp;({{ message.total }})-->
+<!--                                            </span>-->
+                                        </v-flex>
+
+                                        <v-flex
+                                                class="grey--text"
+                                                ellipsis
+                                                hidden-sm-and-down
+                                        >
+                                            &mdash;
+                                            {{ feedback.text }}
+                                        </v-flex>
+                                    </v-layout>
+                                </template>
+
+                                <v-card>
+                                    <v-divider></v-divider>
+                                    <v-card-text v-text="lorem"></v-card-text>
+                                </v-card>
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </div>
+
+        <calendar-list-schedule-component class="margin" :groups-list="user.groups" :lessons-list="lessons"></calendar-list-schedule-component>
 
     </v-container>
+        {{user}}
     </div>
 </template>
 
 <script>
     import axios from 'axios'
     import AttendanceTable from "../components/AttendanceTable.vue";
+    import CalendarListScheduleComponent from "../components/CalendarListScheduleComponent.vue";
     export default {
-        components: {AttendanceTable},
+        components: {AttendanceTable, CalendarListScheduleComponent},
         data() {
             return {
                 dialog: false,
@@ -160,12 +233,14 @@
                     dtoTeachers: [],
                     groups: [],
                     active: false,
+                    dtoFeedbacks: []
                 },
                 groups: [],
-                managers: []
+                managers: [],
+                lessons : [],
+
+                lorem: 'Lorem ipsum dolor sit amet, at aliquam vivendum vel, everti delicatissimi cu eos. Dico iuvaret debitis mel an, et cum zril menandri. Eum in consul legimus accusam. Ea dico abhorreant duo, quo illum minimum incorrupte no, nostro voluptaria sea eu. Suas eligendi ius at, at nemore equidem est. Sed in error hendrerit, in consul constituam cum.'
             }
-        },
-        computed: {
         },
         methods: {
             getFullName (value) {
@@ -203,6 +278,9 @@
                 setTimeout(() => {
                 }, 300)
             },
+            forwardToUserPage(id){
+                this.$router.push('/userpage/' + id)
+            },
             save () {
                 if(this.editUser.firstName != null && this.editUser.lastName != null){
                     Object.assign(this.user, this.editUser);
@@ -221,7 +299,7 @@
                     alert("Incorrect information in fields")
                 }
                 this.close()
-            },
+            }
         },
         mounted() {
             let self = this;
@@ -234,8 +312,43 @@
                 .catch(function (error) {
                     console.log(error);
                 });
-
+            axios.get('http://localhost:8080/schedule/employee/' + id)
+                .then(function (response) {
+                    console.log(response.data);
+                    self.lessons = response.data;
+                    self.lessons.forEach(function (one) {
+                        one.open = false;
+                    })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
+        watch:{
+            '$route' (to, from){
+                let self = this;
+                let id = this.$route.params.id;
+                axios.get('http://localhost:8080/users/' + id)
+                    .then(function (response) {
+                        self.user = response.data;
+                        console.log(self.user)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                axios.get('http://localhost:8080/schedule/employee/' + id)
+                    .then(function (response) {
+                        console.log(response.data);
+                        self.lessons = response.data;
+                        self.lessons.forEach(function (one) {
+                            one.open = false;
+                        })
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        }
     }
 </script>
 
@@ -294,5 +407,15 @@
     .attendance{
         margin-bottom: 20px;
         margin-top: 20px;
+    }
+    .margin{
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .avatar_icon{
+        font-size: 150px;
+    }
+    .cursor{
+        cursor: pointer;
     }
 </style>

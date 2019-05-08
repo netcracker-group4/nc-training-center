@@ -109,4 +109,22 @@ public class FeedbackDao extends GenericAbstractDao<Feedback, Integer> implement
         }
         return feedbacks;
     }
+
+    @Override
+    public List<Feedback> getAllByUserId(Integer userId) {
+        List<Feedback> feedbacks;
+        String sql = feedbackSelectAllByUser;
+        log.info(sql + " select all feedback by user " + userId);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            ResultSet rs = statement.executeQuery();
+            feedbacks = parseResultSet(rs);
+        } catch (Exception e) {
+            throw new PersistException(e);
+        }
+        if (feedbacks.size() == 0) {
+            return null;
+        }
+        return feedbacks;
+    }
 }

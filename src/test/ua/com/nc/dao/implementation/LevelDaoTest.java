@@ -33,7 +33,7 @@ public class LevelDaoTest {
         sqlQueriesProperties.setLevelSelectAll(properties.getProperty("level.select-all"));
         sqlQueriesProperties.setLevelSelectById(properties.getProperty("level.select-by-id"));
         sqlQueriesProperties.setLevelUpdate(properties.getProperty("level.update"));
-        iLevelDao = new LevelDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019", sqlQueriesProperties);
+//        iLevelDao = new LevelDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019", sqlQueriesProperties);
         System.out.println("instantiated COURSE DAO");
         newLevel = new Level("levelName");
     }

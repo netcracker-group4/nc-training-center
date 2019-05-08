@@ -13,4 +13,7 @@ public interface ICourseDao extends GenericDao<Course, Integer> {
 
     void updateCourseLandingPage(int id, boolean isOnLandingPage);
 
+    Course getCourseById (int id);
+    Course getCourseByGroup(int id);
+
 }
