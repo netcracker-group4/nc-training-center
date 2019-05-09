@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class AttachmentDaoImpl extends GenericAbstractDao<Attachment> implements AttachmentDao {
+public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements AttachmentDao {
 
     @Value("${attachment.select-all}")
     private String attachmentSelectAll;
@@ -102,36 +102,15 @@ public class AttachmentDaoImpl extends GenericAbstractDao<Attachment> implements
         List<Attachment> list;
         String sql = attachmentSelectByUrl;
         log.info(sql + " SelectByUrlQuery " + url);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, url);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        if (list.size() > 1) {
-            throw new PersistException("Received more than one record.");
-        }
-        return list.iterator().next();
+        return getUniqueFromSqlByString(sql, url);
     }
+
+
 
     @Override
     public List<Attachment> getByLessonId(Integer lessonId) {
-        List<Attachment> attachments;
         String sql = attachmentSelectByLessonId;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, lessonId);
-            ResultSet rs = statement.executeQuery();
-            attachments = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        return attachments;
+        return getFromSqlById(sql, lessonId);
     }
 
 

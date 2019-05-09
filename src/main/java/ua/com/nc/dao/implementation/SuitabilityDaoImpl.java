@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class SuitabilityDaoImpl extends GenericAbstractDao<Suitability> implements SuitabilityDao {
+public class SuitabilityDaoImpl extends AbstractDaoImpl<Suitability> implements SuitabilityDao {
 
     @Value("${suitability.select-all}")
     private String suitabilitySelectAll;

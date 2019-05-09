@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class AttendanceDaoImpl extends GenericAbstractDao<Attendance> implements AttendanceDao {
+public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements AttendanceDao {
 
     @Value("${attendance.select-by-student-id-and-group-id}")
     private String selectAttendanceByStudentIdAndGroupId;
@@ -63,12 +63,10 @@ public class AttendanceDaoImpl extends GenericAbstractDao<Attendance> implements
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Attendance entity) {
-
     }
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Attendance entity) {
-
     }
 
     @Override
@@ -95,10 +93,13 @@ public class AttendanceDaoImpl extends GenericAbstractDao<Attendance> implements
 
     @Override
     public List<Attendance> getAttendanceByStudentIdAndCourseId(Integer studentId, Integer courseId) {
+        return getAttendances(studentId, courseId, selectAttendanceByStudentIdAndCourseId);
+    }
+
+    private List<Attendance> getAttendances(Integer studentId, Integer courseId, String selectAttendanceByStudentIdAndCourseId) {
         List<Attendance> list;
-        String sql = selectAttendanceByStudentIdAndCourseId;
         log.debug(selectAttendanceByStudentIdAndCourseId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(selectAttendanceByStudentIdAndCourseId)) {
             statement.setInt(1, studentId);
             statement.setInt(2, courseId);
             ResultSet rs = statement.executeQuery();
@@ -112,19 +113,7 @@ public class AttendanceDaoImpl extends GenericAbstractDao<Attendance> implements
 
     @Override
     public List<Attendance> getAttendanceByStudentIdAndGroupId(Integer studentId, Integer groupId) {
-        List<Attendance> list;
-        String sql = selectAttendanceByStudentIdAndGroupId;
-        log.debug(selectAttendanceByStudentIdAndGroupId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, studentId);
-            statement.setInt(2, groupId);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        return list;
+        return getAttendances(studentId, groupId, selectAttendanceByStudentIdAndGroupId);
     }
 
     @Override

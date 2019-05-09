@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class GroupDaoImpl extends GenericAbstractDao<Group> implements GroupDao {
+public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
 
 
     @Value("${group.select-all}")
@@ -109,7 +109,7 @@ public class GroupDaoImpl extends GenericAbstractDao<Group> implements GroupDao 
     public List<Group> getAllGroupsOfCourse(int courseId) {
         String sql = groupSelectByCourse;
         log.info(sql + "find all by courseid" + courseId);
-        return getFromQueryWithId(courseId, sql);
+        return getFromSqlById(sql, courseId);
     }
 
     @Override
@@ -131,25 +131,13 @@ public class GroupDaoImpl extends GenericAbstractDao<Group> implements GroupDao 
     public List<Group> getAllGroupsByStudent(int studentId) {
         String sql = groupSelectByEmployee;
         log.info(sql + "select all groups for student " + studentId);
-        return getFromQueryWithId(studentId, sql);
+        return getFromSqlById(sql, studentId);
     }
 
-    private List<Group> getFromQueryWithId(int studentId, String sql) {
-        List<Group> groups;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, studentId);
-            ResultSet rs = statement.executeQuery();
-            groups = parseResultSet(rs);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new PersistException(e);
-        }
-        return groups;
-    }
 
-    public List<Group> getGroupByTrainerId(Integer id) {
+    public List<Group> getGroupByTrainerId(Integer trainerId) {
         String sql = groupSelectByTrainerId;
-        return getFromQueryWithId(id, sql);
+        return getFromSqlById(sql, trainerId);
     }
 
     @Override

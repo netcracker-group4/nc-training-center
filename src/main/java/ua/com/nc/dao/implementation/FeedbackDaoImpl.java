@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class FeedbackDaoImpl extends GenericAbstractDao<Feedback> implements FeedbackDao {
+public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements FeedbackDao {
 
     @Value("${feedback.select-all}")
     private String feedbackSelectAll;

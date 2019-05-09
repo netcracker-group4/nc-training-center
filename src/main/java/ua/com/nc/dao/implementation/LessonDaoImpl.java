@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class LessonDaoImpl extends GenericAbstractDao<Lesson> implements LessonDao {
+public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao {
 
 
     @Value("${lesson.select-all}")
@@ -136,18 +136,9 @@ public class LessonDaoImpl extends GenericAbstractDao<Lesson> implements LessonD
 
     @Override
     public List<Lesson> getByGroupId(Integer groupId) {
-        List<Lesson> lessons;
         String sql = selectByGroupId;
         log.info("getByGroupId groupId " + groupId + "  " + sql);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, groupId);
-            ResultSet rs = statement.executeQuery();
-            lessons = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        return lessons;
+        return getFromSqlById(sql, groupId);
     }
 
     @Override
@@ -168,18 +159,9 @@ public class LessonDaoImpl extends GenericAbstractDao<Lesson> implements LessonD
 
     @Override
     public List<Lesson> getByUser(int userId) {
-        List<Lesson> lessons;
         String sql = selectByUserId;
         log.info("getByUserId userId " + userId + "  " + sql);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, userId);
-            ResultSet rs = statement.executeQuery();
-            lessons = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        return lessons;
+        return getFromSqlById(sql, userId);
     }
 
     protected List<Lesson> parseResultSetForAttendance(ResultSet rs) throws SQLException {

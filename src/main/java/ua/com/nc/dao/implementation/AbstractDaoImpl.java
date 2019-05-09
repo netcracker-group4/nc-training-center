@@ -14,18 +14,18 @@ import java.util.List;
  */
 
 
-public abstract class GenericAbstractDao<E extends Entity> implements GenericDao<E> {
+public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E> {
 
     Connection connection;
-    protected static final Logger log = Logger.getLogger(GenericAbstractDao.class);
+    protected static final Logger log = Logger.getLogger(AbstractDaoImpl.class);
 
-    GenericAbstractDao() {
+    AbstractDaoImpl() {
     }
 
     @Autowired
-    GenericAbstractDao(String DATABASE_URL,
-                       String DATABASE_USER,
-                       String DATABASE_PASSWORD) throws PersistException {
+    AbstractDaoImpl(String DATABASE_URL,
+                    String DATABASE_USER,
+                    String DATABASE_PASSWORD) throws PersistException {
         try {
             this.connection = DriverManager.getConnection(DATABASE_URL,
                     DATABASE_USER, DATABASE_PASSWORD);
@@ -153,5 +153,65 @@ public abstract class GenericAbstractDao<E extends Entity> implements GenericDao
     protected abstract void prepareStatementForUpdate(PreparedStatement statement, E entity) throws SQLException;
 
     protected abstract List<E> parseResultSet(ResultSet rs) throws SQLException;
+
+
+    List<E> getFromSqlById(String sql , int id) {
+        List<E> list;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        return list;
+    }
+
+    List<E> getListFromSql(String sql) {
+        List<E> list;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        return list;
+    }
+
+    E getUniqueFromSqlById(String sql, Integer id) {
+        List<E> list = getFromSqlById(sql, id);
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
+
+
+    E getUniqueFromSqlByString(String sql, String string) {
+        List<E> list;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, string);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
 
 }

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class AbsenceReasonDaoImpl extends GenericAbstractDao<AbsenceReason> implements AbsenceReasonDao {
+public class AbsenceReasonDaoImpl extends AbstractDaoImpl<AbsenceReason> implements AbsenceReasonDao {
 
     @Value("${absence_reason.select-all}")
     private String absenceReasonSelectAll;

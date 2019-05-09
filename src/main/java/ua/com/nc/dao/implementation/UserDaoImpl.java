@@ -14,7 +14,7 @@ import java.util.TreeMap;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class UserDaoImpl extends GenericAbstractDao<User> implements UserDao {
+public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     private final String USER_ID = "ID";
 
@@ -155,65 +155,27 @@ public class UserDaoImpl extends GenericAbstractDao<User> implements UserDao {
 
     @Override
     public User getByEmail(String email) {
-        List<User> list;
         String sql = usrSelectByEmail;
         log.info(sql + " find by email " + email);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, email);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        if (list.size() > 1) {
-            throw new PersistException("Received more than one record.");
-        }
-        return list.iterator().next();
+        return getUniqueFromSqlByString(sql, email);
     }
 
     @Override
     public User getByToken(String token) {
-        List<User> list;
         String sql = usrSelectByToken;
         log.info(sql + " find by token " + token);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, token);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        if (list.size() > 1) {
-            throw new PersistException("Received more than one record.");
-        }
-        return list.iterator().next();
+        return getUniqueFromSqlByString(sql, token);
     }
 
     @Override
     public List<User> getTrainersOnCourse(int id) {
-        List<User> list;
         String sql = getSelectTrainerByCourseId;
         log.info(sql + "find by course");
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        if (list == null || list.size() == 0) {
+        List <User> trainers = getFromSqlById(sql, id);
+        if (trainers == null || trainers.size() == 0) {
             return null;
         }
-        return list;
+        return trainers;
     }
 
     @Override
@@ -221,14 +183,7 @@ public class UserDaoImpl extends GenericAbstractDao<User> implements UserDao {
         List<User> list;
         String sql = usrSelectTrainerByFeedback;
         log.info(sql + " find trainer by feedback " + id);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
+        list = getFromSqlById(sql, id);
         if (list == null || list.size() == 0) {
             return null;
         }
@@ -271,38 +226,18 @@ public class UserDaoImpl extends GenericAbstractDao<User> implements UserDao {
 
     @Override
     public List<User> getAllTrainers() {
-        List<User> list;
         String sql = usrSelectAllTrainers;
         log.info(sql + "select all trainers");
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        return list;
+        return getListFromSql(sql);
     }
+
+
 
     @Override
     public List<User> getAllManagers() {
-        List<User> list;
         String sql = usrSelectAllManagers;
         log.info(sql + "select all managers");
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        return list;
+        return getListFromSql(sql);
     }
 
 
@@ -310,23 +245,11 @@ public class UserDaoImpl extends GenericAbstractDao<User> implements UserDao {
     public List<User> getByGroupId(Integer id) {
         List<User> users;
         String sql = usrSelectByGroupId;
-        users = getFromQueryById(id, sql);
+        users = getFromSqlById(sql, id);
         return users;
     }
 
-    private List<User> getFromQueryById(Integer id, String sql) {
-        List<User> users;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            users = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        return users;
-    }
-
+    @SuppressWarnings("Duplicates")
     @Override
     public List<User> getUngroupedByCourse(Integer courseId) {
         List<User> allUsersForCourse;
@@ -351,17 +274,7 @@ public class UserDaoImpl extends GenericAbstractDao<User> implements UserDao {
         List<User> allUsersForCourse;
         String sql = usrSelectAllByCourse;
         log.info(sql + " select all users for a course " + courseId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, courseId);
-            ResultSet rs = statement.executeQuery();
-            allUsersForCourse = parseResultSet(rs);
-        } catch (Exception e) {
-            throw new PersistException(e);
-        }
-        if (allUsersForCourse.size() == 0) {
-            return null;
-        }
-        return allUsersForCourse;
+        return getFromSqlById(sql, courseId);
     }
 
     @Override
@@ -416,21 +329,14 @@ public class UserDaoImpl extends GenericAbstractDao<User> implements UserDao {
     public User getManagerById(Integer id) {
         String sql = usrSelectManagerById;
         log.info(sql + " find manager by user id = " + id);
-        List<User> list = getFromQueryById(id, sql);
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        if (list.size() > 1) {
-            throw new PersistException("Received more than one record.");
-        }
-        return list.iterator().next();
+        return getUniqueFromSqlById(sql, id);
     }
 
     @Override
     public List<User> getAllTrainersById(Integer id) {
         String sql = usrSelectAllTrainersById;
         log.info(sql + " find all trainers by id = " + id);
-        List<User> list = getFromQueryById(id, sql);
+        List<User> list = getFromSqlById(sql, id);
         if (list == null || list.size() == 0) {
             return null;
         }
@@ -456,15 +362,10 @@ public class UserDaoImpl extends GenericAbstractDao<User> implements UserDao {
     public User getTrainerByGroupId(Integer groupId) {
         String sql = getSelectTrainerByCourseId;
         log.info(sql + "trainer by group id = " + groupId);
-        List<User> list = getFromQueryById(groupId, sql);
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        if (list.size() > 1) {
-            throw new PersistException("Received more than one record.");
-        }
-        return list.iterator().next();
+        return getUniqueFromSqlById(sql, groupId);
     }
+
+
 
     public TreeMap<User, User> getStudentsAbsentWitNoReason(int lessonId) {
         List<User> students = new ArrayList<>();
@@ -507,23 +408,8 @@ public class UserDaoImpl extends GenericAbstractDao<User> implements UserDao {
 
     public User getLessonTrainer(int lessonId) {
         String sql = this.getLessonTrainer;
-        List<User> trainer;
         log.info("get Trainer of lesson " + lessonId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, lessonId);
-            ResultSet rs = statement.executeQuery();
-            trainer = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e.getMessage());
-        }
-        if (trainer == null || trainer.size() == 0) {
-            return null;
-        }
-        if (trainer.size() > 1) {
-            throw new PersistException("Received more than one record.");
-        }
-        return trainer.get(0);
+        return getUniqueFromSqlById(sql, lessonId);
     }
 
 }

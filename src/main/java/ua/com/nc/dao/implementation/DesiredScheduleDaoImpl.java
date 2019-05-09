@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class DesiredScheduleDaoImpl extends GenericAbstractDao<DesiredSchedule> implements DesiredScheduleDao {
+public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> implements DesiredScheduleDao {
 
     @Value("${desirable.schedule.select-all}")
     private String desirableScheduleSelectAll;
@@ -100,26 +100,14 @@ public class DesiredScheduleDaoImpl extends GenericAbstractDao<DesiredSchedule> 
     public List<DesiredSchedule> getAllForCourse(int courseId) {
         String sql = desirableScheduleSelectByCourseId;
         log.info(sql + "" + "find all by courseId " + courseId);
-        return getFromSqlById(courseId, sql);
+        return getFromSqlById( sql, courseId);
     }
 
     @Override
     public List<DesiredSchedule> getAllForGroup(int groupId) {
         String sql = desirableScheduleSelectByGroupId;
         log.info(sql + "" + "find all by groupId " + groupId);
-        return getFromSqlById(groupId, sql);
+        return getFromSqlById(sql, groupId);
     }
 
-    private List<DesiredSchedule> getFromSqlById(int groupId, String sql) {
-        List<DesiredSchedule> list;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, groupId);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new PersistException(e);
-        }
-        return list;
-    }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class LessonAttachmentDaoImpl extends GenericAbstractDao<LessonAttachment> implements LessonAttachmentDao {
+public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> implements LessonAttachmentDao {
     @Value("${lesson_attachment.insert}")
     private String lessonAttachmentInsert;
     @Value("${lesson_attachment.delete-by-attachment-id}")
@@ -101,18 +101,9 @@ public class LessonAttachmentDaoImpl extends GenericAbstractDao<LessonAttachment
 
     @Override
     public List<LessonAttachment> getAllByLessonId(Integer lessonId) throws PersistException {
-        List<LessonAttachment> list;
         String sql = selectAllByLessonId;
         log.info(sql + "getAllByLessonId " + lessonId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, lessonId);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        return list;
+        return getFromSqlById(sql, lessonId);
     }
 
     @Override

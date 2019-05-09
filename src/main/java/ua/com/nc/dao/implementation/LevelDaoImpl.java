@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class LevelDaoImpl extends GenericAbstractDao<Level> implements LevelDao {
+public class LevelDaoImpl extends AbstractDaoImpl<Level> implements LevelDao {
 
     @Value("${level.select-all}")
     private String levelSelectAll;
@@ -97,18 +97,9 @@ public class LevelDaoImpl extends GenericAbstractDao<Level> implements LevelDao 
 
     @Override
     public List<Level> getAllByTrainer(int trainerId) {
-        List<Level> list;
         String sql = levelSelectByTrainer;
         log.info(sql + " find all by trainer " + trainerId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, trainerId);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new PersistException(e);
-        }
-        return list;
+        return getFromSqlById(sql, trainerId);
     }
 
     @Override

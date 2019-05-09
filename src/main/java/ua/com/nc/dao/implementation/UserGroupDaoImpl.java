@@ -17,7 +17,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class UserGroupDaoImpl extends GenericAbstractDao<UserGroup> implements UserGroupDao {
+public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements UserGroupDao {
 
     @Value("${usr_group.delete-all-for-group}")
     private String userGroupDeleteForGroup;
@@ -130,6 +130,7 @@ public class UserGroupDaoImpl extends GenericAbstractDao<UserGroup> implements U
         }
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public UserGroup getByUserAndCourse(int userId, int courseId) {
         String sql = userGroupSelectByUsrAndCourse;

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class AttendanceStatusDaoImpl extends GenericAbstractDao<AttendanceStatus> implements AttendanceStatusDao {
+public class AttendanceStatusDaoImpl extends AbstractDaoImpl<AttendanceStatus> implements AttendanceStatusDao {
 
     @Value("${attendance_status.select-all}")
     private String attendanceStatusSelectAll;
@@ -81,19 +81,8 @@ public class AttendanceStatusDaoImpl extends GenericAbstractDao<AttendanceStatus
 
     @Override
     public List<AttendanceStatus> getAll() {
-        List<AttendanceStatus> list;
         String sql = attendanceStatusSelectAll;
         log.info(sql + "select all attendance status");
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        return list;
+        return getListFromSql(sql);
     }
 }
