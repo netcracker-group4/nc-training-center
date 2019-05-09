@@ -1,5 +1,6 @@
 package ua.com.nc.service.impl;
 
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ua.com.nc.dto.DtoMailSender;
 import ua.com.nc.service.EmailService;
 
+@Log4j
 @Component
 public class EmailServiceImpl implements EmailService {
     @Autowired

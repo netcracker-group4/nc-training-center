@@ -1,6 +1,7 @@
 package ua.com.nc.controller;
 
 import com.google.gson.Gson;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Log4j
 @Controller
 @CrossOrigin(origins = "http://localhost:8000")
 @RequestMapping(value = "/getInfo")

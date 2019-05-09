@@ -1,7 +1,7 @@
 package ua.com.nc.service.impl;
 
 import com.google.gson.Gson;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.CourseDao;
@@ -21,9 +21,9 @@ import ua.com.nc.service.DashBoardService;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j
 @Service
 public class DashBoardServiceImpl implements DashBoardService {
-    private static final Logger log = Logger.getLogger(DashBoardServiceImpl.class);
     @Autowired
     private
     LevelDao levelDao;

@@ -1,6 +1,6 @@
 package ua.com.nc.service.impl;
 
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Log4j
 @Service
 public class CourseServiceImpl implements CourseService {
-    private static final Logger log = Logger.getLogger(AttachmentServiceImpl.class);
     @Autowired
     private CourseDao courseDao;
     @Autowired

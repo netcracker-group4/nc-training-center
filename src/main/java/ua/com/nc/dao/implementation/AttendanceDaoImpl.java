@@ -1,5 +1,6 @@
 package ua.com.nc.dao.implementation;
 
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import ua.com.nc.dto.UserAttendanceDto;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements AttendanceDao {

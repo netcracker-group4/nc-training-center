@@ -1,5 +1,6 @@
 package ua.com.nc.dao.implementation;
 
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //import static jdk.nashorn.internal.objects.NativeMath.log;
-
+@Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements UserGroupDao {

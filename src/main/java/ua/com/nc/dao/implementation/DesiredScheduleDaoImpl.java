@@ -1,5 +1,6 @@
 package ua.com.nc.dao.implementation;
 
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+@Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> implements DesiredScheduleDao {

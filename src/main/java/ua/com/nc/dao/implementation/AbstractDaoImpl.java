@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.GenericDao;
@@ -13,11 +13,10 @@ import java.util.List;
  * @param <E> entity typeSqlQueriesProperties
  */
 
-
+@Log4j
 public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E> {
 
     Connection connection;
-    protected static final Logger log = Logger.getLogger(AbstractDaoImpl.class);
 
     AbstractDaoImpl() {
     }
@@ -155,7 +154,7 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     protected abstract List<E> parseResultSet(ResultSet rs) throws SQLException;
 
 
-    List<E> getFromSqlById(String sql , int id) {
+    List<E> getFromSqlById(String sql , Integer id) {
         List<E> list;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
@@ -193,7 +192,6 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         }
         return list.iterator().next();
     }
-
 
     E getUniqueFromSqlByString(String sql, String string) {
         List<E> list;

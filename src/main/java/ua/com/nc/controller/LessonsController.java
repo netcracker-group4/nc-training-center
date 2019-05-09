@@ -2,6 +2,7 @@ package ua.com.nc.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -12,7 +13,7 @@ import ua.com.nc.service.LessonsService;
 
 import java.sql.Timestamp;
 
-
+@Log4j
 @Controller
 @CrossOrigin(origins = "http://localhost:8000")
 @RequestMapping(value = "/schedule")

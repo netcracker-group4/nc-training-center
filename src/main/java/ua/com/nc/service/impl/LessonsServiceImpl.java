@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
@@ -17,6 +18,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j
 @Service
 public class LessonsServiceImpl implements LessonsService {
     @Autowired

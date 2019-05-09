@@ -1,6 +1,6 @@
 package ua.com.nc.service.impl;
 
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,9 +12,9 @@ import ua.com.nc.service.AttachmentService;
 
 import java.io.*;
 
+@Log4j
 @Service
 public class AttachmentServiceImpl implements AttachmentService {
-    private static final Logger log = Logger.getLogger(AttachmentServiceImpl.class);
     @Autowired
     private AttachmentDao attachmentDao;
     @Autowired
@@ -28,13 +28,13 @@ public class AttachmentServiceImpl implements AttachmentService {
 
             attachmentDao.insert(attachment);
         }
-        link(lessonId,attachmentDao.getByUrl(attachment.getUrl()).getId());
+        link(lessonId, attachmentDao.getByUrl(attachment.getUrl()).getId());
     }
 
     @Override
     public void add(Integer lessonId, String url, String description) {
         System.out.println("Add method 2 used");
-        Attachment attachment = new Attachment(url,description);
+        Attachment attachment = new Attachment(url, description);
         add(lessonId, attachment);
     }
 
@@ -46,7 +46,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public void uploadFile(Integer lessonId, MultipartFile file) {
-        if(!file.isEmpty()){
+        if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
 
@@ -65,7 +65,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                     log.info("File is not in base");
                     File uploadedFile = new File(filePath);
                     try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));
-                    ){
+                    ) {
                         stream.write(bytes);
                     }
                 }
@@ -92,7 +92,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public void link(Integer lessonId, Integer attachmentId) {
-        LessonAttachment lessonAttachment = new LessonAttachment(attachmentId ,lessonId);
+        LessonAttachment lessonAttachment = new LessonAttachment(attachmentId, lessonId);
         lessonAttachmentDao.insertAttachment(lessonAttachment);
     }
 
