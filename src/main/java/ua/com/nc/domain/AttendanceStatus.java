@@ -3,7 +3,7 @@ package ua.com.nc.domain;
 import java.util.Objects;
 
 
-public class AttendanceStatus extends Entity<Integer> {
+public class AttendanceStatus extends Entity {
     private String title;
 
     public AttendanceStatus(String title) {

@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class FeedbackDaoImpl extends GenericAbstractDao<Feedback, Integer> implements FeedbackDao {
+public class FeedbackDaoImpl extends GenericAbstractDao<Feedback> implements FeedbackDao {
 
     @Value("${feedback.select-all}")
     private String feedbackSelectAll;
@@ -68,11 +68,6 @@ public class FeedbackDaoImpl extends GenericAbstractDao<Feedback, Integer> imple
     @Override
     protected String getUpdateQuery() {
         return feedbackUpdate;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(1, id);
     }
 
     @Override

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Objects;
 
 @Data
-public class Group extends Entity<Integer> {
+public class Group extends Entity {
     private int courseId;
     private String title;
 

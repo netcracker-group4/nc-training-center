@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class Suitability extends Entity<Integer> {
+public class Suitability extends Entity {
     private String title;
     private String color;
     private int priority;

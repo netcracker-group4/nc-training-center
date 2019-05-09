@@ -53,13 +53,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void add(Course course) {
         courseDao.insert(course);
-        courseDao.commit();
     }
 
     @Override
     public void update(Course course) {
         courseDao.update(course);
-        courseDao.commit();
     }
 
     @Override

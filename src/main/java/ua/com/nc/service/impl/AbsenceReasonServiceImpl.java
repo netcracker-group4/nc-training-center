@@ -14,7 +14,6 @@ public class AbsenceReasonServiceImpl implements AbsenceReasonService {
     @Override
     public void add(AbsenceReason reason) {
         absenceReasonDao.insert(reason);
-        absenceReasonDao.commit();
     }
 
     @Override

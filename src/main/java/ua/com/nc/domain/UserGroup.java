@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserGroup extends Entity<Integer> {
+public class UserGroup extends Entity {
     private int userId;
     private int groupId;
     private boolean attending;

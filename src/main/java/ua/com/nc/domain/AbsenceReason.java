@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Objects;
 
 @Data
-public class AbsenceReason extends Entity<Integer> {
+public class AbsenceReason extends Entity {
     private String title;
 
     public AbsenceReason(String title) {

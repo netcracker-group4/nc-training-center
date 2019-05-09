@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class LessonDaoImpl extends GenericAbstractDao<Lesson, Integer> implements LessonDao {
+public class LessonDaoImpl extends GenericAbstractDao<Lesson> implements LessonDao {
 
 
     @Value("${lesson.select-all}")
@@ -75,11 +75,6 @@ public class LessonDaoImpl extends GenericAbstractDao<Lesson, Integer> implement
     @Override
     protected String getUpdateQuery() {
         return lessonUpdate;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(1, id);
     }
 
     @Override

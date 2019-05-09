@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true, of = {"id"})
-public class Attendance extends Entity<Integer> {
+public class Attendance extends Entity {
     @SerializedName("attendanceId")
     private Integer id;
     private Integer lessonId;

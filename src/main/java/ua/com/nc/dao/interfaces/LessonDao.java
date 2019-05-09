@@ -4,7 +4,7 @@ import ua.com.nc.domain.Lesson;
 
 import java.util.List;
 
-public interface LessonDao extends GenericDao<Lesson, Integer> {
+public interface LessonDao extends GenericDao<Lesson> {
     List<Lesson> getByGroupIdAndUserId(Integer groupId, Integer userId);
 
     List<Lesson> getByGroupId(Integer groupId);

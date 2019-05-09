@@ -14,7 +14,7 @@ import java.util.TreeMap;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class UserDaoImpl extends GenericAbstractDao<User, Integer> implements UserDao {
+public class UserDaoImpl extends GenericAbstractDao<User> implements UserDao {
 
     private final String USER_ID = "ID";
 

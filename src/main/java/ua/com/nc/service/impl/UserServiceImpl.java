@@ -38,11 +38,8 @@ public class UserServiceImpl implements UserService {
         user.setLastName(dtoUserSave.getLastName());
         user.setPassword(dtoUserSave.getPassword());
         user.setEmail(dtoUserSave.getEmail());
-
         userDao.insert(user);
         userDao.addUserRole(user.getId(), dtoUserSave.getRole().name());
-
-        userDao.commit();
     }
 
     @Override
@@ -182,14 +179,12 @@ public class UserServiceImpl implements UserService {
         user.setLastName(dtoUserProfiles.getLastName());
         user.setManagerId(dtoUserProfiles.getDtoManager().getId());
         userDao.update(user);
-        userDao.commit();
 
     }
 
     @Override
     public void updateActive(User user) {
         userDao.updateActive(user);
-        userDao.commit();
     }
 
     @Override
@@ -237,7 +232,6 @@ public class UserServiceImpl implements UserService {
 
         userDao.addUserByAdmin(user);
         emailService.sendSimpleMessage(dtoMailSender);
-        userDao.commit();
     }
 
     @Override

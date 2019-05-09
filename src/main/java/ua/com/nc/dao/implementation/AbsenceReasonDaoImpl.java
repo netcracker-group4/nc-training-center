@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class AbsenceReasonDaoImpl extends GenericAbstractDao<AbsenceReason, Integer> implements AbsenceReasonDao {
+public class AbsenceReasonDaoImpl extends GenericAbstractDao<AbsenceReason> implements AbsenceReasonDao {
 
     @Value("${absence_reason.select-all}")
     private String absenceReasonSelectAll;
@@ -65,11 +65,6 @@ public class AbsenceReasonDaoImpl extends GenericAbstractDao<AbsenceReason, Inte
     @Override
     protected String getUpdateQuery() {
         return absenceReasonUpdate;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(1, id);
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class GroupDaoImpl extends GenericAbstractDao<Group, Integer> implements GroupDao {
+public class GroupDaoImpl extends GenericAbstractDao<Group> implements GroupDao {
 
 
     @Value("${group.select-all}")
@@ -76,11 +76,6 @@ public class GroupDaoImpl extends GenericAbstractDao<Group, Integer> implements 
     @Override
     protected String getUpdateQuery() {
         return groupUpdate;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(1, id);
     }
 
     @Override

@@ -41,7 +41,6 @@ public class CourseController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public void deleteCourse(@PathVariable String id) {
         courseDao.delete(Integer.parseInt(id));
-        courseDao.commit();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")

@@ -32,12 +32,10 @@ public class LandingPageServiceImpl implements LandingPageService {
     @Override
     public void updateCourseLandingPage(int id, boolean isOnLandingPage) {
         courseDao.updateCourseLandingPage(id, isOnLandingPage);
-        courseDao.commit();
     }
 
     @Override
     public void updateTrainerLandingPage(int id, boolean isOnLandingPage) {
         userDao.updateTrainerLandingPage(id, isOnLandingPage);
-        userDao.commit();
     }
 }

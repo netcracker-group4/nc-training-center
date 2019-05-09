@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class LevelDaoImpl extends GenericAbstractDao<Level, Integer> implements LevelDao {
+public class LevelDaoImpl extends GenericAbstractDao<Level> implements LevelDao {
 
     @Value("${level.select-all}")
     private String levelSelectAll;
@@ -69,11 +69,6 @@ public class LevelDaoImpl extends GenericAbstractDao<Level, Integer> implements 
     @Override
     protected String getUpdateQuery() {
         return levelUpdate;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(1, id);
     }
 
     @Override

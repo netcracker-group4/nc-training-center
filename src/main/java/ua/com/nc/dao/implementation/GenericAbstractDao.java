@@ -10,21 +10,14 @@ import java.sql.*;
 import java.util.List;
 
 /**
- * @param <E> entity typesqlQueriesProperties
- * @param <K> type of entity's primary key
+ * @param <E> entity typeSqlQueriesProperties
  */
 
 
-public abstract class GenericAbstractDao<E extends Entity<K>, K> implements GenericDao<E, K> {
+public abstract class GenericAbstractDao<E extends Entity> implements GenericDao<E> {
 
     Connection connection;
     protected static final Logger log = Logger.getLogger(GenericAbstractDao.class);
-//    SqlQueriesProperties sqlQueriesProperties;
-//
-//    @Autowired
-//    public void setSqlQueriesProperties(SqlQueriesProperties sqlQueriesProperties) {
-//        this.sqlQueriesProperties = sqlQueriesProperties;
-//    }
 
     GenericAbstractDao() {
     }
@@ -36,7 +29,6 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
         try {
             this.connection = DriverManager.getConnection(DATABASE_URL,
                     DATABASE_USER, DATABASE_PASSWORD);
-            connection.setAutoCommit(false);
         } catch (SQLException e) {
             log.trace("Error while setting autocommit false", e);
             throw new PersistException("Error while setting autocommit false", e);
@@ -59,7 +51,7 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
     }
 
     @Override
-    public E getEntityById(K id) throws PersistException {
+    public E getEntityById(Integer id) throws PersistException {
         List<E> list;
         String sql = getSelectByIdQuery();
         log.info(sql + " select by id with id " + id.toString());
@@ -98,7 +90,7 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
     }
 
     @Override
-    public void delete(K id) throws PersistException {
+    public void delete(Integer id) throws PersistException {
         String sql = getDeleteQuery();
         log.info(sql + " delete with id " + id.toString());
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -130,27 +122,7 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
         }
     }
 
-    protected abstract K parseId(ResultSet rs) throws SQLException;
-
-    @Override
-    public void rollback() throws PersistException {
-        try {
-            connection.rollback();
-        } catch (SQLException e) {
-            log.trace("Error while rolling back", e);
-            throw new PersistException("Error while rolling back", e);
-        }
-    }
-
-
-    public void commit() throws PersistException {
-        try {
-            connection.commit();
-        } catch (SQLException e) {
-            log.trace("Error while committing back", e);
-            throw new PersistException("Error while committing back", e);
-        }
-    }
+    protected abstract Integer parseId(ResultSet rs) throws SQLException;
 
     @Override
     public void close() throws PersistException {
@@ -172,7 +144,9 @@ public abstract class GenericAbstractDao<E extends Entity<K>, K> implements Gene
 
     protected abstract String getUpdateQuery();
 
-    protected abstract void setId(PreparedStatement statement, K id) throws SQLException;
+    protected void setId(PreparedStatement statement, Integer id) throws SQLException{
+        statement.setInt(1, id);
+    }
 
     protected abstract void prepareStatementForInsert(PreparedStatement statement, E entity) throws SQLException;
 

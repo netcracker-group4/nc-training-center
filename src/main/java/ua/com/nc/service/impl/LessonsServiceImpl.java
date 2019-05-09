@@ -57,12 +57,10 @@ public class LessonsServiceImpl implements LessonsService {
     public String updateLesson(DtoLesson toUpdate) {
         Lesson domainLesson = toUpdate.getDomainLesson();
         lessonDao.update(domainLesson);
-        lessonDao.commit();
         lessonAttachmentDao.deleteByLessonId(toUpdate.getId());
         for (LessonAttachment attachment : toUpdate.getAttachments()) {
             lessonAttachmentDao.insertAttachment(attachment);
         }
-        lessonAttachmentDao.commit();
         return Integer.toString(toUpdate.getId());
     }
 
@@ -70,20 +68,16 @@ public class LessonsServiceImpl implements LessonsService {
     public String addLesson(DtoLesson toAdd) {
         Lesson domainLesson = toAdd.getDomainLesson();
         lessonDao.insert(domainLesson);
-        lessonDao.commit();
         for (LessonAttachment attachment : toAdd.getAttachmentsForNewLesson(domainLesson.getId())) {
             lessonAttachmentDao.insertAttachment(attachment);
         }
-        lessonAttachmentDao.commit();
         return Integer.toString(domainLesson.getId());
     }
 
     @Override
     public String deleteLesson(int toArchive) {
         lessonAttachmentDao.deleteByLessonId(toArchive);
-        lessonAttachmentDao.commit();
         lessonDao.archiveLesson(toArchive);
-        lessonDao.commit();
         return "Lesson deleted";
     }
 
@@ -93,7 +87,6 @@ public class LessonsServiceImpl implements LessonsService {
         boolean newCanceled = !lesson.isCanceled();
         lesson.setCanceled(newCanceled);
         lessonDao.update(lesson);
-        lessonDao.commit();
         return Boolean.toString(newCanceled);
     }
 

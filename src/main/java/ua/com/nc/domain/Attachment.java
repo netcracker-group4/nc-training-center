@@ -9,7 +9,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @ToString
-public class Attachment extends Entity<Integer> {
+public class Attachment extends Entity {
     private String url;
     private String description;
 

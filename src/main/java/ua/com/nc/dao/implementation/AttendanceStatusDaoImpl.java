@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class AttendanceStatusDaoImpl extends GenericAbstractDao<AttendanceStatus, Integer> implements AttendanceStatusDao {
+public class AttendanceStatusDaoImpl extends GenericAbstractDao<AttendanceStatus> implements AttendanceStatusDao {
 
     @Value("${attendance_status.select-all}")
     private String attendanceStatusSelectAll;
@@ -55,11 +55,6 @@ public class AttendanceStatusDaoImpl extends GenericAbstractDao<AttendanceStatus
     @Override
     protected String getUpdateQuery() {
         return null;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) {
-
     }
 
     @Override

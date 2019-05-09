@@ -30,10 +30,8 @@ public class GroupsServiceImpl implements GroupsService {
         Group groupToUpdate = groupDao.getEntityById(groupSchedule.getId());
         groupToUpdate.setTitle(groupSchedule.getName());
         groupDao.update(groupToUpdate);
-        groupDao.commit();
         userGroupDao.deleteAllForGroup(groupToUpdate.getId());
         updateStudentsForGroup(groupSchedule, groupToUpdate);
-        userGroupDao.commit();
         return groupToUpdate.getId();
     }
 
@@ -41,10 +39,8 @@ public class GroupsServiceImpl implements GroupsService {
     public boolean delete(int groupId) {
         // TODO what to do with transactions for few daos??
         userGroupDao.deleteAllForGroup(groupId);
-        userGroupDao.commit();
 
         groupDao.delete(groupId);
-        groupDao.commit();
         return true;
     }
 
@@ -53,9 +49,7 @@ public class GroupsServiceImpl implements GroupsService {
         // TODO what to do with transactions for few daos??
         Group groupToInsert = new Group(groupSchedule.getCourseId(), groupSchedule.getName());
         groupDao.insert(groupToInsert);
-        groupDao.commit();
         updateStudentsForGroup(groupSchedule, groupToInsert);
-        userGroupDao.commit();
         return groupToInsert.getId();
     }
 

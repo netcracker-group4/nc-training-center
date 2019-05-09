@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class DesiredScheduleDaoImpl extends GenericAbstractDao<DesiredSchedule, Integer> implements DesiredScheduleDao {
+public class DesiredScheduleDaoImpl extends GenericAbstractDao<DesiredSchedule> implements DesiredScheduleDao {
 
     @Value("${desirable.schedule.select-all}")
     private String desirableScheduleSelectAll;
@@ -66,11 +66,6 @@ public class DesiredScheduleDaoImpl extends GenericAbstractDao<DesiredSchedule, 
     protected String getUpdateQuery() {
         //TODO getUpdateQuery DesiredScheduleDaoImpl
         return null;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(1, id);
     }
 
     @Override

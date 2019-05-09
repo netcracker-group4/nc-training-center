@@ -9,7 +9,7 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @ToString
-public class LessonAttachment extends Entity<Integer> {
+public class LessonAttachment extends Entity {
     private Integer attachmentId;
     private Integer lessonId;
 

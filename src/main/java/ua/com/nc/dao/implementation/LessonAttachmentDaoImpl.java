@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class LessonAttachmentDaoImpl extends GenericAbstractDao<LessonAttachment, Integer> implements LessonAttachmentDao {
+public class LessonAttachmentDaoImpl extends GenericAbstractDao<LessonAttachment> implements LessonAttachmentDao {
     @Value("${lesson_attachment.insert}")
     private String lessonAttachmentInsert;
     @Value("${lesson_attachment.delete-by-attachment-id}")
@@ -62,11 +62,6 @@ public class LessonAttachmentDaoImpl extends GenericAbstractDao<LessonAttachment
     @Override
     protected String getUpdateQuery() {
         return null;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) {
-        //there is no id
     }
 
     @Override

@@ -138,7 +138,6 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId) {
         attendanceDao.attendanceUpdate(attendanceId, statusId, reasonId);
-        attendanceDao.commit();
 
     }
 

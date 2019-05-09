@@ -11,7 +11,7 @@ import java.sql.Date;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @ToString
-public class Feedback extends Entity<Integer> {
+public class Feedback extends Entity {
     private Integer studentId;
     private Integer trainerId;
     private Integer courseId;

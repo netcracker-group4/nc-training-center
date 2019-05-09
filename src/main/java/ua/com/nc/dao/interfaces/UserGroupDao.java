@@ -2,7 +2,7 @@ package ua.com.nc.dao.interfaces;
 
 import ua.com.nc.domain.UserGroup;
 
-public interface UserGroupDao extends GenericDao<UserGroup, Integer> {
+public interface UserGroupDao extends GenericDao<UserGroup> {
 
     void deleteAllForGroup(int groupId);
 

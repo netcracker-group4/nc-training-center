@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class CourseDaoImpl extends GenericAbstractDao<Course, Integer> implements CourseDao {
+public class CourseDaoImpl extends GenericAbstractDao<Course> implements CourseDao {
 
     @Value("${course.select-all}")
     private String courseSelectAll;
@@ -76,11 +76,6 @@ public class CourseDaoImpl extends GenericAbstractDao<Course, Integer> implement
     @Override
     protected String getUpdateQuery() {
         return courseUpdate;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(1, id);
     }
 
     @Override

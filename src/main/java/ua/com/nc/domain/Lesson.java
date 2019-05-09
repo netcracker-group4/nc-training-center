@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @ToString
-public class Lesson extends Entity<Integer> {
+public class Lesson extends Entity {
     private Integer groupId;
     private String topic;
     private Integer trainerId;

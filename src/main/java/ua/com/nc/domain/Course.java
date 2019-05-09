@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Data
-public class Course extends Entity<Integer> {
+public class Course extends Entity {
     private String name;
     private int level;
     private int courseStatusId;

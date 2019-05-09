@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class AttendanceDaoImpl extends GenericAbstractDao<Attendance, Integer> implements AttendanceDao {
+public class AttendanceDaoImpl extends GenericAbstractDao<Attendance> implements AttendanceDao {
 
     @Value("${attendance.select-by-student-id-and-group-id}")
     private String selectAttendanceByStudentIdAndGroupId;
@@ -59,11 +59,6 @@ public class AttendanceDaoImpl extends GenericAbstractDao<Attendance, Integer> i
     @Override
     protected String getUpdateQuery() {
         return null;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) {
-
     }
 
     @Override
@@ -155,10 +150,5 @@ public class AttendanceDaoImpl extends GenericAbstractDao<Attendance, Integer> i
             throw new PersistException(e);
         }
 
-    }
-
-    @Override
-    public void commit() throws PersistException {
-        super.commit();
     }
 }

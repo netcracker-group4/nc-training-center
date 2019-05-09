@@ -17,7 +17,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class UserGroupDaoImpl extends GenericAbstractDao<UserGroup, Integer> implements UserGroupDao {
+public class UserGroupDaoImpl extends GenericAbstractDao<UserGroup> implements UserGroupDao {
 
     @Value("${usr_group.delete-all-for-group}")
     private String userGroupDeleteForGroup;

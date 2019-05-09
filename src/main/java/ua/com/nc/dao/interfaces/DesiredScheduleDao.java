@@ -4,7 +4,7 @@ import ua.com.nc.domain.DesiredSchedule;
 
 import java.util.List;
 
-public interface DesiredScheduleDao extends GenericDao<DesiredSchedule, Integer> {
+public interface DesiredScheduleDao extends GenericDao<DesiredSchedule> {
     List<DesiredSchedule> getAllForCourse(int courseId);
 
     List<DesiredSchedule> getAllForGroup(int groupId);

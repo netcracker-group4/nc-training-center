@@ -27,7 +27,6 @@ public class AttachmentServiceImpl implements AttachmentService {
         if (attachmentDao.getByUrl(attachment.getUrl()) == null) {
 
             attachmentDao.insert(attachment);
-            attachmentDao.commit();
         }
         link(lessonId,attachmentDao.getByUrl(attachment.getUrl()).getId());
     }
@@ -42,9 +41,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public void delete(Integer id) {
         attachmentDao.delete(id);
-        attachmentDao.commit();
         lessonAttachmentDao.deleteByAttachmentId(id);
-        lessonAttachmentDao.commit();
     }
 
     @Override
@@ -97,7 +94,6 @@ public class AttachmentServiceImpl implements AttachmentService {
     public void link(Integer lessonId, Integer attachmentId) {
         LessonAttachment lessonAttachment = new LessonAttachment(attachmentId ,lessonId);
         lessonAttachmentDao.insertAttachment(lessonAttachment);
-        lessonAttachmentDao.commit();
     }
 
 }

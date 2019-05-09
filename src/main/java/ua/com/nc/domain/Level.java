@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class Level extends Entity<Integer> {
+public class Level extends Entity {
     private String title;
 
     public Level(String title) {

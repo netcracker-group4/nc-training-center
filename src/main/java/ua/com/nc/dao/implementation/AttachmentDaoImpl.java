@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class AttachmentDaoImpl extends GenericAbstractDao<Attachment, Integer> implements AttachmentDao {
+public class AttachmentDaoImpl extends GenericAbstractDao<Attachment> implements AttachmentDao {
 
     @Value("${attachment.select-all}")
     private String attachmentSelectAll;
@@ -65,11 +65,6 @@ public class AttachmentDaoImpl extends GenericAbstractDao<Attachment, Integer> i
     @Override
     protected String getUpdateQuery() {
         return null;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(1, id);
     }
 
     @Override
