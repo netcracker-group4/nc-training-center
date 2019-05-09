@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -8,12 +9,14 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.FeedbackDao;
 import ua.com.nc.domain.Feedback;
 
+import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
@@ -32,18 +35,9 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
     @Value("${feedback.select-all-by-user-id}")
     private String feedbackSelectAllByUser;
 
-    public FeedbackDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                           @Value("${spring.datasource.username}") String DATABASE_USER,
-                           @Value("${spring.datasource.password}") String DATABASE_PASSWORD)
-            throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-    }
-
-    @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return rs.getInt("id");
-        } else throw new PersistException("No value returned!");
+    @Autowired
+    public FeedbackDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override

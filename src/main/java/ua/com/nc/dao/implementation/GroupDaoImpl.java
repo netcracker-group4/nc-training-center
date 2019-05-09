@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -8,11 +9,13 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.domain.Group;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
@@ -41,18 +44,11 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     private String deleteUserFromGroup;
 
 
-    public GroupDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                        @Value("${spring.datasource.username}") String DATABASE_USER,
-                        @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
+    @Autowired
+    public GroupDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
-    @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return rs.getInt(1);
-        } else throw new PersistException("No value returned!");
-    }
 
     @Override
     protected String getSelectByIdQuery() {
@@ -120,8 +116,7 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, groupId);
             ResultSet rs = statement.executeQuery();
-            //although it is not an id, this query returns only one number, so this method can parse it
-            return parseId(rs);
+            return (rs.next()) ?  rs.getInt(1) : 0;
         } catch (Exception e) {
             e.printStackTrace();
             throw new PersistException(e);

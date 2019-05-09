@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -8,11 +9,13 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.DesiredScheduleDao;
 import ua.com.nc.domain.DesiredSchedule;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
@@ -27,24 +30,9 @@ public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> imp
     @Value("${desirable.schedule.select-by-group-id}")
     private String desirableScheduleSelectByGroupId;
 
-    public DesiredScheduleDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                                  @Value("${spring.datasource.username}") String DATABASE_USER,
-                                  @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-    }
-
-
-    @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return rs.getInt("ID");
-        } else throw new PersistException("No value returned!");
-    }
-
-    @Override
-    protected String getSelectByIdQuery() {
-        //TODO getSelectByIdQuery DesiredScheduleDaoImpl
-        return null;
+    @Autowired
+    public DesiredScheduleDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override
@@ -58,29 +46,12 @@ public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> imp
     }
 
     @Override
-    protected String getDeleteQuery() {
-        //TODO getDeleteQuery DesiredScheduleDaoImpl
-        return null;
-    }
-
-    @Override
-    protected String getUpdateQuery() {
-        //TODO getUpdateQuery DesiredScheduleDaoImpl
-        return null;
-    }
-
-    @Override
     protected void prepareStatementForInsert(PreparedStatement statement, DesiredSchedule entity) throws SQLException {
         statement.setInt(1, entity.getUserId());
         statement.setInt(2, entity.getCourseId());
         statement.setString(3, entity.getCronInterval());
         statement.setInt(4, entity.getSuitability());
 
-    }
-
-    @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, DesiredSchedule entity) {
-        //TODO prepareStatementForUpdate DesiredScheduleDaoImpl
     }
 
     @Override
@@ -101,7 +72,7 @@ public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> imp
     public List<DesiredSchedule> getAllForCourse(int courseId) {
         String sql = desirableScheduleSelectByCourseId;
         log.info(sql + "" + "find all by courseId " + courseId);
-        return getFromSqlById( sql, courseId);
+        return getFromSqlById(sql, courseId);
     }
 
     @Override

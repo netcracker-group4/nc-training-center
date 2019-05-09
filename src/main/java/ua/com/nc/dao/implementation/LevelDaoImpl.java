@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.LevelDao;
 import ua.com.nc.domain.Level;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,18 +36,9 @@ public class LevelDaoImpl extends AbstractDaoImpl<Level> implements LevelDao {
     @Value("${level.select-by-trainer}")
     private String levelSelectByTrainer;
 
-    public LevelDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                        @Value("${spring.datasource.username}") String DATABASE_USER,
-                        @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-    }
-
-
-    @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return rs.getInt("ID");
-        } else throw new PersistException("No value returned!");
+    @Autowired
+    public LevelDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override

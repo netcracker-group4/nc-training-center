@@ -1,12 +1,15 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.GenericDao;
 import ua.com.nc.domain.Entity;
 
-import java.sql.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -21,16 +24,12 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     AbstractDaoImpl() {
     }
 
-    @Autowired
-    AbstractDaoImpl(String DATABASE_URL,
-                    String DATABASE_USER,
-                    String DATABASE_PASSWORD) throws PersistException {
+    AbstractDaoImpl(DataSource dataSource) throws PersistException {
         try {
-            this.connection = DriverManager.getConnection(DATABASE_URL,
-                    DATABASE_USER, DATABASE_PASSWORD);
+            this.connection = dataSource.getConnection();
         } catch (SQLException e) {
-            log.trace("Error while setting autocommit false", e);
-            throw new PersistException("Error while setting autocommit false", e);
+            log.trace("Error while getting connection ", e);
+            throw new PersistException("Error while getting connection ", e);
         }
     }
 
@@ -121,7 +120,11 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         }
     }
 
-    protected abstract Integer parseId(ResultSet rs) throws SQLException;
+    private Integer parseId(ResultSet rs) throws SQLException {
+        if (rs.next()) {
+            return rs.getInt("ID");
+        } else throw new PersistException("No value returned!");
+    }
 
     @Override
     public void close() throws PersistException {
@@ -133,28 +136,42 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         }
     }
 
-    protected abstract String getSelectByIdQuery();
+    protected String getSelectByIdQuery(){
+        throw new PersistException("SelectByIdQuery is not defined");
+    }
 
-    protected abstract String getSelectQuery();
+    protected String getSelectQuery(){
+        throw new PersistException("SelectAllQuery is not defined");
+    }
 
-    protected abstract String getInsertQuery();
+    protected String getInsertQuery(){
+        throw new PersistException("InsertQuery is not defined");
+    }
 
-    protected abstract String getDeleteQuery();
+    protected String getDeleteQuery(){
+        throw new PersistException("DeleteQuery is not defined");
+    }
 
-    protected abstract String getUpdateQuery();
+    protected String getUpdateQuery(){
+        throw new PersistException("UpdateQuery is not defined");
+    }
 
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException{
+    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
         statement.setInt(1, id);
     }
 
-    protected abstract void prepareStatementForInsert(PreparedStatement statement, E entity) throws SQLException;
+    protected void prepareStatementForInsert(PreparedStatement statement, E entity) throws SQLException{
+        throw new PersistException("prepareStatementForInsert method is not defined");
+    }
 
-    protected abstract void prepareStatementForUpdate(PreparedStatement statement, E entity) throws SQLException;
+    protected void prepareStatementForUpdate(PreparedStatement statement, E entity) throws SQLException{
+        throw new PersistException("prepareStatementForUpdate method is not defined");
+    }
 
     protected abstract List<E> parseResultSet(ResultSet rs) throws SQLException;
 
 
-    List<E> getFromSqlById(String sql , Integer id) {
+    List<E> getFromSqlById(String sql, Integer id) {
         List<E> list;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);

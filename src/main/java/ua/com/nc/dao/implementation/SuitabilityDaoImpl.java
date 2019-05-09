@@ -1,5 +1,6 @@
 package ua.com.nc.dao.implementation;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -7,7 +8,7 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.SuitabilityDao;
 import ua.com.nc.domain.Suitability;
 
-import java.sql.PreparedStatement;
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,62 +21,14 @@ public class SuitabilityDaoImpl extends AbstractDaoImpl<Suitability> implements 
     @Value("${suitability.select-all}")
     private String suitabilitySelectAll;
 
-    public SuitabilityDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                              @Value("${spring.datasource.username}") String DATABASE_USER,
-                              @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-    }
-
-
-    @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return rs.getInt("ID");
-        } else throw new PersistException("No value returned!");
-    }
-
-    @Override
-    protected String getSelectByIdQuery() {
-        //TODO Suitability select by id query
-        return null;
+    @Autowired
+    public SuitabilityDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override
     protected String getSelectQuery() {
         return suitabilitySelectAll;
-    }
-
-    @Override
-    protected String getInsertQuery() {
-        //TODO Suitability insert query
-        return null;
-    }
-
-    @Override
-    protected String getDeleteQuery() {
-        //TODO Suitability delete query
-        return null;
-    }
-
-    @Override
-    protected String getUpdateQuery() {
-        //TODO Suitability update query
-        return null;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(1, id);
-    }
-
-    @Override
-    protected void prepareStatementForInsert(PreparedStatement statement, Suitability entity) {
-        //TODO suitability dao prepareStatementForInsert
-    }
-
-    @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, Suitability entity) {
-        //TODO suitability dao prepareStatementForUpdate
     }
 
     @Override

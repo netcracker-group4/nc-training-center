@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -8,12 +9,14 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.CourseDao;
 import ua.com.nc.domain.Course;
 
+import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
@@ -41,17 +44,9 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     private String selectCourseByGroupId;
 
 
-    public CourseDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                         @Value("${spring.datasource.username}") String DATABASE_USER,
-                         @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-    }
-
-    @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return rs.getInt("ID");
-        } else throw new PersistException("No value returned!");
+    @Autowired
+    public CourseDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override
@@ -121,28 +116,6 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
             list.add(newCourse);
         }
         return list;
-    }
-
-    @Override
-    public Course getCourseById(int id) {
-
-        String sql = getSelectByIdQuery();
-        List<Course> list = new ArrayList<>();
-        log.info(sql + " get course by id " + id);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-        }
-        if (list.size() > 1) {
-            throw new PersistException("Received more than one record with id " + id);
-        }
-        if (list.size() == 0) {
-            return null;
-        }
-        return list.get(0);
     }
 
     @Override

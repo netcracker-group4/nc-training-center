@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.UserGroup;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,26 +37,9 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     @Value("${usr_group.delete-all-for-user}")
     private String userGroupDeleteForUser;
 
-    public UserGroupDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                            @Value("${spring.datasource.username}") String DATABASE_USER,
-                            @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-    }
-
-
-    @Override
-    protected Integer parseId(ResultSet rs) {
-        return null;
-    }
-
-    @Override
-    protected String getSelectByIdQuery() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectQuery() {
-        return null;
+    @Autowired
+    public UserGroupDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override
@@ -63,18 +48,8 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     }
 
     @Override
-    protected String getDeleteQuery() {
-        return null;
-    }
-
-    @Override
     protected String getUpdateQuery() {
         return userGroupUpdate;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(1, id);
     }
 
     @Override

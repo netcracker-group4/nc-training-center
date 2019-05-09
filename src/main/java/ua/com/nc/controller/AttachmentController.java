@@ -52,7 +52,7 @@ public class AttachmentController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/link")
-    public void linkFile(@RequestParam("lessonId") String lessonId, @RequestParam("attachmentId") String attachmentId){
+    public void linkFile(@RequestParam("lessonId") String lessonId, @RequestParam("attachmentId") String attachmentId) {
         service.link(Integer.parseInt(lessonId), Integer.parseInt(attachmentId));
     }
 

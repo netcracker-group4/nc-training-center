@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -8,11 +9,13 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.LessonAttachmentDao;
 import ua.com.nc.domain.LessonAttachment;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
@@ -28,26 +31,9 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
     @Value("${lesson_attachment.delete}")
     private String lessonAttachmentDelete;
 
-    public LessonAttachmentDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                                   @Value("${spring.datasource.username}") String DATABASE_USER,
-                                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-    }
-
-
-    @Override
-    protected Integer parseId(ResultSet rs) {
-        return 0;
-    }
-
-    @Override
-    protected String getSelectByIdQuery() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectQuery() {
-        return null;
+    @Autowired
+    public LessonAttachmentDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override
@@ -61,18 +47,9 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
     }
 
     @Override
-    protected String getUpdateQuery() {
-        return null;
-    }
-
-    @Override
     protected void prepareStatementForInsert(PreparedStatement statement, LessonAttachment entity) throws SQLException {
         statement.setInt(1, entity.getAttachmentId());
         statement.setInt(2, entity.getLessonId());
-    }
-
-    @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, LessonAttachment entity) {
     }
 
     @Override

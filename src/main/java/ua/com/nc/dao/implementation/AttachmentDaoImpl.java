@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -8,11 +9,13 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.AttachmentDao;
 import ua.com.nc.domain.Attachment;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
@@ -32,15 +35,9 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
     private String attachmentSelectByLessonId;
 
 
-    public AttachmentDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                             @Value("${spring.datasource.username}") String DATABASE_USER,
-                             @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-    }
-
-    @Override
-    protected Integer parseId(ResultSet rs) {
-        return null;
+    @Autowired
+    public AttachmentDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override
@@ -64,11 +61,6 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
     }
 
     @Override
-    protected String getUpdateQuery() {
-        return null;
-    }
-
-    @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Attachment entity) throws SQLException {
         setAllFields(statement, entity);
     }
@@ -76,11 +68,6 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
     private void setAllFields(PreparedStatement statement, Attachment entity) throws SQLException {
         statement.setString(1, entity.getUrl());
         statement.setString(2, entity.getDescription());
-
-    }
-
-    @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, Attachment entity) {
 
     }
 
@@ -94,18 +81,15 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
             Attachment attachment = new Attachment(id, url, description);
             attachments.add(attachment);
         }
-
         return attachments;
     }
 
     @Override
     public Attachment getByUrl(String url) throws PersistException {
-        List<Attachment> list;
         String sql = attachmentSelectByUrl;
         log.info(sql + " SelectByUrlQuery " + url);
         return getUniqueFromSqlByString(sql, url);
     }
-
 
 
     @Override

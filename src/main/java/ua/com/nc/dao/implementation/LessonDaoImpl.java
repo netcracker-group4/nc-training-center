@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -8,9 +9,11 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.LessonDao;
 import ua.com.nc.domain.Lesson;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
@@ -39,19 +42,11 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     @Value("${lesson.select-by-user-id}")
     private String selectByUserId;
 
-    public LessonDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                         @Value("${spring.datasource.username}") String DATABASE_USER,
-                         @Value("${spring.datasource.password}") String DATABASE_PASSWORD)
-            throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
+    @Autowired
+    public LessonDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
-    @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return rs.getInt("id");
-        } else throw new PersistException("No value returned!");
-    }
 
     @Override
     protected String getSelectByIdQuery() {
@@ -165,7 +160,7 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
         return getFromSqlById(sql, userId);
     }
 
-    protected List<Lesson> parseResultSetForAttendance(ResultSet rs) throws SQLException {
+    private List<Lesson> parseResultSetForAttendance(ResultSet rs) throws SQLException {
         List<Lesson> lessons = new ArrayList<>();
         while (rs.next()) {
             Integer id = rs.getInt("id");

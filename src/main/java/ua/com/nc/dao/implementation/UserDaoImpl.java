@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.User;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,17 +75,9 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Value("${usr.select-by-token}")
     private String usrSelectByToken;
 
-    public UserDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                       @Value("${spring.datasource.username}") String DATABASE_USER,
-                       @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-    }
-
-    @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return rs.getInt(USER_ID);
-        } else throw new PersistException("No value returned!");
+    @Autowired
+    public UserDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override
@@ -109,11 +103,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     protected String getUpdateQuery() {
         return usrUpdate;
-    }
-
-    @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(1, id);
     }
 
     @Override
@@ -173,7 +162,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public List<User> getTrainersOnCourse(int id) {
         String sql = getSelectTrainerByCourseId;
         log.info(sql + "find by course");
-        List <User> trainers = getFromSqlById(sql, id);
+        List<User> trainers = getFromSqlById(sql, id);
         if (trainers == null || trainers.size() == 0) {
             return null;
         }
@@ -232,7 +221,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         log.info(sql + "select all trainers");
         return getListFromSql(sql);
     }
-
 
 
     @Override
@@ -366,7 +354,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         log.info(sql + "trainer by group id = " + groupId);
         return getUniqueFromSqlById(sql, groupId);
     }
-
 
 
     public TreeMap<User, User> getStudentsAbsentWitNoReason(int lessonId) {

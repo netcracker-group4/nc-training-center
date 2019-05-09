@@ -1,6 +1,7 @@
 package ua.com.nc.dao.implementation;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -9,9 +10,11 @@ import ua.com.nc.dao.interfaces.AttendanceDao;
 import ua.com.nc.domain.Attendance;
 import ua.com.nc.dto.UserAttendanceDto;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
@@ -26,40 +29,9 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
     @Value("${attendance.update}")
     private String attendanceUpdate;
 
-    public AttendanceDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
-                             @Value("${spring.datasource.username}") String DATABASE_USER,
-                             @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
-        super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-    }
-
-    @Override
-    protected Integer parseId(ResultSet rs) {
-        return null;
-    }
-
-    @Override
-    protected String getSelectByIdQuery() {
-        return null;
-    }
-
-    @Override
-    protected String getSelectQuery() {
-        return null;
-    }
-
-    @Override
-    protected String getInsertQuery() {
-        return null;
-    }
-
-    @Override
-    protected String getDeleteQuery() {
-        return null;
-    }
-
-    @Override
-    protected String getUpdateQuery() {
-        return null;
+    @Autowired
+    public AttendanceDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override
