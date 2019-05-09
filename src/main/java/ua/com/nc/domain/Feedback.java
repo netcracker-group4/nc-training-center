@@ -8,7 +8,7 @@ import lombok.ToString;
 import java.sql.Date;
 
 @Data
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @ToString
 public class Feedback extends Entity<Integer> {

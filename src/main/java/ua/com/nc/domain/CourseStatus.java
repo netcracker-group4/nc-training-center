@@ -9,7 +9,7 @@ public enum CourseStatus {
     ENDED("The lessons have ended");
     private String description;
 
-    private CourseStatus(String description) {
+    CourseStatus(String description) {
         this.description = description;
     }
 

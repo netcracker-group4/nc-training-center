@@ -3,7 +3,6 @@ package ua.com.nc.service;
 
 import ua.com.nc.dto.DtoGroup;
 import ua.com.nc.dto.schedule.GroupSchedule;
-import ua.com.nc.service.impl.GroupsServiceImpl;
 
 import java.util.List;
 

@@ -3,10 +3,10 @@ package ua.com.nc.service.impl;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.nc.dao.interfaces.IAttendanceDao;
-import ua.com.nc.dao.interfaces.IGroupDao;
-import ua.com.nc.dao.interfaces.ILessonDao;
-import ua.com.nc.dao.interfaces.IUserDao;
+import ua.com.nc.dao.interfaces.AttendanceDao;
+import ua.com.nc.dao.interfaces.GroupDao;
+import ua.com.nc.dao.interfaces.LessonDao;
+import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.Attendance;
 import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Lesson;
@@ -18,23 +18,23 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-//import ua.com.nc.dao.interfaces.IAttendanceDao;
+//import ua.com.nc.dao.interfaces.AttendanceDao;
 
 @Log4j
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
-    private IAttendanceDao attendanceDao;
+    private AttendanceDao attendanceDao;
 
     @Autowired
-    private IUserDao userDao;
+    private UserDao userDao;
 
     @Autowired
-    private IGroupDao groupDao;
+    private GroupDao groupDao;
 
     @Autowired
-    private ILessonDao lessonDao;
+    private LessonDao lessonDao;
 
     public class TrainerDto {
         public Integer id;

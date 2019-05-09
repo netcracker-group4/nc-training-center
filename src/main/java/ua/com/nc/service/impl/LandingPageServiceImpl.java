@@ -2,8 +2,8 @@ package ua.com.nc.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.nc.dao.interfaces.ICourseDao;
-import ua.com.nc.dao.interfaces.IUserDao;
+import ua.com.nc.dao.interfaces.CourseDao;
+import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.User;
 import ua.com.nc.service.LandingPageService;
@@ -14,30 +14,30 @@ import java.util.List;
 public class LandingPageServiceImpl implements LandingPageService {
 
     @Autowired
-    private ICourseDao iCourseDao;
+    private CourseDao courseDao;
 
     @Autowired
-    private IUserDao iUserDao;
+    private UserDao userDao;
 
     @Override
     public List<Course> getLandingPageCourses() {
-        return iCourseDao.getLandingPageCourses();
+        return courseDao.getLandingPageCourses();
     }
 
     @Override
     public List<User> getLandingPageTrainers() {
-        return iUserDao.getLandingPageTrainers();
+        return userDao.getLandingPageTrainers();
     }
 
     @Override
     public void updateCourseLandingPage(int id, boolean isOnLandingPage) {
-        iCourseDao.updateCourseLandingPage(id, isOnLandingPage);
-        iCourseDao.commit();
+        courseDao.updateCourseLandingPage(id, isOnLandingPage);
+        courseDao.commit();
     }
 
     @Override
     public void updateTrainerLandingPage(int id, boolean isOnLandingPage) {
-        iUserDao.updateTrainerLandingPage(id, isOnLandingPage);
-        iUserDao.commit();
+        userDao.updateTrainerLandingPage(id, isOnLandingPage);
+        userDao.commit();
     }
 }

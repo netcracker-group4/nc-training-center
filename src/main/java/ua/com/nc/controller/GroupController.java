@@ -8,9 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.dao.interfaces.ICourseDao;
-import ua.com.nc.dao.interfaces.IGroupDao;
-import ua.com.nc.dao.interfaces.IUserDao;
+import ua.com.nc.dao.interfaces.CourseDao;
+import ua.com.nc.dao.interfaces.GroupDao;
+import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.schedule.GroupSchedule;
@@ -24,11 +24,11 @@ import java.util.List;
 @RequestMapping("/groups")
 public class GroupController {
     @Autowired
-    private IGroupDao groupDao;
+    private GroupDao groupDao;
     @Autowired
-    private IUserDao userDao;
+    private UserDao userDao;
     @Autowired
-    private ICourseDao courseDao;
+    private CourseDao courseDao;
     @Autowired
     private GroupsService groupsService;
     private final Gson gson = new Gson();

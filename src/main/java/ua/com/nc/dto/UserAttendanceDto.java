@@ -1,13 +1,13 @@
 package ua.com.nc.dto;
 
 import lombok.Data;
-import lombok.ToString;
+import lombok.EqualsAndHashCode;
 import ua.com.nc.domain.Attendance;
 
 import java.sql.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@ToString
 public class UserAttendanceDto extends Attendance {
     String studentFirstName;
     String studentLastName;
@@ -26,18 +26,5 @@ public class UserAttendanceDto extends Attendance {
         this.courseName = courseName;
         this.timeDate = timeDate;
         this.topic = topic;
-    }
-
-    @Override
-    public String toString() {
-        return "UserAttendanceDto{" +
-                super.toString()
-                + ", " +
-                "studentFirstName='" + studentFirstName + '\'' +
-                ", studentLastName='" + studentLastName + '\'' +
-                ", courseId=" + courseId +
-                ", timeDate=" + timeDate +
-                ", topic='" + topic + '\'' +
-                '}';
     }
 }

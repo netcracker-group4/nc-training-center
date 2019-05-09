@@ -1,7 +1,6 @@
 package ua.com.nc.dto;
 
 import lombok.Getter;
-import ua.com.nc.domain.Group;
 
 @Getter
 public class DtoGroup {

@@ -7,7 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.service.impl.ReportServiceImpl;
+import ua.com.nc.service.ReportService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
@@ -21,7 +21,7 @@ import java.security.Principal;
 public class ReportController {     //    /download-report/dashboard-report
 
     @Autowired
-    private ReportServiceImpl reportService;
+    private ReportService reportService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     @ResponseBody

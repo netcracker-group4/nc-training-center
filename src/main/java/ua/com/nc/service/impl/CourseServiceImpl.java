@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ua.com.nc.dao.interfaces.CourseStatus;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.dto.schedule.GroupSchedule;
@@ -27,19 +28,19 @@ import java.util.List;
 public class CourseServiceImpl implements CourseService {
     private static final Logger log = Logger.getLogger(AttachmentServiceImpl.class);
     @Autowired
-    private ICourseDao courseDao;
+    private CourseDao courseDao;
     @Autowired
-    private ILevelDao levelDao;
+    private LevelDao levelDao;
     @Autowired
-    private IDesiredScheduleDao desiredScheduleDao;
+    private DesiredScheduleDao desiredScheduleDao;
     @Autowired
-    private ISuitabilityDao iSuitabilityDao;
+    private SuitabilityDao suitabilityDao;
     @Autowired
-    private IUserDao iUserDao;
+    private UserDao userDao;
     @Autowired
-    private IGroupDao iGroupDao;
+    private GroupDao groupDao;
     @Autowired
-    private IUserGroupDao iUserGroupDao;
+    private UserGroupDao userGroupDao;
 
 
     private int startOfDay = 8;
@@ -47,7 +48,7 @@ public class CourseServiceImpl implements CourseService {
 
 
     //TODO Create all implementations for this bean, then uncomment 1st line of add(...) mthd
-    private ICourseStatus statusDao;
+    private CourseStatus statusDao;
 
     @Override
     public void add(Course course) {
@@ -69,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         int userId = 1;
 //        CourseStatus status = CourseStatus.valueOf(courseStatus);
-        CourseStatus status = CourseStatus.ENDED;
+        ua.com.nc.domain.CourseStatus status = ua.com.nc.domain.CourseStatus.ENDED;
         boolean isLanding = Boolean.parseBoolean(isOnLandingPage);
         Date startingDay = new Date();
         Date endingDay = startingDay;
@@ -88,7 +89,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void add(String name, int userId, String lvl, CourseStatus courseStatus, String imageUrl, boolean isLanding,
+    public void add(String name, int userId, String lvl, ua.com.nc.domain.CourseStatus courseStatus, String imageUrl, boolean isLanding,
                     String desc, Date startingDay, Date endingDay) {
 
     }
@@ -97,9 +98,9 @@ public class CourseServiceImpl implements CourseService {
     public List<ScheduleForUser> getDesiredScheduleForUngroupedStudentsOfCourse(int courseId) throws Exception {
         List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getAllForCourse(courseId);
         List<ScheduleForUser> scheduleForUsers = new ArrayList<>();
-        for (User user : iUserDao.getUngroupedByCourse(courseId)) {
+        for (User user : userDao.getUngroupedByCourse(courseId)) {
             scheduleForUsers.add(new ScheduleForUser(user,
-                    parseSchedules(desiredScheduleList, iSuitabilityDao.getAll()),
+                    parseSchedules(desiredScheduleList, suitabilityDao.getAll()),
                     startOfDay, endOfDay));
         }
         return scheduleForUsers;
@@ -110,11 +111,11 @@ public class CourseServiceImpl implements CourseService {
         List<GroupSchedule> scheduleForGroupsForCourse = new ArrayList<>();
         List<ParsedSchedule> desiredScheduleList = parseSchedules(
                 desiredScheduleDao.getAllForCourse(courseId),
-                iSuitabilityDao.getAll());
-        List<Group> allGroupsForCourse = iGroupDao.getAllGroupsOfCourse(courseId);
+                suitabilityDao.getAll());
+        List<Group> allGroupsForCourse = groupDao.getAllGroupsOfCourse(courseId);
         for (Group group : allGroupsForCourse) {
             List<ScheduleForUser> scheduleForUsersInGroup = new ArrayList<>();
-            for (User user : iUserDao.getByGroupId(group.getId())) {
+            for (User user : userDao.getByGroupId(group.getId())) {
                 scheduleForUsersInGroup.add(new ScheduleForUser(user,
                         desiredScheduleList, startOfDay, endOfDay));
             }
@@ -187,10 +188,10 @@ public class CourseServiceImpl implements CourseService {
     public List<ScheduleForUser> getDesiredScheduleForGroup(int groupId) throws Exception {
         List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getAllForGroup(groupId);
         List<ScheduleForUser> scheduleForUsers = new ArrayList<>();
-        for (User user : iUserDao.getByGroupId(groupId)) {
+        for (User user : userDao.getByGroupId(groupId)) {
             scheduleForUsers.add(new ScheduleForUser(user,
                     parseSchedules(desiredScheduleList,
-                            iSuitabilityDao.getAll()),
+                            suitabilityDao.getAll()),
                     startOfDay, endOfDay));
         }
         return scheduleForUsers;

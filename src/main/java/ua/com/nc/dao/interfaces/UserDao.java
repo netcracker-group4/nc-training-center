@@ -5,7 +5,7 @@ import ua.com.nc.domain.User;
 import java.util.List;
 import java.util.TreeMap;
 
-public interface IUserDao extends GenericDao<User, Integer> {
+public interface UserDao extends GenericDao<User, Integer> {
     User getByEmail(String email);
 
     User getByToken(String token);
@@ -40,7 +40,7 @@ public interface IUserDao extends GenericDao<User, Integer> {
 
     void addUserByAdmin(User user);
 
-    public TreeMap<User, User> getStudentsAbsentWitNoReason(int lessonId);
+    TreeMap<User, User> getStudentsAbsentWitNoReason(int lessonId);
 
     User getAdmin();
 

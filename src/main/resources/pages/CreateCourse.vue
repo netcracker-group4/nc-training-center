@@ -1,4 +1,4 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
     <v-container>
         <v-layout row wrap>
             <v-flex xs12 sm4>

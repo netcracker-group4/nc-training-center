@@ -200,6 +200,7 @@
 
 <script>
     import groupSchedule from './groupSchedule.vue';
+
     export default {
         name: "LessonEditingComponent",
         props: ['currentLesson', 'trainers', 'attachments'],

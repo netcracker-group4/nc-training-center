@@ -34,6 +34,7 @@
 <script>
     import axios from 'axios';
     import AttachmentUpload from "../components/AttachmentUpload.vue";
+
     export default {
         name: "AttachmentsPage",
         data:function(){

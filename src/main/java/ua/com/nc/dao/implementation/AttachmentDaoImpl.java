@@ -38,7 +38,7 @@ public class AttachmentDaoImpl extends GenericAbstractDao<Attachment, Integer> i
     }
 
     @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
+    protected Integer parseId(ResultSet rs) {
         return null;
     }
 
@@ -84,7 +84,7 @@ public class AttachmentDaoImpl extends GenericAbstractDao<Attachment, Integer> i
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, Attachment entity) throws SQLException {
+    protected void prepareStatementForUpdate(PreparedStatement statement, Attachment entity) {
 
     }
 

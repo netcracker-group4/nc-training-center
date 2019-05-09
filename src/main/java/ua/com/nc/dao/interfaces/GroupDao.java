@@ -4,7 +4,7 @@ import ua.com.nc.domain.Group;
 
 import java.util.List;
 
-public interface IGroupDao extends GenericDao<Group, Integer> {
+public interface GroupDao extends GenericDao<Group, Integer> {
 
     List<Group> getAllGroupsOfCourse(int courseId);
 

@@ -32,7 +32,7 @@ public class AttendanceDaoImpl extends GenericAbstractDao<Attendance, Integer> i
     }
 
     @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
+    protected Integer parseId(ResultSet rs) {
         return null;
     }
 
@@ -62,17 +62,17 @@ public class AttendanceDaoImpl extends GenericAbstractDao<Attendance, Integer> i
     }
 
     @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
+    protected void setId(PreparedStatement statement, Integer id) {
 
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement statement, Attendance entity) throws SQLException {
+    protected void prepareStatementForInsert(PreparedStatement statement, Attendance entity) {
 
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, Attendance entity) throws SQLException {
+    protected void prepareStatementForUpdate(PreparedStatement statement, Attendance entity) {
 
     }
 

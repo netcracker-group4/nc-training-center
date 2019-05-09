@@ -2,9 +2,9 @@ package ua.com.nc.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.nc.dao.interfaces.ICourseDao;
-import ua.com.nc.dao.interfaces.IGroupDao;
-import ua.com.nc.dao.interfaces.IUserGroupDao;
+import ua.com.nc.dao.interfaces.CourseDao;
+import ua.com.nc.dao.interfaces.GroupDao;
+import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Group;
 import ua.com.nc.domain.UserGroup;
 import ua.com.nc.dto.DtoGroup;
@@ -18,33 +18,33 @@ import java.util.List;
 @Service
 public class GroupsServiceImpl implements GroupsService {
     @Autowired
-    IGroupDao iGroupDao;
+    GroupDao groupDao;
     @Autowired
-    IUserGroupDao iUserGroupDao;
+    UserGroupDao userGroupDao;
     @Autowired
-    ICourseDao iCourseDao;
+    CourseDao courseDao;
 
     @Override
     public int update(GroupSchedule groupSchedule) {
         // TODO what to do with transactions for few daos??
-        Group groupToUpdate = iGroupDao.getEntityById(groupSchedule.getId());
+        Group groupToUpdate = groupDao.getEntityById(groupSchedule.getId());
         groupToUpdate.setTitle(groupSchedule.getName());
-        iGroupDao.update(groupToUpdate);
-        iGroupDao.commit();
-        iUserGroupDao.deleteAllForGroup(groupToUpdate.getId());
+        groupDao.update(groupToUpdate);
+        groupDao.commit();
+        userGroupDao.deleteAllForGroup(groupToUpdate.getId());
         updateStudentsForGroup(groupSchedule, groupToUpdate);
-        iUserGroupDao.commit();
+        userGroupDao.commit();
         return groupToUpdate.getId();
     }
 
     @Override
     public boolean delete(int groupId) {
         // TODO what to do with transactions for few daos??
-        iUserGroupDao.deleteAllForGroup(groupId);
-        iUserGroupDao.commit();
+        userGroupDao.deleteAllForGroup(groupId);
+        userGroupDao.commit();
 
-        iGroupDao.delete(groupId);
-        iGroupDao.commit();
+        groupDao.delete(groupId);
+        groupDao.commit();
         return true;
     }
 
@@ -52,16 +52,16 @@ public class GroupsServiceImpl implements GroupsService {
     public int add(GroupSchedule groupSchedule) {
         // TODO what to do with transactions for few daos??
         Group groupToInsert = new Group(groupSchedule.getCourseId(), groupSchedule.getName());
-        iGroupDao.insert(groupToInsert);
-        iGroupDao.commit();
+        groupDao.insert(groupToInsert);
+        groupDao.commit();
         updateStudentsForGroup(groupSchedule, groupToInsert);
-        iUserGroupDao.commit();
+        userGroupDao.commit();
         return groupToInsert.getId();
     }
 
     @Override
     public List<DtoGroup> getAll() {
-        List<Group> groups = iGroupDao.getAll();
+        List<Group> groups = groupDao.getAll();
         List<DtoGroup> dtoGroups = new ArrayList<>();
         for (Group group : groups) {
             dtoGroups.add(new DtoGroup(group.getId(), group.getTitle()));
@@ -72,14 +72,14 @@ public class GroupsServiceImpl implements GroupsService {
     private void updateStudentsForGroup(GroupSchedule groupSchedule, Group group) {
         List<ScheduleForUser> newUsers = groupSchedule.getGroupScheduleList();
         for (ScheduleForUser newUser : newUsers) {
-            UserGroup oldUserGroupForThisCourse = iUserGroupDao.getByUserAndCourse(newUser.getUserId(), group.getCourseId());
+            UserGroup oldUserGroupForThisCourse = userGroupDao.getByUserAndCourse(newUser.getUserId(), group.getCourseId());
             if (oldUserGroupForThisCourse == null) {
                 //if this user has not been grouped yet for this course
-                iUserGroupDao.insert(new UserGroup(newUser.getUserId(), group.getId(), true));
+                userGroupDao.insert(new UserGroup(newUser.getUserId(), group.getId(), true));
             } else {
                 //if this user already has been saved as a part of another group for this course
                 oldUserGroupForThisCourse.setGroupId(group.getId());
-                iUserGroupDao.update(oldUserGroupForThisCourse);
+                userGroupDao.update(oldUserGroupForThisCourse);
             }
         }
     }
@@ -87,10 +87,10 @@ public class GroupsServiceImpl implements GroupsService {
 
     @Override
     public List<DtoGroup> getGroupsAndQuantity() {
-        List<Group> groups = iGroupDao.getAll();
+        List<Group> groups = groupDao.getAll();
         List<DtoGroup> dtos = new ArrayList<>();
         groups.forEach(g -> {
-            int n = iGroupDao.getNumberOfEmployeesInGroup(g.getId());
+            int n = groupDao.getNumberOfEmployeesInGroup(g.getId());
             dtos.add(new DtoGroup(g.getId(), g.getTitle(), n));
         });
 

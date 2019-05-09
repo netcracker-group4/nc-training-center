@@ -41,6 +41,7 @@
     // noinspection NpmUsedModulesInstalled
     import draggable from "vuedraggable";
     import axios from 'axios';
+
     export default {
         name: "groupSchedule",
         order: 8,

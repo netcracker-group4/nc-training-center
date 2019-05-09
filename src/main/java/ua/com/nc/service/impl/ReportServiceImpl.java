@@ -21,19 +21,19 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private
-    ILessonDao iLessonDao;
+    LessonDao lessonDao;
     @Autowired
     private
-    IUserDao iUserDao;
+    UserDao userDao;
     @Autowired
     private
-    IGroupDao iGroupDao;
+    GroupDao groupDao;
     @Autowired
     private
-    ILevelDao iLevelDao;
+    LevelDao levelDao;
     @Autowired
     private
-    ICourseDao iCourseDao;
+    CourseDao courseDao;
 
     private String[] dashboardSheetNames = {"Level And Quantity", "Level And Trainers", "Training And Quantity"};
     private String[] levelAndQuantityColumns = {"Level", "Course Name", "Group Name"};
@@ -79,7 +79,7 @@ public class ReportServiceImpl implements ReportService {
     private void drawGroupSheet(XSSFWorkbook workbook, CellStyle headerStyle,
                                 CellStyle presenceStyle, User trainer, List<Group> groups) {
         for (Group group : groups) {
-            List<User> students = iUserDao.getByGroupId(group.getId());
+            List<User> students = userDao.getByGroupId(group.getId());
             //foreach trainer's group create sheet with title
             Sheet groupSheet = workbook.createSheet(trainer.getLastName()
                     + "'s " + group.getTitle());
@@ -87,7 +87,7 @@ public class ReportServiceImpl implements ReportService {
             int rowCount = 0;
             Row headerRow = groupSheet.createRow(rowCount);
             for (User student : students) {
-                List<Lesson> lessons = iLessonDao.getByGroupIdAndUserId(group.getId(), student.getId());
+                List<Lesson> lessons = lessonDao.getByGroupIdAndUserId(group.getId(), student.getId());
 
                 Row studentRow = groupSheet.createRow(++rowCount);
                 int cellCount = 0;
@@ -125,20 +125,20 @@ public class ReportServiceImpl implements ReportService {
     private void drawLevelAndQuantity(Sheet sheetName) {
         int levelRowCount = 1;
 
-        for (Level level : iLevelDao.getAll()) {
+        for (Level level : levelDao.getAll()) {
             String levelTitle = level.getTitle();
             Row levelRowColumn = sheetName.createRow(levelRowCount);
             Cell levelCell = levelRowColumn.createCell(0);
             checkColumnWidth(sheetName, 0, levelTitle);
             levelCell.setCellStyle(headerStyle((XSSFWorkbook) sheetName.getWorkbook()));
             levelCell.setCellValue(levelTitle);
-            for (Course course : iCourseDao.getAllByLevel(level.getId())) {
+            for (Course course : courseDao.getAllByLevel(level.getId())) {
                 String courseName = course.getName();
                 Row courseRowColumn = sheetName.createRow(levelRowCount++);
                 Cell courseCell = courseRowColumn.createCell(1);
                 checkColumnWidth(sheetName, 1, courseName);
                 courseCell.setCellValue(courseName);
-                for (Group group : iGroupDao.getAllGroupsOfCourse(course.getId())) {
+                for (Group group : groupDao.getAllGroupsOfCourse(course.getId())) {
                     String groupName = group.getTitle();
                     Row groupRowColumn = sheetName.createRow(levelRowCount++);
                     groupRowColumn.createCell(2).setCellValue(groupName);
@@ -151,7 +151,7 @@ public class ReportServiceImpl implements ReportService {
 
     private void drawLevelAndTrainers(Sheet levelAndTrainers) {
         int trainerRowCount = 1;
-        for (User trainer : iUserDao.getAllTrainers()) {
+        for (User trainer : userDao.getAllTrainers()) {
             String trainerFullName = trainer.getFirstName() + " " + trainer.getLastName();
             Row trainerRowColumn = levelAndTrainers.createRow(trainerRowCount++);
             int trainerCellCount = 0;
@@ -159,8 +159,8 @@ public class ReportServiceImpl implements ReportService {
             Cell trainerCell = trainerRowColumn.createCell(trainerCellCount++);
             trainerCell.setCellValue(trainerFullName);
 
-            for (Course course : iCourseDao.getAllByTrainer(trainer.getId())) {
-                Level level = findLevelById(iLevelDao.getAllByTrainer(trainer.getId()), course.getLevel());
+            for (Course course : courseDao.getAllByTrainer(trainer.getId())) {
+                Level level = findLevelById(levelDao.getAllByTrainer(trainer.getId()), course.getLevel());
                 String courseAndLevelTitle = course.getName() + " " + level.getTitle();
                 Row courseRowColumn = levelAndTrainers.createRow(trainerRowCount++);
                 if (level.getTitle() != null) {
@@ -177,15 +177,15 @@ public class ReportServiceImpl implements ReportService {
         checkColumnWidth(trainingAndQuantity, 2, trainingAndQuantityColumns[2]);
         int[] courseCell = {0, 2};
         int[] groupCell = {1, 2};
-        for (Course course : iCourseDao.getAll()) {
+        for (Course course : courseDao.getAll()) {
             Row courseRow = trainingAndQuantity.createRow(rowCounter++);
             String courseName = course.getName();
             checkColumnWidth(trainingAndQuantity, 0, courseName);
             courseRow.createCell(courseCell[0]).setCellValue(courseName);
             int numberOfEmployeesInCourse = 0;
             Cell employeesAmountCourse = courseRow.createCell(courseCell[1]);
-            for (Group group : iGroupDao.getAllGroupsOfCourse(course.getId())) {
-                int numberOfEmployeesInGroup = iGroupDao.getNumberOfEmployeesInGroup(group.getId());
+            for (Group group : groupDao.getAllGroupsOfCourse(course.getId())) {
+                int numberOfEmployeesInGroup = groupDao.getNumberOfEmployeesInGroup(group.getId());
                 numberOfEmployeesInCourse += numberOfEmployeesInGroup;
                 Row groupRow = trainingAndQuantity.createRow(rowCounter++);
                 String groupTitle = group.getTitle();
@@ -233,9 +233,9 @@ public class ReportServiceImpl implements ReportService {
             CellStyle headerStyle = headerStyle(workbook);
             CellStyle presenceStyle = presenceStyle(workbook);
 
-            List<User> trainers = iUserDao.getAllTrainers();
+            List<User> trainers = userDao.getAllTrainers();
             for (User trainer : trainers) {
-                List<Group> groups = iGroupDao.getGroupByTrainerId(trainer.getId());
+                List<Group> groups = groupDao.getGroupByTrainerId(trainer.getId());
                 drawGroupSheet(workbook, headerStyle, presenceStyle, trainer, groups);
             }
             workbook.write(out);
@@ -252,7 +252,7 @@ public class ReportServiceImpl implements ReportService {
             CellStyle headerStyle = headerStyle(workbook);
             CellStyle presenceStyle = presenceStyle(workbook);
 
-            List<Group> groups = iGroupDao.getGroupByTrainerId(trainer.getId());
+            List<Group> groups = groupDao.getGroupByTrainerId(trainer.getId());
             drawGroupSheet(workbook, headerStyle, presenceStyle, trainer, groups);
 
             workbook.write(out);
@@ -270,8 +270,8 @@ public class ReportServiceImpl implements ReportService {
             CellStyle presenceStyle = presenceStyle(workbook);
 
             List<Group> groups = new ArrayList<>();
-            groups.add(iGroupDao.getEntityById(groupId));
-            User trainer = iUserDao.getTrainerByGroupId(groupId);
+            groups.add(groupDao.getEntityById(groupId));
+            User trainer = userDao.getTrainerByGroupId(groupId);
 
             drawGroupSheet(workbook, headerStyle, presenceStyle, trainer, groups);
 

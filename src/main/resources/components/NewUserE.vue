@@ -36,6 +36,7 @@
 
 <script>
     import axios from 'axios'
+
     export default {
         $_veeValidate: {
             validator: 'new'

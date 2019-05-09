@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.dao.implementation.LevelDaoImpl;
 import ua.com.nc.dao.interfaces.CourseStatus;
 import ua.com.nc.dao.interfaces.LevelDao;
 import ua.com.nc.domain.Level;

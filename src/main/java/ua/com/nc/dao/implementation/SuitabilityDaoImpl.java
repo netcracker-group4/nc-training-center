@@ -69,12 +69,12 @@ public class SuitabilityDaoImpl extends GenericAbstractDao<Suitability, Integer>
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement statement, Suitability entity) throws SQLException {
+    protected void prepareStatementForInsert(PreparedStatement statement, Suitability entity) {
         //TODO suitability dao prepareStatementForInsert
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, Suitability entity) throws SQLException {
+    protected void prepareStatementForUpdate(PreparedStatement statement, Suitability entity) {
         //TODO suitability dao prepareStatementForUpdate
     }
 

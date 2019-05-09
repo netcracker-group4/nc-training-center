@@ -20,7 +20,6 @@
 </template>
 
 <script>
-    import axios from 'axios'
     // import NavigationDrawer from "../components/NavigationDrawer.vue"
     import NewUserE from "../components/NewUserE.vue"
     import NewUserMT from "../components/NewUserMT.vue"

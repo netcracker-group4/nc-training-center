@@ -131,7 +131,7 @@ public class CourseDaoImpl extends GenericAbstractDao<Course, Integer> implement
     public Course getCourseById(int id) {
 
         String sql = getSelectByIdQuery();
-        List<Course> list = new ArrayList();
+        List<Course> list = new ArrayList<>();
         log.info(sql + " get course by id " + id);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);

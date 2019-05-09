@@ -5,7 +5,7 @@ import ua.com.nc.domain.LessonAttachment;
 
 import java.util.List;
 
-public interface ILessonAttachmentDao extends GenericDao<LessonAttachment, Integer> {
+public interface LessonAttachmentDao extends GenericDao<LessonAttachment, Integer> {
     void deleteByAttachmentId(Integer attachmentId) throws PersistException;
 
     List<LessonAttachment> getAllByLessonId(Integer lessonId) throws PersistException;

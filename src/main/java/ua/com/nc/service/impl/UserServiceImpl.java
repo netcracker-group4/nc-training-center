@@ -11,24 +11,23 @@ import ua.com.nc.dto.*;
 import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
 
-import java.security.SecureRandom;
 import java.util.*;
 
 @Log4j
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    private IUserDao userDao;
+    private UserDao userDao;
     @Autowired
-    private IGroupDao groupDao;
+    private GroupDao groupDao;
     @Autowired
-    private IRoleDao roleDao;
+    private RoleDao roleDao;
     @Autowired
-    private IFeedbackDao feedbackDao;
+    private FeedbackDao feedbackDao;
     @Autowired
-    private ICourseDao iCourseDao;
+    private CourseDao courseDao;
     @Autowired
-    private ILevelDao iLevelDao;
+    private LevelDao levelDao;
     @Autowired
     private EmailService emailService;
 
@@ -81,7 +80,7 @@ public class UserServiceImpl implements UserService {
         List<User> teachers = userDao.getAllTrainersById(id);
         List<Group> groups = groupDao.getAllGroupsByStudent(id);
         List<Feedback> feedbacks = feedbackDao.getAllByUserId(id);
-        List<Level> levels = iLevelDao.getAll();
+        List<Level> levels = levelDao.getAll();
 
         DtoTeacherAndManager dtoManager = null;
         if (manager != null) {
@@ -113,7 +112,7 @@ public class UserServiceImpl implements UserService {
         if (groups != null && groups.size() != 0) {
             for (Group group : groups) {
                 int courseId = group.getCourseId();
-                Course course = iCourseDao.getEntityById(courseId);
+                Course course = courseDao.getEntityById(courseId);
                 String courseName = course.getName();
                 dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId,
                         courseName, course.getUserId(), getLevelName(levels, course.getLevel())));
@@ -172,9 +171,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByEmail(String email) {
-        User user = userDao.getByEmail(email);
 
-        return user;
+        return userDao.getByEmail(email);
     }
 
     @Override

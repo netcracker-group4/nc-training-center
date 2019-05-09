@@ -28,7 +28,7 @@ public class AttendanceStatusDaoImpl extends GenericAbstractDao<AttendanceStatus
 
 
     @Override
-    protected Integer parseId(ResultSet rs) throws SQLException {
+    protected Integer parseId(ResultSet rs) {
         return null;
     }
 
@@ -58,17 +58,17 @@ public class AttendanceStatusDaoImpl extends GenericAbstractDao<AttendanceStatus
     }
 
     @Override
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
+    protected void setId(PreparedStatement statement, Integer id) {
 
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement statement, AttendanceStatus entity) throws SQLException {
+    protected void prepareStatementForInsert(PreparedStatement statement, AttendanceStatus entity) {
 
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, AttendanceStatus entity) throws SQLException {
+    protected void prepareStatementForUpdate(PreparedStatement statement, AttendanceStatus entity) {
 
     }
 

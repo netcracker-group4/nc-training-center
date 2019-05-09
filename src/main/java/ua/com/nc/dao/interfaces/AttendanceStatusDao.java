@@ -4,6 +4,6 @@ import ua.com.nc.domain.AttendanceStatus;
 
 import java.util.List;
 
-public interface IAttendanceStatusDao {
+public interface AttendanceStatusDao {
     List<AttendanceStatus> getAll();
 }

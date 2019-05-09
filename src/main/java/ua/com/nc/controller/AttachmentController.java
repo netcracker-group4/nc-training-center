@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ua.com.nc.dao.implementation.AttachmentDaoImpl;
 import ua.com.nc.dao.interfaces.AttachmentDao;
 import ua.com.nc.domain.Attachment;
 import ua.com.nc.service.AttachmentService;

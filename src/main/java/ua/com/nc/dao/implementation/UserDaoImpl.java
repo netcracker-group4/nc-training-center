@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.IUserDao;
+import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.User;
 
 import java.sql.*;
@@ -14,7 +14,7 @@ import java.util.TreeMap;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class UserDao extends GenericAbstractDao<User, Integer> implements IUserDao {
+public class UserDaoImpl extends GenericAbstractDao<User, Integer> implements UserDao {
 
     private final String USER_ID = "ID";
 
@@ -71,9 +71,9 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     @Value("${usr.select-by-token}")
     private String usrSelectByToken;
 
-    public UserDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                   @Value("${spring.datasource.username}") String DATABASE_USER,
-                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+    public UserDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                       @Value("${spring.datasource.username}") String DATABASE_USER,
+                       @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
@@ -467,7 +467,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     }
 
     public TreeMap<User, User> getStudentsAbsentWitNoReason(int lessonId) {
-        List<User> students = new ArrayList();
+        List<User> students = new ArrayList<>();
         String sql = selectStudentsAbsentOnLessonWithNoReason;
         log.info(sql + " selectStudentsAbsentOnLessonWithNoReason " + lessonId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {

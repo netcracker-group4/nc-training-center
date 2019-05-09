@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ua.com.nc.dao.interfaces.IAttachmentDao;
-import ua.com.nc.dao.interfaces.ILessonAttachmentDao;
+import ua.com.nc.dao.interfaces.AttachmentDao;
+import ua.com.nc.dao.interfaces.LessonAttachmentDao;
 import ua.com.nc.domain.Attachment;
 import ua.com.nc.domain.LessonAttachment;
 import ua.com.nc.service.AttachmentService;
@@ -16,9 +16,9 @@ import java.io.*;
 public class AttachmentServiceImpl implements AttachmentService {
     private static final Logger log = Logger.getLogger(AttachmentServiceImpl.class);
     @Autowired
-    private IAttachmentDao attachmentDao;
+    private AttachmentDao attachmentDao;
     @Autowired
-    private ILessonAttachmentDao lessonAttachmentDao;
+    private LessonAttachmentDao lessonAttachmentDao;
 
 
     @Override
@@ -86,8 +86,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         Attachment attachment = attachmentDao.getEntityById(id);
         path = path + attachment.getUrl();
         try {
-            FileInputStream fin = new FileInputStream(path);
-            return fin;
+            return new FileInputStream(path);
         } catch (FileNotFoundException e) {
             log.trace(e);
         }

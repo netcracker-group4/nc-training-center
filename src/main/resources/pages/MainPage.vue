@@ -1,4 +1,4 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
     <v-container>
         <v-layout wrap row>
             <v-flex xs10 sm10 md10 offset-xs1 offset-sm1 offset-md1>

@@ -83,7 +83,7 @@ public class DesiredScheduleDaoImpl extends GenericAbstractDao<DesiredSchedule, 
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, DesiredSchedule entity) throws SQLException {
+    protected void prepareStatementForUpdate(PreparedStatement statement, DesiredSchedule entity) {
         //TODO prepareStatementForUpdate DesiredScheduleDaoImpl
     }
 

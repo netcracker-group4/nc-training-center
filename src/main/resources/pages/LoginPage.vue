@@ -1,4 +1,4 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
     <v-container class="form" id="email">
         <v-layout row wrap>
             <v-flex xs12 sm12 >
@@ -46,6 +46,7 @@
 
 <script>
     import ModalPage from './ModalPage.vue'
+
     export default {
         name: "LoginPage",
         components: {ModalPage},

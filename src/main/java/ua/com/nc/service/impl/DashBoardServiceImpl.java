@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.nc.dao.interfaces.ICourseDao;
-import ua.com.nc.dao.interfaces.IGroupDao;
-import ua.com.nc.dao.interfaces.ILevelDao;
-import ua.com.nc.dao.interfaces.IUserDao;
+import ua.com.nc.dao.interfaces.CourseDao;
+import ua.com.nc.dao.interfaces.GroupDao;
+import ua.com.nc.dao.interfaces.LevelDao;
+import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Level;
@@ -26,27 +26,27 @@ public class DashBoardServiceImpl implements DashBoardService {
     private static final Logger log = Logger.getLogger(DashBoardServiceImpl.class);
     @Autowired
     private
-    ILevelDao iLevelDao;
+    LevelDao levelDao;
     @Autowired
     private
-    ICourseDao iCourseDao;
+    CourseDao courseDao;
     @Autowired
     private
-    IUserDao iUserDao;
+    UserDao userDao;
     @Autowired
     private
-    IGroupDao iGroupDao;
+    GroupDao groupDao;
 
     @Override
     public List<DTOLevel> getLevelAndQuantity() {
         List<DTOLevel> dtoLevels = new ArrayList<>();
-        List<Level> levelList = iLevelDao.getAll();
+        List<Level> levelList = levelDao.getAll();
         for (Level level : levelList) {
             List<DTOLevel.DTOCourseGroup> dtoCourseGroups = new ArrayList<>();
-            List<Course> courses = iCourseDao.getAllByLevel(level.getId());
+            List<Course> courses = courseDao.getAllByLevel(level.getId());
 
             for (Course course : courses) {
-                List<Group> groups = iGroupDao.getAllGroupsOfCourse(course.getId());
+                List<Group> groups = groupDao.getAllGroupsOfCourse(course.getId());
                 for (Group group : groups) {
                     dtoCourseGroups.add(new DTOLevel.DTOCourseGroup(course, group));
                 }
@@ -60,11 +60,11 @@ public class DashBoardServiceImpl implements DashBoardService {
     @Override
     public List<DTOTrainer> getLevelAndTrainers() {
         List<DTOTrainer> dtoTrainers = new ArrayList<>();
-        List<User> trainers = iUserDao.getAllTrainers();
+        List<User> trainers = userDao.getAllTrainers();
         for (User trainer : trainers) {
             List<DTOTrainer.CourseAndLevel> courseAndLevels = new ArrayList<>();
-            List<Level> levels = iLevelDao.getAllByTrainer(trainer.getId());
-            List<Course> courses = iCourseDao.getAllByTrainer(trainer.getId());
+            List<Level> levels = levelDao.getAllByTrainer(trainer.getId());
+            List<Course> courses = courseDao.getAllByTrainer(trainer.getId());
             for (Course course : courses) {
                 Level level = findById(levels, course.getLevel());
                 courseAndLevels.add(new DTOTrainer.CourseAndLevel(course, level));
@@ -77,14 +77,14 @@ public class DashBoardServiceImpl implements DashBoardService {
 
     @Override
     public List<CourseAndGroups> getTrainingAndQuantity() {
-        List<Course> courses = iCourseDao.getAll();
+        List<Course> courses = courseDao.getAll();
         List<CourseAndGroups> courseAndGroups = new ArrayList<>();
         for (Course course : courses) {
             int numberOfEmployeesInCourse = 0;
-            List<Group> groups = iGroupDao.getAllGroupsOfCourse(course.getId());
+            List<Group> groups = groupDao.getAllGroupsOfCourse(course.getId());
             List<DtoGroup> groupAndQuantities = new ArrayList<>();
             for (Group group : groups) {
-                int numberOfEmployeesInGroup = iGroupDao.getNumberOfEmployeesInGroup(group.getId());
+                int numberOfEmployeesInGroup = groupDao.getNumberOfEmployeesInGroup(group.getId());
                 numberOfEmployeesInCourse += numberOfEmployeesInGroup;
                 groupAndQuantities.add(new DtoGroup(group.getId(), group.getTitle(),
                         numberOfEmployeesInGroup));

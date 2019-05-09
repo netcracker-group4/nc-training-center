@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 @Data
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @ToString
 public class Lesson extends Entity<Integer> {

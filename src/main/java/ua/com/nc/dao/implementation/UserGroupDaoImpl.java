@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.IUserGroupDao;
+import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.UserGroup;
 
 import java.sql.PreparedStatement;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> implements IUserGroupDao {
+public class UserGroupDaoImpl extends GenericAbstractDao<UserGroup, Integer> implements UserGroupDao {
 
     @Value("${usr_group.delete-all-for-group}")
     private String userGroupDeleteForGroup;
@@ -34,9 +34,9 @@ public class UserGroupDao extends GenericAbstractDao<UserGroup, Integer> impleme
     @Value("${usr_group.delete-all-for-user}")
     private String userGroupDeleteForUser;
 
-    public UserGroupDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                        @Value("${spring.datasource.username}") String DATABASE_USER,
-                        @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+    public UserGroupDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                            @Value("${spring.datasource.username}") String DATABASE_USER,
+                            @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 

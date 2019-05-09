@@ -6,10 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Data
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @ToString
-
 public class Attachment extends Entity<Integer> {
     private String url;
     private String description;
