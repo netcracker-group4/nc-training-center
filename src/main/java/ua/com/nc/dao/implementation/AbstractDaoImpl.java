@@ -156,7 +156,7 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         throw new PersistException("UpdateQuery is not defined");
     }
 
-    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
+    void setId(PreparedStatement statement, Integer id) throws SQLException {
         statement.setInt(1, id);
     }
 

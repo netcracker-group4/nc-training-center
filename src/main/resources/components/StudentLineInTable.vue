@@ -141,6 +141,8 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                        console.log(error.errorMessage);
+
                     });
             },
             deleteGroup(index) {
@@ -151,7 +153,7 @@
                         self.groups.splice(index, 1);
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data);
                     });
 
             },
@@ -165,24 +167,30 @@
                         })
                         .catch(function (error) {
                             console.log(error);
+                            console.log(error.response.data);
                         });
                 }
             }
         },
         mounted() {
+
+
             let self = this;
             axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/ungrouped')
                 .then(function (response) {
                     self.allSchedules = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data);
                 });
+
+
             axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/grouped')
                 .then(function (response) {
                     self.groups = response.data;
                 })
                 .catch(function (error) {
+                    console.log(error.response.data);
                     console.log(error);
                 });
             axios.get('http://localhost:8080/getcourses/desired/day-intervals')
@@ -190,6 +198,7 @@
                     self.dayIntervals = response.data;
                 })
                 .catch(function (error) {
+                    console.log(error.response.data);
                     console.log(error);
                 });
             axios.get('http://localhost:8080/getcourses/' + self.$route.params.id)
@@ -197,6 +206,7 @@
                     self.course = response.data;
                 })
                 .catch(function (error) {
+                    console.log(error.response.data);
                     console.log(error);
                 });
         }
