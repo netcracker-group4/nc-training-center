@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.IRoleDao;
+import ua.com.nc.dao.interfaces.RoleDao;
 import ua.com.nc.domain.Role;
 
 import java.sql.*;
@@ -15,16 +15,16 @@ import java.util.List;
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class RoleDao implements IRoleDao {
+public class RoleDaoImpl implements RoleDao {
 
     Connection connection;
 
     @Value("${role.select-by-user-id}")
     private String findRolesByUserId;
 
-    public RoleDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                   @Value("${spring.datasource.username}") String DATABASE_USER,
-                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+    public RoleDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                       @Value("${spring.datasource.username}") String DATABASE_USER,
+                       @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         try {
             this.connection = DriverManager.getConnection(DATABASE_URL,
                     DATABASE_USER, DATABASE_PASSWORD);

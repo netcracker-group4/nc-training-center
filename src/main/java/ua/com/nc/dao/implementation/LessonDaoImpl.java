@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.ILessonDao;
+import ua.com.nc.dao.interfaces.LessonDao;
 import ua.com.nc.domain.Lesson;
 
 import java.sql.*;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements ILessonDao {
+public class LessonDaoImpl extends GenericAbstractDao<Lesson, Integer> implements LessonDao {
 
 
     @Value("${lesson.select-all}")
@@ -38,9 +38,9 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
     @Value("${lesson.select-by-user-id}")
     private String selectByUserId;
 
-    public LessonDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                     @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD)
+    public LessonDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                         @Value("${spring.datasource.username}") String DATABASE_USER,
+                         @Value("${spring.datasource.password}") String DATABASE_PASSWORD)
             throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }

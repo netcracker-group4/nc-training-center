@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.IAttendanceStatusDao;
+import ua.com.nc.dao.interfaces.AttendanceStatusDao;
 import ua.com.nc.domain.AttendanceStatus;
 
 import java.sql.PreparedStatement;
@@ -15,14 +15,14 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class AttendanceStatusDao extends GenericAbstractDao<AttendanceStatus, Integer> implements IAttendanceStatusDao {
+public class AttendanceStatusDaoImpl extends GenericAbstractDao<AttendanceStatus, Integer> implements AttendanceStatusDao {
 
     @Value("${attendance_status.select-all}")
     private String attendanceStatusSelectAll;
 
-    public AttendanceStatusDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                               @Value("${spring.datasource.username}") String DATABASE_USER,
-                               @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+    public AttendanceStatusDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                                   @Value("${spring.datasource.username}") String DATABASE_USER,
+                                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 

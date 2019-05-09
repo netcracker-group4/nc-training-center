@@ -5,15 +5,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.ICourseStatus;
-import ua.com.nc.domain.CourseStatus;
+import ua.com.nc.dao.interfaces.CourseStatus;
 
 import java.sql.*;
 
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class CourseStatusDao implements ICourseStatus {
+public class CourseStatusDaoImpl implements CourseStatus {
 
     @Value("${status.select-id-by-name")
     private String getStatusByName;
@@ -22,9 +21,9 @@ public class CourseStatusDao implements ICourseStatus {
 
     private Connection connection;
 
-    public CourseStatusDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                           @Value("${spring.datasource.username}") String DATABASE_USER,
-                           @Value("${spring.datasource.password}") String DATABASE_PASSWORD) {
+    public CourseStatusDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                               @Value("${spring.datasource.username}") String DATABASE_USER,
+                               @Value("${spring.datasource.password}") String DATABASE_PASSWORD) {
         try {
             this.connection = DriverManager.getConnection(DATABASE_URL,
                     DATABASE_USER, DATABASE_PASSWORD);
@@ -36,7 +35,7 @@ public class CourseStatusDao implements ICourseStatus {
     }
 
     @Override
-    public CourseStatus getCourseStatusById(int id) {
+    public ua.com.nc.domain.CourseStatus getCourseStatusById(int id) {
         String name;
         String sql = getStatusById;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -48,7 +47,7 @@ public class CourseStatusDao implements ICourseStatus {
             log.trace(e);
             throw new PersistException(e);
         }
-        return CourseStatus.valueOf(name.toUpperCase());
+        return ua.com.nc.domain.CourseStatus.valueOf(name.toUpperCase());
     }
 
     @Override

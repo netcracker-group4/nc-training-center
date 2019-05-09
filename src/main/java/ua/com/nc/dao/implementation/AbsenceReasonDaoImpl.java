@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.IAbsenceReasonDao;
+import ua.com.nc.dao.interfaces.AbsenceReasonDao;
 import ua.com.nc.domain.AbsenceReason;
 
 import java.sql.PreparedStatement;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class AbsenceReasonDao extends GenericAbstractDao<AbsenceReason, Integer> implements IAbsenceReasonDao {
+public class AbsenceReasonDaoImpl extends GenericAbstractDao<AbsenceReason, Integer> implements AbsenceReasonDao {
 
     @Value("${absence_reason.select-all}")
     private String absenceReasonSelectAll;
@@ -29,9 +29,9 @@ public class AbsenceReasonDao extends GenericAbstractDao<AbsenceReason, Integer>
     private String absenceReasonInsert;
 
 
-    public AbsenceReasonDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                            @Value("${spring.datasource.username}") String DATABASE_USER,
-                            @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+    public AbsenceReasonDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                                @Value("${spring.datasource.username}") String DATABASE_USER,
+                                @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.ILessonAttachmentDao;
+import ua.com.nc.dao.interfaces.LessonAttachmentDao;
 import ua.com.nc.domain.LessonAttachment;
 
 import java.sql.PreparedStatement;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class LessonAttachmentDao extends GenericAbstractDao<LessonAttachment, Integer> implements ILessonAttachmentDao {
+public class LessonAttachmentDaoImpl extends GenericAbstractDao<LessonAttachment, Integer> implements LessonAttachmentDao {
     @Value("${lesson_attachment.insert}")
     private String lessonAttachmentInsert;
     @Value("${lesson_attachment.delete-by-attachment-id}")
@@ -27,9 +27,9 @@ public class LessonAttachmentDao extends GenericAbstractDao<LessonAttachment, In
     @Value("${lesson_attachment.delete}")
     private String lessonAttachmentDelete;
 
-    public LessonAttachmentDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                               @Value("${spring.datasource.username}") String DATABASE_USER,
-                               @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+    public LessonAttachmentDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                                   @Value("${spring.datasource.username}") String DATABASE_USER,
+                                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 

@@ -2,7 +2,8 @@ package ua.com.nc.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.nc.dao.implementation.AttendanceStatusDao;
+import ua.com.nc.dao.implementation.AttendanceStatusDaoImpl;
+import ua.com.nc.dao.interfaces.AttendanceStatusDao;
 import ua.com.nc.domain.AttendanceStatus;
 import ua.com.nc.service.AttendanceStatusService;
 

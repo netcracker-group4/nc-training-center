@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.IFeedbackDao;
+import ua.com.nc.dao.interfaces.FeedbackDao;
 import ua.com.nc.domain.Feedback;
 
 import java.sql.Date;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class FeedbackDao extends GenericAbstractDao<Feedback, Integer> implements IFeedbackDao {
+public class FeedbackDaoImpl extends GenericAbstractDao<Feedback, Integer> implements FeedbackDao {
 
     @Value("${feedback.select-all}")
     private String feedbackSelectAll;
@@ -31,9 +31,9 @@ public class FeedbackDao extends GenericAbstractDao<Feedback, Integer> implement
     @Value("${feedback.select-all-by-user-id}")
     private String feedbackSelectAllByUser;
 
-    public FeedbackDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                       @Value("${spring.datasource.username}") String DATABASE_USER,
-                       @Value("${spring.datasource.password}") String DATABASE_PASSWORD)
+    public FeedbackDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                           @Value("${spring.datasource.username}") String DATABASE_USER,
+                           @Value("${spring.datasource.password}") String DATABASE_PASSWORD)
             throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }

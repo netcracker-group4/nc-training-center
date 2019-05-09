@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.ISuitabilityDao;
+import ua.com.nc.dao.interfaces.SuitabilityDao;
 import ua.com.nc.domain.Suitability;
 
 import java.sql.PreparedStatement;
@@ -15,14 +15,14 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class SuitabilityDao extends GenericAbstractDao<Suitability, Integer> implements ISuitabilityDao {
+public class SuitabilityDaoImpl extends GenericAbstractDao<Suitability, Integer> implements SuitabilityDao {
 
     @Value("${suitability.select-all}")
     private String suitabilitySelectAll;
 
-    public SuitabilityDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                          @Value("${spring.datasource.username}") String DATABASE_USER,
-                          @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+    public SuitabilityDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                              @Value("${spring.datasource.username}") String DATABASE_USER,
+                              @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 

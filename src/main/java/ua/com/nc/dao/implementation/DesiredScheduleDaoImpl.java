@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.IDesiredScheduleDao;
+import ua.com.nc.dao.interfaces.DesiredScheduleDao;
 import ua.com.nc.domain.DesiredSchedule;
 
 import java.sql.PreparedStatement;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Integer> implements IDesiredScheduleDao {
+public class DesiredScheduleDaoImpl extends GenericAbstractDao<DesiredSchedule, Integer> implements DesiredScheduleDao {
 
     @Value("${desirable.schedule.select-all}")
     private String desirableScheduleSelectAll;
@@ -26,9 +26,9 @@ public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Inte
     @Value("${desirable.schedule.select-by-group-id}")
     private String desirableScheduleSelectByGroupId;
 
-    public DesiredScheduleDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                              @Value("${spring.datasource.username}") String DATABASE_USER,
-                              @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+    public DesiredScheduleDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                                  @Value("${spring.datasource.username}") String DATABASE_USER,
+                                  @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
@@ -42,7 +42,7 @@ public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Inte
 
     @Override
     protected String getSelectByIdQuery() {
-        //TODO getSelectByIdQuery DesiredScheduleDao
+        //TODO getSelectByIdQuery DesiredScheduleDaoImpl
         return null;
     }
 
@@ -58,13 +58,13 @@ public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Inte
 
     @Override
     protected String getDeleteQuery() {
-        //TODO getDeleteQuery DesiredScheduleDao
+        //TODO getDeleteQuery DesiredScheduleDaoImpl
         return null;
     }
 
     @Override
     protected String getUpdateQuery() {
-        //TODO getUpdateQuery DesiredScheduleDao
+        //TODO getUpdateQuery DesiredScheduleDaoImpl
         return null;
     }
 
@@ -84,7 +84,7 @@ public class DesiredScheduleDao extends GenericAbstractDao<DesiredSchedule, Inte
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, DesiredSchedule entity) throws SQLException {
-        //TODO prepareStatementForUpdate DesiredScheduleDao
+        //TODO prepareStatementForUpdate DesiredScheduleDaoImpl
     }
 
     @Override

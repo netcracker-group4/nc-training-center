@@ -1,11 +1,9 @@
 package ua.com.nc.dao.implementation;
 
 import org.junit.*;
-import ua.com.nc.dao.interfaces.ICourseDao;
+import ua.com.nc.dao.interfaces.CourseDao;
 import ua.com.nc.domain.Course;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
@@ -16,7 +14,7 @@ import static org.junit.Assert.*;
 
 public class CourseDaoTest {
 
-    static private ICourseDao iCourseDao;
+    static private CourseDao courseDao;
     private static Course newCourse;
     private static Integer id;
 
@@ -37,15 +35,15 @@ public class CourseDaoTest {
         sqlQueriesProperties.setCourseSelectById(properties.getProperty("course.select-by-id"));
         sqlQueriesProperties.setCourseUpdate(properties.getProperty("course.update"));
         sqlQueriesProperties.setCourseSelectByLevel(properties.getProperty("course.select-by-level"));
-        iCourseDao = new CourseDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019");
+        courseDao = new CourseDaoImpl("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019");
         newCourse = new Course("courseName", 1, 1, 1, "url", new Date(65465465L), new Date(654L), true, "desc");
     }
 
     @AfterClass
     public static void after() {
         try {
-            iCourseDao.rollback();
-            iCourseDao.close();
+            courseDao.rollback();
+            courseDao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,66 +52,66 @@ public class CourseDaoTest {
     @Before
     public void setUp() {
         newCourse.setId(null);
-        iCourseDao.insert(newCourse);
+        courseDao.insert(newCourse);
         id = newCourse.getId();
     }
 
     @After
     public void tearDown() {
-        if (iCourseDao.getEntityById(id) != null){
-            iCourseDao.delete(id);
+        if (courseDao.getEntityById(id) != null){
+            courseDao.delete(id);
         }
     }
 
 
     @Test
     public void getAll() {
-        assertTrue(iCourseDao.getAll().size() > 0);
+        assertTrue(courseDao.getAll().size() > 0);
     }
 
     @Test
     public void getEntityById() {
-        Course course = iCourseDao.getEntityById(id);
+        Course course = courseDao.getEntityById(id);
         assertNotNull(course);
         assertEquals(newCourse, course);
     }
 
     @Test
     public void update() {
-        Course savedCourse = iCourseDao.getEntityById(id);
+        Course savedCourse = courseDao.getEntityById(id);
         assertNotNull(savedCourse);
         assertEquals(newCourse, savedCourse);
 
         Course newCourse = new Course(id,"new courseName", 2, 2, 2, "new url", new Date(55555L), new Date(6666L), false, "new desc");
-        iCourseDao.update(newCourse);
+        courseDao.update(newCourse);
 
-        Course updatedRetrievedCourse = iCourseDao.getEntityById(id);
+        Course updatedRetrievedCourse = courseDao.getEntityById(id);
         assertNotNull(updatedRetrievedCourse);
         assertEquals(newCourse, updatedRetrievedCourse);
     }
 
     @Test
     public void delete() {
-        List<Course> courses = iCourseDao.getAll();
+        List<Course> courses = courseDao.getAll();
         assertTrue(courses.size() > 0);
         int before = courses.size();
-        iCourseDao.delete(id);
-        assertEquals(before - 1, iCourseDao.getAll().size());
-        assertNull(iCourseDao.getEntityById(id));
+        courseDao.delete(id);
+        assertEquals(before - 1, courseDao.getAll().size());
+        assertNull(courseDao.getEntityById(id));
     }
 
     @Test
     public void insert() {
-        List<Course> courses = iCourseDao.getAll();
+        List<Course> courses = courseDao.getAll();
         int before = courses.size();
         assertTrue(courses.size() > 0);
         Course course = new Course("new courseName", 2, 2, 2, "new url", new Date(55555), new Date(6666), false, "new desc");
-        iCourseDao.insert(course);
+        courseDao.insert(course);
         assertNotNull(course.getId());
         Integer newID = course.getId();
         assertTrue(newID != 0);
-        assertEquals(before + 1, iCourseDao.getAll().size());
-        Course insertedCourse = iCourseDao.getEntityById(newID);
+        assertEquals(before + 1, courseDao.getAll().size());
+        Course insertedCourse = courseDao.getEntityById(newID);
         assertNotNull(insertedCourse);
         assertEquals(course, insertedCourse);
     }
@@ -122,7 +120,7 @@ public class CourseDaoTest {
     @Test
     public void getAllByLevel() {
         int levelId = 1;
-        List<Course> courses = iCourseDao.getAllByLevel(levelId);
+        List<Course> courses = courseDao.getAllByLevel(levelId);
         for (Course course : courses) {
             assertEquals(levelId, course.getLevel());
         }

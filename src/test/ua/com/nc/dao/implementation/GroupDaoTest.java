@@ -1,12 +1,11 @@
 package ua.com.nc.dao.implementation;
 
 import org.junit.*;
-import ua.com.nc.dao.interfaces.IGroupDao;
+import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.domain.Group;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -14,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class GroupDaoTest {
 
-    static private IGroupDao iGroupDao;
+    static private GroupDao groupDao;
     private static Group newGroup;
     private static Integer id;
 
@@ -34,15 +33,15 @@ public class GroupDaoTest {
         sqlQueriesProperties.setGroupSelectAll(properties.getProperty("group.select-all"));
         sqlQueriesProperties.setGroupSelectById(properties.getProperty("group.select-by-id"));
         sqlQueriesProperties.setGroupUpdate(properties.getProperty("group.update"));
-        iGroupDao = new GroupDao("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019");
+        groupDao = new GroupDaoImpl("jdbc:postgresql://45.66.10.81:5432/nc_training_center", "ncpostgres", "nc2019");
         newGroup = new Group(1, "groupName");
     }
 
     @AfterClass
     public static void after() {
         try {
-            iGroupDao.rollback();
-            iGroupDao.close();
+            groupDao.rollback();
+            groupDao.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,66 +50,66 @@ public class GroupDaoTest {
     @Before
     public void setUp() {
         newGroup.setId(null);
-        iGroupDao.insert(newGroup);
+        groupDao.insert(newGroup);
         id = newGroup.getId();
     }
 
     @After
     public void tearDown() {
-        if (iGroupDao.getEntityById(id) != null){
-            iGroupDao.delete(id);
+        if (groupDao.getEntityById(id) != null){
+            groupDao.delete(id);
         }
     }
 
 
     @Test
     public void getAll() {
-        assertTrue(iGroupDao.getAll().size() > 0);
+        assertTrue(groupDao.getAll().size() > 0);
     }
 
     @Test
     public void getEntityById() {
-        Group group = iGroupDao.getEntityById(id);
+        Group group = groupDao.getEntityById(id);
         assertNotNull(group);
         assertEquals(newGroup, group);
     }
 
     @Test
     public void update() {
-        Group savedGroup = iGroupDao.getEntityById(id);
+        Group savedGroup = groupDao.getEntityById(id);
         assertNotNull(savedGroup);
         assertEquals(newGroup, savedGroup);
 
         Group newGroup = new Group(id,2, "new groupName");
-        iGroupDao.update(newGroup);
+        groupDao.update(newGroup);
 
-        Group updatedRetrievedGroup = iGroupDao.getEntityById(id);
+        Group updatedRetrievedGroup = groupDao.getEntityById(id);
         assertNotNull(updatedRetrievedGroup);
         assertEquals(newGroup, updatedRetrievedGroup);
     }
 
     @Test
     public void delete() {
-        List<Group> groups = iGroupDao.getAll();
+        List<Group> groups = groupDao.getAll();
         assertTrue(groups.size() > 0);
         int before = groups.size();
-        iGroupDao.delete(id);
-        assertEquals(before - 1, iGroupDao.getAll().size());
-        assertNull(iGroupDao.getEntityById(id));
+        groupDao.delete(id);
+        assertEquals(before - 1, groupDao.getAll().size());
+        assertNull(groupDao.getEntityById(id));
     }
 
     @Test
     public void insert() {
-        List<Group> groups = iGroupDao.getAll();
+        List<Group> groups = groupDao.getAll();
         int before = groups.size();
         assertTrue(groups.size() > 0);
         Group group = new Group(2, "new groupName");
-        iGroupDao.insert(group);
+        groupDao.insert(group);
         assertNotNull(group.getId());
         Integer newID = group.getId();
         assertTrue(newID != 0);
-        assertEquals(before + 1, iGroupDao.getAll().size());
-        Group insertedGroup = iGroupDao.getEntityById(newID);
+        assertEquals(before + 1, groupDao.getAll().size());
+        Group insertedGroup = groupDao.getEntityById(newID);
         assertNotNull(insertedGroup);
         assertEquals(group, insertedGroup);
     }

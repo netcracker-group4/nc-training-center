@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.dao.implementation.LevelDao;
-import ua.com.nc.dao.interfaces.ICourseStatus;
-import ua.com.nc.domain.CourseStatus;
+import ua.com.nc.dao.implementation.LevelDaoImpl;
+import ua.com.nc.dao.interfaces.CourseStatus;
+import ua.com.nc.dao.interfaces.LevelDao;
 import ua.com.nc.domain.Level;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class InfoController {
     @Autowired
     private LevelDao levelDao;
     @Autowired
-    private ICourseStatus status;
+    private CourseStatus status;
 
     @RequestMapping(value = "/getLevels", method = RequestMethod.GET)
     @ResponseBody
@@ -44,7 +44,7 @@ public class InfoController {
 
     @RequestMapping(value = "/getStatuses", method = RequestMethod.GET)
     public String getAllStatuses() {
-        CourseStatus[] statuses = CourseStatus.values();
+        ua.com.nc.domain.CourseStatus[] statuses = ua.com.nc.domain.CourseStatus.values();
         List<String> list = new ArrayList<>();
         Arrays.stream(statuses).forEach(s -> list.add(s.getName()));
         return gson.toJson(list);

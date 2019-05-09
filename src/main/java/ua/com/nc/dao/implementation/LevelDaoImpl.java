@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.ILevelDao;
+import ua.com.nc.dao.interfaces.LevelDao;
 import ua.com.nc.domain.Level;
 
 import java.sql.PreparedStatement;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class LevelDao extends GenericAbstractDao<Level, Integer> implements ILevelDao {
+public class LevelDaoImpl extends GenericAbstractDao<Level, Integer> implements LevelDao {
 
     @Value("${level.select-all}")
     private String levelSelectAll;
@@ -32,9 +32,9 @@ public class LevelDao extends GenericAbstractDao<Level, Integer> implements ILev
     @Value("${level.select-by-trainer}")
     private String levelSelectByTrainer;
 
-    public LevelDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                    @Value("${spring.datasource.username}") String DATABASE_USER,
-                    @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+    public LevelDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                        @Value("${spring.datasource.username}") String DATABASE_USER,
+                        @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 

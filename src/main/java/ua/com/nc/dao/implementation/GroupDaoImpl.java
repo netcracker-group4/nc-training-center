@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.IGroupDao;
+import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.domain.Group;
 
 import java.sql.PreparedStatement;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class GroupDao extends GenericAbstractDao<Group, Integer> implements IGroupDao {
+public class GroupDaoImpl extends GenericAbstractDao<Group, Integer> implements GroupDao {
 
 
     @Value("${group.select-all}")
@@ -40,9 +40,9 @@ public class GroupDao extends GenericAbstractDao<Group, Integer> implements IGro
     private String deleteUserFromGroup;
 
 
-    public GroupDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                    @Value("${spring.datasource.username}") String DATABASE_USER,
-                    @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+    public GroupDaoImpl(@Value("${spring.datasource.url}") String DATABASE_URL,
+                        @Value("${spring.datasource.username}") String DATABASE_USER,
+                        @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 

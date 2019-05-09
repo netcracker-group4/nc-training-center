@@ -5,7 +5,8 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.dao.implementation.AbsenceReasonDao;
+import ua.com.nc.dao.implementation.AbsenceReasonDaoImpl;
+import ua.com.nc.dao.interfaces.AbsenceReasonDao;
 import ua.com.nc.service.AbsenceReasonService;
 
 @Log4j
