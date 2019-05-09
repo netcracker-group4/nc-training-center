@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IAttendanceStatusDao;
 import ua.com.nc.domain.AttendanceStatus;
-import ua.com.nc.domain.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -3,7 +3,7 @@ package ua.com.nc.domain;
 import lombok.Data;
 
 @Data
-public class Level extends Entity<Integer>{
+public class Level extends Entity<Integer> {
     private String title;
 
     public Level(String title) {

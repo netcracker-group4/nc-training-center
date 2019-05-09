@@ -29,7 +29,7 @@ public class AttachmentServiceImpl implements AttachmentService {
             iAttachmentDao.insert(attachment);
             iAttachmentDao.commit();
         }
-        LessonAttachment lessonAttachment = new LessonAttachment(iAttachmentDao.getByUrl(attachment.getUrl()).getId() ,lessonId);
+        LessonAttachment lessonAttachment = new LessonAttachment(iAttachmentDao.getByUrl(attachment.getUrl()).getId(), lessonId);
         System.out.print(iAttachmentDao.getByUrl(attachment.getUrl()).getId());
         iLessonAttachmentDao.insert(lessonAttachment);
         iLessonAttachmentDao.commit();
@@ -38,7 +38,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public void add(Integer lessonId, String url, String description) {
         System.out.println("Add method 2 used");
-        Attachment attachment = new Attachment(url,description);
+        Attachment attachment = new Attachment(url, description);
         add(lessonId, attachment);
     }
 
@@ -53,7 +53,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public void uploadFile(Integer lessonId, MultipartFile file) {
         String name = null;
-        if(!file.isEmpty()){
+        if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
 
@@ -77,7 +77,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                     stream.flush();
                     stream.close();
                 }
-                add(lessonId,name,null);
+                add(lessonId, name, null);
             } catch (Exception e) {
                 log.trace(e);
             }

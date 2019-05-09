@@ -128,22 +128,22 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
     }
 
     @Override
-    public Course getCourseById (int id) {
+    public Course getCourseById(int id) {
 
-        String sql = getSelectByIdQuery ();
-        List <Course> list = new ArrayList ();
-        log.info (sql + " get course by id " + id);
-        try (PreparedStatement statement = connection.prepareStatement (sql)) {
-            statement.setInt (1, id);
+        String sql = getSelectByIdQuery();
+        List<Course> list = new ArrayList();
+        log.info(sql + " get course by id " + id);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
-            list = parseResultSet (rs);
+            list = parseResultSet(rs);
         } catch (Exception e) {
             log.trace(e);
         }
         if (list.size() > 1) {
             throw new PersistException("Received more than one record with id " + id);
         }
-        if (list.size () == 0) {
+        if (list.size() == 0) {
             return null;
         }
         return list.get(0);
@@ -205,12 +205,11 @@ public class CourseDao extends GenericAbstractDao<Course, Integer> implements IC
     }
 
 
-
-    public Course getCourseByGroup(int id){
+    public Course getCourseByGroup(int id) {
         String sql = selectCourseByGroupId;
         Course course;
-        try(PreparedStatement statement = connection.prepareStatement(sql)){
-            statement.setInt(1,id);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             course = parseResultSet(rs).get(0);
         } catch (SQLException e) {

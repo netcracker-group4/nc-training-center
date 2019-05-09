@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.nc.domain.Role;
@@ -24,10 +23,10 @@ public class IndexPageController {
     private RoleService roleService;
 
     @GetMapping
-    public String showIndexPage(@AuthenticationPrincipal User user, Model model){
+    public String showIndexPage(@AuthenticationPrincipal User user, Model model) {
         boolean isAuthorized = false;
         List<Role> userRoles = null;
-        if(user != null){
+        if (user != null) {
             isAuthorized = true;
             userRoles = roleService.findAllByUserId(user.getId());
         }

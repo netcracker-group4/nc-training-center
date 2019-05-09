@@ -5,7 +5,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.IGroupDao;
-import ua.com.nc.domain.Course;
 import ua.com.nc.domain.Group;
 
 import java.sql.PreparedStatement;
@@ -39,7 +38,6 @@ public class GroupDao extends GenericAbstractDao<Group, Integer> implements IGro
     private String groupSelectByTrainerId;
     @Value("${group.delete-student}")
     private String deleteUserFromGroup;
-
 
 
     public GroupDao(@Value("${spring.datasource.url}") String DATABASE_URL,
@@ -161,7 +159,7 @@ public class GroupDao extends GenericAbstractDao<Group, Integer> implements IGro
 
     @Override
     public void deleteUserFromGroup(String id, String userId) {
-        try(PreparedStatement statement = connection.prepareStatement(deleteUserFromGroup)){
+        try (PreparedStatement statement = connection.prepareStatement(deleteUserFromGroup)) {
             statement.setInt(1, Integer.parseInt(id));
             statement.setInt(2, Integer.parseInt(userId));
             statement.executeQuery();

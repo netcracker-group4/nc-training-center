@@ -1,10 +1,8 @@
 package ua.com.nc.domain;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -16,7 +14,7 @@ public class Attendance extends Entity<Integer> {
     private String reason;
     private String status;
 
-    public Attendance(Integer id, Integer lessonId, Integer userId, String reason, String status){
+    public Attendance(Integer id, Integer lessonId, Integer userId, String reason, String status) {
         this.id = id;
         this.lessonId = lessonId;
         this.userId = userId;
@@ -30,6 +28,6 @@ public class Attendance extends Entity<Integer> {
                 ", lessonId=" + lessonId +
                 ", userId=" + userId +
                 ", reason='" + reason + '\'' +
-                ", status='" + status + '\'' ;
+                ", status='" + status + '\'';
     }
 }

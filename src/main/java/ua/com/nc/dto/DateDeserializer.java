@@ -14,6 +14,6 @@ public class DateDeserializer implements JsonDeserializer<Timestamp> {
     public Timestamp deserialize(JsonElement element, Type arg1, JsonDeserializationContext arg2) throws JsonParseException {
         //date must be in "yyyy-MM-dd HH:mm:ss" format
         String date = element.getAsString();
-        return Timestamp.valueOf( date ) ;
+        return Timestamp.valueOf(date);
     }
 }

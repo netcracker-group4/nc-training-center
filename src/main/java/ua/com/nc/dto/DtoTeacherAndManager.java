@@ -12,7 +12,7 @@ public class DtoTeacherAndManager {
     private String email;
 
 
-    DtoTeacherAndManager(){
+    DtoTeacherAndManager() {
 
     }
 

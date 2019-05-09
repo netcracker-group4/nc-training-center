@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.sql.Date;
-
 import java.sql.Timestamp;
 
 @Data

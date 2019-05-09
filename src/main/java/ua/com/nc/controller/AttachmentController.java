@@ -14,9 +14,7 @@ import ua.com.nc.dao.implementation.AttachmentDao;
 import ua.com.nc.domain.Attachment;
 import ua.com.nc.service.AttachmentService;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
-import java.io.IOException;
 
 
 @Log4j
@@ -30,30 +28,31 @@ public class AttachmentController {
     AttachmentService service;
     private final Gson gson = new Gson();
 
-    @RequestMapping(method = RequestMethod.GET,value="/lesson/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/lesson/{id}")
     @ResponseBody
-    public String getLessonAttachments(@PathVariable String id){
+    public String getLessonAttachments(@PathVariable String id) {
         return gson.toJson(attachmentDao.getByLessonId(Integer.parseInt(id)));
     }
 
-    @RequestMapping(method = RequestMethod.GET,value="/all")
+    @RequestMapping(method = RequestMethod.GET, value = "/all")
     @ResponseBody
     public String getAllAttachments() {
         return gson.toJson(attachmentDao.getAll());
     }
 
-    @RequestMapping(method = RequestMethod.GET,value="/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
-    public String getReason(@PathVariable String id){
+    public String getReason(@PathVariable String id) {
         return gson.toJson(attachmentDao.getEntityById(Integer.parseInt(id)));
     }
 
-    @RequestMapping(method = RequestMethod.POST,value = "/upload-file")
-    public void uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("lessonId") String lessonId){
-        service.uploadFile(Integer.parseInt(lessonId),file);
+    @RequestMapping(method = RequestMethod.POST, value = "/upload-file")
+    public void uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("lessonId") String lessonId) {
+        service.uploadFile(Integer.parseInt(lessonId), file);
     }
+
     @RequestMapping(value = "/download/{fileId}", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileId) throws IOException {
+    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileId) {
         Integer attachmentId = Integer.parseInt(fileId);
         FileInputStream in = service.downloadFile(attachmentId);
 

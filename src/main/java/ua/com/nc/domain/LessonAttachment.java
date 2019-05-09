@@ -13,7 +13,7 @@ public class LessonAttachment extends Entity<Integer> {
     private Integer attachmentId;
     private Integer lessonId;
 
-    public LessonAttachment(Integer id, Integer attachmentId, Integer lessonId){
+    public LessonAttachment(Integer id, Integer attachmentId, Integer lessonId) {
         super(id);
         this.attachmentId = attachmentId;
         this.lessonId = lessonId;

@@ -8,15 +8,15 @@
                 :headers="headers"
                 :items="groupsAndQuantities"
                 :expand="true"
-                item-key="course.id"
+                item-key="id"
         >
             <template v-slot:items="props">
                 <tr>
                     <td class="my-link">
-                        <div @click="" >{{ props.item.group.id }}</div>
+                        <div @click="">{{ props.item.id }}</div>
                     </td>
-                    <td class="my-link">
-                        <div @click="goToGroupPage(props.item.group.id)" >{{ props.item.group.title }}</div>
+                    <td class="my-link clickable">
+                        <div @click="goToGroupPage(props.item.id)">{{ props.item.title }}</div>
                     </td>
                     <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
 
@@ -32,7 +32,7 @@
 
     export default {
         name: "AllGroups",
-        data: function(){
+        data: function () {
             return {
                 headers: [
                     {
@@ -53,11 +53,11 @@
             }
         },
         methods: {
-            goToGroupPage(id){
-                this.$router.push("/group/"+id)
+            goToGroupPage(id) {
+                this.$router.push("/group/" + id)
             }
         },
-        mounted(){
+        mounted() {
             let self = this;
             axios.get('http://localhost:8080/groups/groups-and-quantity')
                 .then(function (response) {
@@ -71,5 +71,10 @@
 </script>
 
 <style scoped>
-
+    .clickable {
+        cursor: pointer;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        color: black;
+    }
 </style>

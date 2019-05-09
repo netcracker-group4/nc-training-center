@@ -1,5 +1,6 @@
 package ua.com.nc.controller;
 
+import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,14 +18,14 @@ public class DashBoardController {
 
     @Autowired
     private DashBoardService dashBoardService;
+    private Gson gson = new Gson();
 
     @RequestMapping(value = {"/level-and-quantity"}, method = RequestMethod.GET)
     @ResponseBody
     public String getLevelAndQuantity() {
         if (userHasRightToSeeDashBoard()) {
-            return dashBoardService.getLevelAndQuantity();
-        }
-        else return "ERROR";
+            return gson.toJson(dashBoardService.getLevelAndQuantity());
+        } else return "ERROR";
     }
 
     private boolean userHasRightToSeeDashBoard() {
@@ -36,18 +37,16 @@ public class DashBoardController {
     @ResponseBody
     public String getLevelAndTrainers() {
         if (userHasRightToSeeDashBoard()) {
-            return dashBoardService.getLevelAndTrainers();
-        }
-        else return "ERROR";
+            return gson.toJson(dashBoardService.getLevelAndTrainers());
+        } else return "ERROR";
     }
 
     @RequestMapping(value = {"/training-and-quantity"}, method = RequestMethod.GET)
     @ResponseBody
     public String getTrainingAndQuantity() {
         if (userHasRightToSeeDashBoard()) {
-            return dashBoardService.getTrainingAndQuantity();
-        }
-        else return "ERROR";
+            return gson.toJson(dashBoardService.getTrainingAndQuantity());
+        } else return "ERROR";
     }
 
 }

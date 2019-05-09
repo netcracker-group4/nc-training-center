@@ -104,7 +104,7 @@
         },
         methods: {
             goToGroupPage(groupId) {
-                this.$router.push('/groups/' + groupId);
+                this.$router.push('/group/' + groupId);
             },
             goToCoursePage(levelId) {
                 this.$router.push('/courses/' + levelId);

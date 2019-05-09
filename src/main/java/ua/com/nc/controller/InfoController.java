@@ -23,28 +23,27 @@ public class InfoController {
     @Autowired
     private ICourseStatus status;
 
-    @RequestMapping(value="/getLevels",method = RequestMethod.GET)
+    @RequestMapping(value = "/getLevels", method = RequestMethod.GET)
     @ResponseBody
-    public String getLevels(){
+    public String getLevels() {
         return gson.toJson(levelDao.getAll());
     }
 
-    @RequestMapping(value="/getLevel/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/getLevel/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Level getLevel(@PathVariable String id){
+    public Level getLevel(@PathVariable String id) {
         return levelDao.getEntityById(Integer.parseInt(id));
     }
 
 
-    @RequestMapping(value = "/getStatus/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/getStatus/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public String getStatus(@PathVariable String id){
-        String res =gson.toJson(status.getCourseStatusById(Integer.parseInt(id)));
-        return res;
+    public String getStatus(@PathVariable String id) {
+        return gson.toJson(status.getCourseStatusById(Integer.parseInt(id)));
     }
 
     @RequestMapping(value = "/getStatuses", method = RequestMethod.GET)
-    public String getAllStatuses(){
+    public String getAllStatuses() {
         CourseStatus[] statuses = CourseStatus.values();
         List<String> list = new ArrayList<>();
         Arrays.stream(statuses).forEach(s -> list.add(s.getName()));

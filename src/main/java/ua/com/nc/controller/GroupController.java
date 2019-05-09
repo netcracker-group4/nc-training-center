@@ -30,17 +30,17 @@ public class GroupController {
     @Autowired
     private ICourseDao courseDao;
     @Autowired
-    private GroupsService  groupsService;
+    private GroupsService groupsService;
     private final Gson gson = new Gson();
 
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String  addGroup(@RequestBody GroupSchedule groupSchedule) {
+    public String addGroup(@RequestBody GroupSchedule groupSchedule) {
         int newId;
-        if(groupSchedule.getId() == 0){
+        if (groupSchedule.getId() == 0) {
             newId = groupsService.add(groupSchedule);
-        }else {
+        } else {
             newId = groupsService.update(groupSchedule);
         }
         return Integer.toString(newId);
@@ -48,7 +48,7 @@ public class GroupController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    public String  deleteGroup(@PathVariable String id) {
+    public String deleteGroup(@PathVariable String id) {
         groupsService.delete(Integer.parseInt(id));
         return "Group deleted";
     }
@@ -60,7 +60,7 @@ public class GroupController {
 
     @RequestMapping(value = "/get-groups/{id}")
     @ResponseBody
-    public String getGroupsInCourse(@PathVariable String id){
+    public String getGroupsInCourse(@PathVariable String id) {
         return gson.toJson(groupDao.getAllGroupsOfCourse(Integer.parseInt(id)));
     }
 
@@ -70,28 +70,28 @@ public class GroupController {
         return gson.toJson(groupDao.getEntityById(Integer.parseInt(id)));
     }
 
-    @RequestMapping(value = "/{id}/users",method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/users", method = RequestMethod.GET)
     @ResponseBody
-    public List<User> getStudents(@PathVariable String id){
+    public List<User> getStudents(@PathVariable String id) {
         return userDao.getByGroupId(Integer.parseInt(id));
     }
 
-    @RequestMapping(value = "/{id}/user/{userId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}/user/{userId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void deleteStudent(@PathVariable String id,@PathVariable String userId){
-        groupDao.deleteUserFromGroup(id,userId);
+    public void deleteStudent(@PathVariable String id, @PathVariable String userId) {
+        groupDao.deleteUserFromGroup(id, userId);
     }
 
     @RequestMapping(value = "/{id}/course", method = RequestMethod.GET)
     @ResponseBody
-    public Course getCourseByGroup(@PathVariable String id){
+    public Course getCourseByGroup(@PathVariable String id) {
         return courseDao.getCourseByGroup(Integer.parseInt(id));
     }
 
     @RequestMapping(value = {"/groups-and-quantity"}, method = RequestMethod.GET)
     @ResponseBody
     public String getLevelAndQuantity() {
-        return groupsService.getGroupsAndQuantity();
+        return gson.toJson(groupsService.getGroupsAndQuantity());
     }
 
 }

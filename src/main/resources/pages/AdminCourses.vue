@@ -15,7 +15,7 @@
         >
             <template v-slot:items="props">
                 <tr>
-                    <td class="my-link">
+                    <td class="my-link clickable">
                         <div @click="goToCoursePage(props.item.course.id)" >{{ props.item.course.name }}</div>
                     </td>
                     <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
@@ -75,9 +75,6 @@
         goToCoursePage(id){
           this.$router.push('/courses/'+ id);
         },
-        search(){
-
-        },
         deleteCourse(courseId){
             if(confirm("Are you sure you want to delete "+this.findCourseById(courseId).name)){
                 axios.delete('http://localhost:8080/getcourses/'+courseId)
@@ -101,5 +98,10 @@
 
 
 <style scoped>
-
+    .clickable {
+        cursor: pointer;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        color: black;
+    }
 </style>

@@ -6,11 +6,11 @@ import java.util.Objects;
 public class AttendanceStatus extends Entity<Integer> {
     private String title;
 
-    public AttendanceStatus(String title){
+    public AttendanceStatus(String title) {
         this.title = title;
     }
 
-    public AttendanceStatus(Integer id, String title){
+    public AttendanceStatus(Integer id, String title) {
         super(id);
         this.title = title;
     }
@@ -21,11 +21,13 @@ public class AttendanceStatus extends Entity<Integer> {
         if (!(o instanceof Course)) return false;
         if (!super.equals(o)) return false;
         AttendanceStatus status = (AttendanceStatus) o;
-        return title.equals( status.title);
+        return title.equals(status.title);
     }
+
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), title);    }
+        return Objects.hash(super.hashCode(), title);
+    }
 
     public String getTitle() {
         return title;

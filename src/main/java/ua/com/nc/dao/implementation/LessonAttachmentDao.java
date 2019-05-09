@@ -5,7 +5,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ILessonAttachmentDao;
-import ua.com.nc.domain.Attachment;
 import ua.com.nc.domain.LessonAttachment;
 
 import java.sql.PreparedStatement;
@@ -36,7 +35,7 @@ public class LessonAttachmentDao extends GenericAbstractDao<LessonAttachment, In
 
 
     @Override
-    protected Integer parseId(ResultSet rs){
+    protected Integer parseId(ResultSet rs) {
         return 0;
     }
 
@@ -66,8 +65,8 @@ public class LessonAttachmentDao extends GenericAbstractDao<LessonAttachment, In
     }
 
     @Override
-    protected void setId(PreparedStatement statement, Integer id)  {
-       //there is no id
+    protected void setId(PreparedStatement statement, Integer id) {
+        //there is no id
     }
 
     @Override
@@ -77,7 +76,7 @@ public class LessonAttachmentDao extends GenericAbstractDao<LessonAttachment, In
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement statement, LessonAttachment entity)  {
+    protected void prepareStatementForUpdate(PreparedStatement statement, LessonAttachment entity) {
     }
 
     @Override

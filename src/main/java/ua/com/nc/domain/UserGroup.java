@@ -6,7 +6,7 @@ import lombok.Data;
 public class UserGroup extends Entity<Integer> {
     private int userId;
     private int groupId;
-    private boolean attending ;
+    private boolean attending;
 
     public UserGroup() {
     }

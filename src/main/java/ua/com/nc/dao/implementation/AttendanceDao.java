@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class AttendanceDao extends GenericAbstractDao<Attendance, Integer> implements IAttendanceDao{
+public class AttendanceDao extends GenericAbstractDao<Attendance, Integer> implements IAttendanceDao {
 
     @Value("${attendance.select-by-student-id-and-group-id}")
     private String selectAttendanceByStudentIdAndGroupId;
@@ -26,8 +26,8 @@ public class AttendanceDao extends GenericAbstractDao<Attendance, Integer> imple
     private String attendanceUpdate;
 
     public AttendanceDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                   @Value("${spring.datasource.username}") String DATABASE_USER,
-                   @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
+                         @Value("${spring.datasource.username}") String DATABASE_USER,
+                         @Value("${spring.datasource.password}") String DATABASE_PASSWORD) throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }
 
@@ -91,8 +91,8 @@ public class AttendanceDao extends GenericAbstractDao<Attendance, Integer> imple
             String topic = rs.getString("topic");
             String status = rs.getString("status");
             String reason = rs.getString("reason");
-            attendances.add(new UserAttendanceDto(  id, lessonId, userId, reason, status, firstName,
-                                                    lastName, courseId, courseName, timeDate, topic));
+            attendances.add(new UserAttendanceDto(id, lessonId, userId, reason, status, firstName,
+                    lastName, courseId, courseName, timeDate, topic));
 
         }
         return attendances;
@@ -137,14 +137,14 @@ public class AttendanceDao extends GenericAbstractDao<Attendance, Integer> imple
         String sql = attendanceUpdate;
         log.info(sql + " attendance update");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            if(statusId == null){
+            if (statusId == null) {
                 statement.setNull(1, Types.INTEGER);
-            }else{
+            } else {
                 statement.setInt(1, statusId);
             }
-            if(reasonId == null){
+            if (reasonId == null) {
                 statement.setNull(2, Types.INTEGER);
-            }else{
+            } else {
                 statement.setInt(2, reasonId);
             }
             statement.setInt(3, attendanceId);

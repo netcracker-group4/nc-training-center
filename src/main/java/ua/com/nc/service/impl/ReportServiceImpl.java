@@ -35,9 +35,9 @@ public class ReportServiceImpl implements ReportService {
     private
     ICourseDao iCourseDao;
 
-    private String[] dashboardSheetNames =        {"Level And Quantity", "Level And Trainers", "Training And Quantity"};
-    private String[] levelAndQuantityColumns =    {"Level", "Course Name", "Group Name"};
-    private String[] levelAndTrainersColumns =    {"Trainer", "Course Name and Level"};
+    private String[] dashboardSheetNames = {"Level And Quantity", "Level And Trainers", "Training And Quantity"};
+    private String[] levelAndQuantityColumns = {"Level", "Course Name", "Group Name"};
+    private String[] levelAndTrainersColumns = {"Trainer", "Course Name and Level"};
     private String[] trainingAndQuantityColumns = {"Course Name", "Group Name", "Amount of Employees"};
 
 
@@ -71,7 +71,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private void checkColumnWidth(Sheet groupSheet, int cellCount, String fittingName) {
-        if(groupSheet.getColumnWidth(cellCount)< 255 * 30){
+        if (groupSheet.getColumnWidth(cellCount) < 255 * 30) {
             groupSheet.setColumnWidth(cellCount, 255 * fittingName.length());
         }
     }
@@ -129,20 +129,20 @@ public class ReportServiceImpl implements ReportService {
             String levelTitle = level.getTitle();
             Row levelRowColumn = sheetName.createRow(levelRowCount);
             Cell levelCell = levelRowColumn.createCell(0);
-            checkColumnWidth(sheetName,0, levelTitle);
-            levelCell.setCellStyle(headerStyle((XSSFWorkbook)sheetName.getWorkbook()));
+            checkColumnWidth(sheetName, 0, levelTitle);
+            levelCell.setCellStyle(headerStyle((XSSFWorkbook) sheetName.getWorkbook()));
             levelCell.setCellValue(levelTitle);
             for (Course course : iCourseDao.getAllByLevel(level.getId())) {
                 String courseName = course.getName();
                 Row courseRowColumn = sheetName.createRow(levelRowCount++);
                 Cell courseCell = courseRowColumn.createCell(1);
-                checkColumnWidth(sheetName,1, courseName);
+                checkColumnWidth(sheetName, 1, courseName);
                 courseCell.setCellValue(courseName);
                 for (Group group : iGroupDao.getAllGroupsOfCourse(course.getId())) {
                     String groupName = group.getTitle();
                     Row groupRowColumn = sheetName.createRow(levelRowCount++);
                     groupRowColumn.createCell(2).setCellValue(groupName);
-                    checkColumnWidth(sheetName,2, groupName);
+                    checkColumnWidth(sheetName, 2, groupName);
                 }
             }
         }
@@ -174,7 +174,7 @@ public class ReportServiceImpl implements ReportService {
 
     private void drawTrainingAndQuantity(Sheet trainingAndQuantity) {
         int rowCounter = 1;
-        checkColumnWidth(trainingAndQuantity,2, trainingAndQuantityColumns[2]);
+        checkColumnWidth(trainingAndQuantity, 2, trainingAndQuantityColumns[2]);
         int[] courseCell = {0, 2};
         int[] groupCell = {1, 2};
         for (Course course : iCourseDao.getAll()) {
@@ -189,7 +189,7 @@ public class ReportServiceImpl implements ReportService {
                 numberOfEmployeesInCourse += numberOfEmployeesInGroup;
                 Row groupRow = trainingAndQuantity.createRow(rowCounter++);
                 String groupTitle = group.getTitle();
-                checkColumnWidth(trainingAndQuantity,1, groupTitle);
+                checkColumnWidth(trainingAndQuantity, 1, groupTitle);
                 groupRow.createCell(groupCell[0]).setCellValue(groupTitle);
                 groupRow.createCell(groupCell[1]).setCellValue(numberOfEmployeesInGroup);
             }

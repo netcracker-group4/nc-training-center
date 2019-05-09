@@ -7,8 +7,12 @@ import java.io.FileInputStream;
 
 public interface AttachmentService {
     void add(Integer lessonId, Attachment attachment);
+
     void add(Integer lessonId, String url, String description);
+
     void delete(Integer id);
+
     void uploadFile(Integer lessonId, MultipartFile file);
+
     FileInputStream downloadFile(Integer id);
 }

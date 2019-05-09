@@ -103,7 +103,7 @@
         },
         methods: {
             goToGroupPage(groupId) {
-                this.$router.push('/groups/' + groupId);
+                this.$router.push('/group/' + groupId);
             },
             goToCoursePage(courseId) {
                 this.$router.push('/courses/' + courseId);
@@ -117,11 +117,11 @@
             axios.get('http://localhost:8080/dashboard/training-and-quantity')
                 .then(function (response) {
                     self.coursesAndQuantities = response.data;
+                    console.log(response.data);
                     self.coursesAndQuantities.forEach(function (s) {
                         self.selectedCourses.push(s.course.id);
                         s.groups.forEach(function (ee) {
                             self.allGroups.push(ee.group);
-                            self.selectedGroups.push(ee.group.id);
                         });
                         self.groupsForCourses[s.course.id] = s.groups;
                     });

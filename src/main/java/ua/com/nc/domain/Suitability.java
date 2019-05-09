@@ -3,7 +3,7 @@ package ua.com.nc.domain;
 import lombok.Data;
 
 @Data
-public class Suitability extends Entity<Integer>{
+public class Suitability extends Entity<Integer> {
     private String title;
     private String color;
     private int priority;

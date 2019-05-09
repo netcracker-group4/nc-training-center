@@ -1,6 +1,7 @@
 package ua.com.nc.dto;
 
 import lombok.Getter;
+import ua.com.nc.domain.Group;
 
 @Getter
 public class DtoGroup {
@@ -10,6 +11,8 @@ public class DtoGroup {
     private String courseName;
     private int trainerId;
     private String level;
+    private int numberOfEmployees;
+
 
     public DtoGroup() {
     }
@@ -26,6 +29,12 @@ public class DtoGroup {
         this.courseName = courseName;
         this.trainerId = trainerId;
         this.level = level;
+    }
+
+    public DtoGroup(Integer id, String title, int numberOfEmployees) {
+        this.id = id;
+        this.title = title;
+        this.numberOfEmployees = numberOfEmployees;
     }
 
 }

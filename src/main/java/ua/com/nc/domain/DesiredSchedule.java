@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class DesiredSchedule extends Entity<Integer>{
+public class DesiredSchedule extends Entity<Integer> {
     private int userId;
     private int courseId;
     // m1 h1 m2 h2 day in [1,2,3,4,5,6,7]

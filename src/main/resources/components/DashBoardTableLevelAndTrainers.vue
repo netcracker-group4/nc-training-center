@@ -103,7 +103,7 @@
         },
         methods: {
             goToTrainerPage(trainerId) {
-                this.$router.push('/trainers/' + trainerId);
+                this.$router.push('/userpage/' + trainerId);
             },
             goToCoursePage(trainerId) {
                 this.$router.push('/courses/' + trainerId);

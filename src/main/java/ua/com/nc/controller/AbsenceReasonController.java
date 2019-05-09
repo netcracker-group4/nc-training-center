@@ -22,22 +22,24 @@ public class AbsenceReasonController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public String getReasons(){
+    public String getReasons() {
         return gson.toJson(absenceReasonDao.getAll());
     }
-    @RequestMapping(method = RequestMethod.GET,value="/{id}")
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
-    public String getReason(@PathVariable String id){
+    public String getReason(@PathVariable String id) {
         return gson.toJson(absenceReasonDao.getEntityById(Integer.parseInt(id)));
     }
 
-    @RequestMapping(method = RequestMethod.DELETE,value="/{id}")
-    public void deleteReason(@PathVariable String id){
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    public void deleteReason(@PathVariable String id) {
         absenceReasonDao.delete(Integer.parseInt(id));
         absenceReasonDao.commit();
     }
+
     @RequestMapping(method = RequestMethod.POST)
-    public void add(@RequestParam(name = "title")String title){
+    public void add(@RequestParam(name = "title") String title) {
         service.add(title);
     }
 

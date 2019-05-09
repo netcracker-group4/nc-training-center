@@ -20,7 +20,7 @@ public class AttendanceStatusController {
     private AttendanceStatusService attendanceStatusService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(){
+    public ResponseEntity<?> getAll() {
         return ResponseEntity.ok().body(new Gson().toJson(attendanceStatusService.getAll()));
     }
 }

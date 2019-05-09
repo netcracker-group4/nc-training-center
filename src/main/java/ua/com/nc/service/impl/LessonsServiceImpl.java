@@ -1,6 +1,9 @@
 package ua.com.nc.service.impl;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
@@ -53,7 +56,6 @@ public class LessonsServiceImpl implements LessonsService {
     @Override
     public String updateLesson(DtoLesson toUpdate) {
         Lesson domainLesson = toUpdate.getDomainLesson();
-        System.out.println("domain    to update    " + domainLesson);
         iLessonDao.update(domainLesson);
         iLessonDao.commit();
         iLessonAttachmentDao.deleteByLessonId(toUpdate.getId());

@@ -1,5 +1,6 @@
 package ua.com.nc.controller;
 
+import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,26 +16,31 @@ public class LandingPageController {
 
     @Autowired
     private LandingPageService landingPageService;
+    private Gson gson = new Gson();
 
-    @RequestMapping (value = {"/courses-on-landing-page"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/courses-on-landing-page"}, method = RequestMethod.GET)
     @ResponseBody
-    public String getLandingPageCourses () { return landingPageService.getLandingPageCourses(); }
-
-    @RequestMapping (value = {"/trainers-on-landing-page"}, method = RequestMethod.GET)
-    @ResponseBody
-    public String getLandingPageTrainers () { return landingPageService.getLandingPageTrainers(); }
-
-    @RequestMapping (value = {"/update-course-landing-page"}, method = RequestMethod.POST)
-    @ResponseBody
-    public void updateCourseLandingPage (@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage,
-                                         @RequestParam (name = "id") int id) {
-        landingPageService.updateCourseLandingPage (id, isOnLandingPage);
+    public String getLandingPageCourses() {
+        return gson.toJson(landingPageService.getLandingPageCourses());
     }
 
-    @RequestMapping (value = {"/update-trainer-landing-page"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/trainers-on-landing-page"}, method = RequestMethod.GET)
     @ResponseBody
-    public void updateTrainerLandingPage (@RequestParam (name = "isOnLandingPage") boolean isOnLandingPage,
-                                          @RequestParam (name = "id") int id) {
+    public String getLandingPageTrainers() {
+        return gson.toJson(landingPageService.getLandingPageTrainers());
+    }
+
+    @RequestMapping(value = {"/update-course-landing-page"}, method = RequestMethod.POST)
+    @ResponseBody
+    public void updateCourseLandingPage(@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage,
+                                        @RequestParam(name = "id") int id) {
+        landingPageService.updateCourseLandingPage(id, isOnLandingPage);
+    }
+
+    @RequestMapping(value = {"/update-trainer-landing-page"}, method = RequestMethod.POST)
+    @ResponseBody
+    public void updateTrainerLandingPage(@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage,
+                                         @RequestParam(name = "id") int id) {
         landingPageService.updateTrainerLandingPage(id, isOnLandingPage);
     }
 

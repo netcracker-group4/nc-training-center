@@ -32,8 +32,8 @@ public class FeedbackDao extends GenericAbstractDao<Feedback, Integer> implement
     private String feedbackSelectAllByUser;
 
     public FeedbackDao(@Value("${spring.datasource.url}") String DATABASE_URL,
-                     @Value("${spring.datasource.username}") String DATABASE_USER,
-                     @Value("${spring.datasource.password}") String DATABASE_PASSWORD)
+                       @Value("${spring.datasource.username}") String DATABASE_USER,
+                       @Value("${spring.datasource.password}") String DATABASE_PASSWORD)
             throws PersistException {
         super(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
     }

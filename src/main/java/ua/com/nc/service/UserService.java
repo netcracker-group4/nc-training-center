@@ -18,6 +18,7 @@ public interface UserService extends UserDetailsService {
     void updateActive(User user);
 
     List<DtoTeacherAndManager> getAllManagers();
+
     List<DtoTeacherAndManager> getAllTrainers();
 
     void addEmployeeByAdmin(DtoMailSender dtoMailSender);

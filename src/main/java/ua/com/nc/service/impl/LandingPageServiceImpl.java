@@ -1,6 +1,5 @@
 package ua.com.nc.service.impl;
 
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.ICourseDao;
@@ -21,26 +20,24 @@ public class LandingPageServiceImpl implements LandingPageService {
     private IUserDao iUserDao;
 
     @Override
-    public String getLandingPageCourses () {
-        List <Course> landingPageCourses = iCourseDao.getLandingPageCourses();
-        return new Gson().toJson(landingPageCourses);
+    public List<Course> getLandingPageCourses() {
+        return iCourseDao.getLandingPageCourses();
     }
 
     @Override
-    public String getLandingPageTrainers () {
-        List <User> landingPageTrainers = iUserDao.getLandingPageTrainers();
-        return new Gson().toJson(landingPageTrainers);
+    public List<User> getLandingPageTrainers() {
+        return iUserDao.getLandingPageTrainers();
     }
 
     @Override
-    public void updateCourseLandingPage (int id, boolean isOnLandingPage) {
+    public void updateCourseLandingPage(int id, boolean isOnLandingPage) {
         iCourseDao.updateCourseLandingPage(id, isOnLandingPage);
         iCourseDao.commit();
     }
 
     @Override
-    public void updateTrainerLandingPage (int id, boolean isOnLandingPage) {
-        iUserDao.updateTrainerLandingPage (id, isOnLandingPage);
+    public void updateTrainerLandingPage(int id, boolean isOnLandingPage) {
+        iUserDao.updateTrainerLandingPage(id, isOnLandingPage);
         iUserDao.commit();
     }
 }

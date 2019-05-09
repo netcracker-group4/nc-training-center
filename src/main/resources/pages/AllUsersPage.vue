@@ -17,7 +17,7 @@
                             item-key="id"
                     >
                         <template v-slot:items="props">
-                            <tr @click="goToUserPage(props.item.id)">
+                            <tr class="my-link" @click="goToUserPage(props.item.id)">
                                 <td>
                                     <div>{{ props.item.firstName }}</div>
                                 </td>
@@ -30,7 +30,6 @@
                                 <td class="text-xs-right">{{ props.item.active }}<!--<img src="../img/icon/baseline_done_black_18dp.png"/>--></td>
                             </tr>
                         </template>
-
                     </v-data-table>
                 </v-flex>
             </v-layout>
@@ -105,5 +104,11 @@
     }
     .role {
         align-items: center;
+    }
+    .clickable {
+        cursor: pointer;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        color: black;
     }
 </style>

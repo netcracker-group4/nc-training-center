@@ -7,12 +7,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
-import ua.com.nc.dto.DtoGroup;
-import ua.com.nc.dto.DtoTeacherAndManager;
-import ua.com.nc.dto.DtoUser;
-import ua.com.nc.dto.DtoUserProfiles;
-import ua.com.nc.dao.interfaces.*;
-import ua.com.nc.domain.*;
 import ua.com.nc.dto.*;
 import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
@@ -122,7 +116,7 @@ public class UserServiceImpl implements UserService {
                 Course course = iCourseDao.getEntityById(courseId);
                 String courseName = course.getName();
                 dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId,
-                        courseName, course.getUserId(), getLevelName(levels,course.getLevel() )));
+                        courseName, course.getUserId(), getLevelName(levels, course.getLevel())));
             }
         }
 
@@ -167,9 +161,9 @@ public class UserServiceImpl implements UserService {
         return dtoUserProfiles;
     }
 
-    private String getLevelName(List<Level> levels, int levelId){
+    private String getLevelName(List<Level> levels, int levelId) {
         for (Level level : levels) {
-            if(level.getId() == levelId){
+            if (level.getId() == levelId) {
                 return level.getTitle();
             }
         }

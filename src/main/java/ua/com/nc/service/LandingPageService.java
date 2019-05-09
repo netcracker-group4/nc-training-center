@@ -1,13 +1,18 @@
 package ua.com.nc.service;
 
 
+import ua.com.nc.domain.Course;
+import ua.com.nc.domain.User;
+
+import java.util.List;
+
 public interface LandingPageService {
 
-    String getLandingPageCourses ();
+    List<Course> getLandingPageCourses();
 
-    String getLandingPageTrainers ();
+    List<User> getLandingPageTrainers();
 
-    void updateCourseLandingPage (int id, boolean isOnLandingPage);
+    void updateCourseLandingPage(int id, boolean isOnLandingPage);
 
-    void updateTrainerLandingPage (int id, boolean isOnLandingPage);
+    void updateTrainerLandingPage(int id, boolean isOnLandingPage);
 }

@@ -92,8 +92,8 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
         statement.setString(2, entity.getTopic());
         statement.setInt(3, entity.getTrainerId());
         statement.setTimestamp(4, entity.getTime());
-        String[] intervalElems =  entity.getDuration().split(":");
-        statement.setString(5, intervalElems[0]+"h "+ intervalElems[1]+"m");
+        String[] intervalElems = entity.getDuration().split(":");
+        statement.setString(5, intervalElems[0] + "h " + intervalElems[1] + "m");
         statement.setBoolean(6, entity.isCanceled());
     }
 
@@ -114,8 +114,8 @@ public class LessonDao extends GenericAbstractDao<Lesson, Integer> implements IL
             Date timeDate = rs.getDate("time_date");
             Timestamp time = rs.getTimestamp("time_date");
             boolean isCanceled = rs.getBoolean("is_canceled");
-            String  duration = rs.getString("duration");
-            Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate, time,duration, isCanceled);
+            String duration = rs.getString("duration");
+            Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate, time, duration, isCanceled);
             lessons.add(lesson);
         }
         return lessons;

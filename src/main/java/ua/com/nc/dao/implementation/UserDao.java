@@ -174,7 +174,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     }
 
     @Override
-    public List<User> getTrainersOnCourse(int id){
+    public List<User> getTrainersOnCourse(int id) {
         List<User> list;
         String sql = getSelectTrainerByCourseId;
         log.info(sql + "find by course");
@@ -282,7 +282,6 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     }
 
 
-
     @Override
     public List<User> getByGroupId(Integer id) {
         List<User> users;
@@ -348,7 +347,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
-            statement.setInt(3,user.getManagerId());
+            statement.setInt(3, user.getManagerId());
             statement.setInt(4, user.getId());
             statement.executeUpdate();
         } catch (Exception e) {
@@ -430,7 +429,7 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
     }
 
     @Override
-    public User getTrainerByGroupId(Integer groupId){
+    public User getTrainerByGroupId(Integer groupId) {
         String sql = getSelectTrainerByCourseId;
         log.info(sql + "trainer by group id = " + groupId);
         List<User> list = getFromQueryById(groupId, sql);
@@ -442,18 +441,19 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         }
         return list.iterator().next();
     }
-    public TreeMap<User, User> getStudentsAbsentWitNoReason (int lessonId) {
-        List <User> students = new ArrayList ();
+
+    public TreeMap<User, User> getStudentsAbsentWitNoReason(int lessonId) {
+        List<User> students = new ArrayList();
         String sql = selectStudentsAbsentOnLessonWithNoReason;
-        log.info (sql + " selectStudentsAbsentOnLessonWithNoReason " + lessonId);
+        log.info(sql + " selectStudentsAbsentOnLessonWithNoReason " + lessonId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            setId (statement, lessonId);
+            setId(statement, lessonId);
             ResultSet rs = statement.executeQuery();
-            students = parseResultSet (rs);
+            students = parseResultSet(rs);
         } catch (Exception e) {
             log.trace(e);
         }
-        TreeMap <User, User> absentUsersAndTheirManagers = new TreeMap ();
+        TreeMap<User, User> absentUsersAndTheirManagers = new TreeMap();
         for (User student : students) {
             User manager = getManagerById(student.getId());
             absentUsersAndTheirManagers.put(student, manager);
@@ -461,10 +461,10 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         return absentUsersAndTheirManagers;
     }
 
-    public User getAdmin () {
-        List <User> admin = new ArrayList<>();
+    public User getAdmin() {
+        List<User> admin = new ArrayList<>();
         String sql = getAdmin;
-        log.info (sql + " getAdmin");
+        log.info(sql + " getAdmin");
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(sql);
@@ -481,16 +481,16 @@ public class UserDao extends GenericAbstractDao<User, Integer> implements IUserD
         return admin.get(0);
     }
 
-    public User getLessonTrainer (int lessonId) {
+    public User getLessonTrainer(int lessonId) {
         String sql = this.getLessonTrainer;
         List<User> trainer;
-        log.info ("get Trainer of lesson " + lessonId);
+        log.info("get Trainer of lesson " + lessonId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt (1, lessonId);
+            statement.setInt(1, lessonId);
             ResultSet rs = statement.executeQuery();
             trainer = parseResultSet(rs);
         } catch (Exception e) {
-            log.trace (e);
+            log.trace(e);
             throw new PersistException(e.getMessage());
         }
         if (trainer == null || trainer.size() == 0) {

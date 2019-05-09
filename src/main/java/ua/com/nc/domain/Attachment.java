@@ -14,7 +14,7 @@ public class Attachment extends Entity<Integer> {
     private String url;
     private String description;
 
-    public Attachment(Integer id,String url,String description){
+    public Attachment(Integer id, String url, String description) {
         super(id);
         this.url = url;
         this.description = description;

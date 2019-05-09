@@ -24,45 +24,45 @@ public class AttendanceController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<?> getAttendance(@RequestParam(required = false, name="userId") Integer userId,
-                                        @RequestParam(required = false, name="courseId") Integer courseId,
-                                        @RequestParam(required = false, name="groupId") Integer groupId){
+    public ResponseEntity<?> getAttendance(@RequestParam(required = false, name = "userId") Integer userId,
+                                           @RequestParam(required = false, name = "courseId") Integer courseId,
+                                           @RequestParam(required = false, name = "groupId") Integer groupId) {
 
-        if(userId != null && courseId != null){
+        if (userId != null && courseId != null) {
             List<Attendance> attendances = attendanceService.getAttendanceByStudentIdAndCourseId(userId, courseId);
             return ResponseEntity.ok().body(new Gson().toJson(attendances));
-        }if(userId != null && groupId != null){
+        }
+        if (userId != null && groupId != null) {
             Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
             List<Attendance> attendances = attendanceService.getAttendanceByStudentIdAndGroupId(userId, groupId);
             return ResponseEntity.ok().body(gson.toJson(attendances));
-        }
-        else{
+        } else {
             AttendanceDto attendanceDto = attendanceService.getAttendance();
-        return ResponseEntity.ok().body(new Gson().toJson(attendanceDto));
+            return ResponseEntity.ok().body(new Gson().toJson(attendanceDto));
         }
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> updateAttendance(@RequestParam String attendanceId,
                                               @RequestParam String statusId,
-                                              @RequestParam String absenceId){
+                                              @RequestParam String absenceId) {
         Integer integerAttendanceId;
         Integer integerStatusId;
         Integer integerAbsenceId;
 
-        if(attendanceId.trim().equals("null") || attendanceId.equals("undefined")){
+        if (attendanceId.trim().equals("null") || attendanceId.equals("undefined")) {
             integerAttendanceId = null;
-        }else{
+        } else {
             integerAttendanceId = Integer.parseInt(attendanceId);
         }
-        if(statusId.trim().equals("null") || statusId.equals("undefined")){
+        if (statusId.trim().equals("null") || statusId.equals("undefined")) {
             integerStatusId = null;
-        }else{
+        } else {
             integerStatusId = Integer.parseInt(statusId);
         }
-        if(absenceId.trim().equals("null") || absenceId.equals("undefined")){
+        if (absenceId.trim().equals("null") || absenceId.equals("undefined")) {
             integerAbsenceId = null;
-        }else{
+        } else {
             integerAbsenceId = Integer.parseInt(absenceId);
         }
 

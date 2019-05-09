@@ -1,6 +1,5 @@
 package ua.com.nc.service.impl;
 
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.ICourseDao;
@@ -26,7 +25,7 @@ public class GroupsServiceImpl implements GroupsService {
     ICourseDao iCourseDao;
 
     @Override
-    synchronized public int update(GroupSchedule groupSchedule) {
+    public int update(GroupSchedule groupSchedule) {
         // TODO what to do with transactions for few daos??
         Group groupToUpdate = iGroupDao.getEntityById(groupSchedule.getId());
         groupToUpdate.setTitle(groupSchedule.getName());
@@ -39,7 +38,7 @@ public class GroupsServiceImpl implements GroupsService {
     }
 
     @Override
-    synchronized public boolean delete(int groupId) {
+    public boolean delete(int groupId) {
         // TODO what to do with transactions for few daos??
         iUserGroupDao.deleteAllForGroup(groupId);
         iUserGroupDao.commit();
@@ -50,7 +49,7 @@ public class GroupsServiceImpl implements GroupsService {
     }
 
     @Override
-    synchronized public int add(GroupSchedule groupSchedule) {
+    public int add(GroupSchedule groupSchedule) {
         // TODO what to do with transactions for few daos??
         Group groupToInsert = new Group(groupSchedule.getCourseId(), groupSchedule.getName());
         iGroupDao.insert(groupToInsert);
@@ -70,7 +69,7 @@ public class GroupsServiceImpl implements GroupsService {
         return dtoGroups;
     }
 
-    synchronized private void updateStudentsForGroup(GroupSchedule groupSchedule, Group group) {
+    private void updateStudentsForGroup(GroupSchedule groupSchedule, Group group) {
         List<ScheduleForUser> newUsers = groupSchedule.getGroupScheduleList();
         for (ScheduleForUser newUser : newUsers) {
             UserGroup oldUserGroupForThisCourse = iUserGroupDao.getByUserAndCourse(newUser.getUserId(), group.getCourseId());
@@ -84,32 +83,17 @@ public class GroupsServiceImpl implements GroupsService {
             }
         }
     }
-    private class DTOGroup{
-        private Group group;
-        private int numberOfEmployees;
 
-        public DTOGroup(Group group, int numberOfEmploers) {
-            this.group = group;
-            this.numberOfEmployees = numberOfEmploers;
-        }
 
-        public Group getGroupInDTO() {
-            return group;
-        }
-
-        public int getNumberOfEmployees() {
-            return numberOfEmployees;
-        }
-    }
     @Override
-    public String getGroupsAndQuantity() {
+    public List<DtoGroup> getGroupsAndQuantity() {
         List<Group> groups = iGroupDao.getAll();
-        List<DTOGroup> dtos = new ArrayList<>();
+        List<DtoGroup> dtos = new ArrayList<>();
         groups.forEach(g -> {
             int n = iGroupDao.getNumberOfEmployeesInGroup(g.getId());
-            dtos.add(new DTOGroup(g,n));
+            dtos.add(new DtoGroup(g.getId(), g.getTitle(), n));
         });
 
-        return new Gson().toJson(dtos);
+        return dtos;
     }
 }

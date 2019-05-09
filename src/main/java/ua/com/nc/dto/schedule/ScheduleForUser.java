@@ -15,19 +15,19 @@ public class ScheduleForUser {
     public ScheduleForUser() {
     }
 
-    public ScheduleForUser(User user, List<ParsedSchedule> desiredSchedules, int start, double end){
+    public ScheduleForUser(User user, List<ParsedSchedule> desiredSchedules, int start, double end) {
         List<ParsedSchedule> parsedSchedules = getForUser(user.getId(), desiredSchedules);
         this.userId = user.getId();
         this.userName = user.getFirstName() + "  " + user.getLastName();
         for (int i = start; i < end; i++) {
-            scheduleForIntervals.add(new ScheduleForInterval(i, i+1, parsedSchedules));
+            scheduleForIntervals.add(new ScheduleForInterval(i, i + 1, parsedSchedules));
         }
     }
 
     private List<ParsedSchedule> getForUser(int userId, List<ParsedSchedule> desiredSchedules) {
         List<ParsedSchedule> result = new ArrayList<>();
         for (ParsedSchedule parsedSchedule : desiredSchedules) {
-            if(parsedSchedule.getUserId() == userId){
+            if (parsedSchedule.getUserId() == userId) {
                 result.add(parsedSchedule);
             }
         }

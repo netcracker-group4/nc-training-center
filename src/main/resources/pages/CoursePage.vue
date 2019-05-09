@@ -182,7 +182,7 @@
                     });
             },
             goTrainerPage(id){
-                this.$router.push('/trainers/' + id);
+                this.$router.push('/userpage/' + id);
             },
             goGroupPage(id){
                 this.$router.push('/groups/' + id);

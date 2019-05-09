@@ -1,19 +1,15 @@
 package ua.com.nc.controller;
 
-import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.domain.Role;
 import ua.com.nc.domain.User;
-import ua.com.nc.dto.*;
-import ua.com.nc.service.EmailService;
+import ua.com.nc.dto.DtoMailSender;
+import ua.com.nc.dto.DtoUserProfiles;
+import ua.com.nc.dto.DtoUserSave;
 import ua.com.nc.service.UserService;
-
-import java.util.List;
 
 @Log4j
 @RestController
@@ -26,17 +22,15 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> save(@RequestBody DtoUserSave dtoUserSave) {
 //        log.debug(user);
-
-
-        if(     dtoUserSave != null &&
+        if (dtoUserSave != null &&
                 dtoUserSave.getEmail() != null &&
                 dtoUserSave.getFirstName() != null &&
                 dtoUserSave.getLastName() != null &&
                 dtoUserSave.getPassword() != null &&
-                dtoUserSave.getRole() != null){
+                dtoUserSave.getRole() != null) {
             userService.add(dtoUserSave);
             return ResponseEntity.ok().body("User saved");
-        }else{
+        } else {
             return ResponseEntity.badRequest().body("Incorrectly entered fields");
         }
 

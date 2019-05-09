@@ -1,6 +1,5 @@
 package ua.com.nc.dto;
 
-import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.ToString;
 import ua.com.nc.domain.Attendance;

@@ -1,8 +1,6 @@
 package ua.com.nc.dto;
 
 import lombok.Data;
-import ua.com.nc.domain.Feedback;
-import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Role;
 
 import java.util.List;
@@ -21,7 +19,7 @@ public class DtoUserProfiles {
     private List<DtoGroup> groups;
     private List<DtoFeedback> dtoFeedbacks;
 
-    DtoUserProfiles(){
+    DtoUserProfiles() {
     }
 
     public DtoUserProfiles(Integer id, String firstName, String lastName, String email, String image, List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager, List<DtoTeacherAndManager> dtoTeachers, List<DtoGroup> groups, List<DtoFeedback> dtoFeedbacks) {

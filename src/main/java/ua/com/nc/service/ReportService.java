@@ -1,6 +1,5 @@
 package ua.com.nc.service;
 
-import ua.com.nc.domain.Group;
 import ua.com.nc.domain.User;
 
 import java.io.ByteArrayInputStream;

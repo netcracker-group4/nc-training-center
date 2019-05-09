@@ -2,7 +2,7 @@ package ua.com.nc.domain;
 
 import java.util.Objects;
 
-public class Entity <T>{
+public class Entity<T> {
     private T id;
 
     Entity() {

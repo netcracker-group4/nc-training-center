@@ -36,14 +36,15 @@ public class ReportController {     //    /download-report/dashboard-report
         ByteArrayInputStream in = reportService.getAttendanceExcel();
 
         HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Disposition",
-                    "attachment; filename = attendance-report.xlsx");
+        headers.add("Content-Disposition",
+                "attachment; filename = attendance-report.xlsx");
 
         return ResponseEntity.ok().headers(headers).body(new InputStreamResource(in));
     }
 
     @RequestMapping(value = "/attendance-report/{groupId}", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource>  excelGroupAttendanceReport(@PathVariable Integer groupId) throws IOException {
+    public ResponseEntity<InputStreamResource> excelGroupAttendanceReport(@PathVariable Integer groupId)
+            throws IOException {
 
         ByteArrayInputStream in = reportService.getAttendanceExcel(groupId);
 

@@ -16,16 +16,16 @@ public class AttendanceReminderServiceImpl implements AttendanceReminderService 
     @Autowired
     private IUserDao userDao;
 
-    public TreeMap <User, User> getStudentsAbsentWitNoReason (int lessonId) {
-        TreeMap <User, User> absentUsersAndTheirManagers = userDao.getStudentsAbsentWitNoReason(lessonId);
+    public TreeMap<User, User> getStudentsAbsentWitNoReason(int lessonId) {
+        TreeMap<User, User> absentUsersAndTheirManagers = userDao.getStudentsAbsentWitNoReason(lessonId);
         return absentUsersAndTheirManagers;
     }
 
-    public User getAdmin () {
+    public User getAdmin() {
         return userDao.getAdmin();
     }
 
-    public User getLessonTrainer (int lessonId) {
+    public User getLessonTrainer(int lessonId) {
         return userDao.getLessonTrainer(lessonId);
     }
 

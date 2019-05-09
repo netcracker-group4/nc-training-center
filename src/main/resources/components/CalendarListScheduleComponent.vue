@@ -202,7 +202,6 @@
             }
         },
         methods: {
-
             getDate(strDate) {
                 return new Date(strDate).toDateString().slice(0, 20);
             },
@@ -237,13 +236,13 @@
                 return parseInt(hours) + 'h ' + parseInt(minutes) + 'm';
             },
             goToGroupPage(groupId) {
-                this.$router.push('/groups/' + groupId);
+                this.$router.push('/group/' + groupId);
             },
             goToCoursePage(courseId) {
                 this.$router.push('/courses/' + courseId);
             },
             goToTrainerPage(trainerId) {
-                this.$router.push('/trainers/' + trainerId);
+                this.$router.push('/userpage/' + trainerId);
             },
             getGroupName(groupId) {
                 return this.groupsList.filter((e) => {

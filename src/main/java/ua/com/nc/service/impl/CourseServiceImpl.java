@@ -1,6 +1,5 @@
 package ua.com.nc.service.impl;
 
-import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +38,13 @@ public class CourseServiceImpl implements CourseService {
     private IUserDao iUserDao;
     @Autowired
     private IGroupDao iGroupDao;
-@Autowired
+    @Autowired
     private IUserGroupDao iUserGroupDao;
+
+
+    private int startOfDay = 8;
+    private int endOfDay = 21;
+
 
     //TODO Create all implementations for this bean, then uncomment 1st line of add(...) mthd
     private ICourseStatus statusDao;
@@ -58,11 +62,10 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course stringToObjCourse(String name, String user, String level, String courseStatus,
-                                    String imageUrl, String isOnLandingPage, String desc, String startDay, String endDay) {
+    public Course stringToObjCourse(String name, String user, String level,
+                                    String courseStatus, String imageUrl, String isOnLandingPage,
+                                    String desc, String startDay, String endDay) {
         //int statusId = statusDao.getIdByName(courseStatus.getName());
-
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         int userId = 1;
 //        CourseStatus status = CourseStatus.valueOf(courseStatus);
@@ -80,20 +83,18 @@ public class CourseServiceImpl implements CourseService {
         int lvl = levelDao.getIdByName(level.trim());
 
         return new Course(name, lvl, statusId, userId, imageUrl,
-                new java.sql.Date(startingDay.getTime()), new java.sql.Date(endingDay.getTime()), isLanding, desc);
+                new java.sql.Date(startingDay.getTime()), new java.sql.Date(endingDay.getTime()),
+                isLanding, desc);
     }
 
     @Override
-    public void add(String name, int userId, String lvl, CourseStatus courseStatus, String imageUrl, boolean isLanding, String desc, Date startingDay, Date endingDay) {
+    public void add(String name, int userId, String lvl, CourseStatus courseStatus, String imageUrl, boolean isLanding,
+                    String desc, Date startingDay, Date endingDay) {
 
     }
 
-    private int startOfDay = 8;
-    private int endOfDay = 21;
-
-
     @Override
-    public String getDesiredScheduleForUngroupedStudentsOfCourse(int courseId) throws Exception {
+    public List<ScheduleForUser> getDesiredScheduleForUngroupedStudentsOfCourse(int courseId) throws Exception {
         List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getAllForCourse(courseId);
         List<ScheduleForUser> scheduleForUsers = new ArrayList<>();
         for (User user : iUserDao.getUngroupedByCourse(courseId)) {
@@ -101,15 +102,15 @@ public class CourseServiceImpl implements CourseService {
                     parseSchedules(desiredScheduleList, iSuitabilityDao.getAll()),
                     startOfDay, endOfDay));
         }
-        return new Gson().toJson(scheduleForUsers);
+        return scheduleForUsers;
     }
 
     @Override
-    public String getDesiredScheduleForFormedGroupsForCourse(int courseId) throws Exception {
+    public List<GroupSchedule> getDesiredScheduleForFormedGroupsForCourse(int courseId) throws Exception {
         List<GroupSchedule> scheduleForGroupsForCourse = new ArrayList<>();
         List<ParsedSchedule> desiredScheduleList = parseSchedules(
-                        desiredScheduleDao.getAllForCourse(courseId),
-                        iSuitabilityDao.getAll());
+                desiredScheduleDao.getAllForCourse(courseId),
+                iSuitabilityDao.getAll());
         List<Group> allGroupsForCourse = iGroupDao.getAllGroupsOfCourse(courseId);
         for (Group group : allGroupsForCourse) {
             List<ScheduleForUser> scheduleForUsersInGroup = new ArrayList<>();
@@ -117,13 +118,15 @@ public class CourseServiceImpl implements CourseService {
                 scheduleForUsersInGroup.add(new ScheduleForUser(user,
                         desiredScheduleList, startOfDay, endOfDay));
             }
-            scheduleForGroupsForCourse.add(new GroupSchedule(group.getId(), group.getTitle(),scheduleForUsersInGroup, courseId));
+            scheduleForGroupsForCourse.add(new GroupSchedule(group.getId(), group.getTitle(),
+                    scheduleForUsersInGroup, courseId));
         }
-        return new Gson().toJson(scheduleForGroupsForCourse);
+        return scheduleForGroupsForCourse;
     }
 
 
-    private List<ParsedSchedule> parseSchedules(List<DesiredSchedule> desiredSchedules, List<Suitability> suitabilities) throws Exception {
+    private List<ParsedSchedule> parseSchedules(List<DesiredSchedule> desiredSchedules, List<Suitability> suitabilities)
+            throws Exception {
         List<ParsedSchedule> result = new ArrayList<>();
         for (DesiredSchedule desiredSchedule : desiredSchedules) {
             result.add(new ParsedSchedule(desiredSchedule, suitabilities));
@@ -132,7 +135,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public String getDayIntervals() {
+    public List<String> getDayIntervals() {
         List<String> dayIntervals = new ArrayList<>();
         for (int i = startOfDay; i < endOfDay; i++) {
             int halfDay = 12;
@@ -140,36 +143,35 @@ public class CourseServiceImpl implements CourseService {
             String appendix = (i < 12) ? "am" : "pm";
             dayIntervals.add(hours + appendix);
         }
-        return new Gson().toJson(dayIntervals);
+        return dayIntervals;
     }
 
 
     /**
-     *
      * @return local image link;
      */
     @Override
     public String uploadImage(MultipartFile image) {
         StringBuilder name;
-        if(!image.isEmpty() && image.getOriginalFilename()!=null){
+        if (!image.isEmpty() && image.getOriginalFilename() != null) {
             try {
                 byte[] bytes = image.getBytes();
 
                 name = new StringBuilder(image.getOriginalFilename());
                 int dot = name.lastIndexOf(".");
-                String imgFormat = name.substring(dot-1);
-                name = new StringBuilder(name.subSequence(0,dot));
+                String imgFormat = name.substring(dot - 1);
+                name = new StringBuilder(name.subSequence(0, dot));
 
                 String rootPath = "src/main/resources/img";
                 Path path = Paths.get(rootPath + File.separator + name + imgFormat);
-                int i=1;
-                while (Files.exists(path)){
+                int i = 1;
+                while (Files.exists(path)) {
                     name.append(i);
                     path = Paths.get(rootPath + File.separator + name + imgFormat);
                     i++;
                 }
                 File uploadedFile = Files.createFile(path).toFile();
-                try(BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile))) {
+                try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile))) {
                     stream.write(bytes);
                     stream.flush();
                 }
@@ -182,14 +184,15 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public String getDesiredScheduleForGroup(int groupId) throws Exception {
+    public List<ScheduleForUser> getDesiredScheduleForGroup(int groupId) throws Exception {
         List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getAllForGroup(groupId);
         List<ScheduleForUser> scheduleForUsers = new ArrayList<>();
         for (User user : iUserDao.getByGroupId(groupId)) {
             scheduleForUsers.add(new ScheduleForUser(user,
-                    parseSchedules(desiredScheduleList, iSuitabilityDao.getAll()),
+                    parseSchedules(desiredScheduleList,
+                            iSuitabilityDao.getAll()),
                     startOfDay, endOfDay));
         }
-        return new Gson().toJson(scheduleForUsers);
+        return scheduleForUsers;
     }
 }

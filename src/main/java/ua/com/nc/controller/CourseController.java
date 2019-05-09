@@ -58,13 +58,13 @@ public class CourseController {
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT,value = "{id}/create")
-    public void update(@RequestParam(name = "name") String name, @RequestParam(name="level" ) String level,
-                    @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
+    @RequestMapping(method = RequestMethod.PUT, value = "{id}/create")
+    public void update(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
+                       @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
                        @RequestParam(name = "image") MultipartFile image,
-                    @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
-                    @RequestParam(name = "startDay") String startDay,@RequestParam(name = "endDay") String endDay,
-                       @PathVariable int id){
+                       @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
+                       @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
+                       @PathVariable int id) {
         imageUrl = service.uploadImage(image);
         Course course = service.stringToObjCourse(name, "1", level, courseStatus,
                 imageUrl, isOnLandingPage, desc, startDay, endDay);
@@ -75,30 +75,30 @@ public class CourseController {
     @RequestMapping(value = {"/{id}/desired/ungrouped"}, method = RequestMethod.GET)
     @ResponseBody
     public String getDesiredScheduleForUngroupedStudentsForCourse(@PathVariable("id") String id) throws Exception {
-        return service.getDesiredScheduleForUngroupedStudentsOfCourse(Integer.parseInt(id));
+        return gson.toJson(service.getDesiredScheduleForUngroupedStudentsOfCourse(Integer.parseInt(id)));
     }
 
     @RequestMapping(value = {"/{id}/desired/grouped"}, method = RequestMethod.GET)
     @ResponseBody
     public String getDesiredScheduleForFormedGroupsForCourse(@PathVariable("id") String id) throws Exception {
-        return service.getDesiredScheduleForFormedGroupsForCourse(Integer.parseInt(id));
+        return gson.toJson(service.getDesiredScheduleForFormedGroupsForCourse(Integer.parseInt(id)));
     }
 
     @RequestMapping(value = {"/desired/{groupId}"}, method = RequestMethod.GET)
     @ResponseBody
     public String getDesiredScheduleForGroup(@PathVariable("groupId") String groupId) throws Exception {
-        return service.getDesiredScheduleForGroup(Integer.parseInt(groupId));
+        return gson.toJson(service.getDesiredScheduleForGroup(Integer.parseInt(groupId)));
     }
 
     @RequestMapping(value = {"/desired/day-intervals"}, method = RequestMethod.GET)
     @ResponseBody
     public String getDayIntervals() {
-        return service.getDayIntervals();
+        return gson.toJson(service.getDayIntervals());
     }
 
     @RequestMapping(value = "/{id}/trainer", method = RequestMethod.GET)
     @ResponseBody
-    public String getTrainer(@PathVariable String id){
+    public String getTrainer(@PathVariable String id) {
         return gson.toJson(userDao.getTrainersOnCourse(Integer.parseInt(id)));
     }
 
