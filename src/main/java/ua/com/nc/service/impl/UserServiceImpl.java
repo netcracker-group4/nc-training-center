@@ -171,6 +171,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByEmail(String email) {
+        User user = userDao.getByEmail(email);
+
+        return user;
+    }
+
+    @Override
     public void updateUserByAdmin(DtoUserProfiles dtoUserProfiles) {
         User user = userDao.getEntityById(dtoUserProfiles.getId());
         user.setFirstName(dtoUserProfiles.getFirstName());
@@ -226,15 +233,24 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setEmail(dtoMailSender.getTo());
 
-        SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[20];
-        random.nextBytes(bytes);
-        String token = Arrays.toString(bytes);
+        String token = UUID.randomUUID().toString();
         user.setToken(token);
+        dtoMailSender.setText(dtoMailSender.getText() + "/" + token);
 
         userDao.addUserByAdmin(user);
         emailService.sendSimpleMessage(dtoMailSender);
         userDao.commit();
+    }
+
+    @Override
+    public boolean activateUser(String token) {
+        User user = userDao.getByToken(token);
+        if (user == null) {
+            return false;
+        }
+        user.setToken(null);
+
+        return true;
     }
 
     @Override

@@ -46,7 +46,8 @@
                 email: null,
                 firstName: null,
                 lastName: null,
-                password: null
+                password: null,
+                isActive: false,
             }
         },
         methods:{
@@ -69,9 +70,19 @@
         },
         mounted () {
             let token = this.$route.params.token;
-            axios.get('http://localhost:8080/users/registration/' + token, {
+            let self = this;
+            axios.get('http://localhost:8080/users/activate/' + token)
+                .then(function (response) {
+                    self.isActive = response.data;
+                    console.log(self.isActive)
+                    if (!self.isActive) {
+                        self.$router.push('/');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
 
-            })
         }
     }
 </script>

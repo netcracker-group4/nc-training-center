@@ -13,6 +13,8 @@ public interface UserService extends UserDetailsService {
 
     DtoUserProfiles getById(Integer id);
 
+    User getByEmail(String email);
+
     void updateUserByAdmin(DtoUserProfiles dtoUserProfiles);
 
     void updateActive(User user);
@@ -22,6 +24,8 @@ public interface UserService extends UserDetailsService {
     List<DtoTeacherAndManager> getAllTrainers();
 
     void addEmployeeByAdmin(DtoMailSender dtoMailSender);
+
+    boolean activateUser(String token);
 
     //List<User> getAllTrainers();
 }

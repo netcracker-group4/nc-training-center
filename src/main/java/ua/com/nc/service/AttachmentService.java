@@ -15,4 +15,5 @@ public interface AttachmentService {
     void uploadFile(Integer lessonId, MultipartFile file);
 
     FileInputStream downloadFile(Integer id);
+    void link(Integer lessonId, Integer attachmentId);
 }
