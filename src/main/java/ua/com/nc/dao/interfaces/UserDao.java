@@ -2,6 +2,7 @@ package ua.com.nc.dao.interfaces;
 
 import ua.com.nc.domain.User;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -40,7 +41,7 @@ public interface UserDao extends GenericDao<User> {
 
     void addUserByAdmin(User user);
 
-    TreeMap<User, User> getStudentsAbsentWitNoReason(int lessonId);
+    HashMap<User, User> getStudentsAbsentWitNoReason(int lessonId);
 
     User getAdmin();
 
