@@ -12,6 +12,7 @@ import ua.com.nc.domain.User;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -356,7 +357,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
 
-    public TreeMap<User, User> getStudentsAbsentWitNoReason(int lessonId) {
+    public HashMap<User, User> getStudentsAbsentWitNoReason(int lessonId) {
         List<User> students = new ArrayList<>();
         String sql = selectStudentsAbsentOnLessonWithNoReason;
         log.info(sql + " selectStudentsAbsentOnLessonWithNoReason " + lessonId);
@@ -367,9 +368,9 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         } catch (Exception e) {
             log.trace(e);
         }
-        TreeMap<User, User> absentUsersAndTheirManagers = new TreeMap();
+        HashMap<User, User> absentUsersAndTheirManagers = new HashMap<>();
         for (User student : students) {
-            User manager = getManagerById(student.getId());
+            User manager = getManagerById(student.getManagerId());
             absentUsersAndTheirManagers.put(student, manager);
         }
         return absentUsersAndTheirManagers;

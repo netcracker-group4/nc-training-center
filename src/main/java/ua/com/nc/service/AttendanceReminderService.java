@@ -2,11 +2,12 @@ package ua.com.nc.service;
 
 import ua.com.nc.domain.User;
 
+import java.util.HashMap;
 import java.util.TreeMap;
 
 public interface AttendanceReminderService {
 
-    TreeMap<User, User> getStudentsAbsentWitNoReason(int lessonId);
+    HashMap<User, User> getStudentsAbsentWitNoReason(int lessonId);
 
     User getAdmin();
 
