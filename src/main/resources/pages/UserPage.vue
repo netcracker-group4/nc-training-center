@@ -1,38 +1,43 @@
 <template>
     <div>
         <v-container>
-            <v-layout row wrap>
-                <v-flex md6 xs12>
-                    <basic-user-info-component :user="user" :elem-name="'Employee'"/>
-                </v-flex>
-                <v-flex md6 xs12>
-                    <users-manger-component :user="user" :elem-name="'Manager'"
-                                            :if-null-message="'Employee has mo manager'"/>
-                </v-flex>
-            </v-layout>
 
-            <users-attendance class="margin"  :user="user"/>
+            <basic-user-info-component :user="user" :elem-name="userComponentHeader"/>
 
-            <feedback-component class="margin" :lorem="lorem" :user="user"/>
+            <users-attendance v-if="canShowAttendance()" class="margin" :user="user"/>
 
-            <calendar-list-schedule-component class="margin" :groups-list="user.groups"
-                                              :lessons-list="lessons" :previously-selected="getArray(user.groups)"></calendar-list-schedule-component>
+            <feedback-component v-if="canShowFeedbacks()" class="margin" :lorem="lorem" :user="user"/>
 
-            <users-groups-and-courses class="margin" :groups="user.groups"
+            <calendar-list-schedule-component v-if="canShowSchedule()"
+                                              class="margin" :groups-list="user.groups"
+                                              :lessons-list="lessons"
+                                              :previously-selected="getArray(user.groups)"
+                                              :component-header="getScheduleComponentHeader()"
+            ></calendar-list-schedule-component>
+
+            <users-groups-and-courses v-if="canShowCoursesAndGroups()" class="margin" :groups="user.groups"
                                       :trainers="user.dtoTeachers"></users-groups-and-courses>
 
+            <users-courses v-if="canShowCourses()" class="margin" :groups="user.groups"
+                           :trainers="user.dtoTeachers"></users-courses>
+
+            <subordinates-component v-if="canShowManagersSubordinates()"></subordinates-component>
         </v-container>
     </div>
 </template>
 
 <script>
+
     import axios from 'axios'
+    import store from '../store/store.js';
     import CalendarListScheduleComponent from "../components/CalendarListScheduleComponent.vue";
     import FeedbackComponent from "./FeedbackComponent.vue";
     import UsersMangerComponent from "../components/UsersMangerComponent.vue";
     import BasicUserInfoComponent from "../components/BasicUserInfoComponent.vue";
     import UsersGroupsAndCourses from "../components/UsersGroupsAndCourses.vue";
     import UsersAttendance from "./UsersAttendance.vue";
+    import UsersCourses from "../components/UsersCourses.vue";
+    import SubordinatesComponent from "../components/SubordinatesComponent.vue";
 
     export default {
         components: {
@@ -41,7 +46,9 @@
             UsersMangerComponent,
             BasicUserInfoComponent,
             CalendarListScheduleComponent,
-            UsersGroupsAndCourses
+            UsersGroupsAndCourses,
+            UsersCourses,
+            SubordinatesComponent
         },
         data: function () {
             return {
@@ -77,6 +84,43 @@
                     active: this.user.active,
                     id: this.user.id
                 })
+            },
+            getScheduleComponentHeader() {
+                if (this.user.roles !== undefined && this.user.roles.includes('EMPLOYEE')) {
+                    return 'Employee\'s schedule';
+                }
+                if (this.user.roles !== undefined && this.user.roles.includes('TRAINER')) {
+                    return 'Trainer\'s schedule';
+                }
+            },
+            canShowAttendance() {
+                if (this.user.roles !== undefined)
+                    return this.user.roles.includes('EMPLOYEE') && this.viewerIsNotOnlyEmployee()
+            },
+            canShowFeedbacks() {
+                return this.canShowAttendance();
+            },
+            canShowSchedule() {
+                return (this.user.roles !== undefined &&
+                    (this.user.roles.includes("TRAINER") || this.user.roles.includes("EMPLOYEE")))
+                    && this.viewerIsNotOnlyEmployee()
+            },
+            canShowCourses() {
+                if (this.user.roles !== undefined)
+                    return this.user.roles.includes("TRAINER");
+            },
+            viewerIsNotOnlyEmployee() {
+                return store.state.userRoles.includes("MANAGER") ||
+                    store.state.userRoles.includes("TRAINER") ||
+                    store.state.userRoles.includes("ADMIN")
+            },
+            canShowManagersSubordinates() {
+                if (this.user.roles !== undefined)
+                    return this.user.roles.includes("MANAGER") && this.viewerIsNotOnlyEmployee()
+            },
+            canShowCoursesAndGroups() {
+                if (this.user.roles !== undefined)
+                    return this.user.roles.includes("EMPLOYEE");
             },
             editItem(user) {
                 this.editUser = Object.assign({}, user);
@@ -129,33 +173,8 @@
                     selectedCourses.push(value.id)
                 });
                 return selectedCourses;
-            }
-        },
-        mounted() {
-            let self = this;
-            let id = this.$route.params.id;
-            axios.get('http://localhost:8080/users/' + id)
-                .then(function (response) {
-                    self.user = response.data;
-                    console.log(self.user)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            axios.get('http://localhost:8080/schedule/employee/' + id)
-                .then(function (response) {
-                    console.log(response.data);
-                    self.lessons = response.data;
-                    self.lessons.forEach(function (one) {
-                        one.open = false;
-                    })
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        },
-        watch: {
-            '$route'(to, from) {
+            },
+            loadInfo() {
                 let self = this;
                 let id = this.$route.params.id;
                 axios.get('http://localhost:8080/users/' + id)
@@ -178,46 +197,27 @@
                         console.log(error);
                     });
             }
+        },
+        mounted() {
+            this.loadInfo();
+        },
+        watch: {
+            '$route'(to, from) {
+                this.loadInfo();
+            }
+        },
+        computed: {
+            userComponentHeader() {
+                if (this.user.roles !== null && this.user.roles !== undefined && this.user.roles.length !== 0) {
+                    return this.user.roles.join(', ');
+                }
+            }
+
         }
     }
 </script>
 
 <style scoped>
-    .con_wrapper {
-        background: #eeecec;
-        display: flex;
-
-    }
-
-    .div_avatar {
-        padding: 30px 0 0 5%;
-        width: 30%;
-    }
-
-    .div_table {
-        width: 70%;
-    }
-
-    .avatar {
-        margin: 0 0 0 0;
-    }
-
-    .avatar_img {
-        /*max-width: 180px;*/
-        /*max-height: 180px;*/
-    }
-
-    .table_user {
-        margin-right: 0px;
-        float: right;
-        width: 100%;
-        font-size: 14px;
-        background: white;
-        text-align: left;
-        border-collapse: collapse;
-        color: #3E4347;
-        box-sizing: border-box;
-    }
 
     .table_user td:first-child {
         background: #e6e4ee;
@@ -242,11 +242,5 @@
         margin-bottom: 30px;
     }
 
-    .avatar_icon {
-        font-size: 150px;
-    }
 
-    .cursor {
-        cursor: pointer;
-    }
 </style>

@@ -48,4 +48,7 @@ public interface UserDao extends GenericDao<User> {
 
 
     User getTrainerByGroupId(Integer groupId);
+
+    List<User> getSubordinatesOfManager(Integer managerId);
+
 }

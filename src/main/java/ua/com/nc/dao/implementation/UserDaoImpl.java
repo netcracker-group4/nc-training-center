@@ -58,6 +58,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     private String usrSelectAllByCourse;
     @Value("${course.select-trainer}")
     private String getSelectTrainerByCourseId;
+    @Value("${usr.select-subordinates-by-manager}")
+    private String getSelectSubordinatesByManager;
     @Value("${usr.select-students-absent-on-lesson-with-no-reason}")
     private String selectStudentsAbsentOnLessonWithNoReason;
     @Value("${usr.select-admin")
@@ -353,6 +355,13 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         String sql = getSelectTrainerByCourseId;
         log.info(sql + "trainer by group id = " + groupId);
         return getUniqueFromSqlById(sql, groupId);
+    }
+
+    @Override
+    public List<User> getSubordinatesOfManager(Integer managerId) {
+        String sql = getSelectSubordinatesByManager;
+        log.info(" subordinates by manager id = " + managerId + "   " + sql);
+        return  getFromSqlById(sql, managerId);
     }
 
 

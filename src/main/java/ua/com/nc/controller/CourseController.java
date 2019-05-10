@@ -101,4 +101,10 @@ public class CourseController {
         return gson.toJson(userDao.getTrainersOnCourse(Integer.parseInt(id)));
     }
 
+    @RequestMapping(value = "/trainer/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public String getTrainersCourses(@PathVariable Integer id) {
+        return gson.toJson(courseDao.getAllByTrainer(id));
+    }
+
 }

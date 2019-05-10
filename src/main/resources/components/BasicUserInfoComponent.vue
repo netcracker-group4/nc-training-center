@@ -1,112 +1,132 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-layout row wrap>
-        <v-expansion-panel expand v-model="expanded">
-            <v-expansion-panel-content>
-                <!--suppress HtmlUnknownBooleanAttribute -->
-                <template v-slot:header>
-                    <div>{{elemName}}</div>
-                </template>
-                <div v-if="user !== null && user !== undefined " style="padding: 20px;">
-                    <v-toolbar flat color="white">
-                        <v-spacer></v-spacer>
-                        <v-dialog v-model="dialog" max-width="500px">
-                            <template v-slot:activator="{ on }">
-                                <v-icon class="mr-4" @click="editItem">
-                                    edit
-                                </v-icon>
-                            </template>
-                            <v-card>
-                                <v-card-title>
-                                    <span class="headline">Edit user</span>
-                                </v-card-title>
-
-                                <v-card-text>
-                                    <v-container grid-list-md>
-                                        <v-layout wrap>
-                                            <v-flex xs5>
-                                                <v-text-field v-model="editUser.firstName"
-                                                              label="Name"></v-text-field>
-                                            </v-flex>
-                                            <v-flex xs5>
-                                                <v-text-field v-model="editUser.lastName"
-                                                              label="Surname"></v-text-field>
-                                            </v-flex>
-                                            <v-flex xs10>
-                                                <v-select
-                                                        v-model="editUser.dtoManager"
-                                                        :items="managers"
-                                                        label="Change manager"
-                                                >
-                                                    <template slot="selection" slot-scope="managers">
-                                                        {{ managers.item.firstName }} {{ managers.item.lastName }}
-                                                    </template>
-                                                    <template slot="item" slot-scope="managers">
-                                                        {{ managers.item.firstName }} {{ managers.item.lastName }}
-                                                    </template>
-                                                </v-select>
-                                            </v-flex>
-                                        </v-layout>
-                                    </v-container>
-                                </v-card-text>
-
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-                                    <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </v-toolbar>
-                    <v-layout row wrap align-center>
-                        <v-flex xs12 md5 class="text-xs-right">
-                            <v-avatar style="margin: auto" size="180">
-                                <img src="https://png.pngtree.com/svg/20161212/f93e57629c.svg" alt="avatar">
-                            </v-avatar>
-
-                        </v-flex>
-                        <v-flex xs12 md7 class="text-xs-right" style="padding: 20px 0">
-                            <v-list two-line>
-                                <v-list-tile>
-                                    <v-list-tile-content>
-                                        <v-list-tile-title><span class="grey--text">Name :</span> <span
-                                                class="font-weight-medium">{{user.firstName}}</span></v-list-tile-title>
-                                    </v-list-tile-content>
-                                </v-list-tile>
-                                <v-list-tile>
-                                    <v-list-tile-content>
-                                        <v-list-tile-title><span class="grey--text">Surname :</span> <span
-                                                class="font-weight-medium">{{user.lastName}}</span></v-list-tile-title>
-                                    </v-list-tile-content>
-                                </v-list-tile>
-                                <v-list-tile>
-                                    <v-list-tile-content>
-                                        <v-list-tile-title><span class="grey--text">Email :</span> <span
-                                                class="font-weight-medium">{{user.email}}</span></v-list-tile-title>
-                                    </v-list-tile-content>
-                                </v-list-tile>
-                            </v-list>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap style="margin-bottom: 40px">
-                        <v-switch style="margin: auto; padding-left: 30px" v-model="user.active" @change="isActive"
+        <v-container xs12 >
+            <div v-if="user !== null && user !== undefined " style="padding: 20px;">
+                <v-toolbar v-if="viewerIsAdmin()" flat color="white">
+                    <span>{{elemName}}</span>
+                    <v-spacer></v-spacer>
+                    <span class="text-xs-center align-center ">
+                        <v-switch v-if="viewerIsAdmin()" style="margin-bottom: -20px"
+                                  v-model="user.active"
+                                  @change="isActive"
                                   label="Active"></v-switch>
-                        <v-spacer></v-spacer>
-                        <v-btn color="success">Message</v-btn>
-                    </v-layout>
-                </div>
-                <div v-else>
-                    <v-card>
-                        <v-card-text class="headline grey--text">
-                            {{ifNullMessage}}
-                        </v-card-text>
-                    </v-card>
-                </div>
-            </v-expansion-panel-content>
-        </v-expansion-panel>
+                    </span>
+                    <v-dialog v-model="dialog" max-width="500px">
+                        <template v-slot:activator="{ on }">
+                            <v-icon @click="editItem" style="margin-left: 30px">
+                                edit
+                            </v-icon>
+                        </template>
+                        <v-card>
+                            <v-card-title>
+                                <span class="headline">Edit user</span>
+                            </v-card-title>
+
+                            <v-card-text>
+                                <v-container grid-list-md>
+                                    <v-layout wrap>
+                                        <v-flex xs5>
+                                            <v-text-field v-model="editUser.firstName"
+                                                          label="Name"></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs5>
+                                            <v-text-field v-model="editUser.lastName"
+                                                          label="Surname"></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs10>
+                                            <v-select
+                                                    v-model="editUser.dtoManager"
+                                                    :items="managers"
+                                                    label="Change manager"
+                                            >
+                                                <template slot="selection" slot-scope="managers">
+                                                    {{ managers.item.firstName }} {{ managers.item.lastName }}
+                                                </template>
+                                                <template slot="item" slot-scope="managers">
+                                                    {{ managers.item.firstName }} {{ managers.item.lastName }}
+                                                </template>
+                                            </v-select>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-container>
+                            </v-card-text>
+
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
+                                <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-toolbar>
+
+                <v-layout row wrap align-center>
+                    <v-flex xs12 md5 class="text-xs-center">
+                        <v-avatar style="margin: auto" size="75%" class="avatar">
+                            <img src="https://png.pngtree.com/svg/20161212/f93e57629c.svg" alt="avatar">
+                        </v-avatar>
+                    </v-flex>
+                    <v-flex xs12 md7 class="text-xs-right" style="padding: 20px 0">
+                        <v-list two-line>
+                            <v-list-tile>
+                                <v-list-tile-content>
+                                    <v-list-tile-title><span class="grey--text">Name :</span> <span
+                                            class="font-weight-medium">{{user.firstName}}</span></v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                            <v-list-tile>
+                                <v-list-tile-content>
+                                    <v-list-tile-title><span class="grey--text">Surname :</span> <span
+                                            class="font-weight-medium">{{user.lastName}}</span></v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                            <v-list-tile>
+                                <v-list-tile-content>
+                                    <v-list-tile-title><span class="grey--text">Email :</span> <span
+                                            class="font-weight-medium">{{user.email}}</span></v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                            <v-list-tile v-if="canShowManager()" class="cursor"
+                                         v-on:click="goToUserPage(user.dtoManager) ">
+                                <v-list-tile-content>
+                                    <v-list-tile-title><span class="grey--text">Manger :</span> <span
+                                            class="font-weight-medium">{{getManagersName(user.dtoManager)}}</span>
+                                    </v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+
+                            <v-list-tile v-if="canShowManager()">
+                                <v-list-tile-content>
+                                    <v-list-tile-title><span class="grey--text">Teachers :</span>
+                                        <span v-on:click="goToUserPage(user.dtoManager) "
+                                              v-for="teacher in user.dtoTeachers" class="font-weight-medium cursor">
+                                        {{getManagersName(teacher)}}</span>
+                                    </v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+
+                            <v-list-tile v-if="canShowManager()">
+                                <v-list-tile-content>
+                                    <v-list-tile-title><span class="grey--text">Groups :</span>
+                                        <span v-for="group in user.groups" v-on:click="goToGroupPage(group.id)"
+                                              class="font-weight-medium cursor">{{group.title}}</span>
+                                    </v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                        </v-list>
+                    </v-flex>
+                </v-layout>
+                <v-layout row wrap style="margin-bottom: 40px">
+                    <v-spacer></v-spacer>
+                    <v-btn color="success" large>Message</v-btn>
+                </v-layout>
+            </div>
+        </v-container>
     </v-layout>
 </template>
 <script>
     import axios from 'axios/index';
+    import store from '../store/store.js';
 
     export default {
         name: 'basic-user-info-component',
@@ -130,7 +150,20 @@
                 expanded: [true]
             }
         },
+
         methods: {
+            viewerIsAdmin() {
+                return store.getters.isAdmin;
+            },
+            getManagersName(dtoManager) {
+                if (dtoManager !== null) {
+                    return dtoManager.firstName + ' ' + dtoManager.lastName
+                } else return "Employee has no manager";
+            },
+            canShowManager() {
+                if (this.user.roles !== undefined)
+                    return this.user.roles.includes('EMPLOYEE');
+            },
             editItem() {
                 this.editUser = Object.assign({}, this.user);
                 this.dialog = true;
@@ -144,7 +177,12 @@
                         console.log(error);
                     });
             },
+            goToUserPage(dtoManager) {
+                if (dtoManager !== null) {
+                    this.$router.push('/userpage/' + dtoManager.id);
+                }
 
+            },
             close() {
                 this.dialog = false;
                 setTimeout(() => {
@@ -213,5 +251,9 @@
 
     .table_user tr:last-child td {
         border-bottom: none;
+    }
+
+    .cursor {
+        cursor: pointer;
     }
 </style>

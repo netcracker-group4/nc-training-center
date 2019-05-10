@@ -58,6 +58,11 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllManagers(), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/{id}/subordinates", method = RequestMethod.GET)
+    public ResponseEntity<?> getSubordinatesOfManager(@PathVariable Integer id) {
+        return new ResponseEntity<>(userService.getSubordinatesOfManager(id), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/get-all-trainers", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTrainers() {
         return new ResponseEntity<>(userService.getAllTrainers(), HttpStatus.OK);

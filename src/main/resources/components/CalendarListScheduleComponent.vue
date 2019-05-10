@@ -4,7 +4,7 @@
             <v-expansion-panel-content>
                 <!--suppress HtmlUnknownBooleanAttribute -->
                 <template v-slot:header>
-                    <div>Employee's schedule</div>
+                    <div>{{componentHeader}}</div>
                 </template>
                 <div style="margin: 20px">
                     <v-layout style="margin-bottom: 20px;">
@@ -160,7 +160,7 @@
 <script>
     export default {
         name: "CalendarListScheduleComponent",
-        props: ['lessonsList', 'groupsList', "previouslySelected"],
+        props: ['lessonsList', 'groupsList', "previouslySelected", "componentHeader"],
         data: function () {
             return {
                 start: new Date().toISOString().slice(0, 10),

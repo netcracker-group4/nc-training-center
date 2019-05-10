@@ -27,5 +27,7 @@ public interface UserService extends UserDetailsService {
 
     boolean activateUser(String token);
 
+    List<DtoTeacherAndManager> getSubordinatesOfManager(Integer id);
+
     //List<User> getAllTrainers();
 }

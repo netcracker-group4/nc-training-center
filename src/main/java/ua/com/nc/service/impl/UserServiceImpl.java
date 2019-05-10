@@ -246,6 +246,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<DtoTeacherAndManager> getSubordinatesOfManager(Integer managerId) {
+        List<DtoTeacherAndManager> dtoSubordinates = new ArrayList<>();
+        List<User> subordinatesOfManager = userDao.getSubordinatesOfManager(managerId);
+        for (User subordinate : subordinatesOfManager) {
+            dtoSubordinates.add(new DtoTeacherAndManager(subordinate));
+        }
+        return dtoSubordinates;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.getByEmail(username);
 
