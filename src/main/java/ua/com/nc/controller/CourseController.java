@@ -9,7 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.CourseDao;
 import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.Course;
+import ua.com.nc.domain.User;
 import ua.com.nc.service.CourseService;
+
+import java.util.List;
 
 @Log4j
 @Controller
@@ -28,14 +31,14 @@ public class CourseController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public String getCourses() {
-        return gson.toJson(courseDao.getAll());
+    public List<Course> getCourses() {
+        return courseDao.getAll();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
-    public String getCourse(@PathVariable String id) {
-        return gson.toJson(courseDao.getEntityById(Integer.parseInt(id)));
+    public Course getCourse(@PathVariable String id) {
+        return courseDao.getEntityById(Integer.parseInt(id));
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
@@ -97,8 +100,8 @@ public class CourseController {
 
     @RequestMapping(value = "/{id}/trainer", method = RequestMethod.GET)
     @ResponseBody
-    public String getTrainer(@PathVariable String id) {
-        return gson.toJson(userDao.getTrainersOnCourse(Integer.parseInt(id)));
+    public List<User> getTrainer(@PathVariable String id) {
+        return userDao.getTrainersOnCourse(Integer.parseInt(id));
     }
 
 }
