@@ -7,7 +7,7 @@ import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.User;
 import ua.com.nc.service.AttendanceReminderService;
 
-import java.util.TreeMap;
+import java.util.HashMap;
 
 @Log4j
 @Service
@@ -16,7 +16,7 @@ public class AttendanceReminderServiceImpl implements AttendanceReminderService 
     @Autowired
     private UserDao userDao;
 
-    public TreeMap<User, User> getStudentsAbsentWitNoReason(int lessonId) {
+    public HashMap<User, User> getStudentsAbsentWitNoReason(int lessonId) {
         return userDao.getStudentsAbsentWitNoReason(lessonId);
     }
 
@@ -27,5 +27,6 @@ public class AttendanceReminderServiceImpl implements AttendanceReminderService 
     public User getLessonTrainer(int lessonId) {
         return userDao.getLessonTrainer(lessonId);
     }
+
 
 }

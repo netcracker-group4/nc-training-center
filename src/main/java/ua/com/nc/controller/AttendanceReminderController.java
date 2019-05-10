@@ -6,12 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
 import ua.com.nc.domain.User;
-import ua.com.nc.dto.DtoMailSender;
 import ua.com.nc.service.AttendanceReminderService;
 import ua.com.nc.service.EmailService;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeMap;
 
 @Log4j
 @Controller
@@ -19,43 +20,36 @@ import java.util.TreeMap;
 public class AttendanceReminderController {
 
     @Autowired
-    AttendanceReminderService attendanceReminderService;
+    private AttendanceReminderService attendanceReminderService;
 
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
 
-    //    @Value ()
-    private String subjectTemplate = "No Reason Students Absence";
+    public void sendAttendanceReminders (@RequestParam(name = "lessonId") int lessonId) {
 
-    //    @Value ()
-    private String textTemplate = "There are students who were absent with no reason: ";
-
-    public void sendAttendanceReminders(@RequestParam(name = "lessonId") int lessonId) {
-
-        TreeMap<User, User> absentUsersAndTheirManagers = attendanceReminderService.getStudentsAbsentWitNoReason(lessonId);
-        Set<User> students = absentUsersAndTheirManagers.keySet();
+        HashMap<User, User> absentStudentsAndTheirManagers =
+                attendanceReminderService.getStudentsAbsentWitNoReason(lessonId);
+        Set<User> students = absentStudentsAndTheirManagers.keySet();
+        String studentsText = emailService.textGenerator(students);
 
         User admin = attendanceReminderService.getAdmin();
-        sendEmail(admin.getEmail(), subjectTemplate, textGenerator(students));
+        String adminEmail = admin.getEmail();
+        emailService.sendAttendanceReminderEmail(adminEmail, studentsText);
 
         User trainer = attendanceReminderService.getLessonTrainer(lessonId);
-        sendEmail(trainer.getEmail(), subjectTemplate, textGenerator(students));
-    }
+        String trainerEmail = trainer.getEmail();
+        emailService.sendAttendanceReminderEmail(trainerEmail, studentsText);
 
-    private String textGenerator(Set<User> students) {
-        String text = textTemplate + '\n';
-        for (User student : students) {
-            text += student.getFirstName() + ' ' + student.getLastName() + '\n';
+        HashMap<User, ArrayList<User>> managersAndStudents =
+                emailService.reverseHashMap (absentStudentsAndTheirManagers);
+
+        for (HashMap.Entry<User, ArrayList<User>> entry : managersAndStudents.entrySet()) {
+            User manager = entry.getKey();
+            Set <User> managerStudents = new HashSet<>(entry.getValue());
+            String managerStudentsText = emailService.textGenerator(managerStudents);
+            String managerEmail = manager.getEmail();
+            emailService.sendAttendanceReminderEmail(managerEmail, managerStudentsText);
         }
-        return text;
-    }
-
-    private void sendEmail(String to, String subject, String text) {
-        DtoMailSender mailSender = new DtoMailSender();
-        mailSender.setTo(to);
-        mailSender.setSubject(subject);
-        mailSender.setText(text);
-        emailService.sendSimpleMessage(mailSender);
     }
 
 }
