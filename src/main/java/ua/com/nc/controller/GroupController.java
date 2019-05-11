@@ -94,4 +94,11 @@ public class GroupController {
         return gson.toJson(groupsService.getGroupsAndQuantity());
     }
 
+    @RequestMapping(value = {"/{id}/trainer"}, method = RequestMethod.GET)
+    @ResponseBody
+    public User getTeacher(@PathVariable String id) {
+        return groupsService.getTrainer(Integer.parseInt(id));
+
+    }
+
 }

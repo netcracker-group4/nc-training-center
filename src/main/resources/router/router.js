@@ -29,7 +29,7 @@ const routes = [
     {path: '/dashboard', component: DashBoardPage},
     {path: '/login', component: LoginPage},
     {path: '/dashboard', component: DashBoardPage},
-    {path: '/group/:id', component: GroupPage},
+    {path: '/group/:id', component: GroupPage, props: true},
     {path: '/groups/:id/schedule', component: GroupSchedulePage},
     {path: '/courses/:id', component: CoursePage, props: true},
     {path: '/trainers/:id', component: TrainerPage},
