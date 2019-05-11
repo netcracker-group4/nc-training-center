@@ -6,7 +6,7 @@
 
             <users-attendance v-if="canShowAttendance()" class="margin" :user="user"/>
 
-            <feedback-component v-if="canShowFeedbacks()" class="margin" :lorem="lorem" :user="user"/>
+            <feedback-component v-if="canShowFeedbacks()" class="margin" :user="user"/>
 
             <calendar-list-schedule-component v-if="canShowSchedule()"
                                               class="margin" :groups-list="user.groups"
@@ -31,7 +31,7 @@
     import axios from 'axios'
     import store from '../store/store.js';
     import CalendarListScheduleComponent from "../components/CalendarListScheduleComponent.vue";
-    import FeedbackComponent from "./FeedbackComponent.vue";
+    import FeedbackComponent from "../components/FeedbackComponent.vue";
     import UsersMangerComponent from "../components/UsersMangerComponent.vue";
     import BasicUserInfoComponent from "../components/BasicUserInfoComponent.vue";
     import UsersGroupsAndCourses from "../components/UsersGroupsAndCourses.vue";
@@ -71,8 +71,6 @@
                 groups: [],
                 managers: [],
                 lessons: [],
-
-                lorem: 'Lorem ipsum dolor sit amet, at aliquam vivendum vel, everti delicatissimi cu eos. Dico iuvaret debitis mel an, et cum zril menandri. Eum in consul legimus accusam. Ea dico abhorreant duo, quo illum minimum incorrupte no, nostro voluptaria sea eu. Suas eligendi ius at, at nemore equidem est. Sed in error hendrerit, in consul constituam cum.'
             }
         },
         methods: {

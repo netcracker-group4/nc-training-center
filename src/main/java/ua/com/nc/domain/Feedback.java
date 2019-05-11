@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.sql.Date;
+import java.time.OffsetDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -16,9 +16,12 @@ public class Feedback extends Entity {
     private Integer trainerId;
     private Integer courseId;
     private String text;
-    private Date timeDate;
+    private OffsetDateTime timeDate;
 
-    public Feedback(Integer id, Integer studentId, Integer trainerId, Integer courseId, String text, Date timeDate) {
+    public Feedback() {
+    }
+
+    public Feedback(Integer id, Integer studentId, Integer trainerId, Integer courseId, String text, OffsetDateTime timeDate) {
         super(id);
         this.studentId = studentId;
         this.trainerId = trainerId;

@@ -14,6 +14,9 @@ export default new Vuex.Store({
         userRoles: state => {
             return state.userRoles
         },
+        user: state => {
+            return state.user
+        },
         isAdmin: state => {
             if(userRoles != null && userRoles != undefined){
                 return state.userRoles.includes('ADMIN')

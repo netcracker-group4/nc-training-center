@@ -10,10 +10,10 @@ import ua.com.nc.dao.interfaces.FeedbackDao;
 import ua.com.nc.domain.Feedback;
 
 import javax.sql.DataSource;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,9 +73,9 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
     private void setAllFields(PreparedStatement statement, Feedback entity) throws SQLException {
         statement.setInt(1, entity.getStudentId());
         statement.setInt(2, entity.getTrainerId());
-        statement.setInt(3, entity.getCourseId());
-        statement.setString(4, entity.getText());
-        statement.setDate(5, entity.getTimeDate());
+//        statement.setInt(3, entity.getCourseId());
+        statement.setString(3, entity.getText());
+        statement.setObject(4, entity.getTimeDate());
     }
 
     @Override
@@ -93,9 +93,10 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
             Integer trainerId = rs.getInt("trainer_id");
             Integer courseId = rs.getInt("course_id");
             String text = rs.getString("text");
-            Date timeDate = rs.getDate("date_time");
-            Feedback lesson = new Feedback(id, studentId, trainerId, courseId, text, timeDate);
-            feedbacks.add(lesson);
+//            Date timeDate = rs.getDate("date_time");
+            OffsetDateTime offsetDateTime = rs.getObject("date_time", OffsetDateTime.class);
+            Feedback feedback = new Feedback(id, studentId, trainerId, courseId, text, offsetDateTime);
+            feedbacks.add(feedback);
         }
         return feedbacks;
     }

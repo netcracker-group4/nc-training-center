@@ -9,6 +9,7 @@ import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.dto.*;
 import ua.com.nc.service.EmailService;
+import ua.com.nc.service.FeedbackService;
 import ua.com.nc.service.UserService;
 
 import java.util.*;
@@ -76,7 +77,6 @@ public class UserServiceImpl implements UserService {
         User manager = userDao.getManagerById(id);
         List<User> teachers = userDao.getAllTrainersById(id);
         List<Group> groups = groupDao.getAllGroupsByStudent(id);
-        List<Feedback> feedbacks = feedbackDao.getAllByUserId(id);
         List<Level> levels = levelDao.getAll();
 
         DtoTeacherAndManager dtoManager = null;
@@ -116,28 +116,6 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        List<DtoFeedback> dtoFeedbacks = new ArrayList<>();
-        if (feedbacks != null && feedbacks.size() != 0) {
-            for (Feedback feedback : feedbacks) {
-                User teacher = userDao.getTrainerByFeedback(feedback.getId());
-                DtoTeacherAndManager dtoTeacher = new DtoTeacherAndManager(
-                        teacher.getId(),
-                        teacher.getFirstName(),
-                        teacher.getLastName(),
-                        teacher.isActive(),
-                        teacher.getImageUrl()
-                );
-
-                dtoFeedbacks.add(new DtoFeedback(
-                        feedback.getId(),
-                        dtoTeacher,
-                        feedback.getText(),
-                        feedback.getTimeDate()
-                ));
-
-            }
-        }
-
         DtoUserProfiles dtoUserProfiles = null;
         if (user != null) {
             dtoUserProfiles = new DtoUserProfiles(
@@ -150,8 +128,7 @@ public class UserServiceImpl implements UserService {
                     user.isActive(),
                     dtoManager,
                     dtoTeachers,
-                    dtoGroups,
-                    dtoFeedbacks
+                    dtoGroups
             );
         }
         return dtoUserProfiles;

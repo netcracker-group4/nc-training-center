@@ -17,12 +17,11 @@ public class DtoUserProfiles {
     private DtoTeacherAndManager dtoManager;
     private List<DtoTeacherAndManager> dtoTeachers;
     private List<DtoGroup> groups;
-    private List<DtoFeedback> dtoFeedbacks;
 
     DtoUserProfiles() {
     }
 
-    public DtoUserProfiles(Integer id, String firstName, String lastName, String email, String image, List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager, List<DtoTeacherAndManager> dtoTeachers, List<DtoGroup> groups, List<DtoFeedback> dtoFeedbacks) {
+    public DtoUserProfiles(Integer id, String firstName, String lastName, String email, String image, List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager, List<DtoTeacherAndManager> dtoTeachers, List<DtoGroup> groups) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,7 +32,6 @@ public class DtoUserProfiles {
         this.dtoManager = dtoManager;
         this.dtoTeachers = dtoTeachers;
         this.groups = groups;
-        this.dtoFeedbacks = dtoFeedbacks;
     }
 
     public Integer getId() {
