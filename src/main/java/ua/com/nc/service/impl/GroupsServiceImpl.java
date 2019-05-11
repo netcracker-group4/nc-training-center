@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.CourseDao;
 import ua.com.nc.dao.interfaces.GroupDao;
+import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Group;
+import ua.com.nc.domain.User;
 import ua.com.nc.domain.UserGroup;
 import ua.com.nc.dto.DtoGroup;
 import ua.com.nc.dto.schedule.GroupSchedule;
@@ -25,6 +27,8 @@ public class GroupsServiceImpl implements GroupsService {
     UserGroupDao userGroupDao;
     @Autowired
     CourseDao courseDao;
+    @Autowired
+    UserDao userDao;
 
     @Override
     public int update(GroupSchedule groupSchedule) {
@@ -91,5 +95,10 @@ public class GroupsServiceImpl implements GroupsService {
         });
 
         return dtos;
+    }
+
+    @Override
+    public User getTrainer(int id) {
+        return userDao.getTrainerByGroupId(id);
     }
 }

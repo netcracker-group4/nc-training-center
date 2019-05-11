@@ -5,11 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoMailSender;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dto.DtoUserSave;
 import ua.com.nc.service.UserService;
+
+import java.util.Map;
 
 @Log4j
 @RestController
@@ -18,6 +21,9 @@ import ua.com.nc.service.UserService;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private GroupDao groupDao;
+
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> save(@RequestBody DtoUserSave dtoUserSave) {
@@ -78,5 +84,11 @@ public class UserController {
     public ResponseEntity<?> activate(@PathVariable String token) {
         boolean isActivated = userService.activateUser(token);
         return new ResponseEntity<>(isActivated, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "{id}/getAttendanceGraph")
+    public Map<String, Double> getAttendanceGraph(@PathVariable String id){
+        int userId = Integer.parseInt(id);
+        return userService.getAttandanceGraph(userId);
     }
 }

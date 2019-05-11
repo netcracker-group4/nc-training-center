@@ -1,9 +1,9 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <v-container>
 
             <basic-user-info-component :user="user" :elem-name="userComponentHeader"/>
-
+            <user-attendance-progress v-if="canShowAttendance()" :absenceReasons="absenceReasons"/>
             <users-attendance v-if="canShowAttendance()" class="margin" :user="user"/>
 
             <feedback-component v-if="canShowFeedbacks()" class="margin" :user="user"/>
@@ -36,6 +36,7 @@
     import UsersAttendance from "./UsersAttendance.vue";
     import UsersCourses from "../components/UsersCourses.vue";
     import SubordinatesComponent from "../components/SubordinatesComponent.vue";
+    import UserAttendanceProgress from "../components/UserAttendanceProgress.vue";
 
     export default {
         components: {
@@ -45,7 +46,8 @@
             CalendarListScheduleComponent,
             UsersGroupsAndCourses,
             UsersCourses,
-            SubordinatesComponent
+            SubordinatesComponent,
+            UserAttendanceProgress
         },
         data: function () {
             return {
@@ -68,7 +70,7 @@
                 groups: [],
                 managers: [],
                 lessons: [],
-                lorem: 'Lorem ipsum dolor sit amet, at aliquam vivendum vel, everti delicatissimi cu eos. Dico iuvaret debitis mel an, et cum zril menandri. Eum in consul legimus accusam. Ea dico abhorreant duo, quo illum minimum incorrupte no, nostro voluptaria sea eu. Suas eligendi ius at, at nemore equidem est. Sed in error hendrerit, in consul constituam cum.'
+                absenceReasons: []
             }
         },
         methods: {
@@ -104,7 +106,7 @@
             },
             canShowAttendance() {
                 if (this.user.roles !== undefined)
-                    return this.user.roles.includes('EMPLOYEE') && (this.viewerIsNotOnlyEmployee())
+                    return this.user.roles.includes('EMPLOYEE') && this.viewerIsNotOnlyEmployee()
             },
             canShowFeedbacks() {
                 return this.canShowAttendance();
@@ -167,6 +169,14 @@
                         console.log(error);
                         self.errorAutoClosable(error.response.data);
                     });
+                axios.get('http://localhost:8080/users/'+this.$route.params.id+'/getAttendanceGraph')
+                    .then(function (response) {
+                        self.absenceReasons = response.data;
+                        console.log(response.data);
+                    }).catch(function (error) {
+                    console.log(error);
+                    self.errorAutoClosable(error.response.data);
+                });
             }
         }
         ,

@@ -47,7 +47,6 @@ public class CourseServiceImpl implements CourseService {
     private int endOfDay = 21;
 
 
-    //TODO Create all implementations for this bean, then uncomment 1st line of add(...) mthd
     private CourseStatus statusDao;
 
     @Override
@@ -86,11 +85,6 @@ public class CourseServiceImpl implements CourseService {
                 isLanding, desc);
     }
 
-    @Override
-    public void add(String name, int userId, String lvl, ua.com.nc.domain.CourseStatus courseStatus, String imageUrl, boolean isLanding,
-                    String desc, Date startingDay, Date endingDay) {
-
-    }
 
     @Override
     public List<ScheduleForUser> getDesiredScheduleForUngroupedStudentsOfCourse(int courseId) throws Exception {

@@ -5,6 +5,7 @@ import ua.com.nc.domain.User;
 import ua.com.nc.dto.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService extends UserDetailsService {
     void add(DtoUserSave user);
@@ -28,6 +29,8 @@ public interface UserService extends UserDetailsService {
     boolean activateUser(String token);
 
     List<DtoTeacherAndManager> getSubordinatesOfManager(Integer id);
+
+    Map<String, Double> getAttandanceGraph(int userId);
 
     //List<User> getAllTrainers();
 }

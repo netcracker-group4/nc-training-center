@@ -2,9 +2,12 @@
     <div>
         <div class="subheading pt-3">
             <b>{{course.name}}</b>
-            <b>{{teacher.firstName}} {{teacher.lastName}}</b>
+            <p>
+                <b>Trainer</b>
+                <b @click="forwardToTrainerPage(teacher.id)">{{teacher.firstName}} {{teacher.lastName}}</b>
+            </p>
         </div>
-        <div>Group with  {{ $route.params.id }}  number</div>
+        <div>Group with  {{ id }}  number</div>
         <v-data-table
             :headers="headers"
             :items="students"
@@ -16,8 +19,8 @@
                 <td class="my-link">
                     <div>{{ props.item.id }}</div>
                 </td>
-                <td class="text-xs-right">{{ props.item.firstName +' '+ props.item.lastName }}</td>
-                <td class="text-xs-right" v-if="isAdmin">
+                <td class="text-xs-left">{{ props.item.firstName +' '+ props.item.lastName }}</td>
+                <td class="text-xs-left" v-if="isAdmin">
                     {{props.item.email}}
                 </td>
                 <td class="text-xs-right" v-if="isAdmin">
@@ -26,7 +29,6 @@
             </tr>
         </template>
     </v-data-table>
-
     </div>
 </template>
 
@@ -34,10 +36,10 @@
     import axios from 'axios'
 
     export default {
+        props: ['id'],
         name: "GroupPage",
         data: function(){
             return{
-                id: this.$route.params.id,
                 students: [],
                 teacher: [],
                 course: [],
@@ -53,6 +55,10 @@
                     },
                     {
                         text: '@email', value: 'email',
+                        width: "40", align: 'right'
+                    },
+                    {
+                        text: 'action',
                         width: "30", align: 'right'
                     }
                 ],
@@ -70,24 +76,6 @@
             findUserById(id){
                 return this.students.find(s => s.id === id);
             },
-            setUsers(self){
-                axios.get('http://localhost:8080/groups/'+self.id+'/users')
-                    .then(function (response) {
-                        self.students = response.data;
-                    });
-            },
-            setTeacher(self){
-                axios.get('http://localhost:8080/getcourses/'+self.course.id+'/trainer')
-                    .then(function (response) {
-                        self.teacher = response.data;
-                    });
-            },
-            setCourse(self){
-                axios.get('http://localhost:8080/groups/'+self.id+'/course')
-                    .then(function (response) {
-                        self.course = response.data;
-                    });
-            },
             setGroup(){
                 let self = this;
                 let c;
@@ -95,29 +83,38 @@
                     .then(function (response) {
                         c = response.data;
                         self.course = c;
-                    });
-                /*axios.get('http://localhost:8080/getcourses/'+c.id+'/trainer')
+                    }).catch(function (error) {
+                    console.log(error);
+                });
+                axios.get('http://localhost:8080/groups/'+self.id+'/trainer')
                     .then(function (response) {
                         self.teacher = response.data;
-                    });*/
+                    });
                 axios.get('http://localhost:8080/groups/'+self.id+'/users')
                     .then(function (response) {
                         self.students = response.data;
-                    });
+                    }).catch(function (error) {
+                    console.log(error);
+                });
             },
             forwardToUserPage(id){
                 this.$router.push('/userpage/' + id)
+            },
+            forwardToTrainerPage(id){
+                this.$router.push('/trainers/' + id)
             }
 
         },
         mounted(){
             let self = this;
+            console.log(self);
             self.setGroup();
             //alert((self.$store.state.userRoles.find(r => r === "TRAINER")));
-            if(!((self.$store.state.userRoles.find(r => r === "TRAINER")) || self.isAdmin)){
+            console.log(self);
+            /*if(!((self.$store.state.userRoles.find(r => r === "TRAINER")) || self.isAdmin)){
                 alert("You don`t have permission");
                 self.$router.push("/");
-            }
+            }*/
         },
 
     }

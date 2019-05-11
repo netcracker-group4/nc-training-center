@@ -1,6 +1,7 @@
 package ua.com.nc.dao.interfaces;
 
 import ua.com.nc.domain.Group;
+import ua.com.nc.domain.User;
 
 import java.util.List;
 
