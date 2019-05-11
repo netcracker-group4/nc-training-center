@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.dto.*;
+import ua.com.nc.service.AttendanceService;
 import ua.com.nc.service.EmailService;
 import ua.com.nc.service.FeedbackService;
 import ua.com.nc.service.UserService;
@@ -31,6 +32,10 @@ public class UserServiceImpl implements UserService {
     private LevelDao levelDao;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private AttendanceStatusDao statusDao;
+    @Autowired
+    private AttendanceService attendanceService;
 
     @Override
     public void add(DtoUserSave dtoUserSave) {
@@ -243,6 +248,30 @@ public class UserServiceImpl implements UserService {
             user.setRoles(roles);
             return user;
         }
+    }
 
+    @Override
+    public Map<String, Double> getAttandanceGraph(int userId) {
+        List<Group> groups = groupDao.getAllGroupsByStudent(userId);
+        Map<String,Integer> att = new HashMap<>();
+        statusDao.getAll().forEach(r -> {
+            att.put(r.getTitle().toLowerCase(), 0);
+            }
+        );
+        int allLessons = 0;
+        for (Group g : groups) {
+            List<Attendance> at = attendanceService.getAttendanceByStudentIdAndGroupId(userId, g.getId());
+            if(at!=null && !at.isEmpty()){
+                for(Attendance a: at){
+                    String status = a.getStatus().toLowerCase();
+                    att.put(status,att.get(status)+1);
+                    allLessons++;
+                }
+            }
+        }
+        final int a = allLessons;
+        Map<String, Double> result = new HashMap<>();
+        att.forEach((key, value) -> result.put(key, (value * 100.0) / a));
+        return result;
     }
 }

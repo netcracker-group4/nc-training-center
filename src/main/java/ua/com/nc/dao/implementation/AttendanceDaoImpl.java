@@ -111,6 +111,6 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
             e.printStackTrace();
             throw new PersistException(e);
         }
-
     }
+
 }

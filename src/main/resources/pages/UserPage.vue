@@ -1,9 +1,9 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <v-container>
 
             <basic-user-info-component :user="user" :elem-name="userComponentHeader"/>
-
+            <user-attendance-progress v-if="canShowAttendance()" :absenceReasons="absenceReasons"/>
             <users-attendance v-if="canShowAttendance()" class="margin" :user="user"/>
 
             <feedback-component v-if="canShowFeedbacks()" class="margin" :user="user"/>
@@ -38,6 +38,7 @@
     import UsersAttendance from "./UsersAttendance.vue";
     import UsersCourses from "../components/UsersCourses.vue";
     import SubordinatesComponent from "../components/SubordinatesComponent.vue";
+    import UserAttendanceProgress from "../components/UserAttendanceProgress.vue";
 
     export default {
         components: {
@@ -48,7 +49,8 @@
             CalendarListScheduleComponent,
             UsersGroupsAndCourses,
             UsersCourses,
-            SubordinatesComponent
+            SubordinatesComponent,
+            UserAttendanceProgress
         },
         data: function () {
             return {
@@ -71,6 +73,8 @@
                 groups: [],
                 managers: [],
                 lessons: [],
+                absenceReasons: [
+                    ]
             }
         },
         methods: {
@@ -194,6 +198,13 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+                axios.get('http://localhost:8080/users/'+this.$route.params.id+'/getAttendanceGraph')
+                    .then(function (response) {
+                        self.absenceReasons = response.data;
+                        console.log(response.data);
+                    }).catch(function (error) {
+                    console.log(error);
+                });
             }
         },
         mounted() {
