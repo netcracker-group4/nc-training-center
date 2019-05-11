@@ -15,21 +15,22 @@ import NewUserPage from "../pages/NewUserPage.vue";
 import AttendancePage from "../pages/AttendancePage.vue";
 import AbsenceReasons from '../pages/AbsenceReasons.vue'
 import DesiredSchedulePage from "../pages/DesiredSchedulePage.vue";
-import VueDraggable from 'vuedraggable';
 import AttachmentsPage from "../pages/AttachmentsPage.vue"
 import TestPage from '../pages/TestPage.vue'
 import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
 import AllGroups from "../pages/AllGroups.vue";
 
+
 Vue.use(Router);
-Vue.use(VueDraggable);
+
+
 const routes = [
     {path: '/', component: MainPage},
     {path: '/registration/:token', component: RegistrationPage},
     {path: '/dashboard', component: DashBoardPage},
     {path: '/login', component: LoginPage},
     {path: '/dashboard', component: DashBoardPage},
-    {path: '/group/:id', component: GroupPage},
+    {path: '/group/:id', component: GroupPage, props: true},
     {path: '/groups/:id/schedule', component: GroupSchedulePage},
     {path: '/courses/:id', component: CoursePage, props: true},
     {path: '/trainers/:id', component: TrainerPage},

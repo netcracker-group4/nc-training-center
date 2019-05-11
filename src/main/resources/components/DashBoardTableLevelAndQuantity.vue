@@ -54,11 +54,11 @@
                     >
                         <template v-slot:items="props">
                             <tr class="inner-table">
-                                <td @click="goToGroupPage(props.item.group.id)" class="text-xs-right my-link">{{
-                                    props.item.group.title }}
+                                <td @click="goToGroupPage(props.item.group.id)" class="text-xs-right my-link">
+                                    {{ props.item.group.title }}
                                 </td>
-                                <td @click="goToCoursePage(props.item.course.id)" class="text-xs-right my-link">{{
-                                    props.item.course.name }}
+                                <td @click="goToCoursePage(props.item.course.id)" class="text-xs-right my-link">
+                                    {{props.item.course.name }}
                                 </td>
                             </tr>
                         </template>
@@ -103,6 +103,14 @@
             }
         },
         methods: {
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             goToGroupPage(groupId) {
                 this.$router.push('/group/' + groupId);
             },
@@ -124,6 +132,7 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                    self.errorAutoClosable(error.response.data);
                 });
         },
         computed : {

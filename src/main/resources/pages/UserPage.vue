@@ -1,9 +1,9 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <v-container>
 
             <basic-user-info-component :user="user" :elem-name="userComponentHeader"/>
-
+            <user-attendance-progress v-if="canShowAttendance()" :absenceReasons="absenceReasons"/>
             <users-attendance v-if="canShowAttendance()" class="margin" :user="user"/>
 
             <feedback-component v-if="canShowFeedbacks()" class="margin" :user="user"/>
@@ -27,28 +27,27 @@
 </template>
 
 <script>
-
     import axios from 'axios'
     import store from '../store/store.js';
     import CalendarListScheduleComponent from "../components/CalendarListScheduleComponent.vue";
     import FeedbackComponent from "../components/FeedbackComponent.vue";
-    import UsersMangerComponent from "../components/UsersMangerComponent.vue";
     import BasicUserInfoComponent from "../components/BasicUserInfoComponent.vue";
     import UsersGroupsAndCourses from "../components/UsersGroupsAndCourses.vue";
     import UsersAttendance from "./UsersAttendance.vue";
     import UsersCourses from "../components/UsersCourses.vue";
     import SubordinatesComponent from "../components/SubordinatesComponent.vue";
+    import UserAttendanceProgress from "../components/UserAttendanceProgress.vue";
 
     export default {
         components: {
             UsersAttendance,
             FeedbackComponent,
-            UsersMangerComponent,
             BasicUserInfoComponent,
             CalendarListScheduleComponent,
             UsersGroupsAndCourses,
             UsersCourses,
-            SubordinatesComponent
+            SubordinatesComponent,
+            UserAttendanceProgress
         },
         data: function () {
             return {
@@ -71,17 +70,31 @@
                 groups: [],
                 managers: [],
                 lessons: [],
+                absenceReasons: []
             }
         },
         methods: {
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             getFullName(value) {
                 return value.firstName + ' ' + value.lastName;
             },
-            isActive() {
-                axios.put('http://localhost:8080/users/update-active', {
-                    active: this.user.active,
-                    id: this.user.id
-                })
+            hasFullPrivilege(){
+                return store.getters.isAdmin() || store.state.user.id === this.$route.params.id;
             },
             getScheduleComponentHeader() {
                 if (this.user.roles !== undefined && this.user.roles.includes('EMPLOYEE')) {
@@ -110,7 +123,7 @@
             viewerIsNotOnlyEmployee() {
                 return store.state.userRoles.includes("MANAGER") ||
                     store.state.userRoles.includes("TRAINER") ||
-                    store.state.userRoles.includes("ADMIN")
+                    this.hasFullPrivilege()
             },
             canShowManagersSubordinates() {
                 if (this.user.roles !== undefined)
@@ -120,50 +133,10 @@
                 if (this.user.roles !== undefined)
                     return this.user.roles.includes("EMPLOYEE");
             },
-            editItem(user) {
-                this.editUser = Object.assign({}, user);
-                this.dialog = true;
-                let self = this;
-                axios.get('http://localhost:8080/groups/get-all')
-                    .then(function (response) {
-                        self.groups = response.data;
-                        console.log(self.groups)
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-                axios.get('http://localhost:8080/users/get-all-managers')
-                    .then(function (response) {
-                        self.managers = response.data;
-                        console.log(self.managers)
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            },
             close() {
                 this.dialog = false;
                 setTimeout(() => {
                 }, 300)
-            },
-            save() {
-                if (this.editUser.firstName != null && this.editUser.lastName != null) {
-                    Object.assign(this.user, this.editUser);
-                    console.log(this.editUser.firstName + " " +
-                        this.editUser.lastName + " " +
-                        this.editUser.dtoManager + " " +
-                        this.editUser.groups + "\n" + this.user.groups);
-                    axios.put('http://localhost:8080/users/update', {
-                        id: this.user.id,
-                        firstName: this.editUser.firstName,
-                        lastName: this.editUser.lastName,
-                        dtoManager: this.editUser.dtoManager
-                    })
-                    // .then(response => alert("User updated"))
-                } else {
-                    alert("Incorrect information in fields")
-                }
-                this.close()
             },
             getArray(groupsList) {
                 let selectedCourses = [];
@@ -182,6 +155,7 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                        self.errorAutoClosable(error.response.data);
                     });
                 axios.get('http://localhost:8080/schedule/employee/' + id)
                     .then(function (response) {
@@ -193,17 +167,29 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                        self.errorAutoClosable(error.response.data);
                     });
+                axios.get('http://localhost:8080/users/'+this.$route.params.id+'/getAttendanceGraph')
+                    .then(function (response) {
+                        self.absenceReasons = response.data;
+                        console.log(response.data);
+                    }).catch(function (error) {
+                    console.log(error);
+                    self.errorAutoClosable(error.response.data);
+                });
             }
-        },
+        }
+        ,
         mounted() {
             this.loadInfo();
-        },
+        }
+        ,
         watch: {
             '$route'(to, from) {
                 this.loadInfo();
             }
-        },
+        }
+        ,
         computed: {
             userComponentHeader() {
                 if (this.user.roles !== null && this.user.roles !== undefined && this.user.roles.length !== 0) {

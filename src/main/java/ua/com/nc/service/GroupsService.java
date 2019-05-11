@@ -1,6 +1,7 @@
 package ua.com.nc.service;
 
 
+import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoGroup;
 import ua.com.nc.dto.schedule.GroupSchedule;
 
@@ -16,4 +17,6 @@ public interface GroupsService {
     List<DtoGroup> getAll();
 
     List<DtoGroup> getGroupsAndQuantity();
+
+    User getTrainer(int id);
 }

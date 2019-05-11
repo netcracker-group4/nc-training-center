@@ -61,12 +61,14 @@
             }
         },
         methods: {
-            // getTrainerName(trainerId) {
-            //     let trainer = this.trainers.filter((e) => {
-            //         return e.id === trainerId;
-            //     })[0];
-            //     return trainer.firstName + ' ' + trainer.lastName;
-            // },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             goToCoursePage(courseId) {
                 this.$router.push('/courses/' + courseId);
             },
@@ -83,6 +85,7 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                        self.errorAutoClosable(error.response.data);
                     });
             }
         },

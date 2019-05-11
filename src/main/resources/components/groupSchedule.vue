@@ -69,7 +69,15 @@
         methods: {
             getColor(forInterval) {
                 return forInterval.colorsForDays[this.currentDay];
-            }
+            },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
         },
         mounted() {
             let self = this;
@@ -79,6 +87,7 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                    self.errorAutoClosable(error.response.data);
                 });
             axios.get('http://localhost:8080/getcourses/desired/day-intervals')
                 .then(function (response) {
@@ -86,6 +95,7 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                    self.errorAutoClosable(error.response.data);
                 });
         }
     }

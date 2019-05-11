@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.dto.*;
+import ua.com.nc.service.AttendanceService;
 import ua.com.nc.service.EmailService;
-import ua.com.nc.service.FeedbackService;
 import ua.com.nc.service.UserService;
 
 import java.util.*;
@@ -31,6 +31,10 @@ public class UserServiceImpl implements UserService {
     private LevelDao levelDao;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private AttendanceStatusDao statusDao;
+    @Autowired
+    private AttendanceService attendanceService;
 
     @Override
     public void add(DtoUserSave dtoUserSave) {
@@ -47,7 +51,6 @@ public class UserServiceImpl implements UserService {
     public List<DtoUser> getAll() {
         List<DtoUser> dtoUsers = new ArrayList<>();
         List<User> users = userDao.getAll();
-
         if (!users.isEmpty()) {
             for (User user : users) {
 //            List<DTOGroup> dtoGroups = new ArrayList<>();
@@ -81,27 +84,13 @@ public class UserServiceImpl implements UserService {
 
         DtoTeacherAndManager dtoManager = null;
         if (manager != null) {
-            dtoManager = new DtoTeacherAndManager(
-                    manager.getId(),
-                    manager.getFirstName(),
-                    manager.getLastName(),
-                    manager.getImageUrl(),
-                    manager.isActive(),
-                    manager.getEmail()
-            );
+            dtoManager = new DtoTeacherAndManager(manager);
         }
 
         List<DtoTeacherAndManager> dtoTeachers = new ArrayList<>();
         if (teachers != null && teachers.size() != 0) {
             for (User teacher : teachers) {
-                dtoTeachers.add(new DtoTeacherAndManager(
-                        teacher.getId(),
-                        teacher.getFirstName(),
-                        teacher.getLastName(),
-                        teacher.getImageUrl(),
-                        teacher.isActive(),
-                        teacher.getEmail()
-                ));
+                dtoTeachers.add(new DtoTeacherAndManager(teacher));
             }
         }
 
@@ -112,7 +101,8 @@ public class UserServiceImpl implements UserService {
                 Course course = courseDao.getEntityById(courseId);
                 String courseName = course.getName();
                 dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId,
-                        courseName, course.getUserId(), getLevelName(levels, course.getLevel())));
+                        courseName, course.getUserId(),
+                        getLevelName(levels, course.getLevel())));
             }
         }
 
@@ -243,6 +233,30 @@ public class UserServiceImpl implements UserService {
             user.setRoles(roles);
             return user;
         }
+    }
 
+    @Override
+    public Map<String, Double> getAttandanceGraph(int userId) {
+        List<Group> groups = groupDao.getAllGroupsByStudent(userId);
+        Map<String,Integer> att = new HashMap<>();
+        statusDao.getAll().forEach(r -> {
+            att.put(r.getTitle().toLowerCase(), 0);
+            }
+        );
+        int allLessons = 0;
+        for (Group g : groups) {
+            List<Attendance> at = attendanceService.getAttendanceByStudentIdAndGroupId(userId, g.getId());
+            if(at!=null && !at.isEmpty()){
+                for(Attendance a: at){
+                    String status = a.getStatus().toLowerCase();
+                    att.put(status,att.get(status)+1);
+                    allLessons++;
+                }
+            }
+        }
+        final int a = allLessons;
+        Map<String, Double> result = new HashMap<>();
+        att.forEach((key, value) -> result.put(key, (value * 100.0) / a));
+        return result;
     }
 }
