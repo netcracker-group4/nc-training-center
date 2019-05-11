@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface FeedbackDao extends GenericDao<Feedback> {
     List<Feedback> getAllByUserId(Integer userId);
+
 }
