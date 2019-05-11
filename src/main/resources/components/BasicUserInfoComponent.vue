@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-layout row wrap>
-        <v-container xs12 >
+        <v-container xs12>
             <div v-if="user !== null && user !== undefined " style="padding: 20px;">
                 <v-toolbar v-if="viewerIsAdmin()" flat color="white">
                     <span>{{elemName}}</span>
@@ -152,6 +152,22 @@
         },
 
         methods: {
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             viewerIsAdmin() {
                 return store.getters.isAdmin;
             },
@@ -175,6 +191,7 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                        self.errorAutoClosable(error.response.data);
                     });
             },
             goToUserPage(dtoManager) {
@@ -195,26 +212,36 @@
 
 
             isActive() {
+                let self = this;
                 axios.put('http://localhost:8080/users/update-active', {
                     active: this.user.active,
                     id: this.user.id
+                }).then(function (response) {
+                    if (self.user.active)
+                        self.successAutoClosable("User is now active");
+                    else self.successAutoClosable("User is now not active")
+                }).catch(function (error) {
+                    console.log(error);
+                    self.errorAutoClosable('Server error occurred. User is not updated');
                 })
             },
 
             save() {
+                let self = this;
                 if (this.editUser.firstName != null && this.editUser.lastName != null) {
-                    Object.assign(this.user, this.editUser);
-                    console.log(this.editUser.firstName + " " +
-                        this.editUser.lastName + " " +
-                        this.editUser.dtoManager + " " +
-                        this.editUser.groups + "\n" + this.user.groups);
                     axios.put('http://localhost:8080/users/update', {
                         id: this.user.id,
                         firstName: this.editUser.firstName,
                         lastName: this.editUser.lastName,
                         dtoManager: this.editUser.dtoManager
+                    }).then(function () {
+                            Object.assign(self.user, self.editUser);
+                        self.successAutoClosable('User is updated')
+                        }
+                    ).catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data + '.  User is not updated');
                     })
-                    // .then(response => alert("User updated"))
                 } else {
                     alert("Incorrect information in fields")
                 }

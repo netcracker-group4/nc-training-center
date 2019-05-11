@@ -9,7 +9,6 @@ import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.dto.*;
 import ua.com.nc.service.EmailService;
-import ua.com.nc.service.FeedbackService;
 import ua.com.nc.service.UserService;
 
 import java.util.*;
@@ -47,7 +46,6 @@ public class UserServiceImpl implements UserService {
     public List<DtoUser> getAll() {
         List<DtoUser> dtoUsers = new ArrayList<>();
         List<User> users = userDao.getAll();
-
         if (!users.isEmpty()) {
             for (User user : users) {
 //            List<DTOGroup> dtoGroups = new ArrayList<>();
@@ -81,27 +79,13 @@ public class UserServiceImpl implements UserService {
 
         DtoTeacherAndManager dtoManager = null;
         if (manager != null) {
-            dtoManager = new DtoTeacherAndManager(
-                    manager.getId(),
-                    manager.getFirstName(),
-                    manager.getLastName(),
-                    manager.getImageUrl(),
-                    manager.isActive(),
-                    manager.getEmail()
-            );
+            dtoManager = new DtoTeacherAndManager(manager);
         }
 
         List<DtoTeacherAndManager> dtoTeachers = new ArrayList<>();
         if (teachers != null && teachers.size() != 0) {
             for (User teacher : teachers) {
-                dtoTeachers.add(new DtoTeacherAndManager(
-                        teacher.getId(),
-                        teacher.getFirstName(),
-                        teacher.getLastName(),
-                        teacher.getImageUrl(),
-                        teacher.isActive(),
-                        teacher.getEmail()
-                ));
+                dtoTeachers.add(new DtoTeacherAndManager(teacher));
             }
         }
 
@@ -112,7 +96,8 @@ public class UserServiceImpl implements UserService {
                 Course course = courseDao.getEntityById(courseId);
                 String courseName = course.getName();
                 dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId,
-                        courseName, course.getUserId(), getLevelName(levels, course.getLevel())));
+                        courseName, course.getUserId(),
+                        getLevelName(levels, course.getLevel())));
             }
         }
 

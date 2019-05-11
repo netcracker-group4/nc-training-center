@@ -69,6 +69,7 @@
 <script>
     import axios from 'axios';
     import store from '../store/store.js';
+
     export default {
         name: 'feedback-component',
         props: {
@@ -76,7 +77,7 @@
         },
         data:() => ({
             feedbackText: '',
-            userFeedback: ''
+            userFeedback: []
         }),
         methods: {
             getAuthorizationUser() {
