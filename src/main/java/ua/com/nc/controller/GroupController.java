@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.interfaces.CourseDao;
@@ -36,6 +37,7 @@ public class GroupController {
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String addGroup(@RequestBody GroupSchedule groupSchedule) {
         int newId;
         if (groupSchedule.getId() == 0) {
@@ -48,6 +50,7 @@ public class GroupController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String deleteGroup(@PathVariable String id) {
         groupsService.delete(Integer.parseInt(id));
         return "Group deleted";
@@ -78,6 +81,7 @@ public class GroupController {
 
     @RequestMapping(value = "/{id}/user/{userId}", method = RequestMethod.DELETE)
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteStudent(@PathVariable String id, @PathVariable String userId) {
         groupDao.deleteUserFromGroup(id, userId);
     }
@@ -101,10 +105,11 @@ public class GroupController {
 
     }
 
-    @RequestMapping(value = {"/employee/{id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/employee/{employeeId}"}, method = RequestMethod.GET)
     @ResponseBody
-    public String getGroupsByUser(@PathVariable Integer id){
-        return gson.toJson(groupsService.getAllByEmployeeId(id));
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
+    public String getGroupsByUser(@PathVariable Integer employeeId) {
+        return gson.toJson(groupsService.getAllByEmployeeId(employeeId));
     }
 
 }

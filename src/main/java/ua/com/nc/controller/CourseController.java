@@ -3,6 +3,7 @@ package ua.com.nc.controller;
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,12 +43,14 @@ public class CourseController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteCourse(@PathVariable String id) {
         courseDao.delete(Integer.parseInt(id));
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void add(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                     @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
@@ -61,6 +64,7 @@ public class CourseController {
 
 
     @RequestMapping(method = RequestMethod.PUT, value = "{id}/create")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void update(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                        @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
                        @RequestParam(name = "image") MultipartFile image,
@@ -76,18 +80,21 @@ public class CourseController {
 
     @RequestMapping(value = {"/{id}/desired/ungrouped"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String getDesiredScheduleForUngroupedStudentsForCourse(@PathVariable("id") String id) throws Exception {
         return gson.toJson(service.getDesiredScheduleForUngroupedStudentsOfCourse(Integer.parseInt(id)));
     }
 
     @RequestMapping(value = {"/{id}/desired/grouped"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String getDesiredScheduleForFormedGroupsForCourse(@PathVariable("id") String id) throws Exception {
         return gson.toJson(service.getDesiredScheduleForFormedGroupsForCourse(Integer.parseInt(id)));
     }
 
     @RequestMapping(value = {"/desired/{groupId}"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
     public String getDesiredScheduleForGroup(@PathVariable("groupId") String groupId) throws Exception {
         return gson.toJson(service.getDesiredScheduleForGroup(Integer.parseInt(groupId)));
     }

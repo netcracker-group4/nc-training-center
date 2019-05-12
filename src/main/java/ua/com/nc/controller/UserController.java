@@ -4,12 +4,12 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.domain.User;
-import ua.com.nc.dto.DtoMailSender;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dto.DtoUserSave;
 import ua.com.nc.service.UserService;
@@ -49,12 +49,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> update(@RequestBody DtoUserProfiles dtoUserProfiles) {
         userService.updateUserByAdmin(dtoUserProfiles);
         return ResponseEntity.ok().body("User updated");
     }
 
     @RequestMapping(value = "/update-active", method = RequestMethod.PUT)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateActive(@RequestBody User user) {
         userService.updateActive(user);
         return ResponseEntity.ok().body("Update user active");
@@ -71,6 +73,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}/trainers", method = RequestMethod.GET)
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
     public ResponseEntity<?> getTrainersOfEmployee(@PathVariable Integer id) {
         return new ResponseEntity<>(userService.getTrainersOfEmployee(id), HttpStatus.OK);
     }
@@ -93,6 +96,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "{id}/getAttendanceGraph")
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
     public Map<String, Double> getAttendanceGraph(@PathVariable String id){
         int userId = Integer.parseInt(id);
         return userService.getAttandanceGraph(userId);

@@ -10,11 +10,13 @@ import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.User;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
 
 @Log4j
 @Component
@@ -334,7 +336,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         if (list == null || list.size() == 0) {
             return null;
         }
-
         return list;
     }
 
@@ -358,6 +359,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         log.info(sql + "trainer by group id = " + groupId);
         return getUniqueFromSqlById(sql, groupId);
     }
+
 
     @Override
     public List<User> getSubordinatesOfManager(Integer managerId) {

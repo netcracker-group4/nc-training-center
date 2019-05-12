@@ -127,7 +127,8 @@
             },
             canShowSchedule() {
                 return (this.user.roles !== undefined &&
-                    (this.user.roles.includes("TRAINER") || this.user.roles.includes("EMPLOYEE")))
+                    (this.user.roles.includes("TRAINER") ||
+                        this.user.roles.includes("EMPLOYEE")))
                     && this.viewerIsNotOnlyEmployee()
             },
             canShowCourses() {
@@ -140,7 +141,8 @@
                     store.state.userRoles.includes("TRAINER")
             },
             authenticatedUserIsThisOnesManager() {
-                return store.state.userRoles.includes("MANAGER") && parseInt(store.state.user.id) === parseInt(this.user.dtoManager.id);
+                return store.state.userRoles.includes("MANAGER") &&
+                    parseInt(store.state.user.id) === parseInt(this.user.dtoManager.id);
             },
             canShowManagersSubordinates() {
                 if (this.user.roles !== undefined)
@@ -213,7 +215,6 @@
                         self.errorAutoClosable(error.response.data);
                     });
                 }
-                console.log('Loaded!!!');
             }
         }
         ,
