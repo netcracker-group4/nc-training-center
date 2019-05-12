@@ -63,33 +63,33 @@ public class GroupController {
 
     @RequestMapping(value = "/get-groups/{id}")
     @ResponseBody
-    public String getGroupsInCourse(@PathVariable String id) {
-        return gson.toJson(groupDao.getAllGroupsOfCourse(Integer.parseInt(id)));
+    public String getGroupsInCourse(@PathVariable Integer id) {
+        return gson.toJson(groupDao.getAllGroupsOfCourse(id));
     }
 
     @RequestMapping(value = "/{id}")
     @ResponseBody
-    public String getGroup(@PathVariable String id) {
-        return gson.toJson(groupDao.getEntityById(Integer.parseInt(id)));
+    public String getGroup(@PathVariable Integer id) {
+        return gson.toJson(groupDao.getEntityById(id));
     }
 
     @RequestMapping(value = "/{id}/users", method = RequestMethod.GET)
     @ResponseBody
-    public List<User> getStudents(@PathVariable String id) {
-        return userDao.getByGroupId(Integer.parseInt(id));
+    public List<User> getStudents(@PathVariable Integer id) {
+        return userDao.getByGroupId(id);
     }
 
     @RequestMapping(value = "/{id}/user/{userId}", method = RequestMethod.DELETE)
     @ResponseBody
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void deleteStudent(@PathVariable String id, @PathVariable String userId) {
+    public void deleteStudent(@PathVariable Integer id, @PathVariable Integer userId) {
         groupDao.deleteUserFromGroup(id, userId);
     }
 
     @RequestMapping(value = "/{id}/course", method = RequestMethod.GET)
     @ResponseBody
-    public Course getCourseByGroup(@PathVariable String id) {
-        return courseDao.getCourseByGroup(Integer.parseInt(id));
+    public Course getCourseByGroup(@PathVariable Integer id) {
+        return courseDao.getCourseByGroup(id);
     }
 
     @RequestMapping(value = {"/groups-and-quantity"}, method = RequestMethod.GET)
@@ -100,8 +100,8 @@ public class GroupController {
 
     @RequestMapping(value = {"/{id}/trainer"}, method = RequestMethod.GET)
     @ResponseBody
-    public User getTeacher(@PathVariable String id) {
-        return groupsService.getTrainer(Integer.parseInt(id));
+    public User getTeacher(@PathVariable Integer id) {
+        return groupsService.getTrainer(id);
 
     }
 
