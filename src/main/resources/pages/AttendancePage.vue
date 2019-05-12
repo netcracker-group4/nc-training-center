@@ -1,7 +1,9 @@
 <template>
     <v-container>
         <h1>Attendance
-        <span class="text-xs-right">
+        <span class="text-xs-right" v-if="  this.$store.getters.isAuthorized &&
+                                            (this.$store.getters.isAdmin
+                                            || this.$store.getters.isTrainer)">
             <v-btn flat color="primary" @click="downloadAttendance" class="download-button">download attendance report</v-btn>
         </span></h1>
         <v-stepper v-model="e6" vertical>
