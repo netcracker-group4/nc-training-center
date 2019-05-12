@@ -154,7 +154,7 @@
                 axios.post('/groups', self.groups[index])
                     .then(function (response) {
                         self.groups[index].id = response.data;
-                        self.successAutoClosable('Group has been saved')
+                        self.successAutoClosable('Group  ' +self.groups[index].name + ' has been saved')
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -167,8 +167,8 @@
                 axios.delete('/groups/' + self.groups[index].id)
                     .then(function (response) {
                         self.allSchedules = self.allSchedules.concat(self.groups[index].groupScheduleList);
+                        self.successAutoClosable('Group ' +self.groups[index].name + ' has been deleted');
                         self.groups.splice(index, 1);
-                        self.successAutoClosable('Group has been deleted')
                     })
                     .catch(function (error) {
                         console.log(error);

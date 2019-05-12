@@ -72,6 +72,7 @@
             goToUserPage(userId) {
                 // this.$emit("sendId", userId);
                 this.$router.push('/userpage/' + userId);
+                window.scrollTo(0,0);
             },
             goToNewUserPage() {
                 this.$router.push('/add-user');

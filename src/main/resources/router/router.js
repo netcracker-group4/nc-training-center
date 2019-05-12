@@ -6,7 +6,6 @@ import DashBoardPage from "../pages/DashBoardPage.vue";
 import LoginPage from '../pages/LoginPage.vue'
 import GroupPage from "../pages/GroupPage.vue";
 import CoursePage from "../pages/CoursePage.vue";
-import TrainerPage from "../pages/TrainerPage.vue";
 import AdminCourses from "../pages/AdminCourses.vue";
 import CreateCourse from "../pages/CreateCourse.vue";
 import AllUsersPage from "../pages/AllUsersPage.vue";
@@ -33,7 +32,6 @@ const routes = [
     {path: '/group/:id', component: GroupPage, props: true},
     {path: '/groups/:id/schedule', component: GroupSchedulePage},
     {path: '/courses/:id', component: CoursePage, props: true},
-    {path: '/trainers/:id', component: TrainerPage},
     {path: '/admincourses', component: AdminCourses},
     {path: '/coursecreate', component: CreateCourse},
     {path: '/coursecreate/:id', component: CreateCourse,props: true},

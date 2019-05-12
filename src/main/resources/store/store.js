@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-    state:{
+    state: {
         isAuthorized: isAuthorized,
         user: user,
         userRoles: userRoles,
@@ -18,16 +18,14 @@ export default new Vuex.Store({
             return state.user
         },
         isAdmin: state => {
-            if(userRoles != null && userRoles != undefined){
+            if ( userRoles !== undefined && userRoles != null) {
                 return state.userRoles.includes('ADMIN')
-            }else return false
+            } else return false
         },
         isAuthorized: state => {
-            if( state.isAuthorized != false &&
-                state.isAuthorized != null &&
-                state.isAuthorized != undefined){
-                return true
-            }else return false
+            return state.isAuthorized !== undefined &&
+                state.isAuthorized !== null &&
+                state.isAuthorized !== false;
         },
     },
 

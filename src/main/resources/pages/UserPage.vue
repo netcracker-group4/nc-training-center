@@ -1,9 +1,11 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
     <div>
         <v-container>
 
             <basic-user-info-component :user="user" :elem-name="userComponentHeader"/>
+
             <user-attendance-progress v-if="canShowAttendance()" :absenceReasons="absenceReasons"/>
+
             <users-attendance v-if="canShowAttendance()" class="margin" :user="user"/>
 
             <feedback-component v-if="canShowFeedbacks()" class="margin" :user="user"/>
@@ -94,7 +96,7 @@
                 return value.firstName + ' ' + value.lastName;
             },
             hasFullPrivilege(){
-                return store.getters.isAdmin() || store.state.user.id === this.$route.params.id;
+                return store.getters.isAdmin || store.state.user.id === this.$route.params.id;
             },
             getScheduleComponentHeader() {
                 if (this.user.roles !== undefined && this.user.roles.includes('EMPLOYEE')) {

@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.domain.User;
@@ -43,7 +44,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getById(@PathVariable Integer id) {
+    public ResponseEntity<?> getById(@AuthenticationPrincipal User user,  @PathVariable Integer id) {
+        log.info("Logged in roles!!!!!");
+        log.info(user.getAuthorities());
         return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
     }
 
