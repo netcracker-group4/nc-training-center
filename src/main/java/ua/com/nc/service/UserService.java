@@ -24,7 +24,7 @@ public interface UserService extends UserDetailsService {
 
     List<DtoTeacherAndManager> getAllTrainers();
 
-    void addEmployeeByAdmin(DtoMailSender dtoMailSender);
+//    void addEmployeeByAdmin(DtoMailSender dtoMailSender);
 
     boolean activateUser(String token);
 

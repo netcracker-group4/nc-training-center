@@ -119,7 +119,7 @@
             },
             getAllFeedback() {
                 let self = this;
-                axios.get('http://localhost:8080/feedback/get-by-user?userId=' + self.user.id)
+                axios.get('http://localhost:8080/feedback/get-by-user?userId=' + this.$route.params.id)
                     .then(function (response) {
                         self.userFeedback = response.data;
                         console.log(self.userFeedback)
@@ -131,7 +131,7 @@
             getAllFeedbackByTrainer() {
                 let self = this;
                 axios.get('http://localhost:8080/feedback/get-by-rainer-and-by-user?userId=' +
-                    self.user.id + "&trainerId=" + store.state.user.id)
+                    this.$route.params.id + "&trainerId=" + store.state.user.id)
                     .then(function (response) {
                         self.userFeedback = response.data;
                         console.log(self.userFeedback)
@@ -148,6 +148,15 @@
                 this.getAllFeedbackByTrainer();
             }
 
+        },
+        watch: {
+            '$route'(to, from) {
+                if (this.isNotOnlyTrainer()) {
+                    this.getAllFeedback();
+                } else {
+                    this.getAllFeedbackByTrainer();
+                }
+            }
         }
     }
 </script>

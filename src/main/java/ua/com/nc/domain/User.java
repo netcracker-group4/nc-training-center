@@ -90,6 +90,7 @@ public class User extends Entity implements UserDetails {
         }
     }
 
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -157,7 +158,7 @@ public class User extends Entity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        if (roles != null) {
+        if (this.roles != null && !this.roles.isEmpty()) {
             for (Role role : this.roles) {
                 authorities.add(new SimpleGrantedAuthority(role.name()));
             }

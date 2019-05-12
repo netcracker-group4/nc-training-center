@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoMailSender;
@@ -33,8 +34,7 @@ public class UserController {
                 dtoUserSave.getEmail() != null &&
                 dtoUserSave.getFirstName() != null &&
                 dtoUserSave.getLastName() != null &&
-                dtoUserSave.getPassword() != null &&
-                dtoUserSave.getRole() != null) {
+                dtoUserSave.getPassword() != null) {
             userService.add(dtoUserSave);
             return ResponseEntity.ok().body("User saved");
         } else {
@@ -80,16 +80,16 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllTrainers(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/mail-send", method = RequestMethod.POST)
-    public ResponseEntity<?> addEmployeeByAdmin(@RequestBody DtoMailSender dtoMailSender) {
-        userService.addEmployeeByAdmin(dtoMailSender);
-        return ResponseEntity.ok().body("Send mail");
-    }
+//    @RequestMapping(value = "/mail-send", method = RequestMethod.POST)
+//    public ResponseEntity<?> addEmployeeByAdmin(@RequestBody DtoMailSender dtoMailSender) {
+//        userService.addEmployeeByAdmin(dtoMailSender);
+//        return ResponseEntity.ok().body("Send mail");
+//    }
 
     @RequestMapping(value = "/activate/{token}", method = RequestMethod.GET)
-    public ResponseEntity<?> activate(@PathVariable String token) {
-        boolean isActivated = userService.activateUser(token);
-        return new ResponseEntity<>(isActivated, HttpStatus.OK);
+    public RedirectView activate(@PathVariable String token) {
+        userService.activateUser(token);
+        return new RedirectView("/");
     }
 
     @RequestMapping(value = "{id}/getAttendanceGraph")
