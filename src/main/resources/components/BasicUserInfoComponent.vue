@@ -2,16 +2,16 @@
     <v-layout row wrap>
         <v-container xs12>
             <div v-if="user !== null && user !== undefined " style="padding: 20px;">
-                <v-toolbar v-if="viewerIsAdmin()" flat color="white">
+                <v-toolbar  flat color="white">
                     <span>{{elemName}}</span>
                     <v-spacer></v-spacer>
-                    <span class="text-xs-center align-center ">
+                    <span v-if="viewerIsAdmin()" class="text-xs-center align-center ">
                         <v-switch v-if="viewerIsAdmin()" style="margin-bottom: -20px"
                                   v-model="user.active"
                                   @change="isActive"
                                   label="Active"></v-switch>
                     </span>
-                    <v-dialog v-model="dialog" max-width="500px">
+                    <v-dialog  v-if="viewerIsAdmin()" v-model="dialog" max-width="500px">
                         <template v-slot:activator="{ on }">
                             <v-icon @click="editItem" style="margin-left: 30px">
                                 edit
@@ -198,7 +198,7 @@
                 if (dtoManager !== null) {
                     this.$router.push('/userpage/' + dtoManager.id);
                 }
-
+                window.scrollTo(0,0);
             },
             close() {
                 this.dialog = false;

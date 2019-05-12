@@ -3,6 +3,7 @@ package ua.com.nc.controller;
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,31 +23,24 @@ public class DashBoardController {
 
     @RequestMapping(value = {"/level-and-quantity"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String getLevelAndQuantity() {
-        if (userHasRightToSeeDashBoard()) {
-            return gson.toJson(dashBoardService.getLevelAndQuantity());
-        } else return "ERROR";
+        return gson.toJson(dashBoardService.getLevelAndQuantity());
     }
 
-    private boolean userHasRightToSeeDashBoard() {
-        //TODO method that checks if user is admin or smth else
-        return true;
-    }
 
     @RequestMapping(value = {"/level-and-trainers"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String getLevelAndTrainers() {
-        if (userHasRightToSeeDashBoard()) {
-            return gson.toJson(dashBoardService.getLevelAndTrainers());
-        } else return "ERROR";
+        return gson.toJson(dashBoardService.getLevelAndTrainers());
     }
 
     @RequestMapping(value = {"/training-and-quantity"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String getTrainingAndQuantity() {
-        if (userHasRightToSeeDashBoard()) {
-            return gson.toJson(dashBoardService.getTrainingAndQuantity());
-        } else return "ERROR";
+        return gson.toJson(dashBoardService.getTrainingAndQuantity());
     }
 
 }

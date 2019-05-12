@@ -59,6 +59,7 @@
             },
             goToUserPage(userId) {
                 this.$router.push('/userpage/' + userId);
+                window.scrollTo(0,0);
             },
             loadInfo() {
                 let self = this;

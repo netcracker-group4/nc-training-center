@@ -5,35 +5,34 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
+import ua.com.nc.exceptions.NoSuchUserException;
 import ua.com.nc.service.ReportService;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.rmi.NoSuchObjectException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Log4j
 @Service
 public class ReportServiceImpl implements ReportService {
 
     @Autowired
-    private
-    LessonDao lessonDao;
+    private LessonDao lessonDao;
     @Autowired
-    private
-    UserDao userDao;
+    private UserDao userDao;
     @Autowired
-    private
-    GroupDao groupDao;
+    private GroupDao groupDao;
     @Autowired
-    private
-    LevelDao levelDao;
+    private LevelDao levelDao;
     @Autowired
-    private
-    CourseDao courseDao;
+    private CourseDao courseDao;
 
     private String[] dashboardSheetNames = {"Level And Quantity", "Level And Trainers", "Training And Quantity"};
     private String[] levelAndQuantityColumns = {"Level", "Course Name", "Group Name"};
@@ -47,7 +46,7 @@ public class ReportServiceImpl implements ReportService {
                 return level;
             }
         }
-        return null;
+        throw new NoSuchUserException("Can't find Level for Id " + id);
     }
 
     private CellStyle headerStyle(XSSFWorkbook workbook) {
@@ -173,10 +172,10 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private void drawTrainingAndQuantity(Sheet trainingAndQuantity) {
-        int rowCounter = 1;
         checkColumnWidth(trainingAndQuantity, 2, trainingAndQuantityColumns[2]);
         int[] courseCell = {0, 2};
         int[] groupCell = {1, 2};
+        int rowCounter = 1;
         for (Course course : courseDao.getAll()) {
             Row courseRow = trainingAndQuantity.createRow(rowCounter++);
             String courseName = course.getName();
@@ -224,6 +223,7 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
+    //get full attendance report
     @Override
     public ByteArrayInputStream getAttendanceExcel() throws IOException {
 

@@ -1,6 +1,7 @@
 package ua.com.nc.service;
 
 
+import ua.com.nc.domain.Group;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoGroup;
 import ua.com.nc.dto.schedule.GroupSchedule;
@@ -13,6 +14,8 @@ public interface GroupsService {
     boolean delete(int groupId);
 
     int add(GroupSchedule groupSchedule);
+
+    Group getGroupById(int groupId);
 
     List<DtoGroup> getAll();
 
