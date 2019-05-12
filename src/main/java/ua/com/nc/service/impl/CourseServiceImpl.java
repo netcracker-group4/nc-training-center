@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.CourseStatus;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
+import ua.com.nc.dto.DtoCourse;
 import ua.com.nc.dto.schedule.GroupSchedule;
 import ua.com.nc.dto.schedule.ParsedSchedule;
 import ua.com.nc.dto.schedule.ScheduleForUser;
@@ -187,5 +188,22 @@ public class CourseServiceImpl implements CourseService {
                     startOfDay, endOfDay));
         }
         return scheduleForUsers;
+    }
+
+    @Override
+    public List<DtoCourse> getAllByTrainerAndEmployee(Integer trainerId, Integer employeeId) {
+        List<Course> courses = courseDao.getAllCourseByTrainerAndByEmployee(trainerId, employeeId);
+        List<DtoCourse> dtoCourses = new ArrayList<>();
+
+        if (courses != null && !courses.isEmpty()) {
+            for (Course course : courses) {
+                DtoCourse dtoCourse = new DtoCourse();
+                dtoCourse.setId(course.getId());
+                dtoCourse.setName(course.getName());
+                dtoCourses.add(dtoCourse);
+            }
+        }
+
+        return dtoCourses;
     }
 }
