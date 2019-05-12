@@ -52,14 +52,14 @@ public class LessonsController {
 
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{lessonId}")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToDeleteLesson(authentication, #lessonId)")
     public String deleteLesson(@PathVariable Integer lessonId) {
         return lessonsService.deleteLesson(lessonId);
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/{id}")
+    @RequestMapping(method = RequestMethod.POST, value = "/{lessonId}")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToCancelLesson(authentication, #lessonId)")
     public String cancelLesson(@PathVariable Integer lessonId) {
         return lessonsService.cancelLesson(lessonId);

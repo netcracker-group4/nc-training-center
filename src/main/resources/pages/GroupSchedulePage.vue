@@ -7,7 +7,7 @@
                     <v-radio :key="2" :label="'List'" :value="false"></v-radio>
                 </v-radio-group>
                 <v-spacer></v-spacer>
-                <v-btn flat v-on:click="$router.push('/groups/' + group.id)">{{group.title}}</v-btn>
+                <v-btn flat v-on:click="goToGroupPage()">{{group.title}}</v-btn>
                 <v-btn color="info" v-on:click="addLesson">Add lesson</v-btn>
             </v-layout>
             <!--        buttons-->
@@ -226,6 +226,9 @@
             }
         },
         methods: {
+            goToGroupPage(){
+                this.$router.push('/group/' + this.group.id);
+            },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
                     timeout: 2000,
@@ -275,6 +278,7 @@
                     .catch(function (error) {
                         console.log(error);
                         self.errorAutoClosable(error.response.data);
+                        console.log(error.response.data);
 
                     });
             },
