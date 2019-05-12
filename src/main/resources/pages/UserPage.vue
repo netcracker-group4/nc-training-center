@@ -111,10 +111,11 @@
             },
             canShowFeedbacks() {
                 return (this.user.roles !== undefined) &&
-                    (store.state.userRoles.includes("ADMIN")) ||
+                    ((store.state.userRoles.includes("ADMIN")) ||
                     (store.state.userRoles.includes("MANAGER") && store.state.user.id === this.user.dtoManager.id) ||
-                    (store.state.userRoles.includes("TEACHER")) ||
-                    (store.state.userRoles.includes("EMPLOYEE") && store.state.user.id === this.user.id);
+                    (store.state.userRoles.includes("TRAINER")) ||
+                    (store.state.userRoles.includes("EMPLOYEE") && store.state.user.id === this.user.id)) &&
+                    (this.user.roles.includes("EMPLOYEE"));
             },
             canShowSchedule() {
                 return (this.user.roles !== undefined &&

@@ -116,7 +116,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, User entity) throws SQLException {
         setAllFields(statement, entity);
-        statement.setInt(7, entity.getId());
+        statement.setInt(8, entity.getId());
     }
 
     private void setAllFields(PreparedStatement statement, User entity) throws SQLException {
@@ -125,7 +125,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         statement.setString(3, entity.getFirstName());
         statement.setString(4, entity.getLastName());
         statement.setString(5, entity.getToken());
-        statement.setObject(6, entity.getManagerId(), Types.INTEGER);
+        statement.setInt(6, entity.getManagerId());
         statement.setBoolean(7, entity.isActive());
     }
 

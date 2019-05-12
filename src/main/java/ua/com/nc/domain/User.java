@@ -158,8 +158,10 @@ public class User extends Entity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        for (Role role : this.roles) {
-            authorities.add(new SimpleGrantedAuthority(role.name()));
+        if (this.roles != null && !this.roles.isEmpty()) {
+            for (Role role : this.roles) {
+                authorities.add(new SimpleGrantedAuthority(role.name()));
+            }
         }
         return authorities;
     }
