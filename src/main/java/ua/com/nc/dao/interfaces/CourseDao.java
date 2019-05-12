@@ -15,4 +15,6 @@ public interface CourseDao extends GenericDao<Course> {
 
     Course getCourseByGroup(int id);
 
+    Course getCourseByFeedback(Integer feedbackId);
+
 }
