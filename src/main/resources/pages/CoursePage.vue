@@ -65,8 +65,13 @@
                                     </template>
                                 </v-select>-->
                             </div>
-                            <div class="subheading pt-3"> <b>Groups</b></div>
-                            <div v-for="group in groups" @click="goGroupPage(group.id)">{{group.title}}</div>
+                            <div class="subheading pt-3">
+                                <b>Groups</b> <v-btn v-if="isAdmin" @click="manageGroups()">Manage groups</v-btn>
+                            </div>
+                            <div v-for="group in groups">
+                                <b @click="goGroupPage(group.id)" >{{group.title}}</b>
+                                <v-btn v-if="isAdmin" @click="manageSchedule(group.id)">Manage schedule</v-btn>
+                            </div>
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -254,6 +259,12 @@
                     this.img = '';
                     this.imageUrl = '';
                 }
+            },
+            manageGroups(){
+                this.$router.push('/desired-schedule/' + this.$route.params.id);
+            },
+            manageSchedule(id){
+                this.$router.push('/groups/'+id+'/schedule');
             }
         },
         mounted() {
