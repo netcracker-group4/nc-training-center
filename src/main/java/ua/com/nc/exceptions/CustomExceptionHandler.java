@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ua.com.nc.dao.PersistException;
 
+import java.nio.file.AccessDeniedException;
+
 /**
  * Class with methods that automatically catch defined exceptions classes (so you don't need to use try-catch)
  * exceptions also are logged here
@@ -57,6 +59,14 @@ public class CustomExceptionHandler {
     public String  handleLogicException(LogicException exception) {
         log.trace(exception.getMessage(), exception);
         return exception.getMessage();
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public String handleAccessDeniedException(AccessDeniedException exception) {
+        log.trace(exception.getMessage(), exception);
+        return "Access denied";
     }
 
 }

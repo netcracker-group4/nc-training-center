@@ -167,8 +167,7 @@
                         self.lessons.forEach(function (one) {
                             one.open = false;
                         })
-                    })
-                    .catch(function (error) {
+                    }).catch(function (error) {
                         console.log(error);
                         self.errorAutoClosable(error.response.data);
                     });
