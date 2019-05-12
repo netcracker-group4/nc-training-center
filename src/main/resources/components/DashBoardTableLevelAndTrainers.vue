@@ -71,6 +71,7 @@
 
 <script>
     import axios from 'axios'
+    import store from "../store/store.js";
 
     export default {
         name: "DashBoardTableTrainingAndQuantity",
@@ -122,19 +123,21 @@
             trainerName: item => item.trainer.firstName + ' ' + item.trainer.lastName
         },
         mounted() {
-            let self = this;
-            axios.get('http://localhost:8080/dashboard/level-and-trainers')
-                .then(function (response) {
-                    self.trainersAndLevels = response.data;
-                    self.trainersAndLevels.forEach(function (value) {
-                        console.log(value);
-                        self.selectedTrainers.push(value.trainer.id);
+            if(store.getters.isAdmin) {
+                let self = this;
+                axios.get('http://localhost:8080/dashboard/level-and-trainers')
+                    .then(function (response) {
+                        self.trainersAndLevels = response.data;
+                        self.trainersAndLevels.forEach(function (value) {
+                            console.log(value);
+                            self.selectedTrainers.push(value.trainer.id);
+                        })
                     })
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+            }
         },
         computed: {
             filteredTrainers() {

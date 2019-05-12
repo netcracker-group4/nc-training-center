@@ -157,42 +157,46 @@
             }
         },
         mounted() {
-            let self = this;
-            axios.get('http://localhost:8080/schedule/' + self.$route.params.id)
-                .then(function (response) {
-                    self.lessons = response.data;
-                    self.lessons.forEach(function (one) {
-                        one.open = false;
+            if (!a.getters.isAdmin && !a.getters.isTrainer) {
+                this.$router.push('/404');
+            } else {
+                let self = this;
+                axios.get('http://localhost:8080/schedule/' + self.$route.params.id)
+                    .then(function (response) {
+                        self.lessons = response.data;
+                        self.lessons.forEach(function (one) {
+                            one.open = false;
+                        })
                     })
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
-            axios.get('http://localhost:8080/groups/' + self.$route.params.id)
-                .then(function (response) {
-                    self.group = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
-            axios.get('http://localhost:8080/users/get-all-trainers')
-                .then(function (response) {
-                    self.allTrainers = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
-            axios.get('http://localhost:8080/attachments/all')
-                .then(function (response) {
-                    self.allAttachments = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                axios.get('http://localhost:8080/groups/' + self.$route.params.id)
+                    .then(function (response) {
+                        self.group = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                axios.get('http://localhost:8080/users/get-all-trainers')
+                    .then(function (response) {
+                        self.allTrainers = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                axios.get('http://localhost:8080/attachments/all')
+                    .then(function (response) {
+                        self.allAttachments = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+            }
         },
         computed: {
             lessonsMap() {
@@ -254,7 +258,7 @@
                         "timeDate": new Date().toISOString(),
                         "attachments": [],
                         "isCanceled": false,
-                        "duration" : '01:00',
+                        "duration": '01:00',
                         isNew: true
                     };
                 window.scrollTo(0, document.body.scrollHeight);
@@ -265,7 +269,7 @@
                     .then(function (response) {
                         lesson.isCanceled = response.data;
                         lesson.open = false;
-                        if(lesson.isCanceled) self.successAutoClosable('Lesson has been canceled');
+                        if (lesson.isCanceled) self.successAutoClosable('Lesson has been canceled');
                         else self.successAutoClosable('Lesson has been activated');
                     })
                     .catch(function (error) {
@@ -300,8 +304,7 @@
                         if (newLesson.isNew) {
                             self.successAutoClosable('New lesson has been added');
                             newLesson.isNew = false;
-                        }
-                        else self.successAutoClosable('Lesson has been updated');
+                        } else self.successAutoClosable('Lesson has been updated');
                     })
                     .catch(function (error) {
                         console.log(error);

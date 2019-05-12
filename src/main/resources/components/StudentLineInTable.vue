@@ -94,6 +94,7 @@
     // noinspection NpmUsedModulesInstalled
     import draggable from "vuedraggable";
     import axios from 'axios';
+    import store from "../store/store.js";
 
     export default {
         name: "StudentLineInTable",
@@ -194,42 +195,45 @@
         },
         mounted() {
 
+            if(store.getters.isAdmin) {
+                let self = this;
+                axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/ungrouped')
+                    .then(function (response) {
+                        self.allSchedules = response.data;
+                    })
+                    .catch(function (error) {
+                        self.errorAutoClosable(error.response.data);
+                        console.log(error);
+                    });
 
-            let self = this;
-            axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/ungrouped')
-                .then(function (response) {
-                    self.allSchedules = response.data;
-                })
-                .catch(function (error) {
-                    self.errorAutoClosable(error.response.data);
-                    console.log(error);
-                });
 
-
-            axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/grouped')
-                .then(function (response) {
-                    self.groups = response.data;
-                })
-                .catch(function (error) {
-                    self.errorAutoClosable(error.response.data);
-                    console.log(error);
-                });
-            axios.get('http://localhost:8080/getcourses/desired/day-intervals')
-                .then(function (response) {
-                    self.dayIntervals = response.data;
-                })
-                .catch(function (error) {
-                    self.errorAutoClosable(error.response.data);
-                    console.log(error);
-                });
-            axios.get('http://localhost:8080/getcourses/' + self.$route.params.id)
-                .then(function (response) {
-                    self.course = response.data;
-                })
-                .catch(function (error) {
-                    self.errorAutoClosable(error.response.data);
-                    console.log(error);
-                });
+                axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/grouped')
+                    .then(function (response) {
+                        self.groups = response.data;
+                    })
+                    .catch(function (error) {
+                        self.errorAutoClosable(error.response.data);
+                        console.log(error);
+                    });
+                axios.get('http://localhost:8080/getcourses/desired/day-intervals')
+                    .then(function (response) {
+                        self.dayIntervals = response.data;
+                    })
+                    .catch(function (error) {
+                        self.errorAutoClosable(error.response.data);
+                        console.log(error);
+                    });
+                axios.get('http://localhost:8080/getcourses/' + self.$route.params.id)
+                    .then(function (response) {
+                        self.course = response.data;
+                    })
+                    .catch(function (error) {
+                        self.errorAutoClosable(error.response.data);
+                        console.log(error);
+                    });
+            }else {
+                this.$router.push('/404')
+            }
         }
     }
 </script>

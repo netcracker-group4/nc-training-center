@@ -18,7 +18,7 @@ import AttachmentsPage from "../pages/AttachmentsPage.vue"
 import TestPage from '../pages/TestPage.vue'
 import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
 import AllGroups from "../pages/AllGroups.vue";
-
+import NotFound from "../pages/NotFound.vue";
 
 Vue.use(Router);
 
@@ -43,7 +43,9 @@ const routes = [
     {path: '/desired-schedule/:id', component: DesiredSchedulePage},
     {path: '/attachments-page', component: AttachmentsPage},
     {path: '/test', component: TestPage},
-    {path: '/allgroups', component: AllGroups}
+    {path: '/allgroups', component: AllGroups},
+    {path: '/404', component: NotFound },
+    {path: '*', redirect: '/404'}
 ];
 
 export default new Router({
