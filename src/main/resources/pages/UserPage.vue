@@ -39,7 +39,6 @@
     import UsersCourses from "../components/UsersCourses.vue";
     import SubordinatesComponent from "../components/SubordinatesComponent.vue";
     import UserAttendanceProgress from "../components/UserAttendanceProgress.vue";
-
     export default {
         components: {
             UsersAttendance,
@@ -111,7 +110,11 @@
                     return this.user.roles.includes('EMPLOYEE') && this.viewerIsNotOnlyEmployee()
             },
             canShowFeedbacks() {
-                return this.canShowAttendance();
+                return (this.user.roles !== undefined) &&
+                    (store.state.userRoles.includes("ADMIN")) ||
+                    (store.state.userRoles.includes("MANAGER") && store.state.user.id === this.user.dtoManager.id) ||
+                    (store.state.userRoles.includes("TEACHER")) ||
+                    (store.state.userRoles.includes("EMPLOYEE") && store.state.user.id === this.user.id);
             },
             canShowSchedule() {
                 return (this.user.roles !== undefined &&
@@ -198,19 +201,16 @@
                     return this.user.roles.join(', ');
                 }
             }
-
         }
     }
 </script>
 
 <style scoped>
-
     .table_user td:first-child {
         background: #e6e4ee;
         /*border-bottom: 2px solid #e6e4ee;*/
         border-left: none;
     }
-
     .table_user td {
         border-right: 20px solid white;
         border-left: 20px solid white;
@@ -218,15 +218,11 @@
         padding: 12px 10px;
         color: #8b8e91;
     }
-
     .table_user tr:last-child td {
         border-bottom: none;
     }
-
     .margin {
         margin-top: 30px;
         margin-bottom: 30px;
     }
-
-
 </style>
