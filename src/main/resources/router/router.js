@@ -26,7 +26,7 @@ Vue.use(Router);
 
 const routes = [
     {path: '/', component: MainPage},
-    {path: '/registration/:token', component: RegistrationPage},
+    {path: '/registration', component: RegistrationPage},
     {path: '/dashboard', component: DashBoardPage},
     {path: '/login', component: LoginPage},
     {path: '/dashboard', component: DashBoardPage},

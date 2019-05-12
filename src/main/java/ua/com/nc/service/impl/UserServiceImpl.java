@@ -12,6 +12,7 @@ import ua.com.nc.service.AttendanceService;
 import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
 
+import java.time.OffsetDateTime;
 import java.util.*;
 
 @Log4j
@@ -43,8 +44,23 @@ public class UserServiceImpl implements UserService {
         user.setLastName(dtoUserSave.getLastName());
         user.setPassword(dtoUserSave.getPassword());
         user.setEmail(dtoUserSave.getEmail());
-        userDao.insert(user);
-        userDao.addUserRole(user.getId(), dtoUserSave.getRole().name());
+        user.setCreated(OffsetDateTime.now());
+
+        if (dtoUserSave.getRole() != null) {
+            userDao.addUserRole(user.getId(), dtoUserSave.getRole().name());
+            user.setActive(true);
+            userDao.insert(user);
+        } else {
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
+            userDao.insert(user);
+
+            DtoMailSender dtoMailSender = new DtoMailSender();
+            dtoMailSender.setTo(user.getEmail());
+            dtoMailSender.setSubject("Invite");
+            dtoMailSender.setText("http://localhost:8080/users/activate/" + token);
+            emailService.sendSimpleMessage(dtoMailSender);
+        }
     }
 
     @Override
@@ -188,18 +204,18 @@ public class UserServiceImpl implements UserService {
         return dtoTrainers;
     }
 
-    @Override
-    public void addEmployeeByAdmin(DtoMailSender dtoMailSender) {
-        User user = new User();
-        user.setEmail(dtoMailSender.getTo());
-
-        String token = UUID.randomUUID().toString();
-        user.setToken(token);
-        dtoMailSender.setText(dtoMailSender.getText() + "/" + token);
-
-        userDao.addUserByAdmin(user);
-        emailService.sendSimpleMessage(dtoMailSender);
-    }
+//    @Override
+//    public void addEmployeeByAdmin(DtoMailSender dtoMailSender) {
+//        User user = new User();
+//        user.setEmail(dtoMailSender.getTo());
+//
+//        String token = UUID.randomUUID().toString();
+//        user.setToken(token);
+//        dtoMailSender.setText(dtoMailSender.getText() + "/" + token);
+//
+//        userDao.addUserByAdmin(user);
+//        emailService.sendSimpleMessage(dtoMailSender);
+//    }
 
     @Override
     public boolean activateUser(String token) {
@@ -208,6 +224,8 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         user.setToken(null);
+        user.setActive(true);
+        userDao.updateActive(user);
 
         return true;
     }
