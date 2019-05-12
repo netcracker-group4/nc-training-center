@@ -102,6 +102,14 @@
             }
         },
         methods: {
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             goToTrainerPage(trainerId) {
                 this.$router.push('/userpage/' + trainerId);
             },
@@ -119,11 +127,13 @@
                 .then(function (response) {
                     self.trainersAndLevels = response.data;
                     self.trainersAndLevels.forEach(function (value) {
+                        console.log(value);
                         self.selectedTrainers.push(value.trainer.id);
                     })
                 })
                 .catch(function (error) {
                     console.log(error);
+                    self.errorAutoClosable(error.response.data);
                 });
         },
         computed: {

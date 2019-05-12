@@ -17,8 +17,6 @@ public interface CourseService {
     Course stringToObjCourse(String name, String user, String level, String courseStatus,
                              String imageUrl, String isOnLandingPage, String desc, String startDay, String endDay);
 
-    void add(String name, int userId, String lvl, CourseStatus courseStatus,
-             String imageUrl, boolean isLanding, String desc, Date startingDay, Date endingDay);
 
     List<ScheduleForUser> getDesiredScheduleForUngroupedStudentsOfCourse(int courseId) throws Exception;
 

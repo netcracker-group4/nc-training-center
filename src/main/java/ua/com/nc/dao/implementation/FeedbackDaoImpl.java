@@ -34,6 +34,8 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
     private String feedbackDelete;
     @Value("${feedback.select-all-by-user-id}")
     private String feedbackSelectAllByUser;
+    @Value("${feedback.select-all-by-trainer-id-and-user-id}")
+    private String feedbackSelectAllByTrainerIdAndByUserId;
 
     @Autowired
     public FeedbackDaoImpl(DataSource dataSource) throws PersistException {
@@ -108,6 +110,25 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
         log.info(sql + " select all feedback by user " + userId);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
+            ResultSet rs = statement.executeQuery();
+            feedbacks = parseResultSet(rs);
+        } catch (Exception e) {
+            throw new PersistException(e);
+        }
+        if (feedbacks.size() == 0) {
+            return null;
+        }
+        return feedbacks;
+    }
+
+    @Override
+    public List<Feedback> getAllByTrainerIdAndUserId(Integer userId, Integer trainerId) {
+        List<Feedback> feedbacks;
+        String sql = feedbackSelectAllByTrainerIdAndByUserId;
+        log.info(sql + " select all feedback by trainer " + trainerId + " and by user " + userId);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            statement.setInt(2, trainerId);
             ResultSet rs = statement.executeQuery();
             feedbacks = parseResultSet(rs);
         } catch (Exception e) {

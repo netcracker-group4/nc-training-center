@@ -12,7 +12,7 @@ import java.util.Set;
 @Data
 public class User extends Entity implements UserDetails {
     private String email;
-    private String password;
+    private transient String password;
     private String firstName;
     private String lastName;
     private String token;

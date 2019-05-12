@@ -122,6 +122,22 @@
 
         },
         methods: {
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             getColor(forInterval) {
                 return forInterval.colorsForDays[this.currentDay];
             },
@@ -138,10 +154,11 @@
                 axios.post('/groups', self.groups[index])
                     .then(function (response) {
                         self.groups[index].id = response.data;
+                        self.successAutoClosable('Group has been saved')
                     })
                     .catch(function (error) {
                         console.log(error);
-                        console.log(error.errorMessage);
+                        self.errorAutoClosable(error.response.data);
 
                     });
             },
@@ -151,9 +168,11 @@
                     .then(function (response) {
                         self.allSchedules = self.allSchedules.concat(self.groups[index].groupScheduleList);
                         self.groups.splice(index, 1);
+                        self.successAutoClosable('Group has been deleted')
                     })
                     .catch(function (error) {
-                        console.log(error.response.data);
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
                     });
 
             },
@@ -164,10 +183,11 @@
                         .then(function (response) {
                             console.log(response);
                             self.groups[i].id = response.data;
+                            self.successAutoClosable('All groups has been saved')
                         })
                         .catch(function (error) {
                             console.log(error);
-                            console.log(error.response.data);
+                            self.errorAutoClosable(error.response.data);
                         });
                 }
             }
@@ -181,7 +201,8 @@
                     self.allSchedules = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error.response.data);
+                    self.errorAutoClosable(error.response.data);
+                    console.log(error);
                 });
 
 
@@ -190,7 +211,7 @@
                     self.groups = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error.response.data);
+                    self.errorAutoClosable(error.response.data);
                     console.log(error);
                 });
             axios.get('http://localhost:8080/getcourses/desired/day-intervals')
@@ -198,7 +219,7 @@
                     self.dayIntervals = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error.response.data);
+                    self.errorAutoClosable(error.response.data);
                     console.log(error);
                 });
             axios.get('http://localhost:8080/getcourses/' + self.$route.params.id)
@@ -206,7 +227,7 @@
                     self.course = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error.response.data);
+                    self.errorAutoClosable(error.response.data);
                     console.log(error);
                 });
         }

@@ -31,8 +31,14 @@ public class FeedbackController {
 
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllByUserId(@PathVariable Integer id) {
-        return new ResponseEntity<>(feedbackService.getAllByUserId(id), HttpStatus.OK);
+    @RequestMapping(value = "/get-by-user", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllByUserId(@RequestParam Integer userId) {
+        return new ResponseEntity<>(feedbackService.getAllByUserId(userId), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/get-by-rainer-and-by-user", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllByTrainerIdAndUserId(@RequestParam Integer userId,
+                                                        @RequestParam Integer trainerId) {
+        return new ResponseEntity<>(feedbackService.getAllByTrainerIdAndUserId(userId, trainerId), HttpStatus.OK);
     }
 }

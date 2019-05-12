@@ -102,6 +102,14 @@
             }
         },
         methods: {
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             goToGroupPage(groupId) {
                 this.$router.push('/group/' + groupId);
             },
@@ -125,10 +133,10 @@
                         });
                         self.groupsForCourses[s.course.id] = s.groups;
                     });
-
                 })
                 .catch(function (error) {
                     console.log(error);
+                    self.errorAutoClosable(error.response.data);
                 });
         },
         computed: {

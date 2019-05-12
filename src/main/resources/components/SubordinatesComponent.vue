@@ -49,6 +49,14 @@
             }
         },
         methods: {
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             goToUserPage(userId) {
                 this.$router.push('/userpage/' + userId);
             },
@@ -62,6 +70,7 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                        self.errorAutoClosable(error.response.data);
                     });
             }
         },

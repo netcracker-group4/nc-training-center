@@ -7,7 +7,7 @@
                     <div>Feedback</div>
                 </template>
                 <div class="div_table_item">
-                    <template>
+                    <template v-if="canShowLeaveFeedbackBlock()">
                         <v-container style="display:flex; justify-content: space-between;">
                             <v-avatar size="60px">
                                 <img
@@ -37,6 +37,7 @@
                     <v-data-table
                             :items="userFeedback"
                             hide-headers
+                            :rows-per-page-items="rows"
                     >
                         <template v-slot:items="props">
                             <div class="table_item">
@@ -50,6 +51,7 @@
                                 <td style="vertical-align: top;">
                                     <div class="div_teacherName">
                                         {{ props.item.teacher.firstName }} {{ props.item.teacher.lastName }}
+                                        <span class="span_courseName">{{ props.item.course.name }}</span>
                                     </div>
                                     <div class="div_feedbackText">
                                         {{ props.item.text }}
@@ -69,18 +71,24 @@
 <script>
     import axios from 'axios';
     import store from '../store/store.js';
+
     export default {
         name: 'feedback-component',
-        props: {
-            user: {}
-        },
+        props: [
+            'user'
+        ],
         data:() => ({
             feedbackText: '',
-            userFeedback: ''
+            userFeedback: [],
+            rows: [3,5,10,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}]
         }),
         methods: {
             getAuthorizationUser() {
                 return store.state.user;
+            },
+            canShowLeaveFeedbackBlock() {
+                return store.state.userRoles.includes("ADMIN") ||
+                    store.state.userRoles.includes("TRAINER");
             },
             leaveFeedback() {
                 let self = this;
@@ -93,31 +101,53 @@
                     // self.userFeedback = response.data;
                     self.feedbackText = '';
                     console.log(response);
-                    axios.get('http://localhost:8080/feedback/' + self.user.id)
-                        .then(function (response) {
-                            self.userFeedback = response.data;
-                            console.log(self.userFeedback)
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
+                    if (this.isNotOnlyTrainer()) {
+                        this.getAllFeedback();
+                    } else {
+                        this.getAllFeedbackByTrainer();
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
 
+            },
+            isNotOnlyTrainer() {
+                return store.state.userRoles.includes("ADMIN") ||
+                    store.state.userRoles.includes("MANAGER") ||
+                    store.state.userRoles.includes("EMPLOYEE");
+            },
+            getAllFeedback() {
+                let self = this;
+                axios.get('http://localhost:8080/feedback/get-by-user?userId=' + self.user.id)
+                    .then(function (response) {
+                        self.userFeedback = response.data;
+                        console.log(self.userFeedback)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            getAllFeedbackByTrainer() {
+                let self = this;
+                axios.get('http://localhost:8080/feedback/get-by-rainer-and-by-user?userId=' +
+                    self.user.id + "&trainerId=" + store.state.user.id)
+                    .then(function (response) {
+                        self.userFeedback = response.data;
+                        console.log(self.userFeedback)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
         },
         mounted() {
-            let self = this;
-            axios.get('http://localhost:8080/feedback/' + self.user.id)
-                .then(function (response) {
-                    self.userFeedback = response.data;
-                    console.log(self.userFeedback)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            if (this.isNotOnlyTrainer()) {
+                this.getAllFeedback();
+            } else {
+                this.getAllFeedbackByTrainer();
+            }
+
         }
     }
 </script>
@@ -133,6 +163,11 @@
         color: darkred;
         font-size: 15px;
         font-weight: bold;
+    }
+    .span_courseName {
+        margin: 0 0 0 5px;
+        color: crimson;
+        font-size: 13px;
     }
     .div_feedbackText {
         font-size: 14px;

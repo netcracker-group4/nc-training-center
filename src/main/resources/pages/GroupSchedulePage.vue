@@ -167,6 +167,7 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                    self.errorAutoClosable(error.response.data);
                 });
             axios.get('http://localhost:8080/groups/' + self.$route.params.id)
                 .then(function (response) {
@@ -174,6 +175,7 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                    self.errorAutoClosable(error.response.data);
                 });
             axios.get('http://localhost:8080/users/get-all-trainers')
                 .then(function (response) {
@@ -181,6 +183,7 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                    self.errorAutoClosable(error.response.data);
                 });
             axios.get('http://localhost:8080/attachments/all')
                 .then(function (response) {
@@ -188,6 +191,7 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                    self.errorAutoClosable(error.response.data);
                 });
         },
         computed: {
@@ -218,6 +222,22 @@
             }
         },
         methods: {
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             editLesson(lesson) {
                 this.currentEditingLesson = Object.assign({}, lesson);
                 this.editing = true;
@@ -234,18 +254,24 @@
                         "timeDate": new Date().toISOString(),
                         "attachments": [],
                         "isCanceled": false,
-                        "duration" : '01:00'
+                        "duration" : '01:00',
+                        isNew: true
                     };
                 window.scrollTo(0, document.body.scrollHeight);
             },
             cancelLesson(lesson) {
+                let self = this;
                 axios.post('/schedule/' + lesson.id)
                     .then(function (response) {
                         lesson.isCanceled = response.data;
                         lesson.open = false;
+                        if(lesson.isCanceled) self.successAutoClosable('Lesson has been canceled');
+                        else self.successAutoClosable('Lesson has been activated');
                     })
                     .catch(function (error) {
                         console.log(error);
+                        self.errorAutoClosable(error.response.data);
+
                     });
             },
             deleteLesson(lesson) {
@@ -254,10 +280,12 @@
                     .then(function (response) {
                         self.lessons = self.lessons.filter(el => el.id !== lesson.id);
                         self.cancel();
-                        console.log(response.data);
+                        self.successAutoClosable('Lesson has been archived');
+
                     })
                     .catch(function (error) {
                         console.log(error);
+                        self.errorAutoClosable(error.response.data);
                     });
             },
             save(newLesson) {
@@ -269,9 +297,15 @@
                         newLesson.open = false;
                         self.lessons.push(newLesson);
                         self.cancel();
+                        if (newLesson.isNew) {
+                            self.successAutoClosable('New lesson has been added');
+                            newLesson.isNew = false;
+                        }
+                        else self.successAutoClosable('Lesson has been updated');
                     })
                     .catch(function (error) {
                         console.log(error);
+                        self.errorAutoClosable(error.response.data);
                     });
             },
             cancel() {

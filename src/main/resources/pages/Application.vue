@@ -6,6 +6,7 @@
                 <router-view></router-view>
             </v-container>
         </v-content>
+        <vue-snotify></vue-snotify>
     </v-app>
 </template>
 
@@ -19,5 +20,5 @@
 </script>
 
 <style scoped>
-
+    @import "~vue-snotify/styles/material.css";
 </style>

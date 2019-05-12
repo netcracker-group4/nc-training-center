@@ -8,7 +8,7 @@ public class DtoFeedback {
     private Integer id;
     private Integer studentId;
     private DtoTeacherAndManager teacher;
-    private DtoCourse dtoCourse;
+    private DtoCourse course;
     private String text;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm", timezone="GMT")
     private OffsetDateTime timeDate;
@@ -16,11 +16,11 @@ public class DtoFeedback {
     public DtoFeedback() {
     }
 
-    public DtoFeedback(Integer id, Integer studentId, DtoTeacherAndManager teacher, DtoCourse dtoCourse, String text, OffsetDateTime timeDate) {
+    public DtoFeedback(Integer id, Integer studentId, DtoTeacherAndManager teacher, DtoCourse course, String text, OffsetDateTime timeDate) {
         this.id = id;
         this.studentId = studentId;
         this.teacher = teacher;
-        this.dtoCourse = dtoCourse;
+        this.course = course;
         this.text = text;
         this.timeDate = timeDate;
     }
@@ -49,12 +49,12 @@ public class DtoFeedback {
         this.teacher = teacher;
     }
 
-    public DtoCourse getDtoCourse() {
-        return dtoCourse;
+    public DtoCourse getCourse() {
+        return course;
     }
 
-    public void setDtoCourse(DtoCourse dtoCourse) {
-        this.dtoCourse = dtoCourse;
+    public void setCourse(DtoCourse course) {
+        this.course = course;
     }
 
     public String getText() {
