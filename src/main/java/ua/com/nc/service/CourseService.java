@@ -3,6 +3,7 @@ package ua.com.nc.service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.CourseStatus;
+import ua.com.nc.dto.DtoCourse;
 import ua.com.nc.dto.schedule.GroupSchedule;
 import ua.com.nc.dto.schedule.ScheduleForUser;
 
@@ -27,4 +28,6 @@ public interface CourseService {
     String uploadImage(MultipartFile image);
 
     List<ScheduleForUser> getDesiredScheduleForGroup(int groupId) throws Exception;
+
+    List<DtoCourse> getAllByTrainerAndEmployee(Integer trainerId, Integer employeeId);
 }

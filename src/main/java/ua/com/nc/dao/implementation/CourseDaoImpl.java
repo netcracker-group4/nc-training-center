@@ -44,6 +44,8 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     private String selectCourseByGroupId;
     @Value("${course.select-course-by-feedback}")
     private String selectCourseByFeedbackId;
+    @Value("${course.select-course-by-trainer-and-by-employee}")
+    private String courseSelectAllByTrainerAndEmployee;
 
 
     @Autowired
@@ -195,6 +197,24 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
             throw new PersistException("Received more than one record.");
         }
         return courses.get(0);
+    }
+
+    @Override
+    public List<Course> getAllCourseByTrainerAndByEmployee(Integer trainerId, Integer employeeId) {
+        List<Course> courses;
+        String sql = courseSelectAllByTrainerAndEmployee;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, trainerId);
+            statement.setInt(2, employeeId);
+            ResultSet rs = statement.executeQuery();
+            courses = parseResultSet(rs);
+        } catch (SQLException e) {
+            throw new PersistException(e);
+        }
+        if (courses == null || courses.size() == 0) {
+            return null;
+        }
+        return courses;
     }
 
 

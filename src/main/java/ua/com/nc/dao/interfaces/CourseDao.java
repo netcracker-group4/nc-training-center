@@ -17,4 +17,6 @@ public interface CourseDao extends GenericDao<Course> {
 
     Course getCourseByFeedback(Integer feedbackId);
 
+    List<Course> getAllCourseByTrainerAndByEmployee(Integer trainerId, Integer employeeId);
+
 }

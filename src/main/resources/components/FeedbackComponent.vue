@@ -80,6 +80,7 @@
         data:() => ({
             feedbackText: '',
             userFeedback: [],
+            courses: [],
             rows: [3,5,10,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}]
         }),
         methods: {
@@ -87,8 +88,7 @@
                 return store.state.user;
             },
             canShowLeaveFeedbackBlock() {
-                return store.state.userRoles.includes("ADMIN") ||
-                    store.state.userRoles.includes("TRAINER");
+                return store.state.userRoles.includes("TRAINER") && this.courses.length > 0;
             },
             leaveFeedback() {
                 let self = this;
@@ -135,6 +135,16 @@
                     .then(function (response) {
                         self.userFeedback = response.data;
                         console.log(self.userFeedback)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                axios.get('http://localhost:8080/getcourses/get-all-courses-by-trainer-and-employee?trainerId=' +
+                    store.state.user.id + "&employeeId=" + this.$route.params.id)
+                    .then(function (response) {
+                        self.courses = response.data;
+                        console.log(self.courses)
                     })
                     .catch(function (error) {
                         console.log(error);
