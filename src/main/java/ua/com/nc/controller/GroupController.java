@@ -101,4 +101,10 @@ public class GroupController {
 
     }
 
+    @RequestMapping(value = {"/employee/{id}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public String getGroupsByUser(@PathVariable Integer id){
+        return gson.toJson(groupsService.getAllByEmployeeId(id));
+    }
+
 }

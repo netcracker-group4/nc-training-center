@@ -30,6 +30,8 @@ public interface UserService extends UserDetailsService {
 
     List<DtoTeacherAndManager> getSubordinatesOfManager(Integer id);
 
+    List<DtoTeacherAndManager> getTrainersOfEmployee(Integer id);
+
     Map<String, Double> getAttandanceGraph(int userId);
 
     //List<User> getAllTrainers();

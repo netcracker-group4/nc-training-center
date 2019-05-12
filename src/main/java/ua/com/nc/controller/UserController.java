@@ -45,8 +45,6 @@ public class UserController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getById(@AuthenticationPrincipal User user,  @PathVariable Integer id) {
-        log.info("Logged in roles!!!!!");
-        log.info(user.getAuthorities());
         return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
     }
 
@@ -70,6 +68,11 @@ public class UserController {
     @RequestMapping(value = "/{id}/subordinates", method = RequestMethod.GET)
     public ResponseEntity<?> getSubordinatesOfManager(@PathVariable Integer id) {
         return new ResponseEntity<>(userService.getSubordinatesOfManager(id), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}/trainers", method = RequestMethod.GET)
+    public ResponseEntity<?> getTrainersOfEmployee(@PathVariable Integer id) {
+        return new ResponseEntity<>(userService.getTrainersOfEmployee(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/get-all-trainers", method = RequestMethod.GET)

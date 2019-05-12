@@ -98,9 +98,11 @@
                             <v-list-tile v-if="canShowManager()">
                                 <v-list-tile-content>
                                     <v-list-tile-title><span class="grey--text">Teachers :</span>
-                                        <span v-on:click="goToUserPage(user.dtoManager) "
-                                              v-for="teacher in user.dtoTeachers" class="font-weight-medium cursor">
+                                        <span v-if="trainers.length < 1" >No teachers yet</span>
+                                        <span v-else v-on:click="goToUserPage(teacher) "
+                                              v-for="teacher in trainers" class="font-weight-medium cursor">
                                         {{getManagersName(teacher)}}</span>
+
                                     </v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
@@ -108,7 +110,8 @@
                             <v-list-tile v-if="canShowManager()">
                                 <v-list-tile-content>
                                     <v-list-tile-title><span class="grey--text">Groups :</span>
-                                        <span v-for="group in user.groups" v-on:click="goToGroupPage(group.id)"
+                                        <span v-if="groups.length < 1" >No groups yet</span>
+                                        <span v-else v-for="group in groups" v-on:click="goToGroupPage(group.id)"
                                               class="font-weight-medium cursor">{{group.title}}</span>
                                     </v-list-tile-title>
                                 </v-list-tile-content>
@@ -130,7 +133,7 @@
 
     export default {
         name: 'basic-user-info-component',
-        props: {elemName: String, user: {}, ifNullMessage: String},
+        props: {elemName: String, user: {}, ifNullMessage: String, trainers : Array, groups : Array},
         data: function () {
             return {
                 dialog: false,

@@ -6,7 +6,7 @@
                 <template v-slot:header>
                     <div>Employee's attendance</div>
                 </template>
-                <div class="attendance" v-for="group in user.groups">
+                <div class="attendance" v-for="group in groups">
                     <v-card flat>
                         <v-card-title>
                             Attendance of user {{user.firstName + ' ' + user.lastName}}
@@ -28,9 +28,7 @@
     export default {
         name: 'users-attendance',
         components: {AttendanceTable},
-        props: {
-            user: {}
-        }
+        props: {user: {}, groups : Array}
     }
 </script>
 <style scoped>

@@ -6,7 +6,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
-import ua.com.nc.domain.*;
+import ua.com.nc.domain.Attendance;
+import ua.com.nc.domain.Group;
+import ua.com.nc.domain.Role;
+import ua.com.nc.domain.User;
 import ua.com.nc.dto.*;
 import ua.com.nc.service.AttendanceService;
 import ua.com.nc.service.EmailService;
@@ -78,64 +81,27 @@ public class UserServiceImpl implements UserService {
         User user = userDao.getEntityById(id);
         List<Role> role = roleDao.findAllByUserId(id);
         User manager = userDao.getManagerById(id);
-        List<User> teachers = userDao.getAllTrainersById(id);
-        List<Group> groups = groupDao.getAllGroupsByStudent(id);
-        List<Level> levels = levelDao.getAll();
 
         DtoTeacherAndManager dtoManager = null;
         if (manager != null) {
             dtoManager = new DtoTeacherAndManager(manager);
         }
 
-        List<DtoTeacherAndManager> dtoTeachers = new ArrayList<>();
-        if (teachers != null && teachers.size() != 0) {
-            for (User teacher : teachers) {
-                dtoTeachers.add(new DtoTeacherAndManager(teacher));
-            }
-        }
-
-        List<DtoGroup> dtoGroups = new ArrayList<>();
-        if (groups != null && groups.size() != 0) {
-            for (Group group : groups) {
-                int courseId = group.getCourseId();
-                Course course = courseDao.getEntityById(courseId);
-                String courseName = course.getName();
-                dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId,
-                        courseName, course.getUserId(),
-                        getLevelName(levels, course.getLevel())));
-            }
-        }
-
         DtoUserProfiles dtoUserProfiles = null;
         if (user != null) {
             dtoUserProfiles = new DtoUserProfiles(
-                    user.getId(),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getEmail(),
-                    user.getImageUrl(),
+                    user,
                     role,
                     user.isActive(),
-                    dtoManager,
-                    dtoTeachers,
-                    dtoGroups
+                    dtoManager
             );
         }
         return dtoUserProfiles;
     }
 
-    private String getLevelName(List<Level> levels, int levelId) {
-        for (Level level : levels) {
-            if (level.getId() == levelId) {
-                return level.getTitle();
-            }
-        }
-        return "Unknown";
-    }
 
     @Override
     public User getByEmail(String email) {
-
         return userDao.getByEmail(email);
     }
 
@@ -146,7 +112,6 @@ public class UserServiceImpl implements UserService {
         user.setLastName(dtoUserProfiles.getLastName());
         user.setManagerId(dtoUserProfiles.getDtoManager().getId());
         userDao.update(user);
-
     }
 
     @Override
@@ -223,6 +188,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<DtoTeacherAndManager> getTrainersOfEmployee(Integer id) {
+        List<User> teachers = userDao.getAllTrainersById(id);
+        List<DtoTeacherAndManager> dtoTeachers = new ArrayList<>();
+        if (teachers != null && teachers.size() != 0) {
+            for (User teacher : teachers) {
+                dtoTeachers.add(new DtoTeacherAndManager(teacher));
+            }
+        }
+        return dtoTeachers;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.getByEmail(username);
 
@@ -238,18 +215,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Double> getAttandanceGraph(int userId) {
         List<Group> groups = groupDao.getAllGroupsByStudent(userId);
-        Map<String,Integer> att = new HashMap<>();
+        Map<String, Integer> att = new HashMap<>();
         statusDao.getAll().forEach(r -> {
-            att.put(r.getTitle().toLowerCase(), 0);
-            }
+                    att.put(r.getTitle().toLowerCase(), 0);
+                }
         );
         int allLessons = 0;
         for (Group g : groups) {
             List<Attendance> at = attendanceService.getAttendanceByStudentIdAndGroupId(userId, g.getId());
-            if(at!=null && !at.isEmpty()){
-                for(Attendance a: at){
+            if (at != null && !at.isEmpty()) {
+                for (Attendance a : at) {
                     String status = a.getStatus().toLowerCase();
-                    att.put(status,att.get(status)+1);
+                    att.put(status, att.get(status) + 1);
                     allLessons++;
                 }
             }
