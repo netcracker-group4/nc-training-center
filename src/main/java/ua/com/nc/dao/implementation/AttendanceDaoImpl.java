@@ -42,6 +42,7 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
     protected void prepareStatementForUpdate(PreparedStatement statement, Attendance entity) {
     }
 
+
     @Override
     protected List<Attendance> parseResultSet(ResultSet rs) throws SQLException {
         List<Attendance> attendances = new ArrayList<>();
