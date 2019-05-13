@@ -285,5 +285,6 @@
 
     .cursor {
         cursor: pointer;
+        margin-right: 10px;
     }
 </style>

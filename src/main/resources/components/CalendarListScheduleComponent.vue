@@ -162,12 +162,12 @@
 <script>
     export default {
         name: "CalendarListScheduleComponent",
-        props: ['lessonsList', 'groupsList', "previouslySelected", "componentHeader"],
+        props: ['lessonsList', 'groupsList', "componentHeader"],
         data: function () {
             return {
                 start: new Date().toISOString().slice(0, 10),
                 calendarView: true,
-                selectedGroups: this.previouslySelected
+                selectedGroups: []
             }
         },
         computed: {
@@ -201,6 +201,13 @@
                 let monthIndex = date.getMonth();
                 let year = date.getFullYear();
                 return monthNames[monthIndex] + ' ' + year;
+            },
+            selectedG(){
+                let selectedCourses = [];
+                this.groupsList.forEach(function (value) {
+                    selectedCourses.push(value.id)
+                });
+                return selectedCourses;
             }
         },
         methods: {

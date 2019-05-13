@@ -76,7 +76,8 @@ public class CustomSecurityService {
 
     public boolean hasPermissionToRetrieveGroups(Authentication authentication, Integer employeeId) {
         log.info(employeeId);
-        return roleDao.findAllByUserId(employeeId).contains(Role.EMPLOYEE);
+        return roleDao.findAllByUserId(employeeId).contains(Role.EMPLOYEE) ||
+                roleDao.findAllByUserId(employeeId).contains(Role.TRAINER);
     }
 
 

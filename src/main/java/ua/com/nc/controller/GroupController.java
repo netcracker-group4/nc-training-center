@@ -123,4 +123,11 @@ public class GroupController {
         return gson.toJson(groupsService.getAllByEmployeeId(employeeId));
     }
 
+    @RequestMapping(value = {"/trainer/{employeeId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
+    public String getGroupsByTrainer(@PathVariable Integer employeeId) {
+        return gson.toJson(groupsService.getAllByTrainerId(employeeId));
+    }
+
 }

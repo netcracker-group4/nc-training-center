@@ -14,7 +14,6 @@
             <calendar-list-schedule-component v-if="canShowSchedule()"
                                               class="margin" :groups-list="groups"
                                               :lessons-list="lessons"
-                                              :previously-selected="getArray(groups)"
                                               :component-header="getScheduleComponentHeader()"/>
 
             <users-groups-and-courses v-if="canShowCoursesAndGroups()"
@@ -188,7 +187,16 @@
                 let role;
                 if(this.user.roles.includes('TRAINER')){
                     role = 'trainer/';
+                    axios.get('http://localhost:8080/groups/trainer/' + this.$route.params.id)
+                        .then(function (response) {
+                            self.groups = response.data;
+                            console.log(response.data);
+                        }).catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
                 }else role = 'employee/';
+
                 axios.get('http://localhost:8080/schedule/' + role + this.$route.params.id)
                     .then(function (response) {
                         console.log(response.data);
