@@ -3,6 +3,9 @@ package ua.com.nc.controller;
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +25,7 @@ public class CourseController {
     @Autowired
     private CourseDao courseDao;
     @Autowired
-    private CourseService service;
+    private CourseService courseService;
     @Autowired
     private UserDao userDao;
 
@@ -42,33 +45,36 @@ public class CourseController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteCourse(@PathVariable String id) {
         courseDao.delete(Integer.parseInt(id));
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void add(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                     @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
                     @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
                     @RequestParam(name = "image") MultipartFile image) {
-        imageUrl = service.uploadImage(image);
+        imageUrl = courseService.uploadImage(image);
         System.err.println(imageUrl);
-        service.add(service.stringToObjCourse(name, "1", level, courseStatus,
+        courseService.add(courseService.stringToObjCourse(name, "1", level, courseStatus,
                 imageUrl, isOnLandingPage, desc, startDay, endDay));
     }
 
 
     @RequestMapping(method = RequestMethod.PUT, value = "{id}/create")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void update(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                        @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
                        @RequestParam(name = "image") MultipartFile image,
                        @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
                        @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
                        @PathVariable int id) {
-        imageUrl = service.uploadImage(image);
-        Course course = service.stringToObjCourse(name, "1", level, courseStatus,
+        imageUrl = courseService.uploadImage(image);
+        Course course = courseService.stringToObjCourse(name, "1", level, courseStatus,
                 imageUrl, isOnLandingPage, desc, startDay, endDay);
         course.setId(id);
         courseDao.update(course);
@@ -76,26 +82,29 @@ public class CourseController {
 
     @RequestMapping(value = {"/{id}/desired/ungrouped"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String getDesiredScheduleForUngroupedStudentsForCourse(@PathVariable("id") String id) throws Exception {
-        return gson.toJson(service.getDesiredScheduleForUngroupedStudentsOfCourse(Integer.parseInt(id)));
+        return gson.toJson(courseService.getDesiredScheduleForUngroupedStudentsOfCourse(Integer.parseInt(id)));
     }
 
     @RequestMapping(value = {"/{id}/desired/grouped"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String getDesiredScheduleForFormedGroupsForCourse(@PathVariable("id") String id) throws Exception {
-        return gson.toJson(service.getDesiredScheduleForFormedGroupsForCourse(Integer.parseInt(id)));
+        return gson.toJson(courseService.getDesiredScheduleForFormedGroupsForCourse(Integer.parseInt(id)));
     }
 
     @RequestMapping(value = {"/desired/{groupId}"}, method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
     public String getDesiredScheduleForGroup(@PathVariable("groupId") String groupId) throws Exception {
-        return gson.toJson(service.getDesiredScheduleForGroup(Integer.parseInt(groupId)));
+        return gson.toJson(courseService.getDesiredScheduleForGroup(Integer.parseInt(groupId)));
     }
 
     @RequestMapping(value = {"/desired/day-intervals"}, method = RequestMethod.GET)
     @ResponseBody
     public String getDayIntervals() {
-        return gson.toJson(service.getDayIntervals());
+        return gson.toJson(courseService.getDayIntervals());
     }
 
     @RequestMapping(value = "/{id}/trainer", method = RequestMethod.GET)
@@ -108,6 +117,12 @@ public class CourseController {
     @ResponseBody
     public String getTrainersCourses(@PathVariable Integer id) {
         return gson.toJson(courseDao.getAllByTrainer(id));
+    }
+
+    @RequestMapping(value = "/get-all-courses-by-trainer-and-employee", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllCoursesByTrainerAndByEmployee(@RequestParam Integer trainerId,
+                                                                 @RequestParam Integer employeeId) {
+        return new ResponseEntity<>(courseService.getAllByTrainerAndEmployee(trainerId, employeeId), HttpStatus.OK);
     }
 
 }

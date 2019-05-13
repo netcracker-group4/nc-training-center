@@ -7,7 +7,7 @@
                     <v-radio :key="2" :label="'List'" :value="false"></v-radio>
                 </v-radio-group>
                 <v-spacer></v-spacer>
-                <v-btn flat v-on:click="$router.push('/groups/' + group.id)">{{group.title}}</v-btn>
+                <v-btn flat v-on:click="goToGroupPage()">{{group.title}}</v-btn>
                 <v-btn color="info" v-on:click="addLesson">Add lesson</v-btn>
             </v-layout>
             <!--        buttons-->
@@ -157,42 +157,45 @@
             }
         },
         mounted() {
-            let self = this;
-            axios.get('http://localhost:8080/schedule/' + self.$route.params.id)
-                .then(function (response) {
-                    self.lessons = response.data;
-                    self.lessons.forEach(function (one) {
-                        one.open = false;
+            if (!a.getters.isAdmin && !a.getters.isTrainer) {
+                this.$router.push('/404');
+            } else {
+                let self = this;
+                axios.get('http://localhost:8080/schedule/' + self.$route.params.id)
+                    .then(function (response) {
+                        self.lessons = response.data;
+                        self.lessons.forEach(function (one) {
+                            one.open = false;
+                        })
+                    }).catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                axios.get('http://localhost:8080/groups/' + self.$route.params.id)
+                    .then(function (response) {
+                        self.group = response.data;
                     })
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
-            axios.get('http://localhost:8080/groups/' + self.$route.params.id)
-                .then(function (response) {
-                    self.group = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
-            axios.get('http://localhost:8080/users/get-all-trainers')
-                .then(function (response) {
-                    self.allTrainers = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
-            axios.get('http://localhost:8080/attachments/all')
-                .then(function (response) {
-                    self.allAttachments = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                axios.get('http://localhost:8080/users/get-all-trainers')
+                    .then(function (response) {
+                        self.allTrainers = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                axios.get('http://localhost:8080/attachments/all')
+                    .then(function (response) {
+                        self.allAttachments = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+            }
         },
         computed: {
             lessonsMap() {
@@ -222,6 +225,9 @@
             }
         },
         methods: {
+            goToGroupPage(){
+                this.$router.push('/group/' + this.group.id);
+            },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
                     timeout: 2000,
@@ -254,7 +260,7 @@
                         "timeDate": new Date().toISOString(),
                         "attachments": [],
                         "isCanceled": false,
-                        "duration" : '01:00',
+                        "duration": '01:00',
                         isNew: true
                     };
                 window.scrollTo(0, document.body.scrollHeight);
@@ -265,12 +271,13 @@
                     .then(function (response) {
                         lesson.isCanceled = response.data;
                         lesson.open = false;
-                        if(lesson.isCanceled) self.successAutoClosable('Lesson has been canceled');
+                        if (lesson.isCanceled) self.successAutoClosable('Lesson has been canceled');
                         else self.successAutoClosable('Lesson has been activated');
                     })
                     .catch(function (error) {
                         console.log(error);
                         self.errorAutoClosable(error.response.data);
+                        console.log(error.response.data);
 
                     });
             },
@@ -300,8 +307,7 @@
                         if (newLesson.isNew) {
                             self.successAutoClosable('New lesson has been added');
                             newLesson.isNew = false;
-                        }
-                        else self.successAutoClosable('Lesson has been updated');
+                        } else self.successAutoClosable('Lesson has been updated');
                     })
                     .catch(function (error) {
                         console.log(error);

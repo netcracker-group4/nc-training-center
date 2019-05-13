@@ -2,6 +2,7 @@ package ua.com.nc.config;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,6 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import ua.com.nc.exceptions.CustomAccessDeniedHandler;
 import ua.com.nc.service.UserService;
 
 @Configuration
@@ -26,7 +29,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
-                .antMatchers("/css/**", "/js/**", "/registration", "/users", "/logout", "/admincourses", "/dashboard", "/attendance", "/admin").permitAll()
+                .antMatchers("/css/**", "/js/**", "/registration", "/logout", "/users/activate/{token}").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -34,7 +37,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll();
+                .permitAll()
+                .and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+//                .and()
+//                .exceptionHandling().accessDeniedPage("/error.html");
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new CustomAccessDeniedHandler();
     }
 
     @Override

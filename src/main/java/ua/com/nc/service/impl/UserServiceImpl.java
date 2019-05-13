@@ -6,12 +6,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
-import ua.com.nc.domain.*;
+import ua.com.nc.domain.Attendance;
+import ua.com.nc.domain.Group;
+import ua.com.nc.domain.Role;
+import ua.com.nc.domain.User;
 import ua.com.nc.dto.*;
 import ua.com.nc.service.AttendanceService;
 import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
 
+import java.time.OffsetDateTime;
 import java.util.*;
 
 @Log4j
@@ -43,8 +47,23 @@ public class UserServiceImpl implements UserService {
         user.setLastName(dtoUserSave.getLastName());
         user.setPassword(dtoUserSave.getPassword());
         user.setEmail(dtoUserSave.getEmail());
-        userDao.insert(user);
-        userDao.addUserRole(user.getId(), dtoUserSave.getRole().name());
+        user.setCreated(OffsetDateTime.now());
+
+        if (dtoUserSave.getRole() != null) {
+            userDao.addUserRole(user.getId(), dtoUserSave.getRole().name());
+            user.setActive(true);
+            userDao.insert(user);
+        } else {
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
+            userDao.insert(user);
+
+            DtoMailSender dtoMailSender = new DtoMailSender();
+            dtoMailSender.setTo(user.getEmail());
+            dtoMailSender.setSubject("Invite");
+            dtoMailSender.setText("http://localhost:8080/users/activate/" + token);
+            emailService.sendSimpleMessage(dtoMailSender);
+        }
     }
 
     @Override
@@ -78,64 +97,27 @@ public class UserServiceImpl implements UserService {
         User user = userDao.getEntityById(id);
         List<Role> role = roleDao.findAllByUserId(id);
         User manager = userDao.getManagerById(id);
-        List<User> teachers = userDao.getAllTrainersById(id);
-        List<Group> groups = groupDao.getAllGroupsByStudent(id);
-        List<Level> levels = levelDao.getAll();
 
         DtoTeacherAndManager dtoManager = null;
         if (manager != null) {
             dtoManager = new DtoTeacherAndManager(manager);
         }
 
-        List<DtoTeacherAndManager> dtoTeachers = new ArrayList<>();
-        if (teachers != null && teachers.size() != 0) {
-            for (User teacher : teachers) {
-                dtoTeachers.add(new DtoTeacherAndManager(teacher));
-            }
-        }
-
-        List<DtoGroup> dtoGroups = new ArrayList<>();
-        if (groups != null && groups.size() != 0) {
-            for (Group group : groups) {
-                int courseId = group.getCourseId();
-                Course course = courseDao.getEntityById(courseId);
-                String courseName = course.getName();
-                dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId,
-                        courseName, course.getUserId(),
-                        getLevelName(levels, course.getLevel())));
-            }
-        }
-
         DtoUserProfiles dtoUserProfiles = null;
         if (user != null) {
             dtoUserProfiles = new DtoUserProfiles(
-                    user.getId(),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getEmail(),
-                    user.getImageUrl(),
+                    user,
                     role,
                     user.isActive(),
-                    dtoManager,
-                    dtoTeachers,
-                    dtoGroups
+                    dtoManager
             );
         }
         return dtoUserProfiles;
     }
 
-    private String getLevelName(List<Level> levels, int levelId) {
-        for (Level level : levels) {
-            if (level.getId() == levelId) {
-                return level.getTitle();
-            }
-        }
-        return "Unknown";
-    }
 
     @Override
     public User getByEmail(String email) {
-
         return userDao.getByEmail(email);
     }
 
@@ -146,7 +128,6 @@ public class UserServiceImpl implements UserService {
         user.setLastName(dtoUserProfiles.getLastName());
         user.setManagerId(dtoUserProfiles.getDtoManager().getId());
         userDao.update(user);
-
     }
 
     @Override
@@ -188,18 +169,18 @@ public class UserServiceImpl implements UserService {
         return dtoTrainers;
     }
 
-    @Override
-    public void addEmployeeByAdmin(DtoMailSender dtoMailSender) {
-        User user = new User();
-        user.setEmail(dtoMailSender.getTo());
-
-        String token = UUID.randomUUID().toString();
-        user.setToken(token);
-        dtoMailSender.setText(dtoMailSender.getText() + "/" + token);
-
-        userDao.addUserByAdmin(user);
-        emailService.sendSimpleMessage(dtoMailSender);
-    }
+//    @Override
+//    public void addEmployeeByAdmin(DtoMailSender dtoMailSender) {
+//        User user = new User();
+//        user.setEmail(dtoMailSender.getTo());
+//
+//        String token = UUID.randomUUID().toString();
+//        user.setToken(token);
+//        dtoMailSender.setText(dtoMailSender.getText() + "/" + token);
+//
+//        userDao.addUserByAdmin(user);
+//        emailService.sendSimpleMessage(dtoMailSender);
+//    }
 
     @Override
     public boolean activateUser(String token) {
@@ -208,6 +189,8 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         user.setToken(null);
+        user.setActive(true);
+        userDao.updateActive(user);
 
         return true;
     }
@@ -220,6 +203,18 @@ public class UserServiceImpl implements UserService {
             dtoSubordinates.add(new DtoTeacherAndManager(subordinate));
         }
         return dtoSubordinates;
+    }
+
+    @Override
+    public List<DtoTeacherAndManager> getTrainersOfEmployee(Integer id) {
+        List<User> teachers = userDao.getAllTrainersById(id);
+        List<DtoTeacherAndManager> dtoTeachers = new ArrayList<>();
+        if (teachers != null && teachers.size() != 0) {
+            for (User teacher : teachers) {
+                dtoTeachers.add(new DtoTeacherAndManager(teacher));
+            }
+        }
+        return dtoTeachers;
     }
 
     @Override
@@ -238,18 +233,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Double> getAttandanceGraph(int userId) {
         List<Group> groups = groupDao.getAllGroupsByStudent(userId);
-        Map<String,Integer> att = new HashMap<>();
+        Map<String, Integer> att = new HashMap<>();
         statusDao.getAll().forEach(r -> {
-            att.put(r.getTitle().toLowerCase(), 0);
-            }
+                    att.put(r.getTitle().toLowerCase(), 0);
+                }
         );
         int allLessons = 0;
         for (Group g : groups) {
             List<Attendance> at = attendanceService.getAttendanceByStudentIdAndGroupId(userId, g.getId());
-            if(at!=null && !at.isEmpty()){
-                for(Attendance a: at){
+            if (at != null && !at.isEmpty()) {
+                for (Attendance a : at) {
                     String status = a.getStatus().toLowerCase();
-                    att.put(status,att.get(status)+1);
+                    att.put(status, att.get(status) + 1);
                     allLessons++;
                 }
             }

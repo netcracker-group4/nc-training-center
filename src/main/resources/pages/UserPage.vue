@@ -1,27 +1,33 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template>
     <div>
         <v-container>
 
-            <basic-user-info-component :user="user" :elem-name="userComponentHeader"/>
+            <basic-user-info-component :user="user" :groups="groups" :trainers="trainers"
+                                       :elem-name="userComponentHeader"/>
+
             <user-attendance-progress v-if="canShowAttendance()" :absenceReasons="absenceReasons"/>
-            <users-attendance v-if="canShowAttendance()" class="margin" :user="user"/>
+
+            <users-attendance v-if="canShowAttendance()" class="margin" :user="user" :groups="groups"/>
 
             <feedback-component v-if="canShowFeedbacks()" class="margin" :user="user"/>
 
             <calendar-list-schedule-component v-if="canShowSchedule()"
-                                              class="margin" :groups-list="user.groups"
+                                              class="margin" :groups-list="groups"
                                               :lessons-list="lessons"
-                                              :previously-selected="getArray(user.groups)"
-                                              :component-header="getScheduleComponentHeader()"
-            ></calendar-list-schedule-component>
+                                              :previously-selected="getArray(groups)"
+                                              :component-header="getScheduleComponentHeader()"/>
 
-            <users-groups-and-courses v-if="canShowCoursesAndGroups()" class="margin" :groups="user.groups"
-                                      :trainers="user.dtoTeachers"></users-groups-and-courses>
+            <users-groups-and-courses v-if="canShowCoursesAndGroups()"
+                                      class="margin"
+                                      :groups="groups"
+                                      :trainers="trainers"/>
 
-            <users-courses v-if="canShowCourses()" class="margin" :groups="user.groups"
-                           :trainers="user.dtoTeachers"></users-courses>
+            <users-courses v-if="canShowCourses()"
+                           class="margin"
+                           :groups="groups"
+                           :trainers="trainers"/>
 
-            <subordinates-component v-if="canShowManagersSubordinates()"></subordinates-component>
+            <subordinates-component v-if="canShowManagersSubordinates()"/>
         </v-container>
     </div>
 </template>
@@ -37,6 +43,7 @@
     import UsersCourses from "../components/UsersCourses.vue";
     import SubordinatesComponent from "../components/SubordinatesComponent.vue";
     import UserAttendanceProgress from "../components/UserAttendanceProgress.vue";
+
     export default {
         components: {
             UsersAttendance,
@@ -62,17 +69,20 @@
                     image: '',
                     roles: [],
                     dtoManager: '',
-                    dtoTeachers: [],
-                    groups: [],
                     active: false,
                 },
-                groups: [],
                 managers: [],
                 lessons: [],
-                absenceReasons: []
+                absenceReasons: [],
+                trainers: [],
+                groups: [],
             }
         },
         methods: {
+            canShowManager() {
+                if (this.user.roles !== undefined)
+                    return this.user.roles.includes('EMPLOYEE');
+            },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
                     timeout: 2000,
@@ -92,8 +102,8 @@
             getFullName(value) {
                 return value.firstName + ' ' + value.lastName;
             },
-            hasFullPrivilege(){
-                return store.getters.isAdmin() || store.state.user.id === this.$route.params.id;
+            hasFullPrivilege() {
+                return store.getters.isAdmin || parseInt(store.state.user.id) === parseInt(this.$route.params.id);
             },
             getScheduleComponentHeader() {
                 if (this.user.roles !== undefined && this.user.roles.includes('EMPLOYEE')) {
@@ -109,14 +119,16 @@
             },
             canShowFeedbacks() {
                 return (this.user.roles !== undefined) &&
-                    (store.state.userRoles.includes("ADMIN")) ||
+                    ((store.state.userRoles.includes("ADMIN")) ||
                     (store.state.userRoles.includes("MANAGER") && store.state.user.id === this.user.dtoManager.id) ||
-                    (store.state.userRoles.includes("TEACHER")) ||
-                    (store.state.userRoles.includes("EMPLOYEE") && store.state.user.id === this.user.id);
+                    (store.state.userRoles.includes("TRAINER")) ||
+                    (store.state.userRoles.includes("EMPLOYEE") && store.state.user.id === this.user.id)) &&
+                    (this.user.roles.includes("EMPLOYEE"));
             },
             canShowSchedule() {
                 return (this.user.roles !== undefined &&
-                    (this.user.roles.includes("TRAINER") || this.user.roles.includes("EMPLOYEE")))
+                    (this.user.roles.includes("TRAINER") ||
+                        this.user.roles.includes("EMPLOYEE")))
                     && this.viewerIsNotOnlyEmployee()
             },
             canShowCourses() {
@@ -124,9 +136,13 @@
                     return this.user.roles.includes("TRAINER");
             },
             viewerIsNotOnlyEmployee() {
-                return store.state.userRoles.includes("MANAGER") ||
-                    store.state.userRoles.includes("TRAINER") ||
-                    this.hasFullPrivilege()
+                return this.hasFullPrivilege() ||
+                    this.authenticatedUserIsThisOnesManager() ||
+                    store.state.userRoles.includes("TRAINER")
+            },
+            authenticatedUserIsThisOnesManager() {
+                return store.state.userRoles.includes("MANAGER") &&
+                    parseInt(store.state.user.id) === parseInt(this.user.dtoManager.id);
             },
             canShowManagersSubordinates() {
                 if (this.user.roles !== undefined)
@@ -155,31 +171,50 @@
                     .then(function (response) {
                         self.user = response.data;
                         console.log(self.user)
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        self.errorAutoClosable(error.response.data);
-                    });
-                axios.get('http://localhost:8080/schedule/employee/' + id)
-                    .then(function (response) {
-                        console.log(response.data);
-                        self.lessons = response.data;
-                        self.lessons.forEach(function (one) {
-                            one.open = false;
-                        })
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        self.errorAutoClosable(error.response.data);
-                    });
-                axios.get('http://localhost:8080/users/'+this.$route.params.id+'/getAttendanceGraph')
-                    .then(function (response) {
-                        self.absenceReasons = response.data;
-                        console.log(response.data);
                     }).catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                if (this.canShowSchedule()) {
+                    axios.get('http://localhost:8080/schedule/employee/' + id)
+                        .then(function (response) {
+                            console.log(response.data);
+                            self.lessons = response.data;
+                            self.lessons.forEach(function (one) {
+                                one.open = false;
+                            })
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            self.errorAutoClosable(error.response.data);
+                        });
+                }
+                if (this.canShowManager()) {
+                    axios.get('http://localhost:8080/users/' + this.$route.params.id + '/trainers')
+                        .then(function (response) {
+                            self.trainers = response.data;
+                            console.log(response.data);
+                        }).catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                    axios.get('http://localhost:8080/users/' + this.$route.params.id + '/getAttendanceGraph')
+                        .then(function (response) {
+                            self.absenceReasons = response.data;
+                            console.log(response.data);
+                        }).catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                    axios.get('http://localhost:8080/groups/employee/' + this.$route.params.id)
+                        .then(function (response) {
+                            self.groups = response.data;
+                            console.log(response.data);
+                        }).catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                }
             }
         }
         ,
@@ -209,6 +244,7 @@
         /*border-bottom: 2px solid #e6e4ee;*/
         border-left: none;
     }
+
     .table_user td {
         border-right: 20px solid white;
         border-left: 20px solid white;
@@ -216,9 +252,11 @@
         padding: 12px 10px;
         color: #8b8e91;
     }
+
     .table_user tr:last-child td {
         border-bottom: none;
     }
+
     .margin {
         margin-top: 30px;
         margin-bottom: 30px;

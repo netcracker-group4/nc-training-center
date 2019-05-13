@@ -145,10 +145,10 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     }
 
     @Override
-    public void deleteUserFromGroup(String id, String userId) {
+    public void deleteUserFromGroup(Integer id, Integer userId) {
         try (PreparedStatement statement = connection.prepareStatement(deleteUserFromGroup)) {
-            statement.setInt(1, Integer.parseInt(id));
-            statement.setInt(2, Integer.parseInt(userId));
+            statement.setInt(1, id);
+            statement.setInt(2, userId);
             statement.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();

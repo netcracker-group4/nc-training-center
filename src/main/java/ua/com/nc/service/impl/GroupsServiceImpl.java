@@ -3,13 +3,8 @@ package ua.com.nc.service.impl;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.nc.dao.interfaces.CourseDao;
-import ua.com.nc.dao.interfaces.GroupDao;
-import ua.com.nc.dao.interfaces.UserDao;
-import ua.com.nc.dao.interfaces.UserGroupDao;
-import ua.com.nc.domain.Group;
-import ua.com.nc.domain.User;
-import ua.com.nc.domain.UserGroup;
+import ua.com.nc.dao.interfaces.*;
+import ua.com.nc.domain.*;
 import ua.com.nc.dto.DtoGroup;
 import ua.com.nc.dto.schedule.GroupSchedule;
 import ua.com.nc.dto.schedule.ScheduleForUser;
@@ -29,10 +24,11 @@ public class GroupsServiceImpl implements GroupsService {
     CourseDao courseDao;
     @Autowired
     UserDao userDao;
+    @Autowired
+    LevelDao levelDao;
 
     @Override
     public int update(GroupSchedule groupSchedule) {
-        // TODO what to do with transactions for few daos??
         Group groupToUpdate = groupDao.getEntityById(groupSchedule.getId());
         groupToUpdate.setTitle(groupSchedule.getName());
         groupDao.update(groupToUpdate);
@@ -43,8 +39,8 @@ public class GroupsServiceImpl implements GroupsService {
 
     @Override
     public boolean delete(int groupId) {
-        // TODO what to do with transactions for few daos??
         userGroupDao.deleteAllForGroup(groupId);
+
 
         groupDao.delete(groupId);
         return true;
@@ -52,7 +48,6 @@ public class GroupsServiceImpl implements GroupsService {
 
     @Override
     public int add(GroupSchedule groupSchedule) {
-        // TODO what to do with transactions for few daos??
         Group groupToInsert = new Group(groupSchedule.getCourseId(), groupSchedule.getName());
         groupDao.insert(groupToInsert);
         updateStudentsForGroup(groupSchedule, groupToInsert);
@@ -74,6 +69,34 @@ public class GroupsServiceImpl implements GroupsService {
         }
         return dtoGroups;
     }
+
+    @Override
+    public List<DtoGroup> getAllByEmployeeId(Integer employeeId) {
+        List<Level> levels = levelDao.getAll();
+        List<Group> groups = groupDao.getAllGroupsByStudent(employeeId);
+        List<DtoGroup> dtoGroups = new ArrayList<>();
+        if (groups != null && groups.size() != 0) {
+            for (Group group : groups) {
+                int courseId = group.getCourseId();
+                Course course = courseDao.getEntityById(courseId);
+                String courseName = course.getName();
+                dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId,
+                        courseName, course.getUserId(),
+                        getLevelName(levels, course.getLevel())));
+            }
+        }
+        return dtoGroups;
+    }
+
+    private String getLevelName(List<Level> levels, int levelId) {
+        for (Level level : levels) {
+            if (level.getId() == levelId) {
+                return level.getTitle();
+            }
+        }
+        return "Unknown";
+    }
+
 
     private void updateStudentsForGroup(GroupSchedule groupSchedule, Group group) {
         List<ScheduleForUser> newUsers = groupSchedule.getGroupScheduleList();

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.interfaces.CourseDao;
@@ -36,6 +37,7 @@ public class GroupController {
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String addGroup(@RequestBody GroupSchedule groupSchedule) {
         int newId;
         if (groupSchedule.getId() == 0) {
@@ -48,6 +50,7 @@ public class GroupController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String deleteGroup(@PathVariable String id) {
         groupsService.delete(Integer.parseInt(id));
         return "Group deleted";
@@ -60,32 +63,33 @@ public class GroupController {
 
     @RequestMapping(value = "/get-groups/{id}")
     @ResponseBody
-    public String getGroupsInCourse(@PathVariable String id) {
-        return gson.toJson(groupDao.getAllGroupsOfCourse(Integer.parseInt(id)));
+    public String getGroupsInCourse(@PathVariable Integer id) {
+        return gson.toJson(groupDao.getAllGroupsOfCourse(id));
     }
 
     @RequestMapping(value = "/{id}")
     @ResponseBody
-    public String getGroup(@PathVariable String id) {
-        return gson.toJson(groupDao.getEntityById(Integer.parseInt(id)));
+    public String getGroup(@PathVariable Integer id) {
+        return gson.toJson(groupDao.getEntityById(id));
     }
 
     @RequestMapping(value = "/{id}/users", method = RequestMethod.GET)
     @ResponseBody
-    public List<User> getStudents(@PathVariable String id) {
-        return userDao.getByGroupId(Integer.parseInt(id));
+    public List<User> getStudents(@PathVariable Integer id) {
+        return userDao.getByGroupId(id);
     }
 
     @RequestMapping(value = "/{id}/user/{userId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void deleteStudent(@PathVariable String id, @PathVariable String userId) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void deleteStudent(@PathVariable Integer id, @PathVariable Integer userId) {
         groupDao.deleteUserFromGroup(id, userId);
     }
 
     @RequestMapping(value = "/{id}/course", method = RequestMethod.GET)
     @ResponseBody
-    public Course getCourseByGroup(@PathVariable String id) {
-        return courseDao.getCourseByGroup(Integer.parseInt(id));
+    public Course getCourseByGroup(@PathVariable Integer id) {
+        return courseDao.getCourseByGroup(id);
     }
 
     @RequestMapping(value = {"/groups-and-quantity"}, method = RequestMethod.GET)
@@ -96,9 +100,16 @@ public class GroupController {
 
     @RequestMapping(value = {"/{id}/trainer"}, method = RequestMethod.GET)
     @ResponseBody
-    public User getTeacher(@PathVariable String id) {
-        return groupsService.getTrainer(Integer.parseInt(id));
+    public User getTeacher(@PathVariable Integer id) {
+        return groupsService.getTrainer(id);
 
+    }
+
+    @RequestMapping(value = {"/employee/{employeeId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
+    public String getGroupsByUser(@PathVariable Integer employeeId) {
+        return gson.toJson(groupsService.getAllByEmployeeId(employeeId));
     }
 
 }

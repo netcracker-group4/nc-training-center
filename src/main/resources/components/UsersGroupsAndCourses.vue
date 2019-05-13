@@ -40,11 +40,7 @@
         data: function () {
             return {
                 headers: [
-                    {
-                        text: 'Course name',
-                        align: 'left',
-                        value: 'courseName'
-                    },
+                    {text: 'Course name', align: 'left', value: 'courseName'},
                     {text: 'Course level', value: 'level', align: 'right'},
                     {text: 'Group name', value: 'title', align: 'right'},
                     {text: 'Trainer', value: 'trainerName', align: 'right'}

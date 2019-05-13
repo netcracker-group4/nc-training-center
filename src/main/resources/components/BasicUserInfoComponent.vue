@@ -2,16 +2,16 @@
     <v-layout row wrap>
         <v-container xs12>
             <div v-if="user !== null && user !== undefined " style="padding: 20px;">
-                <v-toolbar v-if="viewerIsAdmin()" flat color="white">
+                <v-toolbar  flat color="white">
                     <span>{{elemName}}</span>
                     <v-spacer></v-spacer>
-                    <span class="text-xs-center align-center ">
+                    <span v-if="viewerIsAdmin()" class="text-xs-center align-center ">
                         <v-switch v-if="viewerIsAdmin()" style="margin-bottom: -20px"
                                   v-model="user.active"
                                   @change="isActive"
                                   label="Active"></v-switch>
                     </span>
-                    <v-dialog v-model="dialog" max-width="500px">
+                    <v-dialog  v-if="viewerIsAdmin()" v-model="dialog" max-width="500px">
                         <template v-slot:activator="{ on }">
                             <v-icon @click="editItem" style="margin-left: 30px">
                                 edit
@@ -98,9 +98,11 @@
                             <v-list-tile v-if="canShowManager()">
                                 <v-list-tile-content>
                                     <v-list-tile-title><span class="grey--text">Teachers :</span>
-                                        <span v-on:click="goToUserPage(user.dtoManager) "
-                                              v-for="teacher in user.dtoTeachers" class="font-weight-medium cursor">
+                                        <span v-if="trainers.length < 1" >No teachers yet</span>
+                                        <span v-else v-on:click="goToUserPage(teacher) "
+                                              v-for="teacher in trainers" class="font-weight-medium cursor">
                                         {{getManagersName(teacher)}}</span>
+
                                     </v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
@@ -108,7 +110,8 @@
                             <v-list-tile v-if="canShowManager()">
                                 <v-list-tile-content>
                                     <v-list-tile-title><span class="grey--text">Groups :</span>
-                                        <span v-for="group in user.groups" v-on:click="goToGroupPage(group.id)"
+                                        <span v-if="groups.length < 1" >No groups yet</span>
+                                        <span v-else v-for="group in groups" v-on:click="goToGroupPage(group.id)"
                                               class="font-weight-medium cursor">{{group.title}}</span>
                                     </v-list-tile-title>
                                 </v-list-tile-content>
@@ -130,7 +133,7 @@
 
     export default {
         name: 'basic-user-info-component',
-        props: {elemName: String, user: {}, ifNullMessage: String},
+        props: {elemName: String, user: {}, ifNullMessage: String, trainers : Array, groups : Array},
         data: function () {
             return {
                 dialog: false,
@@ -198,7 +201,7 @@
                 if (dtoManager !== null) {
                     this.$router.push('/userpage/' + dtoManager.id);
                 }
-
+                window.scrollTo(0,0);
             },
             close() {
                 this.dialog = false;

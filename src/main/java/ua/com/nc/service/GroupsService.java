@@ -19,6 +19,8 @@ public interface GroupsService {
 
     List<DtoGroup> getAll();
 
+    List<DtoGroup> getAllByEmployeeId(Integer employeeId);
+
     List<DtoGroup> getGroupsAndQuantity();
 
     User getTrainer(int id);

@@ -1,9 +1,11 @@
 package ua.com.nc.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ua.com.nc.domain.User;
 
 @Data
+@NoArgsConstructor
 public class DtoTeacherAndManager {
     private boolean isActive;
     private Integer id;
@@ -12,10 +14,6 @@ public class DtoTeacherAndManager {
     private String photoUrl;
     private String email;
 
-
-    DtoTeacherAndManager() {
-
-    }
 
     public DtoTeacherAndManager(User user) {
         this.id = user.getId();

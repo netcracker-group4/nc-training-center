@@ -1,7 +1,6 @@
 package ua.com.nc.dao.interfaces;
 
 import ua.com.nc.domain.Group;
-import ua.com.nc.domain.User;
 
 import java.util.List;
 
@@ -17,5 +16,5 @@ public interface GroupDao extends GenericDao<Group> {
 
     List<Group> getGroupByTrainerId(Integer id);
 
-    void deleteUserFromGroup(String id, String userId);
+    void deleteUserFromGroup(Integer id, Integer userId);
 }

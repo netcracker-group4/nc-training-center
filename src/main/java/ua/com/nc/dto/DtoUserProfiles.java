@@ -1,11 +1,14 @@
 package ua.com.nc.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ua.com.nc.domain.Role;
+import ua.com.nc.domain.User;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class DtoUserProfiles {
     private Integer id;
     private String firstName;
@@ -15,13 +18,9 @@ public class DtoUserProfiles {
     private List<Role> roles;
     private boolean isActive;
     private DtoTeacherAndManager dtoManager;
-    private List<DtoTeacherAndManager> dtoTeachers;
-    private List<DtoGroup> groups;
 
-    DtoUserProfiles() {
-    }
-
-    public DtoUserProfiles(Integer id, String firstName, String lastName, String email, String image, List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager, List<DtoTeacherAndManager> dtoTeachers, List<DtoGroup> groups) {
+    public DtoUserProfiles(Integer id, String firstName, String lastName, String email, String image,
+                           List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -30,47 +29,16 @@ public class DtoUserProfiles {
         this.roles = roles;
         this.isActive = isActive;
         this.dtoManager = dtoManager;
-        this.dtoTeachers = dtoTeachers;
-        this.groups = groups;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public DtoTeacherAndManager getDtoManager() {
-        return dtoManager;
-    }
-
-    public List<DtoTeacherAndManager> getDtoTeachers() {
-        return dtoTeachers;
-    }
-
-    public List<DtoGroup> getGroups() {
-        return groups;
+    public DtoUserProfiles(User user, List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager) {
+        this.id = user.getId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
+        this.image = user.getImageUrl();
+        this.roles = roles;
+        this.isActive = isActive;
+        this.dtoManager = dtoManager;
     }
 }

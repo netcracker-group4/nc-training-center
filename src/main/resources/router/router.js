@@ -6,7 +6,6 @@ import DashBoardPage from "../pages/DashBoardPage.vue";
 import LoginPage from '../pages/LoginPage.vue'
 import GroupPage from "../pages/GroupPage.vue";
 import CoursePage from "../pages/CoursePage.vue";
-import TrainerPage from "../pages/TrainerPage.vue";
 import AdminCourses from "../pages/AdminCourses.vue";
 import CreateCourse from "../pages/CreateCourse.vue";
 import AllUsersPage from "../pages/AllUsersPage.vue";
@@ -19,21 +18,20 @@ import AttachmentsPage from "../pages/AttachmentsPage.vue"
 import TestPage from '../pages/TestPage.vue'
 import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
 import AllGroups from "../pages/AllGroups.vue";
-
+import NotFound from "../pages/NotFound.vue";
 
 Vue.use(Router);
 
 
 const routes = [
     {path: '/', component: MainPage},
-    {path: '/registration/:token', component: RegistrationPage},
+    {path: '/registration', component: RegistrationPage},
     {path: '/dashboard', component: DashBoardPage},
     {path: '/login', component: LoginPage},
     {path: '/dashboard', component: DashBoardPage},
     {path: '/group/:id', component: GroupPage, props: true},
     {path: '/groups/:id/schedule', component: GroupSchedulePage},
     {path: '/courses/:id', component: CoursePage, props: true},
-    {path: '/trainers/:id', component: TrainerPage},
     {path: '/admincourses', component: AdminCourses},
     {path: '/coursecreate', component: CreateCourse},
     {path: '/coursecreate/:id', component: CreateCourse,props: true},
@@ -45,7 +43,9 @@ const routes = [
     {path: '/desired-schedule/:id', component: DesiredSchedulePage},
     {path: '/attachments-page', component: AttachmentsPage},
     {path: '/test', component: TestPage},
-    {path: '/allgroups', component: AllGroups}
+    {path: '/allgroups', component: AllGroups},
+    {path: '/404', component: NotFound },
+    {path: '*', redirect: '/404'}
 ];
 
 export default new Router({

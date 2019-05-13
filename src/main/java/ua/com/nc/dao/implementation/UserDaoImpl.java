@@ -10,11 +10,13 @@ import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.User;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
 
 @Log4j
 @Component
@@ -116,7 +118,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, User entity) throws SQLException {
         setAllFields(statement, entity);
-        statement.setInt(7, entity.getId());
+        statement.setInt(8, entity.getId());
     }
 
     private void setAllFields(PreparedStatement statement, User entity) throws SQLException {
@@ -124,8 +126,9 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         statement.setString(2, entity.getPassword());
         statement.setString(3, entity.getFirstName());
         statement.setString(4, entity.getLastName());
-        statement.setObject(5, entity.getManagerId(), Types.INTEGER);
-        statement.setBoolean(6, entity.isActive());
+        statement.setString(5, entity.getToken());
+        statement.setInt(6, entity.getManagerId());
+        statement.setBoolean(7, entity.isActive());
     }
 
     @Override
@@ -333,7 +336,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         if (list == null || list.size() == 0) {
             return null;
         }
-
         return list;
     }
 
@@ -357,6 +359,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         log.info(sql + "trainer by group id = " + groupId);
         return getUniqueFromSqlById(sql, groupId);
     }
+
 
     @Override
     public List<User> getSubordinatesOfManager(Integer managerId) {

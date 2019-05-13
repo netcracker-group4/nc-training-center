@@ -26,10 +26,8 @@
     import DashBoardTableLevelAndQuantity from "../components/DashBoardTableLevelAndQuantity.vue";
     import DashBoardTableLevelAndTrainers from "../components/DashBoardTableLevelAndTrainers.vue";
     import DashBoardTableTrainingAndQuantity from "../components/DashBoardTableTrainingAndQuantity.vue";
+    import store from "../store/store.js";
 
-    //TODO function for checking our logged user's roles (is he an admin?)
-    //TODO error page
-    //TODO testing with greater amount of data
     export default {
         name: "DashBoardPage",
         data: function () {
@@ -41,6 +39,11 @@
             DashBoardTableLevelAndQuantity,
             DashBoardTableLevelAndTrainers,
             DashBoardTableTrainingAndQuantity
+        },
+        mounted() {
+            if (!store.getters.isAdmin) {
+                this.$router.push('/404');
+            }
         }
     }
 </script>

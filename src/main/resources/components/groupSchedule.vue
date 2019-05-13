@@ -41,6 +41,7 @@
     // noinspection NpmUsedModulesInstalled
     import draggable from "vuedraggable";
     import axios from 'axios';
+    import store from "../store/store.js";
 
     export default {
         name: "groupSchedule",
@@ -80,23 +81,25 @@
             },
         },
         mounted() {
-            let self = this;
-            axios.get('http://localhost:8080/getcourses/desired/' + this.groupId)
-                .then(function (response) {
-                    self.allSchedules = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
-            axios.get('http://localhost:8080/getcourses/desired/day-intervals')
-                .then(function (response) {
-                    self.dayIntervals = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
+            if(store.getters.isAdmin || store.getters.isTrainer) {
+                let self = this;
+                axios.get('http://localhost:8080/getcourses/desired/' + this.groupId)
+                    .then(function (response) {
+                        self.allSchedules = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                axios.get('http://localhost:8080/getcourses/desired/day-intervals')
+                    .then(function (response) {
+                        self.dayIntervals = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+            }
         }
     }
 </script>

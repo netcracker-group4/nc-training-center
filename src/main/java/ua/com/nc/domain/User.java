@@ -2,10 +2,12 @@ package ua.com.nc.domain;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.OffsetDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -155,7 +157,13 @@ public class User extends Entity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        if (this.roles != null && !this.roles.isEmpty()) {
+            for (Role role : this.roles) {
+                authorities.add(new SimpleGrantedAuthority(role.name()));
+            }
+        }
+        return authorities;
     }
 
     @Override

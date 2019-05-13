@@ -120,7 +120,9 @@
                             <v-card class="mx-auto card">
                                 <v-card-title
                                         v-bind:class="{ 'active-lesson': !lesson.isCanceled  , 'canceled-lesson': lesson.isCanceled }">
-                                    <span class="title font-weight-light">{{getDate(lesson.timeDate) + ' '+ computedTime(lesson.timeDate.substr(11, 5))}}</span>
+                                    <span class="title font-weight-light">
+                                        {{getDate(lesson.timeDate) + ' '+ computedTime(lesson.timeDate.substr(11, 5))}}
+                                    </span>
                                     <v-spacer></v-spacer>
                                     <span class="title font-weight-light">{{lesson.duration}} </span>
                                 </v-card-title>

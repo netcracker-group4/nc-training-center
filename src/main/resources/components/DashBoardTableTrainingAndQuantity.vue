@@ -68,6 +68,7 @@
 
 <script>
     import axios from 'axios'
+    import store from "../store/store.js";
 
     export default {
         name: "DashBoardTableLevelAndTrainers",
@@ -121,23 +122,25 @@
             }
         },
         mounted() {
-            let self = this;
-            axios.get('http://localhost:8080/dashboard/training-and-quantity')
-                .then(function (response) {
-                    self.coursesAndQuantities = response.data;
-                    console.log(response.data);
-                    self.coursesAndQuantities.forEach(function (s) {
-                        self.selectedCourses.push(s.course.id);
-                        s.groups.forEach(function (ee) {
-                            self.allGroups.push(ee.group);
+            if(store.getters.isAdmin) {
+                let self = this;
+                axios.get('http://localhost:8080/dashboard/training-and-quantity')
+                    .then(function (response) {
+                        self.coursesAndQuantities = response.data;
+                        console.log(response.data);
+                        self.coursesAndQuantities.forEach(function (s) {
+                            self.selectedCourses.push(s.course.id);
+                            s.groups.forEach(function (ee) {
+                                self.allGroups.push(ee.group);
+                            });
+                            self.groupsForCourses[s.course.id] = s.groups;
                         });
-                        self.groupsForCourses[s.course.id] = s.groups;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
                     });
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    self.errorAutoClosable(error.response.data);
-                });
+            }
         },
         computed: {
             filteredCourses() {
