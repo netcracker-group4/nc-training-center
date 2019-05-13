@@ -93,6 +93,7 @@ CREATE TABLE COURSE_STATUS
     DESCRIPTION TEXT
 );
 
+CREATE SEQUENCE level_seq;
 CREATE TABLE LEVEL
 (
     ID    INTEGER DEFAULT NEXTVAL('level_seq') PRIMARY KEY,
@@ -127,10 +128,9 @@ CREATE SEQUENCE desirable_schedule_seq;
 CREATE TABLE DESIRABLE_SCHEDULE
 (
     ID            INTEGER DEFAULT NEXTVAL('desirable_schedule_seq') PRIMARY KEY,
-    USER_ID       INTEGER REFERENCES USR (ID),
-    COURSE_ID     INTEGER REFERENCES COURSE (ID),
     CRON_INTERVAL VARCHAR(50),
-    SUITABILITY   INTEGER REFERENCES SUITABILITY (ID)
+    SUITABILITY   INTEGER REFERENCES SUITABILITY (ID),
+    USER_GROUP_ID INTEGER REFERENCES USR_GROUP (ID)
 );
 
 CREATE SEQUENCE grup_seq;
@@ -147,7 +147,8 @@ CREATE TABLE USR_GROUP
     ID           INTEGER DEFAULT NEXTVAL('usr_group_seq') PRIMARY KEY,
     USER_ID      INTEGER REFERENCES USR (ID),
     GROUP_ID     INTEGER REFERENCES GRUP (ID),
-    IS_ATTENDING BOOLEAN
+    IS_ATTENDING BOOLEAN,
+    COURSE_ID    INTEGER REFERENCES COURSE (ID)
 );
 
 CREATE SEQUENCE attachment_seq;
@@ -155,7 +156,9 @@ CREATE TABLE ATTACHMENT
 (
     ID          INTEGER DEFAULT NEXTVAL('attachment_seq') PRIMARY KEY,
     URL         TEXT,
-    DESCRIPTION TEXT
+    DESCRIPTION TEXT,
+    NAME        VARCHAR(20) NOT NULL,
+    TRAINER_ID  INTEGER REFERENCES USR (ID)
 );
 
 CREATE SEQUENCE lesson_seq;
@@ -165,7 +168,10 @@ CREATE TABLE LESSON
     GROUP_ID  INTEGER REFERENCES GRUP (ID),
     TOPIC     VARCHAR(150) NOT NULL,
     USER_ID   INTEGER REFERENCES USR (ID),
-    TIME_DATE TIMESTAMP WITH TIME ZONE
+    TIME_DATE TIMESTAMP WITH TIME ZONE,
+    is_canceled boolean,
+    is_archived boolean,
+    duration interval
 );
 
 CREATE TABLE LESSON_ATTACHMENT
@@ -177,7 +183,7 @@ CREATE TABLE LESSON_ATTACHMENT
 CREATE SEQUENCE absence_reason_seq;
 CREATE TABLE ABSENCE_REASON
 (
-    ID    INTEGER DEFAULT NEXTVAL('abscence_reason_seq') PRIMARY KEY,
+    ID    INTEGER DEFAULT NEXTVAL('absence_reason_seq') PRIMARY KEY,
     TITLE VARCHAR(50)
 );
 
@@ -256,10 +262,10 @@ CREATE TABLE CHAT_USER
 
 
 alter table lesson
-  add column is_canceled boolean;
+    add column is_canceled boolean;
 
 alter table lesson
-  add column is_archived boolean;
+    add column is_archived boolean;
 
 alter table lesson
     add column duration interval;
