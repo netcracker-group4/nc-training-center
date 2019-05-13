@@ -8,4 +8,6 @@ public interface DesiredScheduleDao extends GenericDao<DesiredSchedule> {
     List<DesiredSchedule> getAllForCourse(int courseId);
 
     List<DesiredSchedule> getAllForGroup(int groupId);
+
+    List<DesiredSchedule> getUngroupedForCourse(int courseId);
 }

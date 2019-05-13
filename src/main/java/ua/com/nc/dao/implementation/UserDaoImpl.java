@@ -245,24 +245,12 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         return users;
     }
 
-    @SuppressWarnings("Duplicates")
     @Override
     public List<User> getUngroupedByCourse(Integer courseId) {
         List<User> allUsersForCourse;
         String sql = usrSelectUngroupedByCourseId;
         log.info(sql + " select Ungrouped users for a course " + courseId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, courseId);
-            statement.setInt(2, courseId);
-            ResultSet rs = statement.executeQuery();
-            allUsersForCourse = parseResultSet(rs);
-        } catch (Exception e) {
-            throw new PersistException(e);
-        }
-        if (allUsersForCourse.size() == 0) {
-            return null;
-        }
-        return allUsersForCourse;
+        return getFromSqlById(sql, courseId);
     }
 
     @Override
@@ -365,7 +353,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public List<User> getSubordinatesOfManager(Integer managerId) {
         String sql = getSelectSubordinatesByManager;
         log.info(" subordinates by manager id = " + managerId + "   " + sql);
-        return  getFromSqlById(sql, managerId);
+        return getFromSqlById(sql, managerId);
     }
 
 

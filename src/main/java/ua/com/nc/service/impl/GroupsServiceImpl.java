@@ -40,8 +40,6 @@ public class GroupsServiceImpl implements GroupsService {
     @Override
     public boolean delete(int groupId) {
         userGroupDao.deleteAllForGroup(groupId);
-
-
         groupDao.delete(groupId);
         return true;
     }
@@ -129,5 +127,13 @@ public class GroupsServiceImpl implements GroupsService {
     @Override
     public User getTrainer(int id) {
         return userDao.getTrainerByGroupId(id);
+    }
+
+
+    @Override
+    public void invertAttending(Integer userGroupId) {
+        UserGroup userGroup = userGroupDao.getEntityById(userGroupId);
+        userGroup.setAttending(!userGroup.isAttending());
+        userGroupDao.update(userGroup);
     }
 }

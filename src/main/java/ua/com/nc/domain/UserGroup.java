@@ -1,28 +1,53 @@
 package ua.com.nc.domain;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Setter
 public class UserGroup extends Entity {
-    private int userId;
-    private int groupId;
+    private Integer userId;
+    private Integer groupId;
+    private Integer courseId;
     private boolean attending;
 
     public UserGroup() {
     }
 
-    public UserGroup(int userId, int groupId, boolean attending) {
+    public UserGroup(Integer userId, Integer groupId, boolean attending) {
         this.userId = userId;
         this.groupId = groupId;
         this.attending = attending;
     }
 
-    public UserGroup(Integer id, int userId, int groupId, boolean attending) {
+    public UserGroup(Integer id, Integer userId, Integer groupId, Integer courseId, boolean attending) {
         super(id);
         this.userId = userId;
         this.groupId = groupId;
+        this.courseId = courseId;
         this.attending = attending;
+    }
+
+    public UserGroup(Integer userId, Integer groupId, Integer courseId, boolean attending) {
+        this.userId = userId;
+        this.groupId = groupId;
+        this.courseId = courseId;
+        this.attending = attending;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public boolean isAttending() {
+        return attending;
     }
 }

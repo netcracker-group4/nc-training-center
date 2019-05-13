@@ -8,15 +8,19 @@ import java.util.List;
 
 @Data
 public class ScheduleForUser {
+    private int id;
     private int userId;
     private String userName;
+    private boolean isAttending;
     private List<ScheduleForInterval> scheduleForIntervals = new ArrayList<>();
 
     public ScheduleForUser() {
     }
 
-    public ScheduleForUser(User user, List<ParsedSchedule> desiredSchedules, int start, double end) {
+    public ScheduleForUser(int id, User user, boolean isAttending , List<ParsedSchedule> desiredSchedules, int start, double end) {
+        this.id = id;
         List<ParsedSchedule> parsedSchedules = getForUser(user.getId(), desiredSchedules);
+        this.isAttending = isAttending;
         this.userId = user.getId();
         this.userName = user.getFirstName() + "  " + user.getLastName();
         for (int i = start; i < end; i++) {

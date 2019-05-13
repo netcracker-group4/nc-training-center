@@ -21,14 +21,21 @@
                             <thead class="thead-dark">
                             <tr>
                                 <th scope="col">Id</th>
-                                <th scope="col" v-bind:style="{width: '30%'}">Name</th>
+                                <th scope="col">Attending</th>
+                                <th scope="col" class="student-name">Name</th>
                                 <th v-for="dayName in dayIntervals" scope="col">{{dayName}}</th>
                             </tr>
                             </thead>
                             <draggable v-model="allSchedules" tag="tbody" group="people">
                                 <tr v-for="item in allSchedules" :key="item.userId">
                                     <td>{{ item.userId }}</td>
-                                    <td v-bind:style="{width: '30%'}">{{ item.userName }}</td>
+                                    <td>
+                                        <v-switch v-model="item.isAttending"
+                                                  @change="invertAttending(item.id, item.userName)"></v-switch>
+                                    </td>
+                                    <td class="student-name"
+                                        v-bind:class="{'notAttending': !item.isAttending}">{{ item.userName }}
+                                    </td>
                                     <td v-for="forInterval in item.scheduleForIntervals"
                                         v-bind:style="{backgroundColor: getColor(forInterval)}">
                                     </td>
@@ -51,14 +58,20 @@
                                     <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">Id</th>
-                                        <th scope="col" v-bind:style="{width: '30%'}">Name</th>
+                                        <th scope="col">Attending</th>
+                                        <th scope="col" class="student-name">Name</th>
                                         <th v-for="dayName in dayIntervals" scope="col">{{dayName}}</th>
                                     </tr>
                                     </thead>
                                     <draggable v-model="group.groupScheduleList" tag="tbody" group="people">
-                                        <tr v-for="item in group.groupScheduleList" :key="item.userId">
+                                        <tr v-for="item in group.groupScheduleList" :key="item.userId" style="cursor: pointer">
                                             <td>{{ item.userId }}</td>
-                                            <td v-bind:style="{width: '30%'}">{{ item.userName }}</td>
+                                            <td>
+                                                <v-switch v-model="item.isAttending"
+                                                          @change="invertAttending(item.id, item.userName)"></v-switch>
+                                            </td>
+                                            <td class="student-name" v-bind:class="{'notAttending': !item.isAttending}">
+                                                {{ item.userName }}</td>
                                             <td v-for="forInterval in item.scheduleForIntervals"
                                                 v-bind:style="{backgroundColor: getColor(forInterval)}">
                                             </td>
@@ -75,7 +88,7 @@
                                     </v-flex>
                                     <v-spacer></v-spacer>
                                     <v-btn alert color="error" @click="deleteGroup(index)">Delete Group</v-btn>
-                                    <v-btn alert  color="success" @click="saveGroup(index)">Save Group</v-btn>
+                                    <v-btn alert color="success" @click="saveGroup(index)">Save Group</v-btn>
                                 </v-layout>
 
                             </div>
@@ -139,6 +152,17 @@
                     pauseOnHover: true
                 });
             },
+            invertAttending(id, userName) {
+                let self = this;
+                axios.get('/groups/invert-attending/' + id)
+                    .then(function (response) {
+                        self.successAutoClosable('Employee  ' + userName + ' now updated')
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+            },
             getColor(forInterval) {
                 return forInterval.colorsForDays[this.currentDay];
             },
@@ -155,7 +179,7 @@
                 axios.post('/groups', self.groups[index])
                     .then(function (response) {
                         self.groups[index].id = response.data;
-                        self.successAutoClosable('Group  ' +self.groups[index].name + ' has been saved')
+                        self.successAutoClosable('Group  ' + self.groups[index].name + ' has been saved')
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -168,7 +192,7 @@
                 axios.delete('/groups/' + self.groups[index].id)
                     .then(function (response) {
                         self.allSchedules = self.allSchedules.concat(self.groups[index].groupScheduleList);
-                        self.successAutoClosable('Group ' +self.groups[index].name + ' has been deleted');
+                        self.successAutoClosable('Group ' + self.groups[index].name + ' has been deleted');
                         self.groups.splice(index, 1);
                     })
                     .catch(function (error) {
@@ -195,7 +219,7 @@
         },
         mounted() {
 
-            if(store.getters.isAdmin) {
+            if (store.getters.isAdmin) {
                 let self = this;
                 axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/ungrouped')
                     .then(function (response) {
@@ -231,7 +255,7 @@
                         self.errorAutoClosable(error.response.data);
                         console.log(error);
                     });
-            }else {
+            } else {
                 this.$router.push('/404')
             }
         }
@@ -240,6 +264,10 @@
 
 <style>
 
+    .student-name {
+        width: 25%;
+        cursor: pointer;
+    }
 
     .zui-table {
         border: solid 1px #e6e4ee;
@@ -272,4 +300,10 @@
         border-bottom: none;
     }
 
+    /*noinspection CssUnusedSymbol*/
+    .notAttending {
+        background-color: #3E4347;
+        color: #cfcfcf;
+        text-decoration-line: line-through;
+    }
 </style>
