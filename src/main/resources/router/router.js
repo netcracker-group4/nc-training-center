@@ -19,6 +19,7 @@ import TestPage from '../pages/TestPage.vue'
 import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
 import AllGroups from "../pages/AllGroups.vue";
 import NotFound from "../pages/NotFound.vue";
+import JoinCoursePage from "../pages/JoinCoursePage.vue";
 
 Vue.use(Router);
 
@@ -32,6 +33,7 @@ const routes = [
     {path: '/group/:id', component: GroupPage, props: true},
     {path: '/groups/:id/schedule', component: GroupSchedulePage},
     {path: '/courses/:id', component: CoursePage, props: true},
+    {path: '/courses/:id/join', component: JoinCoursePage, props: true},
     {path: '/admincourses', component: AdminCourses},
     {path: '/coursecreate', component: CreateCourse},
     {path: '/coursecreate/:id', component: CreateCourse,props: true},

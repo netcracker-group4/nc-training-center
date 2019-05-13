@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.CourseDao;
+import ua.com.nc.dao.interfaces.SuitabilityDao;
 import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.User;
@@ -28,6 +29,8 @@ public class CourseController {
     private CourseService courseService;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private SuitabilityDao suitabilityDao;
 
     private final Gson gson = new Gson();
 
@@ -123,6 +126,10 @@ public class CourseController {
     public ResponseEntity<?> getAllCoursesByTrainerAndByEmployee(@RequestParam Integer trainerId,
                                                                  @RequestParam Integer employeeId) {
         return new ResponseEntity<>(courseService.getAllByTrainerAndEmployee(trainerId, employeeId), HttpStatus.OK);
+    }
+@RequestMapping(value = "/suitabilities", method = RequestMethod.GET)
+    public ResponseEntity<?> getSuitabilities() {
+        return new ResponseEntity<>(suitabilityDao.getAll(), HttpStatus.OK);
     }
 
 }
