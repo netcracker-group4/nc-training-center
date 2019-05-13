@@ -93,8 +93,14 @@ public class LessonsServiceImpl implements LessonsService {
     }
 
     @Override
-    public String getAllForUser(int userId) {
-        List<Lesson> lessons = lessonDao.getByUser(userId);
+    public String getAllForEmployee(int userId) {
+        List<Lesson> lessons = lessonDao.getByEmployee(userId);
+        return createDtoForLessons(lessons);
+    }
+
+    @Override
+    public String getAllForETrainer(Integer userId) {
+        List<Lesson> lessons = lessonDao.getByTrainer(userId);
         return createDtoForLessons(lessons);
     }
 }

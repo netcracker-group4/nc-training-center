@@ -13,5 +13,7 @@ public interface LessonsService {
 
     String cancelLesson(int lessonId);
 
-    String getAllForUser(int userId);
+    String getAllForEmployee(int userId);
+
+    String getAllForETrainer(Integer userId);
 }

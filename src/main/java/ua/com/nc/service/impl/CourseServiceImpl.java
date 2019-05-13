@@ -186,9 +186,7 @@ public class CourseServiceImpl implements CourseService {
         List<ScheduleForUser> scheduleForUsers = new ArrayList<>();
         List<Suitability> all = suitabilityDao.getAll();
         for (User user : userDao.getByGroupId(groupId)) {
-            log.info("user "+user);
             UserGroup byUserAndGroup = userGroupDao.getByUserAndGroup(user.getId(), groupId);
-            log.info("UserGroup  "+byUserAndGroup);
             scheduleForUsers.add(new ScheduleForUser(byUserAndGroup.getId(), user,
                     byUserAndGroup.isAttending(),
                     parseSchedules(desiredScheduleList, all),

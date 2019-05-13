@@ -2,6 +2,7 @@ package ua.com.nc.security;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import ua.com.nc.dto.DtoLesson;
 import java.sql.Timestamp;
 import java.util.List;
 
+@Log4j
 @Component("customSecuritySecurity")
 public class CustomSecurityService {
     @Autowired
@@ -73,6 +75,7 @@ public class CustomSecurityService {
     }
 
     public boolean hasPermissionToRetrieveGroups(Authentication authentication, Integer employeeId) {
+        log.info(employeeId);
         return roleDao.findAllByUserId(employeeId).contains(Role.EMPLOYEE);
     }
 
