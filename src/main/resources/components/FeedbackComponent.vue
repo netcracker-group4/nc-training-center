@@ -75,12 +75,12 @@
     export default {
         name: 'feedback-component',
         props: [
-            'user'
+            'user',
+            'courses'
         ],
         data:() => ({
             feedbackText: '',
             userFeedback: [],
-            courses: [],
             rows: [3,5,10,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}]
         }),
         methods: {
@@ -88,7 +88,7 @@
                 return store.state.user;
             },
             canShowLeaveFeedbackBlock() {
-                return store.state.userRoles.includes("TRAINER") && this.courses.length > 0;
+                return store.state.userRoles.includes("TRAINER");
             },
             leaveFeedback() {
                 let self = this;
@@ -139,16 +139,6 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-
-                axios.get('http://localhost:8080/getcourses/get-all-courses-by-trainer-and-employee?trainerId=' +
-                    store.state.user.id + "&employeeId=" + this.$route.params.id)
-                    .then(function (response) {
-                        self.courses = response.data;
-                        console.log(self.courses)
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
             }
         },
         mounted() {
@@ -157,7 +147,6 @@
             } else {
                 this.getAllFeedbackByTrainer();
             }
-
         },
         watch: {
             '$route'(to, from) {
