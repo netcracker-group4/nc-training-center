@@ -72,7 +72,7 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
 
     private List<Attendance> getAttendances(Integer studentId, Integer courseId, String selectAttendanceByStudentIdAndCourseId) {
         List<Attendance> list;
-        log.debug(selectAttendanceByStudentIdAndCourseId);
+        log.info(selectAttendanceByStudentIdAndCourseId);
         try (PreparedStatement statement = connection.prepareStatement(selectAttendanceByStudentIdAndCourseId)) {
             statement.setInt(1, studentId);
             statement.setInt(2, courseId);

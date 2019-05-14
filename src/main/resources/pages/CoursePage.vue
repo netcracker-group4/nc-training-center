@@ -11,7 +11,7 @@
                         <v-layout column>
                             <div class="subheading pt-3"> <b>{{courseStatus}}</b>
                              <b>{{level.title}}</b>
-                                <<!--v-dialog v-model="dialog" max-width="500px">
+                                <!--v-dialog v-model="dialog" max-width="500px">
                                     <template v-slot:activator="{ on }">
                                         <v-icon
                                                 class="mr-4"
@@ -190,7 +190,7 @@
                 this.$router.push('/userpage/' + id);
             },
             goGroupPage(id){
-                this.$router.push('/groups/' + id);
+                this.$router.push('/group/' + id);
             },
             getGroups(){
                 let self = this;

@@ -19,6 +19,7 @@ import TestPage from '../pages/TestPage.vue'
 import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
 import AllGroups from "../pages/AllGroups.vue";
 import NotFound from "../pages/NotFound.vue";
+import ChatPage from '../pages/ChatPage.vue'
 
 Vue.use(Router);
 
@@ -44,6 +45,7 @@ const routes = [
     {path: '/attachments-page', component: AttachmentsPage},
     {path: '/test', component: TestPage},
     {path: '/allgroups', component: AllGroups},
+    {path: '/chat/:id', component: ChatPage},
     {path: '/404', component: NotFound },
     {path: '*', redirect: '/404'}
 ];

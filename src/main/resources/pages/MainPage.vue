@@ -74,6 +74,7 @@
                                 console.log(error);
                             });
 
+
 },
         methods: {
             forwardToCoursePage(id){
