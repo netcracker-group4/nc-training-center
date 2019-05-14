@@ -65,7 +65,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     private String getSelectSubordinatesByManager;
     @Value("${usr.select-students-absent-on-lesson-with-no-reason}")
     private String selectStudentsAbsentOnLessonWithNoReason;
-    @Value("${usr.select-admin")
+    @Value("${usr.select-admin}")
     private String getAdmin;
     @Value("${lesson.select-lesson-trainer}")
     private String getLessonTrainer;
@@ -75,7 +75,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     private String usrInsertUserRole;
     @Value("${usr.insert-user-by-admin}")
     private String usrInsertUserByAdmin;
-    @Value("$(usr.select-trainer-by-group-id)")
+    @Value("${usr.select-trainer-by-group-id}")
     private String getSelectTrainerByGroupId;
     @Value("${usr.select-by-token}")
     private String usrSelectByToken;

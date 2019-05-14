@@ -11,6 +11,7 @@
                         <v-layout column>
                             <div class="subheading pt-3"> <b>{{courseStatus}}</b>
                              <b>{{level.title}}</b>
+                                <v-btn v-if="this.$store.getters.userRoles.includes('EMPLOYEE')" @click="sign()">Sign course</v-btn>
                                 <<!--v-dialog v-model="dialog" max-width="500px">
                                     <template v-slot:activator="{ on }">
                                         <v-icon
@@ -51,19 +52,6 @@
                         <v-layout column>
                             <div class="subheading pt-3"> <b>Trainers</b></div>
                             <div v-for="tr in trainer" > <b @click="goTrainerPage(tr.id)"> {{tr.firstName }}   {{tr.lastName}} </b>
-                               <!-- <v-select
-                                        v-if="isAdmin"
-                                    v-model="trainer"
-                                    :items="trainers"
-                                    :label=this.trainer.firstName
-                            >
-                                    <template slot="selection" slot-scope="trainers">
-                                        {{ trainers.item.firstName }} {{ trainers.item.lastName }}
-                                    </template>
-                                    <template slot="item" slot-scope="trainers">
-                                        {{ trainers.item.firstName }} {{ trainers.item.lastName }}
-                                    </template>
-                                </v-select>-->
                             </div>
                             <div class="subheading pt-3">
                                 <b>Groups</b> <v-btn v-if="isAdmin" @click="manageGroups()">Manage groups</v-btn>
@@ -107,6 +95,7 @@
         name: "CoursePage",
         data() {
             return{
+                id: this.$route.params.id,
                 name: null,
                 levelId: null,
                 level: null,
@@ -129,7 +118,7 @@
         methods:{
             setCourse(){
                 let self = this;
-                axios.get('http://localhost:8080/getcourses/'+this.$route.params.id)
+                axios.get('http://localhost:8080/getcourses/'+self.id)
                     .then(function (response) {
                         //self.levels = response.data;
                         let dat = response.data;
@@ -192,9 +181,12 @@
             goGroupPage(id){
                 this.$router.push('/groups/' + id);
             },
+            sign(){
+                this.$router.push('/courses/'+this.id+'/join');
+            },
             getGroups(){
                 let self = this;
-                axios.get('http://localhost:8080/groups/get-groups/'+this.$route.params.id)
+                axios.get('http://localhost:8080/groups/get-groups/'+self.id)
                     .then(function (response) {
                         self.groups = response.data;
                     })
