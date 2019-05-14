@@ -24,7 +24,7 @@ public class ParsedSchedule {
         String[] elem = cron.split("\\s+");
         start = Integer.parseInt(elem[1]);
         end = Integer.parseInt(elem[3]);
-        dayOfWeek = DayOfWeek.of(Integer.parseInt(elem[4]));
+        dayOfWeek = DayOfWeek.of(Integer.parseInt(elem[4]) + 1);
     }
 
     private Suitability findSuitability(int suitabilityId, List<Suitability> suitabilityList) throws Exception {
@@ -36,4 +36,14 @@ public class ParsedSchedule {
         throw new Exception("No such suitability");
     }
 
+    @Override
+    public String toString() {
+        return "ParsedSchedule{" +
+                "userId=" + userId +
+                ", dayOfWeek=" + dayOfWeek +
+                ", start=" + start +
+                ", end=" + end +
+                ", color='" + color + '\'' +
+                '}';
+    }
 }

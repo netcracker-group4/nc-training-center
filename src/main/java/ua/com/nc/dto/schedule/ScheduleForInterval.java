@@ -3,6 +3,8 @@ package ua.com.nc.dto.schedule;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @Data
@@ -14,17 +16,18 @@ public class ScheduleForInterval {
     public ScheduleForInterval() {
     }
 
-    public ScheduleForInterval(int start, int end, List<ParsedSchedule> parsedScheduleList) {
+    ScheduleForInterval(int start, int end, List<ParsedSchedule> parsedScheduleList) {
         List<ParsedSchedule> forThisInterval = getForInterval(start, parsedScheduleList);
-        this.start = start;
+        System.out.println("forThisInterval  "+forThisInterval)
+        ;this.start = start;
         this.end = end;
-        int daysIterator = 0;
         for (int i = 0; i < 7; i++) {
-            if (daysIterator < forThisInterval.size() && forThisInterval.get(daysIterator).getDayOfWeek().getValue() == i + 1) {
-                colorsForDays[i] = forThisInterval.get(daysIterator).getColor();
-                daysIterator++;
+            ParsedSchedule parsedSchedule = getForDay(forThisInterval, i);
+            if (parsedSchedule != null) {
+                colorsForDays[i] = parsedSchedule.getColor();
             } else colorsForDays[i] = "grey";
         }
+        System.out.println(Arrays.toString(colorsForDays));
     }
 
     private List<ParsedSchedule> getForInterval(int start, List<ParsedSchedule> parsedScheduleList) {
@@ -34,7 +37,17 @@ public class ScheduleForInterval {
                 result.add(parsedSchedule);
             }
         }
-        result.sort((a, b) -> b.getDayOfWeek().getValue() - a.getDayOfWeek().getValue());
+        result.sort(Comparator.comparingInt(a -> a.getDayOfWeek().getValue()));
+        System.out.println("for interval " + start + " " + result);
         return result;
+    }
+
+    private ParsedSchedule getForDay(List<ParsedSchedule> forThisInterval, int day){
+        for (ParsedSchedule parsedSchedule : forThisInterval) {
+            if(parsedSchedule.getDayOfWeek().getValue()-1 == day){
+                return parsedSchedule;
+            }
+        }
+        return null;
     }
 }

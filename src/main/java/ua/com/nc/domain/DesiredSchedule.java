@@ -26,4 +26,14 @@ public class DesiredSchedule extends Entity {
         this.cronInterval = cronInterval;
         this.suitability = suitability;
     }
+
+    @Override
+    public String toString() {
+        return "DesiredSchedule{" +
+                "userId=" + userId +
+                ", courseId=" + courseId +
+                ", cronInterval='" + cronInterval + '\'' +
+                ", suitability=" + suitability +
+                '}';
+    }
 }

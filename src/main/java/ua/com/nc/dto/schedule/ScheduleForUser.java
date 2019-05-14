@@ -19,23 +19,12 @@ public class ScheduleForUser {
 
     public ScheduleForUser(int id, User user, boolean isAttending , List<ParsedSchedule> desiredSchedules, int start, double end) {
         this.id = id;
-        List<ParsedSchedule> parsedSchedules = getForUser(user.getId(), desiredSchedules);
         this.isAttending = isAttending;
         this.userId = user.getId();
         this.userName = user.getFirstName() + "  " + user.getLastName();
         for (int i = start; i < end; i++) {
-            scheduleForIntervals.add(new ScheduleForInterval(i, i + 1, parsedSchedules));
+            scheduleForIntervals.add(new ScheduleForInterval(i, i + 1, desiredSchedules));
         }
-    }
-
-    private List<ParsedSchedule> getForUser(int userId, List<ParsedSchedule> desiredSchedules) {
-        List<ParsedSchedule> result = new ArrayList<>();
-        for (ParsedSchedule parsedSchedule : desiredSchedules) {
-            if (parsedSchedule.getUserId() == userId) {
-                result.add(parsedSchedule);
-            }
-        }
-        return result;
     }
 
 
