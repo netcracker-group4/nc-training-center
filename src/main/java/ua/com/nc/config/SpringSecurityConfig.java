@@ -15,6 +15,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import ua.com.nc.exceptions.CustomAccessDeniedHandler;
 import ua.com.nc.service.UserService;
 
+@SuppressWarnings("WeakerAccess")
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -28,6 +29,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/download-report").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .antMatchers("/css/**", "/js/**", "/registration", "/logout", "/users/activate/{token}").permitAll()
                 .anyRequest().authenticated()
@@ -40,6 +42,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+//        to enable 404 error page in case of access denied error
 //                .and()
 //                .exceptionHandling().accessDeniedPage("/error.html");
     }

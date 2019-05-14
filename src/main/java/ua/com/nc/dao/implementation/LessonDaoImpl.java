@@ -39,8 +39,10 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     @Value("${lesson.archive}")
     private String archiveLessonQuery;
 
-    @Value("${lesson.select-by-user-id}")
-    private String selectByUserId;
+    @Value("${lesson.select-by-employee-id}")
+    private String selectByEmployeeId;
+    @Value("${lesson.select-by-trainer-id}")
+    private String selectByTrainerId;
 
     @Autowired
     public LessonDaoImpl(DataSource dataSource) throws PersistException {
@@ -154,10 +156,10 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     }
 
     @Override
-    public List<Lesson> getByUser(int userId) {
-        String sql = selectByUserId;
-        log.info("getByUserId userId " + userId + "  " + sql);
-        return getFromSqlById(sql, userId);
+    public List<Lesson> getByEmployee(int employeeId) {
+        String sql = selectByEmployeeId;
+        log.info("getByUserId employeeId " + employeeId + "  " + sql);
+        return getFromSqlById(sql, employeeId);
     }
 
     private List<Lesson> parseResultSetForAttendance(ResultSet rs) throws SQLException {
@@ -176,6 +178,12 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
         return lessons;
     }
 
+    @Override
+    public List<Lesson> getByTrainer(Integer userId) {
+        String sql = selectByTrainerId;
+        log.info("getByUserId employeeId " + userId + "  " + sql);
+        return getFromSqlById(sql, userId);
+    }
 }
 
 

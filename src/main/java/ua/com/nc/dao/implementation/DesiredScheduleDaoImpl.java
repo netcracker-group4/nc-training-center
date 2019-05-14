@@ -27,8 +27,12 @@ public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> imp
     private String desirableScheduleInsert;
     @Value("${desirable.schedule.select-by-course-id}")
     private String desirableScheduleSelectByCourseId;
+    @Value("${desirable.schedule.select-ungrouped-by-course-id}")
+    private String desirableScheduleSelectUngroupedByCourseId;
     @Value("${desirable.schedule.select-by-group-id}")
     private String desirableScheduleSelectByGroupId;
+    @Value("${desirable.schedule.select-by-usr-group-id}")
+    private String desirableScheduleSelectByUsrGroupId;
 
     @Autowired
     public DesiredScheduleDaoImpl(DataSource dataSource) throws PersistException {
@@ -82,4 +86,18 @@ public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> imp
         return getFromSqlById(sql, groupId);
     }
 
+    @Override
+    public List<DesiredSchedule> getUngroupedForCourse(int courseId) {
+        String sql = desirableScheduleSelectUngroupedByCourseId;
+        log.info(sql + "" + "find all by groupId " + courseId);
+        return getFromSqlById(sql, courseId);
+    }
+
+
+    @Override
+    public List<DesiredSchedule> getByUsrGroupId(Integer id) {
+        String sql = desirableScheduleSelectByUsrGroupId;
+        log.info(sql + "" + "find all by groupId " + id);
+        return getFromSqlById(sql, id);
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.interfaces.CourseDao;
 import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.dao.interfaces.UserDao;
+import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.schedule.GroupSchedule;
@@ -32,6 +33,8 @@ public class GroupController {
     private CourseDao courseDao;
     @Autowired
     private GroupsService groupsService;
+    @Autowired
+    private UserGroupDao userGroupDao;
     private final Gson gson = new Gson();
 
 
@@ -48,11 +51,19 @@ public class GroupController {
         return Integer.toString(newId);
     }
 
+    @RequestMapping(path = "/invert-attending/{userGroupId}", method = RequestMethod.GET)
+    @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String invertUser(@PathVariable Integer userGroupId) {
+        groupsService.invertAttending(userGroupId);
+        return "User updated";
+    }
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public String deleteGroup(@PathVariable String id) {
-        groupsService.delete(Integer.parseInt(id));
+    public String deleteGroup(@PathVariable Integer id) {
+        groupsService.delete(id);
         return "Group deleted";
     }
 
@@ -110,6 +121,13 @@ public class GroupController {
     @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
     public String getGroupsByUser(@PathVariable Integer employeeId) {
         return gson.toJson(groupsService.getAllByEmployeeId(employeeId));
+    }
+
+    @RequestMapping(value = {"/trainer/{employeeId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
+    public String getGroupsByTrainer(@PathVariable Integer employeeId) {
+        return gson.toJson(groupsService.getAllByTrainerId(employeeId));
     }
 
 }

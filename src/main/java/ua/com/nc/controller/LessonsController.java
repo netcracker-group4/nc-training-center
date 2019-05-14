@@ -33,8 +33,15 @@ public class LessonsController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/employee/{userId}")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToSeeScheduleOf(authentication, #userId)")
-    public String getAllForUser(@PathVariable Integer userId) {
-        return lessonsService.getAllForUser(userId);
+    public String getAllForEmployee(@PathVariable Integer userId) {
+        return lessonsService.getAllForEmployee(userId);
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/trainer/{userId}")
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToSeeScheduleOf(authentication, #userId)")
+    public String getAllForTrainer(@PathVariable Integer userId) {
+        return lessonsService.getAllForETrainer(userId);
     }
 
     @ResponseBody

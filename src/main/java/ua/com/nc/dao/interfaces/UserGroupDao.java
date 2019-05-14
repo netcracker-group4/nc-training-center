@@ -4,9 +4,11 @@ import ua.com.nc.domain.UserGroup;
 
 public interface UserGroupDao extends GenericDao<UserGroup> {
 
-    void deleteAllForGroup(int groupId);
+    void deleteAllForGroup(Integer groupId);
 
     void deleteAllForUser(Integer userId);
 
-    UserGroup getByUserAndCourse(int userId, int courseId);
+    UserGroup getByUserAndCourse(Integer userId, Integer courseId);
+
+    UserGroup getByUserAndGroup(Integer userId, Integer groupId);
 }

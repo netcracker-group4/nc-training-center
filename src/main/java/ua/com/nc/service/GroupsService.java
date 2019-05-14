@@ -24,4 +24,8 @@ public interface GroupsService {
     List<DtoGroup> getGroupsAndQuantity();
 
     User getTrainer(int id);
+
+    void invertAttending(Integer userGroupId);
+
+    List<DtoGroup> getAllByTrainerId(Integer employeeId);
 }

@@ -8,9 +8,7 @@ import ua.com.nc.dao.interfaces.CourseStatus;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.dto.DtoCourse;
-import ua.com.nc.dto.schedule.GroupSchedule;
-import ua.com.nc.dto.schedule.ParsedSchedule;
-import ua.com.nc.dto.schedule.ScheduleForUser;
+import ua.com.nc.dto.schedule.*;
 import ua.com.nc.service.CourseService;
 
 import java.io.BufferedOutputStream;
@@ -42,7 +40,6 @@ public class CourseServiceImpl implements CourseService {
     private GroupDao groupDao;
     @Autowired
     private UserGroupDao userGroupDao;
-
 
     private int startOfDay = 8;
     private int endOfDay = 21;
@@ -89,10 +86,13 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<ScheduleForUser> getDesiredScheduleForUngroupedStudentsOfCourse(int courseId) throws Exception {
-        List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getAllForCourse(courseId);
+//        List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getUngroupedForCourse(courseId);
         List<ScheduleForUser> scheduleForUsers = new ArrayList<>();
         for (User user : userDao.getUngroupedByCourse(courseId)) {
-            scheduleForUsers.add(new ScheduleForUser(user,
+            UserGroup byUserAndCourse = userGroupDao.getByUserAndCourse(user.getId(), courseId);
+            List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getByUsrGroupId(byUserAndCourse.getId());
+            scheduleForUsers.add(new ScheduleForUser(byUserAndCourse.getId(), user,
+                    byUserAndCourse.isAttending(),
                     parseSchedules(desiredScheduleList, suitabilityDao.getAll()),
                     startOfDay, endOfDay));
         }
@@ -102,14 +102,16 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<GroupSchedule> getDesiredScheduleForFormedGroupsForCourse(int courseId) throws Exception {
         List<GroupSchedule> scheduleForGroupsForCourse = new ArrayList<>();
-        List<ParsedSchedule> desiredScheduleList = parseSchedules(
-                desiredScheduleDao.getAllForCourse(courseId),
-                suitabilityDao.getAll());
+        List<Suitability> all = suitabilityDao.getAll();
         List<Group> allGroupsForCourse = groupDao.getAllGroupsOfCourse(courseId);
         for (Group group : allGroupsForCourse) {
             List<ScheduleForUser> scheduleForUsersInGroup = new ArrayList<>();
             for (User user : userDao.getByGroupId(group.getId())) {
-                scheduleForUsersInGroup.add(new ScheduleForUser(user,
+                UserGroup byUserAndCourse = userGroupDao.getByUserAndCourse(user.getId(), courseId);
+                List<ParsedSchedule> desiredScheduleList = parseSchedules(
+                        desiredScheduleDao.getByUsrGroupId(byUserAndCourse.getId()), all);
+                scheduleForUsersInGroup.add(new ScheduleForUser(byUserAndCourse.getId(), user,
+                        byUserAndCourse.isAttending(),
                         desiredScheduleList, startOfDay, endOfDay));
             }
             scheduleForGroupsForCourse.add(new GroupSchedule(group.getId(), group.getTitle(),
@@ -181,10 +183,12 @@ public class CourseServiceImpl implements CourseService {
     public List<ScheduleForUser> getDesiredScheduleForGroup(int groupId) throws Exception {
         List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getAllForGroup(groupId);
         List<ScheduleForUser> scheduleForUsers = new ArrayList<>();
+        List<Suitability> all = suitabilityDao.getAll();
         for (User user : userDao.getByGroupId(groupId)) {
-            scheduleForUsers.add(new ScheduleForUser(user,
-                    parseSchedules(desiredScheduleList,
-                            suitabilityDao.getAll()),
+            UserGroup byUserAndGroup = userGroupDao.getByUserAndGroup(user.getId(), groupId);
+            scheduleForUsers.add(new ScheduleForUser(byUserAndGroup.getId(), user,
+                    byUserAndGroup.isAttending(),
+                    parseSchedules(desiredScheduleList, all),
                     startOfDay, endOfDay));
         }
         return scheduleForUsers;
@@ -194,7 +198,6 @@ public class CourseServiceImpl implements CourseService {
     public List<DtoCourse> getAllByTrainerAndEmployee(Integer trainerId, Integer employeeId) {
         List<Course> courses = courseDao.getAllCourseByTrainerAndByEmployee(trainerId, employeeId);
         List<DtoCourse> dtoCourses = new ArrayList<>();
-
         if (courses != null && !courses.isEmpty()) {
             for (Course course : courses) {
                 DtoCourse dtoCourse = new DtoCourse();
@@ -205,5 +208,32 @@ public class CourseServiceImpl implements CourseService {
         }
 
         return dtoCourses;
+    }
+
+    @Override
+    public String saveDesired(Integer id, DesiredToSave desiredToSave) {
+        Integer courseId = desiredToSave.getCourseId();
+        UserGroup userGroup = userGroupDao.getByUserAndCourse(id, courseId);
+        if (userGroup == null) {
+            userGroup = new UserGroup(id, null, courseId, true);
+            userGroupDao.insert(userGroup);
+        }
+        for (ScheduleForDay scheduleForDay : desiredToSave.getForDays()) {
+            saveForDay(id, courseId, scheduleForDay);
+        }
+        return "saved";
+    }
+
+    private void saveForDay(Integer id, Integer courseId, ScheduleForDay scheduleForDay) {
+        for (int i = startOfDay; i < endOfDay ; i++) {
+            if (scheduleForDay.getArray()[i - startOfDay] != -1) {
+                String cronInterval = "0 " + i  + " 0 " + (i + 1) + " " + scheduleForDay.getDay();
+                DesiredSchedule desiredSchedule = new DesiredSchedule(id, courseId,
+                        cronInterval, scheduleForDay.getArray()[i - startOfDay]);
+                log.info("before saving");
+                log.info(desiredSchedule);
+                desiredScheduleDao.insert(desiredSchedule);
+            }
+        }
     }
 }

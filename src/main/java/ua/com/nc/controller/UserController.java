@@ -72,10 +72,10 @@ public class UserController {
         return new ResponseEntity<>(userService.getSubordinatesOfManager(id), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}/trainers", method = RequestMethod.GET)
+    @RequestMapping(value = "/{employeeId}/trainers", method = RequestMethod.GET)
     @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
-    public ResponseEntity<?> getTrainersOfEmployee(@PathVariable Integer id) {
-        return new ResponseEntity<>(userService.getTrainersOfEmployee(id), HttpStatus.OK);
+    public ResponseEntity<?> getTrainersOfEmployee(@PathVariable Integer employeeId) {
+        return new ResponseEntity<>(userService.getTrainersOfEmployee(employeeId), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/get-all-trainers", method = RequestMethod.GET)
@@ -95,10 +95,9 @@ public class UserController {
         return new RedirectView("/");
     }
 
-    @RequestMapping(value = "{id}/getAttendanceGraph")
+    @RequestMapping(value = "{employeeId}/getAttendanceGraph")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
-    public Map<String, Double> getAttendanceGraph(@PathVariable String id){
-        int userId = Integer.parseInt(id);
-        return userService.getAttandanceGraph(userId);
+    public Map<String, Double> getAttendanceGraph(@PathVariable Integer employeeId){
+        return userService.getAttandanceGraph(employeeId);
     }
 }

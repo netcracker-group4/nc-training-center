@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-tabs fixed-tabs v-model="currentDay" centered>
+        <v-tabs v-model="currentDay" centered >
             <v-tab
                     v-for="n in days"
                     :key="n"
@@ -14,16 +14,16 @@
                     <div>
                         <table class="zui-table ">
                             <thead class="thead-dark">
-                            <tr>
+                            <tr >
                                 <th scope="col">Id</th>
                                 <th scope="col" v-bind:style="{width: '30%'}">Name</th>
                                 <th v-for="dayName in dayIntervals" scope="col">{{dayName}}</th>
                             </tr>
                             </thead>
                             <draggable v-model="allSchedules" tag="tbody" group="people">
-                                <tr v-for="item in allSchedules" :key="item.userId">
+                                <tr v-for="item in allSchedules" :key="item.userId" style="cursor: pointer">
                                     <td>{{ item.userId }}</td>
-                                    <td v-bind:style="{width: '30%'}">{{ item.userName }}</td>
+                                    <td  v-bind:class="{'notAttending': !item.isAttending}" v-bind:style="{width: '30%'}">{{ item.userName }}</td>
                                     <td v-for="forInterval in item.scheduleForIntervals"
                                         v-bind:style="{backgroundColor: getColor(forInterval)}">
                                     </td>
@@ -105,5 +105,10 @@
 </script>
 
 <style scoped>
-
+    /*noinspection CssUnusedSymbol*/
+    .notAttending {
+        background-color: #3E4347;
+        color: #cfcfcf;
+        text-decoration-line: line-through;
+    }
 </style>
