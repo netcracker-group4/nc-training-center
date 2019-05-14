@@ -100,6 +100,7 @@
             'courses'
         ],
         data:() => ({
+            valid: true,
             feedbackText: '',
             userFeedback: [],
             selectCourse: {

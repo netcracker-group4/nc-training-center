@@ -10,10 +10,7 @@ import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.User;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -118,7 +115,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, User entity) throws SQLException {
         setAllFields(statement, entity);
-        statement.setInt(8, entity.getId());
+        statement.setInt(9, entity.getId());
     }
 
     private void setAllFields(PreparedStatement statement, User entity) throws SQLException {
@@ -127,8 +124,9 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         statement.setString(3, entity.getFirstName());
         statement.setString(4, entity.getLastName());
         statement.setString(5, entity.getToken());
-        statement.setInt(6, entity.getManagerId());
-        statement.setBoolean(7, entity.isActive());
+        statement.setObject(6, entity.getCreated());
+        statement.setObject(7, entity.getManagerId(), Types.INTEGER);
+        statement.setBoolean(8, entity.isActive());
     }
 
     @Override

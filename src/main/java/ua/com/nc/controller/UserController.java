@@ -35,6 +35,9 @@ public class UserController {
                 dtoUserSave.getFirstName() != null &&
                 dtoUserSave.getLastName() != null &&
                 dtoUserSave.getPassword() != null) {
+            if (userService.getByEmail(dtoUserSave.getEmail()) != null) {
+                return ResponseEntity.ok().body("This user already exists");
+            }
             userService.add(dtoUserSave);
             return ResponseEntity.ok().body("User saved");
         } else {
