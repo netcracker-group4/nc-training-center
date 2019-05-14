@@ -75,9 +75,9 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
     private void setAllFields(PreparedStatement statement, Feedback entity) throws SQLException {
         statement.setInt(1, entity.getStudentId());
         statement.setInt(2, entity.getTrainerId());
-//        statement.setInt(3, entity.getCourseId());
-        statement.setString(3, entity.getText());
-        statement.setObject(4, entity.getTimeDate());
+        statement.setInt(3, entity.getCourseId());
+        statement.setString(4, entity.getText());
+        statement.setObject(5, entity.getTimeDate());
     }
 
     @Override

@@ -26,11 +26,23 @@
                                         placeholder="Leave feedback"
                                         v-model="feedbackText"
                                 ></v-textarea>
-                            </div>
-                        </v-container>
-                        <v-container class="v-container_button">
-                            <div style="display: flex; justify-content: flex-end;">
-                                <v-btn @click="leaveFeedback()" color="info">Submit</v-btn>
+                                <v-container class="v-container_button" style="display:flex; justify-content: flex-end; margin-top: 10px;">
+                                    <v-flex xs12 sm4 d-flex>
+                                        <v-select
+                                                v-model="selectCourse.id"
+                                                :items="courses"
+                                                item-text="name"
+                                                item-value="id"
+                                                box
+                                                height="20"
+                                                background-color="white"
+                                                label="Select course"
+                                        ></v-select>
+                                    </v-flex>
+                                    <div style="margin: 10px 0 0 30px;">
+                                        <v-btn @click="leaveFeedback()" color="info">Submit</v-btn>
+                                    </div>
+                                </v-container>
                             </div>
                         </v-container>
                     </template>
@@ -78,9 +90,17 @@
             'user',
             'courses'
         ],
+        // props: {user: {}, courses : Array},
         data:() => ({
             feedbackText: '',
             userFeedback: [],
+            selectCourse: {
+                id: ''
+            },
+            defaultSelectCourse: {
+                id: ''
+            },
+            coursesName: [],
             rows: [3,5,10,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}]
         }),
         methods: {
@@ -88,18 +108,20 @@
                 return store.state.user;
             },
             canShowLeaveFeedbackBlock() {
-                return store.state.userRoles.includes("TRAINER");
+                return store.state.userRoles.includes("TRAINER") && this.courses.length > 0;
             },
             leaveFeedback() {
                 let self = this;
+                console.log(self.selectCourse);
                 axios.post('http://localhost:8080/feedback/add', {
                     studentId: this.user.id,
                     teacher: this.getAuthorizationUser(),
+                    course: this.selectCourse,
                     text: this.feedbackText,
                 })
                 .then(response => {
-                    // self.userFeedback = response.data;
                     self.feedbackText = '';
+                    self.selectCourse = Object.assign({}, self.defaultSelectCourse);
                     console.log(response);
                     if (this.isNotOnlyTrainer()) {
                         this.getAllFeedback();
