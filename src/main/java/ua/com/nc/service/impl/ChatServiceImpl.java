@@ -59,5 +59,10 @@ public class ChatServiceImpl implements ChatService {
         return chatDao.getChatsByUserId(userId);
     }
 
+    @Override
+    public Chat getByUserIdAndChatId(Integer userId, Integer chatId) {
+        return chatDao.getByUserIdAndChatId(userId, chatId);
+    }
+
 
 }

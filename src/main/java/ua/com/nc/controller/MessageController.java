@@ -7,10 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.interfaces.ChatDao;
+import ua.com.nc.domain.Chat;
 import ua.com.nc.domain.Message;
+import ua.com.nc.domain.User;
+import ua.com.nc.exceptions.CustomAccessDeniedHandler;
 import ua.com.nc.service.ChatService;
 import ua.com.nc.service.MessageService;
 
@@ -32,24 +37,34 @@ public class MessageController {
 
     @MessageMapping("/message")
     @SendTo("/topic/msg")
-    public String getMessage(String json){
+    public String getMessage(@AuthenticationPrincipal User user,
+                            String json){
         Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd.HH.mm.ss").serializeNulls().create();
-        //log.debug(chatId + " " + senderId + " " + text);
-        //Message message = new Message(chatId, senderId, new Timestamp(System.currentTimeMillis()), text);
         Message message = gson.fromJson(json, Message.class);
-        message.setDateTime(new Timestamp(System.currentTimeMillis()));
-        Integer messageId = chatService.addMessage(message, null);
-        message.setId(messageId);
-        log.debug(message);
-        return gson.toJson(message);
+        Chat chat = chatService.getByUserIdAndChatId(user.getId(), message.getChatId());
+        if(chat != null){
+            message.setDateTime(new Timestamp(System.currentTimeMillis()));
+            Integer messageId = chatService.addMessage(message, null);
+            message.setId(messageId);
+            return gson.toJson(message);
+        }else{
+            throw new AccessDeniedException("Access denied");
+        }
     }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/messages")
-    public ResponseEntity<?> getAll(@RequestParam(name="chatId") Integer chatId){
+    public ResponseEntity<?> getAll(@AuthenticationPrincipal User user,
+                                    @RequestParam(name="chatId") Integer chatId){
         Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd.HH.mm.ss").serializeNulls().create();
-        List<Message> messages = messageService.getMessagesByChatId(chatId);
-        return ResponseEntity.ok().body(gson.toJson(messages));
+        Chat chat = chatService.getByUserIdAndChatId(user.getId(), chatId);
+        if(chat != null){
+            List<Message> messages = messageService.getMessagesByChatId(chatId);
+            return ResponseEntity.ok().body(gson.toJson(messages));
+        }else{
+            return ResponseEntity.badRequest().body("Access denied");
+        }
+
     }
 
     @ResponseBody

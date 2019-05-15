@@ -9,4 +9,6 @@ public interface ChatService {
     Integer addMessage(Message message, Integer receiverId);
 
     List<Chat> getChatsByUserId(Integer userId);
+
+    Chat getByUserIdAndChatId(Integer userId, Integer chatId);
 }

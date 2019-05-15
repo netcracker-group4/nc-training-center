@@ -13,4 +13,6 @@ public interface ChatDao extends GenericDao<Chat> {
     void addUserToChat(Integer chatId, Integer userId);
 
     List<Chat> getChatsByUserId(Integer userId);
+
+    Chat getByUserIdAndChatId(Integer userId, Integer chatId);
 }

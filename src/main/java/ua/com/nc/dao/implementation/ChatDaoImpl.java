@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ChatDao;
 import ua.com.nc.domain.Chat;
-import ua.com.nc.domain.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -31,6 +30,9 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
 
     @Value("${chat.select-by-user-id}")
     private String chatSelectByUserId;
+
+    @Value("${chat.select-by-user-id-and-chat-id}")
+    private String chatSelectByUserIdAndChatId;
 
     @Autowired
     public ChatDaoImpl(DataSource dataSource) throws PersistException {
@@ -124,5 +126,26 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
             e.printStackTrace();
         }
         return chats;
+    }
+
+    @Override
+    public Chat getByUserIdAndChatId(Integer userId, Integer chatId) {
+        List<Chat> chats = null;
+        String sql = chatSelectByUserIdAndChatId;
+        log.info(sql + "get chat by user id and chat id");
+        try(PreparedStatement statement = connection.prepareStatement(chatSelectByUserIdAndChatId)) {
+            statement.setInt(1, userId);
+            statement.setInt(2, chatId);
+            ResultSet resultSet = statement.executeQuery();
+            chats = parseResultSet(resultSet);
+        } catch (SQLException e) {
+            log.trace(e);
+            e.printStackTrace();
+        }
+        if(chats != null && chats.size() > 0){
+            return chats.get(0);
+        }else{
+            return null;
+        }
     }
 }

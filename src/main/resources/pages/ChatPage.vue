@@ -1,7 +1,27 @@
 <template>
     <v-container>
-        {{messages}}
-        <v-btn @click="send"></v-btn>
+       <div v-for="message in messages">
+           <v-layout v-if="message.senderId == self.$store.state.user.id" class="message-line">
+               <v-flex xs4 offset-xs8 >
+                   <v-card>
+                       <v-card-text>
+                           <div class="message-right">{{message.text}}</div>
+                           <div class="message-right date">{{message.dateTime}}</div>
+                       </v-card-text>
+                   </v-card>
+               </v-flex>
+           </v-layout>
+           <v-layout v-if="message.senderId != self.$store.state.user.id" class="message-line">
+               <v-flex xs4>
+                   <v-card>
+                       <v-card-text>
+                           {{message.text}}
+                           <div class="date">{{messageDate(message.dateTime)}}</div>
+                       </v-card-text>
+                   </v-card>
+               </v-flex>
+           </v-layout>
+       </div>
         <v-footer fixed
                   height="150"
                   color="grey lighten-2">
@@ -27,6 +47,7 @@
         components: {},
         data(){
             return {
+                self: this,
                 message: '',
                 messages: []
             }
@@ -47,9 +68,12 @@
                     msg.chatId = id
                     msg.senderId = this.$store.state.user.id
                     msg.text = this.message
-                    //sendMessage(msg)
-                    alert(msg.text)
+                    sendMessage(msg)
+                    this.message = ''
                 }
+            },
+            messageDate(date){
+                return date.substr(0, 10) + ' at ' + date.substr(11, 2) + ':' + date.substr(14, 2)
             }
         },
         watch:{
@@ -69,5 +93,16 @@
     }
     .btn-area{
         margin-right: 10%;
+    }
+    .message-line{
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .message-right{
+        text-align: right;
+    }
+    .date{
+        margin-top: 10px;
+        color: #9a9a9a;
     }
 </style>
