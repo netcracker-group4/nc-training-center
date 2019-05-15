@@ -6,6 +6,9 @@
                 <b>Trainer</b>
                 <b class="clickable" @click="forwardToUserPage(teacher.id)">{{teacher.firstName}} {{teacher.lastName}}</b>
             </p>
+            <v-icon v-if="hasRights()"  @click="forwardToGroupSchedulePage" >
+                event
+            </v-icon>
         </div>
         <div>Group with  {{ id }}  number</div>
         <v-data-table
@@ -29,6 +32,21 @@
                 </tr>
             </template>
         </v-data-table>
+        <v-data-table
+                :headers="headers2"
+                :items="lessons"
+                :expand="true"
+                item-key="id"
+                no-data-text = "No lessons available"
+        >
+            <template v-slot:items="props">
+                <tr class="clickable" @click="forwardToLessonPage(props.item.id)">
+                    <td class="my-link">
+                        <div>{{ props.item.topic}}</div>
+                    </td>
+                </tr>
+            </template>
+        </v-data-table>
         <v-container v-if="$store.getters.isAdmin || $store.getters.isTrainer">
             <group-attendance class="margin" :groupId="id"/>
         </v-container>
@@ -36,7 +54,8 @@
 </template>
 
 <script>
-    import axios from 'axios'
+    import axios from 'axios';
+    import store from '../store/store.js';
     import GroupAttendance from "../components/GroupAttendance.vue";
 
     export default {
@@ -48,6 +67,7 @@
                 students: [],
                 teacher: [],
                 course: [],
+                lessons:[],
                 headers: [
                     {
                         text: 'Student Id',
@@ -67,6 +87,12 @@
                         width: "30", align: 'right'
                     }
                 ],
+                headers2: [
+                    {   text: 'Lesson topic',
+                        align: 'left',
+                        value: 'topic'
+                    }
+                ],
                 isAdmin: this.$store.getters.isAdmin,
             }
         },
@@ -77,6 +103,11 @@
                         .then(function (response) {
                         });
                 }
+            },
+            hasRights(){
+                if(store.getters.isAdmin)
+                    return true
+                return store.getters.user.id == this.trainer.id;
             },
             findUserById(id){
                 return this.students.find(s => s.id === id);
@@ -101,12 +132,25 @@
                     }).catch(function (error) {
                     console.log(error);
                 });
+                axios.get('http://localhost:8080/schedule/'+self.id)
+                    .then(function (response) {
+                        self.lessons = response.data;
+                    }).catch(function (error) {
+                    console.log(error);
+                });
             },
             forwardToUserPage(id){
                 this.$router.push('/userpage/' + id)
             },
             forwardToTrainerPage(id){
                 this.$router.push('/trainers/' + id)
+            },
+            forwardToLessonPage(id){
+                this.$router.push('/lesson/' + id)
+            },
+            forwardToGroupSchedulePage(){
+                let self = this;
+                this.$router.push('/groups/' + self.id + '/schedule')
             }
 
         },
