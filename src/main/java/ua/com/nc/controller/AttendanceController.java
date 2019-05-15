@@ -26,11 +26,17 @@ public class AttendanceController {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getAttendance(@RequestParam(required = false, name = "userId") Integer userId,
                                            @RequestParam(required = false, name = "courseId") Integer courseId,
-                                           @RequestParam(required = false, name = "groupId") Integer groupId) {
+                                           @RequestParam(required = false, name = "groupId") Integer groupId,
+                                           @RequestParam(required = false, name = "lessonId") Integer lessonId) {
 
         if (userId != null && courseId != null) {
             List<Attendance> attendances = attendanceService.getAttendanceByStudentIdAndCourseId(userId, courseId);
             return ResponseEntity.ok().body(new Gson().toJson(attendances));
+        }
+        if (groupId != null && lessonId != null) {
+            Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+            List<Attendance> attendances = attendanceService.getAttendanceByGroupIdAndLessonId(groupId, lessonId);
+            return ResponseEntity.ok().body(gson.toJson(attendances));
         }
         if (userId != null && groupId != null) {
             Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();

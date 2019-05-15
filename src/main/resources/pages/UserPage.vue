@@ -27,7 +27,6 @@
                            :trainers="trainers"/>
 
             <subordinates-component v-if="canShowManagersSubordinates()"/>
-            {{ courses }}
         </v-container>
     </div>
 </template>

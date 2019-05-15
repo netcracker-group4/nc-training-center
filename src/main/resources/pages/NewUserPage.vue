@@ -9,9 +9,9 @@
                         <v-container @click="showBlockManagerAndTrainer" class="con_user_block" :class="{active: showBlock === 1}">
                             <NewUserMT></NewUserMT>
                         </v-container>
-                        <v-container @click="showBlockEmployee" class="con_user_block" :class="{active: showBlock === 2}">
-                            <NewUserE></NewUserE>
-                        </v-container>
+<!--                        <v-container @click="showBlockEmployee" class="con_user_block" :class="{active: showBlock === 2}">-->
+<!--                            <NewUserE></NewUserE>-->
+<!--                        </v-container>-->
                     </v-container>
                 </v-flex>
             </v-layout>
@@ -58,7 +58,7 @@
         background: white;
         display: flex;
         margin: 0 auto 0;
-        width: 100%;
+        width: 50%;
     }
     .con_user_block {
         margin: 0 auto 0;

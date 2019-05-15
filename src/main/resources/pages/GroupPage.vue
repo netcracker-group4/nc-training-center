@@ -4,7 +4,7 @@
             <b>{{course.name}}</b>
             <p>
                 <b>Trainer</b>
-                <b @click="forwardToTrainerPage(teacher.id)">{{teacher.firstName}} {{teacher.lastName}}</b>
+                <b class="clickable" @click="forwardToUserPage(teacher.id)">{{teacher.firstName}} {{teacher.lastName}}</b>
             </p>
         </div>
         <div>Group with  {{ id }}  number</div>
@@ -14,30 +14,35 @@
             :expand="true"
             item-key="id"
         >
-        <template v-slot:items="props" >
-            <tr @click="forwardToUserPage(props.item.id)">
-                <td class="my-link">
-                    <div>{{ props.item.id }}</div>
-                </td>
-                <td class="text-xs-left">{{ props.item.firstName +' '+ props.item.lastName }}</td>
-                <td class="text-xs-left" v-if="isAdmin">
-                    {{props.item.email}}
-                </td>
-                <td class="text-xs-right" v-if="isAdmin">
-                    <v-btn color="error" @click="deleteStudent(props.item.id)" v-if="isAdmin">Delete</v-btn>
-                </td>
-            </tr>
-        </template>
-    </v-data-table>
+            <template v-slot:items="props" >
+                <tr class="clickable" @click="forwardToUserPage(props.item.id)">
+                    <td >
+                        <div>{{ props.item.id }}</div>
+                    </td>
+                    <td class="text-xs-left clickable">{{ props.item.firstName +' '+ props.item.lastName }}</td>
+                    <td class="text-xs-left" v-if="isAdmin">
+                        {{props.item.email}}
+                    </td>
+                    <td class="text-xs-right" v-if="isAdmin">
+                        <v-btn color="error" @click="deleteStudent(props.item.id)" v-if="isAdmin">Delete</v-btn>
+                    </td>
+                </tr>
+            </template>
+        </v-data-table>
+        <v-container v-if="$store.getters.isAdmin || $store.getters.isTrainer">
+            <group-attendance class="margin" :groupId="id"/>
+        </v-container>
     </div>
 </template>
 
 <script>
     import axios from 'axios'
+    import GroupAttendance from "../components/GroupAttendance.vue";
 
     export default {
         props: ['id'],
         name: "GroupPage",
+        components: {GroupAttendance},
         data: function(){
             return{
                 students: [],
@@ -58,7 +63,7 @@
                         width: "40", align: 'right'
                     },
                     {
-                        text: 'action',
+                        text: 'action', value: 'action',
                         width: "30", align: 'right'
                     }
                 ],
@@ -109,7 +114,7 @@
             let self = this;
             console.log(self);
             self.setGroup();
-            //alert((self.$store.state.userRoles.find(r => r === "TRAINER")));
+            //alert((self.$store.state.userRoles.find(r => r === "TRAINER"))); //self.$store.getters.isTrainer
             console.log(self);
             /*if(!((self.$store.state.userRoles.find(r => r === "TRAINER")) || self.isAdmin)){
                 alert("You don`t have permission");
@@ -121,5 +126,10 @@
 </script>
 
 <style scoped>
-
+    .clickable {
+        cursor: pointer;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        color: black;
+    }
 </style>
