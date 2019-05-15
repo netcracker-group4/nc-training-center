@@ -15,7 +15,7 @@
                             :items="allUsers"
                             :expand="true"
                             item-key="id"
-                    >
+                    >v-if
                         <template v-slot:items="props">
                             <tr class="my-link" @click="goToUserPage(props.item.id)">
                                 <td>
