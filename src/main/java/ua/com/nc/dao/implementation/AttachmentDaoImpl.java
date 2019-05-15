@@ -29,11 +29,12 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
     private String attachmentDelete;
     @Value("${attachment.insert}")
     private String attachmentInsert;
-    @Value("${attachment.select-by-url}")
-    private String attachmentSelectByUrl;
+    @Value("${attachment.select-by-name}")
+    private String attachmentSelectByName;
     @Value("${attachment.select-by-lesson-id}")
     private String attachmentSelectByLessonId;
-
+    @Value("${attachment.select-by-trainer-id}")
+    private String attachmentSelectByTrainerId;
 
     @Autowired
     public AttachmentDaoImpl(DataSource dataSource) throws PersistException {
@@ -67,7 +68,9 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
 
     private void setAllFields(PreparedStatement statement, Attachment entity) throws SQLException {
         statement.setString(1, entity.getUrl());
-        statement.setString(2, entity.getDescription());
+        statement.setString(2,entity.getName());
+        statement.setInt(3,entity.getTrainerId());
+        statement.setString(4, entity.getDescription());
 
     }
 
@@ -77,17 +80,19 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
         while (rs.next()) {
             Integer id = rs.getInt("id");
             String url = rs.getString("url");
+            Integer trainerId = rs.getInt("trainer_id");
+            String name = rs.getString("name");
             String description = rs.getString("description");
-            Attachment attachment = new Attachment(id, url, description);
+            Attachment attachment = new Attachment(id, url, name, trainerId, description);
             attachments.add(attachment);
         }
         return attachments;
     }
 
     @Override
-    public Attachment getByUrl(String url) throws PersistException {
-        String sql = attachmentSelectByUrl;
-        log.info(sql + " SelectByUrlQuery " + url);
+    public Attachment getByName(String url) throws PersistException {
+        String sql = attachmentSelectByName;
+        log.info(sql + " SelectByNameQuery " + url);
         return getUniqueFromSqlByString(sql, url);
     }
 
@@ -96,6 +101,12 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
     public List<Attachment> getByLessonId(Integer lessonId) {
         String sql = attachmentSelectByLessonId;
         return getFromSqlById(sql, lessonId);
+    }
+
+    @Override
+    public List<Attachment> getByTrainerId(Integer trainerId) {
+        String sql = attachmentSelectByTrainerId;
+        return getFromSqlById(sql, trainerId);
     }
 
 

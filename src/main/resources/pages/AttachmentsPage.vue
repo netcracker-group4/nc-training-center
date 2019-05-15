@@ -18,6 +18,9 @@
                                 <td>
                                     <v-btn color="green" @click="downloadFile(props.item.id)">Download</v-btn>
                                 </td>
+                                <td>
+                                    <v-btn color="error" @click="deleteFile(props.item.id)">Delete</v-btn>
+                                </td>
                             </tr>
                         </template>
                     </v-data-table>
@@ -55,14 +58,14 @@
             AttachmentUpload
         },
         mounted() {
-                    let self = this;
+            let self = this;
             axios.get('http://localhost:8080/attachments/all')
-                            .then(function (response) {
-                                self.attachments= response.data;
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+            .then(function (response) {
+                self.attachments= response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         },
         methods:{
             uploadFile(){
@@ -78,8 +81,15 @@
             },
             downloadFile(Id){
                 window.open('http://localhost:8080/attachments/download/'+Id);
-            }
+            },
 
+            deleteFile(fileId){
+                axios.delete('http://localhost:8080/attachments/' + fileId)
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+            }
         }
     }
 </script>

@@ -12,7 +12,7 @@
                             :items="courses"
                             class="elevation-1">
                         <template v-slot:items="props">
-                            <td class="clickable" v-on:click="goToCoursePage(props.item.courseId)">
+                            <td class="clickable" v-on:click="goToCoursePage(props.item.id)">
                                 {{props.item.name }}
                             </td>
                             <td class="text-xs-right">

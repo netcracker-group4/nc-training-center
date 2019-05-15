@@ -19,17 +19,17 @@ export default new Vuex.Store({
             return state.user
         },
         isAdmin: state => {
-            if ( userRoles !== undefined && userRoles != null) {
+            if (userRoles !== undefined && userRoles != null) {
                 return state.userRoles.includes('ADMIN')
             } else return false
         },
         isTrainer: state => {
-            if(userRoles != null && userRoles != undefined){
+            if(userRoles !== undefined && userRoles != null){
                 return state.userRoles.includes('TRAINER')
             }else return false
         },
         isManager: state => {
-            if(userRoles != null && userRoles != undefined){
+            if(userRoles !== undefined && userRoles != null){
                 return state.userRoles.includes('MANAGER')
             }else return false
         },

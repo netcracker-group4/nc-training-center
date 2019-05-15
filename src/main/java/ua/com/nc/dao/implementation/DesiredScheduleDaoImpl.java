@@ -31,6 +31,8 @@ public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> imp
     private String desirableScheduleSelectUngroupedByCourseId;
     @Value("${desirable.schedule.select-by-group-id}")
     private String desirableScheduleSelectByGroupId;
+    @Value("${desirable.schedule.select-by-usr-group-id}")
+    private String desirableScheduleSelectByUsrGroupId;
 
     @Autowired
     public DesiredScheduleDaoImpl(DataSource dataSource) throws PersistException {
@@ -91,4 +93,11 @@ public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> imp
         return getFromSqlById(sql, courseId);
     }
 
+
+    @Override
+    public List<DesiredSchedule> getByUsrGroupId(Integer id) {
+        String sql = desirableScheduleSelectByUsrGroupId;
+        log.info(sql + "" + "find all by groupId " + id);
+        return getFromSqlById(sql, id);
+    }
 }

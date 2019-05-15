@@ -81,7 +81,7 @@ public class GroupController {
     @RequestMapping(value = "/{id}")
     @ResponseBody
     public String getGroup(@PathVariable Integer id) {
-        return gson.toJson(groupDao.getEntityById(id));
+        return gson.toJson(groupsService.getGroupById(id));
     }
 
     @RequestMapping(value = "/{id}/users", method = RequestMethod.GET)
@@ -121,6 +121,13 @@ public class GroupController {
     @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
     public String getGroupsByUser(@PathVariable Integer employeeId) {
         return gson.toJson(groupsService.getAllByEmployeeId(employeeId));
+    }
+
+    @RequestMapping(value = {"/trainer/{employeeId}"}, method = RequestMethod.GET)
+    @ResponseBody
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
+    public String getGroupsByTrainer(@PathVariable Integer employeeId) {
+        return gson.toJson(groupsService.getAllByTrainerId(employeeId));
     }
 
 }

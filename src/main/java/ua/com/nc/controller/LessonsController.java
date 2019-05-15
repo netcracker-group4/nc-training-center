@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ua.com.nc.dao.interfaces.LessonDao;
 import ua.com.nc.dto.DateDeserializer;
 import ua.com.nc.dto.DtoLesson;
 import ua.com.nc.service.LessonsService;
@@ -22,6 +23,10 @@ public class LessonsController {
 
     @Autowired
     LessonsService lessonsService;
+    @Autowired
+    LessonDao lessonDao;
+
+    private final Gson gson = new Gson();
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/{groupId}")
@@ -71,5 +76,12 @@ public class LessonsController {
     public String cancelLesson(@PathVariable Integer lessonId) {
         return lessonsService.cancelLesson(lessonId);
     }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/lesson/{lessonId}")
+    public String getLesson(@PathVariable String lessonId){
+        return gson.toJson(lessonDao.getEntityById(Integer.parseInt(lessonId)));
+    }
+
 
 }

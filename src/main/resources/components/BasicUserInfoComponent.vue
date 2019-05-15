@@ -326,6 +326,7 @@
 
     .cursor {
         cursor: pointer;
+        margin-right: 10px;
     }
     .message-textarea{
         margin-top: 20px;

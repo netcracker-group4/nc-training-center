@@ -31,6 +31,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         Feedback feedback = new Feedback();
         feedback.setStudentId(dtoFeedback.getStudentId());
         feedback.setTrainerId(dtoFeedback.getTeacher().getId());
+        feedback.setCourseId(dtoFeedback.getCourse().getId());
         feedback.setText(dtoFeedback.getText());
         feedback.setTimeDate(OffsetDateTime.now());
 

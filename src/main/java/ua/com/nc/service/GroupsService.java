@@ -1,7 +1,6 @@
 package ua.com.nc.service;
 
 
-import ua.com.nc.domain.Group;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoGroup;
 import ua.com.nc.dto.schedule.GroupSchedule;
@@ -15,7 +14,7 @@ public interface GroupsService {
 
     int add(GroupSchedule groupSchedule);
 
-    Group getGroupById(int groupId);
+    DtoGroup getGroupById(int groupId);
 
     List<DtoGroup> getAll();
 
@@ -26,4 +25,6 @@ public interface GroupsService {
     User getTrainer(int id);
 
     void invertAttending(Integer userGroupId);
+
+    List<DtoGroup> getAllByTrainerId(Integer employeeId);
 }

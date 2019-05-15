@@ -22,6 +22,7 @@ public class FeedbackController {
         if (dtoFeedback != null &&
                 dtoFeedback.getTeacher() != null &&
                 dtoFeedback.getStudentId() != null &&
+                dtoFeedback.getCourse() != null &&
                 dtoFeedback.getText() != null) {
             feedbackService.add(dtoFeedback);
             return ResponseEntity.ok().body("Feedback saved");

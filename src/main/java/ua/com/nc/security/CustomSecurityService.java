@@ -6,12 +6,16 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import ua.com.nc.dao.implementation.UserGroupDaoImpl;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.Lesson;
 import ua.com.nc.domain.Role;
 import ua.com.nc.domain.User;
+import ua.com.nc.domain.UserGroup;
 import ua.com.nc.dto.DateDeserializer;
 import ua.com.nc.dto.DtoLesson;
+import ua.com.nc.dto.schedule.DesiredToSave;
+import ua.com.nc.exceptions.LogicException;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -29,6 +33,23 @@ public class CustomSecurityService {
     private LessonDao lessonDao;
     @Autowired
     private GroupDao groupDao;
+    @Autowired
+    private UserGroupDaoImpl userGroupDao;
+
+    public boolean hasAdminRole(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return user.getRoles().contains(Role.ADMIN);
+    }
+
+    public boolean hasManagerRole(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return user.getRoles().contains(Role.MANAGER);
+    }
+
+    public boolean hasTrainerRole(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return user.getRoles().contains(Role.TRAINER);
+    }
 
     public boolean hasPermissionToSeeScheduleOf(Authentication authentication, Integer userId) {
         User user = (User) authentication.getPrincipal();
@@ -76,7 +97,17 @@ public class CustomSecurityService {
 
     public boolean hasPermissionToRetrieveGroups(Authentication authentication, Integer employeeId) {
         log.info(employeeId);
-        return roleDao.findAllByUserId(employeeId).contains(Role.EMPLOYEE);
+        return roleDao.findAllByUserId(employeeId).contains(Role.EMPLOYEE) ||
+                roleDao.findAllByUserId(employeeId).contains(Role.TRAINER);
+    }
+
+    public boolean canJoinCourse(Authentication authentication, DesiredToSave desiredToSave) throws LogicException {
+        User user = (User) authentication.getPrincipal();
+        UserGroup userGroup = userGroupDao.getByUserAndCourse(user.getId(), desiredToSave.getCourseId());
+        if (userGroup != null) {
+            throw new LogicException("You can join course only once");
+        }
+        return true;
     }
 
 

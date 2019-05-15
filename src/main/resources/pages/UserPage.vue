@@ -9,12 +9,11 @@
 
             <users-attendance v-if="canShowAttendance()" class="margin" :user="user" :groups="groups"/>
 
-            <feedback-component v-if="canShowFeedbacks()" class="margin" :user="user"/>
+            <feedback-component v-if="canShowFeedbacks()" class="margin" :user="user" :courses="courses"/>
 
             <calendar-list-schedule-component v-if="canShowSchedule()"
                                               class="margin" :groups-list="groups"
                                               :lessons-list="lessons"
-                                              :previously-selected="getArray(groups)"
                                               :component-header="getScheduleComponentHeader()"/>
 
             <users-groups-and-courses v-if="canShowCoursesAndGroups()"
@@ -43,7 +42,6 @@
     import UsersCourses from "../components/UsersCourses.vue";
     import SubordinatesComponent from "../components/SubordinatesComponent.vue";
     import UserAttendanceProgress from "../components/UserAttendanceProgress.vue";
-
     export default {
         components: {
             UsersAttendance,
@@ -76,6 +74,7 @@
                 absenceReasons: [],
                 trainers: [],
                 groups: [],
+                courses: []
             }
         },
         methods: {
@@ -83,7 +82,10 @@
                 if (this.user.roles !== undefined)
                     return this.user.roles.includes('EMPLOYEE');
             },
-
+            isTrainer() {
+                if (this.user.roles !== undefined)
+                    return this.user.roles.includes('TRAINER');
+            },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
                     timeout: 2000,
@@ -122,7 +124,7 @@
                 return (this.user.roles !== undefined) &&
                     ((store.state.userRoles.includes("ADMIN")) ||
                         (store.state.userRoles.includes("MANAGER") && store.state.user.id === this.user.dtoManager.id) ||
-                        (store.state.userRoles.includes("TRAINER")) ||
+                        (store.state.userRoles.includes("TRAINER") && this.courses.length > 0) ||
                         (store.state.userRoles.includes("EMPLOYEE") && store.state.user.id === this.user.id)) &&
                     (this.user.roles.includes("EMPLOYEE"));
             },
@@ -178,6 +180,9 @@
                         if (self.canShowSchedule()) {
                             self.loadSchedule();
                         }
+                        if (self.isTrainer) {
+                            self.loadCourses();
+                        }
                     }).catch(function (error) {
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
@@ -188,6 +193,14 @@
                 let role;
                 if(this.user.roles.includes('TRAINER')){
                     role = 'trainer/';
+                    axios.get('http://localhost:8080/groups/trainer/' + this.$route.params.id)
+                        .then(function (response) {
+                            self.groups = response.data;
+                            console.log(response.data);
+                        }).catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
                 }else role = 'employee/';
                 axios.get('http://localhost:8080/schedule/' + role + this.$route.params.id)
                     .then(function (response) {
@@ -229,6 +242,19 @@
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
                 });
+            },
+            loadCourses() {
+                let self = this;
+                let id = this.$route.params.id;
+                axios.get('http://localhost:8080/getcourses/get-all-courses-by-trainer-and-employee?trainerId=' +
+                    store.state.user.id + "&employeeId=" + id)
+                    .then(function (response) {
+                        self.courses = response.data;
+                        console.log(self.courses)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
         }
         ,
@@ -258,7 +284,6 @@
         /*border-bottom: 2px solid #e6e4ee;*/
         border-left: none;
     }
-
     .table_user td {
         border-right: 20px solid white;
         border-left: 20px solid white;
@@ -266,11 +291,9 @@
         padding: 12px 10px;
         color: #8b8e91;
     }
-
     .table_user tr:last-child td {
         border-bottom: none;
     }
-
     .margin {
         margin-top: 30px;
         margin-bottom: 30px;

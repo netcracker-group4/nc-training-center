@@ -19,7 +19,7 @@ import java.sql.SQLException;
 @PropertySource("classpath:sql_queries.properties")
 public class CourseStatusDaoImpl implements CourseStatus {
 
-    @Value("${status.select-id-by-name")
+    @Value("${status.select-id-by-name}")
     private String getStatusByName;
     @Value("${status.select-name-by-id}")
     private String getStatusById;

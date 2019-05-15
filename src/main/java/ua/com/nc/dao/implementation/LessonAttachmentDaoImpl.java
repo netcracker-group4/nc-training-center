@@ -30,6 +30,8 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
     private String deleteAllByLessonId;
     @Value("${lesson_attachment.delete}")
     private String lessonAttachmentDelete;
+    @Value("${lesson_attachment.unlink}")
+    private String lessonAttachmentUnlink;
 
     @Autowired
     public LessonAttachmentDaoImpl(DataSource dataSource) throws PersistException {
@@ -104,6 +106,20 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForInsert(statement, lessonAttachment);
             statement.execute();
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+    }
+
+    @Override
+    public void unlink(Integer lessonId, Integer attachmentId) {
+        String sql = lessonAttachmentUnlink;
+        log.info(sql + "LOG unlink " + "lessonId: " + lessonId + ", attachmentId: " + attachmentId);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1,attachmentId);
+            statement.setInt(2, lessonId);
+            statement.executeUpdate();
         } catch (Exception e) {
             log.trace(e);
             throw new PersistException(e);
