@@ -142,7 +142,7 @@
                                 .catch(function (error) {
                                     console.log(error);
                                 });
-            axios.get('http://localhost:8080/attachments/all')
+            axios.get('http://localhost:8080/attachments/lesson/' + this.$route.params.id)
             .then(function (response) {
                 self.attachments= response.data;
             })
