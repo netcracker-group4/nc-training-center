@@ -14,4 +14,5 @@ public interface LessonAttachmentDao extends GenericDao<LessonAttachment> {
 
     void insertAttachment(LessonAttachment lessonAttachment) throws PersistException;
 
+    void unlink(Integer lessonId, Integer attachmentId);
 }

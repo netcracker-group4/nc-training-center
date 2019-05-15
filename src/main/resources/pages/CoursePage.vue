@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <div class="title mb-1">{{name}}</div>
 
@@ -11,27 +11,7 @@
                         <v-layout column>
                             <div class="subheading pt-3"> <b>{{courseStatus}}</b>
                              <b>{{level.title}}</b>
-                                <<!--v-dialog v-model="dialog" max-width="500px">
-                                    <template v-slot:activator="{ on }">
-                                        <v-icon
-                                                class="mr-4"
-                                                @click="editStatus()"
-                                        >
-                                            edit
-                                        </v-icon>
-                                    </template>
-                                    <v-card>
-
-                                        <v-select
-                                                    v-model="courseStatus"
-                                                    item-value="id"
-                                                    :items="statuses"
-                                                    item-text="courseStatus"
-                                                    :menu-props="{ maxHeight: '300' }"
-                                                    label="Change status"
-                                            ></v-select>
-                                    </v-card>
-                                </v-dialog>-->
+                                <v-btn v-if="this.$store.getters.userRoles.includes('EMPLOYEE')" @click="sign()">Sign course</v-btn>
                             </div>
                             <!--<v-img sizes="" src="https://picsum.photos/510/300?random" aspect-ratio="2" wight="100%"></v-img>-->
                             <v-img :src="'../'+'img/'+imageUrl+'.jpg'" aspect-ratio="2"></v-img>
@@ -49,29 +29,32 @@
                     </v-flex>
                     <v-flex  xs5 offset-xs0 offset-lg0 style="margin-left: 2%">
                         <v-layout column>
-                            <div class="subheading pt-3"> <b>Trainers</b></div>
+                            <div class="subheading pt-3"> <b>Trainer</b></div>
                             <div v-for="tr in trainer" > <b @click="goTrainerPage(tr.id)"> {{tr.firstName }}   {{tr.lastName}} </b>
-                               <!-- <v-select
-                                        v-if="isAdmin"
-                                    v-model="trainer"
-                                    :items="trainers"
-                                    :label=this.trainer.firstName
-                            >
-                                    <template slot="selection" slot-scope="trainers">
-                                        {{ trainers.item.firstName }} {{ trainers.item.lastName }}
-                                    </template>
-                                    <template slot="item" slot-scope="trainers">
-                                        {{ trainers.item.firstName }} {{ trainers.item.lastName }}
-                                    </template>
-                                </v-select>-->
                             </div>
                             <div class="subheading pt-3">
                                 <b>Groups</b> <v-btn v-if="isAdmin" @click="manageGroups()">Manage groups</v-btn>
                             </div>
-                            <div v-for="group in groups">
-                                <b @click="goGroupPage(group.id)" >{{group.title}}</b>
-                                <v-btn v-if="isAdmin" @click="manageSchedule(group.id)">Manage schedule</v-btn>
-                            </div>
+                            <v-data-table
+                                    :headers="headers"
+                                    :items="groups"
+                                    :expand="true"
+                                    item-key="id"
+                            >
+                                <template v-slot:items="props">
+                                    <tr>
+                                        <td class="my-link">
+                                            <div @click="">{{ props.item.id }}</div>
+                                        </td>
+                                        <td class="my-link clickable">
+                                            <div @click="goToGroupPage(props.item.id)">{{props.item.title}}</div>
+                                        </td>
+                                        <td class="text-xs-right">
+                                            <v-btn v-if="isAdmin" @click="manageSchedule(props.item.id)">Manage schedule</v-btn>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </v-data-table>
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -107,6 +90,7 @@
         name: "CoursePage",
         data() {
             return{
+                id: this.$route.params.id,
                 name: null,
                 levelId: null,
                 level: null,
@@ -123,13 +107,27 @@
                 isAdmin: this.$store.getters.isAdmin,
                 trainers: null,
                 dialog: null,
-                statuses:[]
+                statuses:[],
+                headers: [
+                    {
+                        text: 'Group id',
+                        align: 'left',
+                        value: 'id'
+                    },
+                    {
+                        text: 'Group title', value: 'title'
+                    },
+                    {
+                        text: 'Action',
+                        width: "20", align: 'right'
+                    }
+                ]
             }
         },
         methods:{
             setCourse(){
                 let self = this;
-                axios.get('http://localhost:8080/getcourses/'+this.$route.params.id)
+                axios.get('http://localhost:8080/getcourses/'+self.id)
                     .then(function (response) {
                         //self.levels = response.data;
                         let dat = response.data;
@@ -144,7 +142,7 @@
                         self.endDay = dat.endDay;
                         self.getTrainer();
                         self.getGroups();
-                        if(self.isAdmin()){
+                        if(self.isAdmin){
                             self.getTrainers();
                         }
                         console.log(self);
@@ -178,9 +176,6 @@
                 axios.get('http://localhost:8080/dashboard/level-and-trainers')
                     .then(function (response) {
                         self.trainers = response.data;
-                        self.trainers.forEach(function (value) {
-                            self.selectedTrainers.push(value.trainer.id);
-                        })
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -192,9 +187,12 @@
             goGroupPage(id){
                 this.$router.push('/groups/' + id);
             },
+            sign(){
+                this.$router.push('/courses/'+this.id+'/join');
+            },
             getGroups(){
                 let self = this;
-                axios.get('http://localhost:8080/groups/get-groups/'+this.$route.params.id)
+                axios.get('http://localhost:8080/groups/get-groups/'+self.id)
                     .then(function (response) {
                         self.groups = response.data;
                     })

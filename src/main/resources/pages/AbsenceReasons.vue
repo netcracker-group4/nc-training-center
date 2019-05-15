@@ -65,16 +65,12 @@
           }
         },
         mounted() {
-            let self = this;
-            axios.get('http://localhost:8080/absence-reason')
-                            .then(function (response) {
-                                self.reasons= response.data;
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
-
-
+            this.loadInfo();
+        },
+        watch: {
+            '$route'(to, from) {
+                this.loadInfo();
+            }
         },
         methods: {
             deleteReason(idReason){
@@ -82,6 +78,17 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+
+            },
+            loadInfo() {
+                let self = this;
+                axios.get('http://localhost:8080/absence-reason')
+                                .then(function (response) {
+                                    self.reasons= response.data;
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
 
             },
             add(){

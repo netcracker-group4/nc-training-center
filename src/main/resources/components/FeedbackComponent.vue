@@ -8,31 +8,52 @@
                 </template>
                 <div class="div_table_item">
                     <template v-if="canShowLeaveFeedbackBlock()">
-                        <v-container style="display:flex; justify-content: space-between;">
-                            <v-avatar size="60px">
-                                <img
-                                        src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
-                                        alt="Avatar"/>
-                            </v-avatar>
-                            <div style="width: 90%;">
-                                <v-textarea
-                                        name="input-1"
-                                        box
-                                        full-width
-                                        hide-details
-                                        outline
-                                        auto-grow
-                                        rows="3"
-                                        placeholder="Leave feedback"
-                                        v-model="feedbackText"
-                                ></v-textarea>
-                            </div>
-                        </v-container>
-                        <v-container class="v-container_button">
-                            <div style="display: flex; justify-content: flex-end;">
-                                <v-btn @click="leaveFeedback()" color="info">Submit</v-btn>
-                            </div>
-                        </v-container>
+                        <v-form
+                                ref="form"
+                                v-model="valid"
+                                lazy-validation
+                        >
+                            <v-container style="display:flex; justify-content: space-between;">
+                                <v-avatar size="60px">
+                                    <img
+                                            src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+                                            alt="Avatar"/>
+                                </v-avatar>
+                                <div style="width: 90%;">
+                                    <v-textarea
+                                            box
+                                            full-width
+                                            hide-details
+                                            outline
+                                            auto-grow
+                                            rows="4"
+                                            placeholder="Leave feedback"
+                                            v-model="feedbackText"
+                                            :rules="[v => !!v || 'Feedback is required']"
+                                            required
+                                    ></v-textarea>
+                                    <v-container class="v-container_button" style="display:flex; justify-content: flex-end; margin-top: 10px;">
+                                        <v-flex xs12 sm6 d-flex>
+                                            <v-select
+                                                    v-model="selectCourse.id"
+                                                    :items="courses"
+                                                    item-text="name"
+                                                    item-value="id"
+                                                    color="blue"
+                                                    box
+                                                    background-color="white"
+                                                    label="Select course"
+                                                    :rules="[v => !!v || 'Item is required']"
+                                                    required
+                                            ></v-select>
+                                        </v-flex>
+                                        <div style="margin: 10px 0 0 30px;">
+                                            <v-btn @click="leaveFeedback()" color="info">Submit</v-btn>
+                                        </div>
+                                    </v-container>
+                                </div>
+                            </v-container>
+                        </v-form>
                     </template>
                     <v-data-table
                             :items="userFeedback"
@@ -75,12 +96,20 @@
     export default {
         name: 'feedback-component',
         props: [
-            'user'
+            'user',
+            'courses'
         ],
         data:() => ({
+            valid: true,
             feedbackText: '',
             userFeedback: [],
-            courses: [],
+            selectCourse: {
+                id: ''
+            },
+            defaultSelectCourse: {
+                id: ''
+            },
+            coursesName: [],
             rows: [3,5,10,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}]
         }),
         methods: {
@@ -91,25 +120,30 @@
                 return store.state.userRoles.includes("TRAINER") && this.courses.length > 0;
             },
             leaveFeedback() {
-                let self = this;
-                axios.post('http://localhost:8080/feedback/add', {
-                    studentId: this.user.id,
-                    teacher: this.getAuthorizationUser(),
-                    text: this.feedbackText,
-                })
-                .then(response => {
-                    // self.userFeedback = response.data;
-                    self.feedbackText = '';
-                    console.log(response);
-                    if (this.isNotOnlyTrainer()) {
-                        this.getAllFeedback();
-                    } else {
-                        this.getAllFeedbackByTrainer();
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                if (this.$refs.form.validate()) {
+                    let self = this;
+                    console.log(self.selectCourse);
+                    axios.post('http://localhost:8080/feedback/add', {
+                        studentId: this.user.id,
+                        teacher: this.getAuthorizationUser(),
+                        course: this.selectCourse,
+                        text: this.feedbackText,
+                    })
+                    .then(response => {
+                        self.feedbackText = '';
+                        self.selectCourse = Object.assign({}, self.defaultSelectCourse);
+                        console.log(response);
+                        if (this.isNotOnlyTrainer()) {
+                            this.getAllFeedback();
+                        } else {
+                            this.getAllFeedbackByTrainer();
+                        }
+                        this.$refs.form.reset();
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                }
 
             },
             isNotOnlyTrainer() {
@@ -139,16 +173,6 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-
-                axios.get('http://localhost:8080/getcourses/get-all-courses-by-trainer-and-employee?trainerId=' +
-                    store.state.user.id + "&employeeId=" + this.$route.params.id)
-                    .then(function (response) {
-                        self.courses = response.data;
-                        console.log(self.courses)
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
             }
         },
         mounted() {
@@ -157,7 +181,6 @@
             } else {
                 this.getAllFeedbackByTrainer();
             }
-
         },
         watch: {
             '$route'(to, from) {

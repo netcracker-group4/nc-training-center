@@ -20,6 +20,7 @@ import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
 import AllGroups from "../pages/AllGroups.vue";
 import NotFound from "../pages/NotFound.vue";
 import JoinCoursePage from "../pages/JoinCoursePage.vue";
+import LessonPage from "../pages/LessonPage.vue";
 
 Vue.use(Router);
 
@@ -44,6 +45,7 @@ const routes = [
     {path: '/absence-reasons', component: AbsenceReasons},
     {path: '/desired-schedule/:id', component: DesiredSchedulePage},
     {path: '/attachments-page', component: AttachmentsPage},
+    {path: '/lesson/:id', component: LessonPage},
     {path: '/test', component: TestPage},
     {path: '/allgroups', component: AllGroups},
     {path: '/404', component: NotFound },
