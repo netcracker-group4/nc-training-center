@@ -10,10 +10,7 @@ import ua.com.nc.dao.interfaces.MessageDao;
 import ua.com.nc.domain.Message;
 
 import javax.sql.DataSource;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +37,7 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
             Integer id = rs.getInt("id");
             Integer chat_id = rs.getInt("chat_id");
             Integer senderId = rs.getInt("user_id");
-            Date dateTime = rs.getDate("time_date");
+            Timestamp dateTime = rs.getTimestamp("time_date");
             String text = rs.getString("text");
             Message message = new Message(id, chat_id, senderId, dateTime, text);
             messages.add(message);
@@ -49,20 +46,24 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
     }
 
 
-    @Override
-    public void insert(Message message) throws PersistException {
+
+    public Integer insertMessage(Message message) throws PersistException {
+        Integer id;
         String sql = messageInsert;
         log.info(sql + " insert message " + message);
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, message.getChatId());
             statement.setInt(2, message.getSenderId());
-            statement.setDate(3, message.getDateTime());
+            statement.setTimestamp(3, message.getDateTime());
             statement.setString(4, message.getText());
-            statement.executeUpdate();
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            id = resultSet.getInt(1);
         } catch (Exception e) {
             log.trace(e);
             throw new PersistException(e);
         }
+        return id;
     }
 
     @Override

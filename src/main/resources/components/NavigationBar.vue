@@ -47,6 +47,7 @@
                     </template>
                         <v-list-tile
                                 v-for="chat in self.$store.state.chats"
+                                :key="chat.id"
                                 :to="'/chat/' + chat.id"
                         >
                             <v-list-tile-title v-text="chat.name"></v-list-tile-title>

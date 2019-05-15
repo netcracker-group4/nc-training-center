@@ -44,7 +44,7 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
         while (rs.next()){
             Integer id = rs.getInt("id");
             String name = rs.getString("name");
-            Date timeDate = rs.getDate("time_date");
+            Timestamp timeDate = rs.getTimestamp("time_date");
             Integer groupId = rs.getInt("group_id");
             Chat chat = new Chat(id, name, timeDate, groupId);
             list.add(chat);
@@ -80,7 +80,7 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
         log.info(sql + " insert chat");
         try (PreparedStatement statement = connection.prepareStatement(insertChat)) {
             statement.setString(1, chat.getName());
-            statement.setDate(2, chat.getTimeDate());
+            statement.setTimestamp(2, chat.getTimeDate());
             if(chat.getGroupId() != null){
                 statement.setInt(3, chat.getGroupId());
             }else{

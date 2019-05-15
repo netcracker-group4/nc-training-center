@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.sql.Timestamp;
-import java.sql.Date;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -13,10 +12,10 @@ import java.sql.Date;
 public class Message extends Entity {
     private Integer chatId;
     private Integer senderId;
-    private Date dateTime;
+    private Timestamp dateTime;
     private String text;
 
-    public Message(Integer id, Integer chatId, Integer senderId, Date dateTime, String text) {
+    public Message(Integer id, Integer chatId, Integer senderId, Timestamp dateTime, String text) {
         super(id);
         this.chatId = chatId;
         this.senderId = senderId;

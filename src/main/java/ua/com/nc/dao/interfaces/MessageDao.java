@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MessageDao extends GenericDao<Message>{
     List<Message> getMessagesByChatId(Integer chatId);
+
+    Integer insertMessage(Message message);
 }

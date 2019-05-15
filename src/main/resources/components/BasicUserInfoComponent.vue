@@ -194,6 +194,7 @@
                     form.append('receiverId', this.user.id);
                     request.send(form);
                 this.message = ''
+                this.sendMessageWindowShow = false
             },
             successAutoClosable(title) {
                 this.$snotify.success(title, {

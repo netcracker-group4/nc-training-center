@@ -27,29 +27,31 @@ public class ChatServiceImpl implements ChatService {
     private UserService userService;
 
     @Override
-    public void addMessage(Message message, Integer receiverId) {
-        Chat chat = chatDao.getChatBySenderIdAndReceiverId(message.getSenderId(), receiverId);
-        if(chat != null){
-            message.setChatId(chat.getId());
-            messageDao.insert(message);
-        }else{
+    public Integer addMessage(Message message, Integer receiverId) {
+        Integer messageId;
+        Chat chat = null;
+        if(receiverId != null){
+            chat = chatDao.getChatBySenderIdAndReceiverId(message.getSenderId(), receiverId);
+        }
+        if(message.getChatId() != null){
+            //message.setChatId(chat.getId());
+            messageId = messageDao.insertMessage(message);
+        }
+        else{
             if(receiverId != null) {
                 DtoUserProfiles receiver = userService.getById(receiverId);
                 DtoUserProfiles sender = userService.getById(message.getSenderId());
-
                 String chatName = sender.getLastName() + " " + receiver.getLastName();
-
                 Integer chatId = chatDao.addChatReturningId(new Chat(chatName, message.getDateTime(), null));
-
                 chatDao.addUserToChat(chatId, receiver.getId());
                 chatDao.addUserToChat(chatId, sender.getId());
-
                 message.setChatId(chatId);
-                messageDao.insert(message);
+                messageId = messageDao.insertMessage(message);
             }else{
                 throw new PersistException("Receiver id should be not null");
             }
         }
+        return messageId;
     }
 
     @Override

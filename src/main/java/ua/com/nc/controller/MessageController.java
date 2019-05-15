@@ -15,6 +15,7 @@ import ua.com.nc.service.ChatService;
 import ua.com.nc.service.MessageService;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,15 +32,22 @@ public class MessageController {
 
     @MessageMapping("/message")
     @SendTo("/topic/msg")
-    public String getMessage(String text){
-
-        return text;
+    public String getMessage(String json){
+        Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd.HH.mm.ss").serializeNulls().create();
+        //log.debug(chatId + " " + senderId + " " + text);
+        //Message message = new Message(chatId, senderId, new Timestamp(System.currentTimeMillis()), text);
+        Message message = gson.fromJson(json, Message.class);
+        message.setDateTime(new Timestamp(System.currentTimeMillis()));
+        Integer messageId = chatService.addMessage(message, null);
+        message.setId(messageId);
+        log.debug(message);
+        return gson.toJson(message);
     }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/messages")
     public ResponseEntity<?> getAll(@RequestParam(name="chatId") Integer chatId){
-        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").serializeNulls().create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd.HH.mm.ss").serializeNulls().create();
         List<Message> messages = messageService.getMessagesByChatId(chatId);
         return ResponseEntity.ok().body(gson.toJson(messages));
     }
@@ -50,7 +58,7 @@ public class MessageController {
                                         @RequestParam(name="senderId") Integer senderId,
                                         @RequestParam(required = false, name="receiverId") Integer receiverId){
 
-        Message message = new Message(null, senderId, new Date(System.currentTimeMillis()), text);
+        Message message = new Message(null, senderId, new Timestamp(System.currentTimeMillis()), text);
         chatService.addMessage(message, receiverId);
         return ResponseEntity.ok().body("Message added");
     }
