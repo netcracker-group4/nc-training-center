@@ -5,7 +5,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.exceptions.NoSuchUserException;
@@ -14,10 +13,8 @@ import ua.com.nc.service.ReportService;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.rmi.NoSuchObjectException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Log4j
 @Service
@@ -65,15 +62,11 @@ public class ReportServiceImpl implements ReportService {
         CellStyle presenceStyle = workbook.createCellStyle();
         presenceStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         presenceStyle.setAlignment(HorizontalAlignment.CENTER);
+        presenceStyle.setWrapText(true);
         presenceStyle.setFont(presenceFont);
         return presenceStyle;
     }
 
-    private void checkColumnWidth(Sheet groupSheet, int cellCount, String fittingName) {
-        if (groupSheet.getColumnWidth(cellCount) < 255 * 30) {
-            groupSheet.setColumnWidth(cellCount, 255 * fittingName.length());
-        }
-    }
 
     private void drawGroupSheet(XSSFWorkbook workbook, CellStyle headerStyle,
                                 CellStyle presenceStyle, User trainer, List<Group> groups) {
@@ -93,9 +86,9 @@ public class ReportServiceImpl implements ReportService {
                 String studentFullName = student.getFirstName() + " " + student.getLastName();
                 studentRow.createCell(cellCount).setCellValue(studentFullName);
                 studentRow.getCell(cellCount).setCellStyle(headerStyle);
-                checkColumnWidth(groupSheet, cellCount, studentFullName);
+                groupSheet.setColumnWidth(cellCount, 255 * 25);
                 for (Lesson lesson : lessons) {
-                    String lessonTopicAndDate = lesson.getTopic() + " " + lesson.getTimeDate();
+                    String lessonTopicAndDate = lesson.getTopic() + "\n" + lesson.getTimeDate();
 
                     Cell headerCell = headerRow.createCell(++cellCount);
                     headerCell.setCellStyle(headerStyle);
@@ -115,8 +108,8 @@ public class ReportServiceImpl implements ReportService {
         Sheet sheetName = workbook.createSheet(dashboardName);
         Row headerRow = sheetName.createRow(0);
         for (int i = 0; i < trainingAndQuantityColumns.length; i++) {
-            headerRow.createCell(i).setCellValue(trainingAndQuantityColumns[i]);
             headerRow.setRowStyle(headerStyle(workbook));
+            headerRow.createCell(i).setCellValue(trainingAndQuantityColumns[i]);
         }
         return sheetName;
     }
@@ -126,22 +119,23 @@ public class ReportServiceImpl implements ReportService {
 
         for (Level level : levelDao.getAll()) {
             String levelTitle = level.getTitle();
-            Row levelRowColumn = sheetName.createRow(levelRowCount);
+            Row levelRowColumn = sheetName.createRow(levelRowCount++);
             Cell levelCell = levelRowColumn.createCell(0);
-            checkColumnWidth(sheetName, 0, levelTitle);
+            sheetName.setColumnWidth(0, 255 * 12);
             levelCell.setCellStyle(headerStyle((XSSFWorkbook) sheetName.getWorkbook()));
             levelCell.setCellValue(levelTitle);
             for (Course course : courseDao.getAllByLevel(level.getId())) {
                 String courseName = course.getName();
                 Row courseRowColumn = sheetName.createRow(levelRowCount++);
                 Cell courseCell = courseRowColumn.createCell(1);
-                checkColumnWidth(sheetName, 1, courseName);
+                sheetName.setColumnWidth(1, 255 * 25);
+                courseCell.setCellStyle(presenceStyle((XSSFWorkbook) sheetName.getWorkbook()));
                 courseCell.setCellValue(courseName);
                 for (Group group : groupDao.getAllGroupsOfCourse(course.getId())) {
                     String groupName = group.getTitle();
                     Row groupRowColumn = sheetName.createRow(levelRowCount++);
                     groupRowColumn.createCell(2).setCellValue(groupName);
-                    checkColumnWidth(sheetName, 2, groupName);
+                    sheetName.setColumnWidth(2, 255 * 25);
                 }
             }
         }
@@ -154,7 +148,7 @@ public class ReportServiceImpl implements ReportService {
             String trainerFullName = trainer.getFirstName() + " " + trainer.getLastName();
             Row trainerRowColumn = levelAndTrainers.createRow(trainerRowCount++);
             int trainerCellCount = 0;
-            checkColumnWidth(levelAndTrainers, trainerCellCount, trainerFullName);
+            levelAndTrainers.setColumnWidth(trainerCellCount, 255 * 25);
             Cell trainerCell = trainerRowColumn.createCell(trainerCellCount++);
             trainerCell.setCellValue(trainerFullName);
 
@@ -164,22 +158,24 @@ public class ReportServiceImpl implements ReportService {
                 Row courseRowColumn = levelAndTrainers.createRow(trainerRowCount++);
                 if (level.getTitle() != null) {
                     courseRowColumn.createCell(trainerCellCount).setCellValue(courseAndLevelTitle);
+                    levelAndTrainers.setColumnWidth(trainerCellCount, 255 * 30);
                 } else {
                     courseRowColumn.createCell(trainerCellCount).setCellValue(course.getName());
+                    levelAndTrainers.setColumnWidth(trainerCellCount, 255 * 30);
                 }
             }
         }
     }
 
     private void drawTrainingAndQuantity(Sheet trainingAndQuantity) {
-        checkColumnWidth(trainingAndQuantity, 2, trainingAndQuantityColumns[2]);
+        trainingAndQuantity.setColumnWidth(2, 255 * 25);
         int[] courseCell = {0, 2};
         int[] groupCell = {1, 2};
         int rowCounter = 1;
         for (Course course : courseDao.getAll()) {
             Row courseRow = trainingAndQuantity.createRow(rowCounter++);
             String courseName = course.getName();
-            checkColumnWidth(trainingAndQuantity, 0, courseName);
+            trainingAndQuantity.setColumnWidth(0, 255 * 25);
             courseRow.createCell(courseCell[0]).setCellValue(courseName);
             int numberOfEmployeesInCourse = 0;
             Cell employeesAmountCourse = courseRow.createCell(courseCell[1]);
@@ -188,7 +184,7 @@ public class ReportServiceImpl implements ReportService {
                 numberOfEmployeesInCourse += numberOfEmployeesInGroup;
                 Row groupRow = trainingAndQuantity.createRow(rowCounter++);
                 String groupTitle = group.getTitle();
-                checkColumnWidth(trainingAndQuantity, 1, groupTitle);
+                trainingAndQuantity.setColumnWidth(1, 255 * 25);
                 groupRow.createCell(groupCell[0]).setCellValue(groupTitle);
                 groupRow.createCell(groupCell[1]).setCellValue(numberOfEmployeesInGroup);
             }
