@@ -6,7 +6,7 @@
                    <v-card>
                        <v-card-text>
                            <div class="message-right">{{message.text}}</div>
-                           <div class="message-right date">{{message.dateTime}}</div>
+                           <div class="message-right date">{{messageDate(message.dateTime)}}</div>
                        </v-card-text>
                    </v-card>
                </v-flex>

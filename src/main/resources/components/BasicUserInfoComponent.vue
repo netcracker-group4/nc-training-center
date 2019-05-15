@@ -124,7 +124,7 @@
                     <div class="text-xs-center">
                         <v-dialog v-model="sendMessageWindowShow" width="500">
                             <template v-slot:activator="{ on }">
-                                <v-btn color="success" large @click="sendMessageWindowShow = ! sendMessageWindowShow">Message</v-btn>
+                                <v-btn v-if="self.$store.state.user.id != self.$route.params.id" color="success" large @click="sendMessageWindowShow = ! sendMessageWindowShow">Message</v-btn>
                             </template>
 
                             <v-card>
@@ -164,6 +164,7 @@
         props: {elemName: String, user: {}, ifNullMessage: String, trainers : Array, groups : Array},
         data: function () {
             return {
+                self: this,
                 message: '',
                 sendMessageWindowShow: false,
                 dialog: false,
@@ -185,6 +186,9 @@
         },
 
         methods: {
+            goToGroupPage(groupId){
+                this.$router.push('/group/' + groupId)
+            },
             sendMessage(){
                 let form = new FormData();
                 let request = new XMLHttpRequest();

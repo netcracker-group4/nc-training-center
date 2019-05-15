@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <v-container
                 fluid
@@ -83,7 +83,7 @@
           return{
                 dialog: false,
                 topic:null,
-                trainer:null,
+                trainer: [],
                 firstName:null,
                 lastName:null,
                 date:null,
@@ -163,7 +163,7 @@
                 this.dialog = false;
             },
             isLessonTrainer(){
-                return store.getters.user.id == this.trainer.id;
+                return this.$store.state.user.id == this.trainer.id;
              },
              unlink(id){
                 let form = new FormData();

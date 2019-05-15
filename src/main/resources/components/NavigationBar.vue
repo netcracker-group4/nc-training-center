@@ -39,6 +39,9 @@
                 <v-list-group
                         prepend-icon="chat"
                         no-action
+                        v-if="self.$store.state.chats != null &
+                              self.$store.state.chats != undefined &
+                                self.$store.state.chats.length > 0"
                 >
                     <template v-slot:activator>
                         <v-list-tile>
