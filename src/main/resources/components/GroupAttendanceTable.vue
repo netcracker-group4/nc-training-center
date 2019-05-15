@@ -76,7 +76,6 @@
                     sortable: false,
                     value: 'name'
                 },
-                /*{ text: 'Topic', value: 'topic', align: 'left', sortable: false,},*/
                 { text: 'Date', value: 'date', sortable: false,},
                 { text: 'Attendance', value: 'attendance', sortable: false, },
                 { text: 'Reason', value: 'reason', sortable: false, },
@@ -101,20 +100,20 @@
 
         methods: {
             editItem (item) {
-                this.editedItem.attendanceId = item.attendanceId
+                this.editedItem.attendanceId = item.attendanceId;
                 //this.editedItem.status = this.statuses.find(status => status.title == item.status)
                 // this.editedItem.reason = this.reasons.find(reason => reason.title == item.reason)
-                this.dialog = true
+                this.dialog = true;
             },
             close () {
-                this.editedItem = []
-                this.dialog = false
+                this.editedItem = [];
+                this.dialog = false;
             },
             save () {
                 let self = this;
-                let attendanceId = self.editedItem.attendanceId
-                let statusId = self.editedItem.status.id
-                let reasonId = null
+                let attendanceId = self.editedItem.attendanceId;
+                let statusId = self.editedItem.status.id;
+                let reasonId = null;
                 if(self.editedItem.reason == null || self.editedItem.reason == undefined){
                     reasonId = null
                 }else{
@@ -137,9 +136,9 @@
                         //self.modalMessage = "There is no user with such email and password"
                         //self.dialog = true
                     }
-                }
-                console.log(this.editedItem)
-                this.close()
+                };
+                console.log(this.editedItem);
+                this.close();
             },
             forwardToUserPage(id){
                 this.$router.push('/userpage/' + id)
@@ -163,7 +162,5 @@
 </script>
 
 <style scoped>
-.link-button{
-    cursor: pointer;
-}
+
 </style>
