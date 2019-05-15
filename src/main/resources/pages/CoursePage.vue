@@ -265,14 +265,11 @@
                 this.$router.push('/groups/'+id+'/schedule');
             }
         },
-        mounted() {
+        created() {
             try {
                 let self = this;
                 self.setCourse();
-                    axios.get('http://localhost:8080/img/'+self.imageUrl+'.jpg')
-                        .then(function (response) {
-                            self.img = response.data;
-                        })
+
                 /*axios.get('http://localhost:8080/getcourses/{id}/trainer)
                     .then(function (response) {
                         self.courseStatus = response.data;

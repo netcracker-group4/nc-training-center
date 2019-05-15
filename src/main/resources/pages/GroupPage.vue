@@ -124,9 +124,7 @@
                 }
             },
             hasRights(){
-                if(store.getters.isAdmin)
-                    {return true;}
-                return store.getters.user.id == this.trainer.id;
+                return store.getters.user.id == this.teacher.id || store.getters.isAdmin;
             },
             findUserById(id){
                 return this.students.find(s => s.id == id);

@@ -39,7 +39,7 @@ public class AttendanceController {
             return ResponseEntity.ok().body(gson.toJson(attendances));
         }
         if (userId != null && groupId != null) {
-            Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+            Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").serializeNulls().create();
             List<Attendance> attendances = attendanceService.getAttendanceByStudentIdAndGroupId(userId, groupId);
             return ResponseEntity.ok().body(gson.toJson(attendances));
         } else {

@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <v-navigation-drawer
                 v-model="drawer"
@@ -35,6 +35,29 @@
                         <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
+
+                <v-list-group
+                        prepend-icon="chat"
+                        no-action
+                >
+                    <template v-slot:activator>
+                        <v-list-tile>
+                            <v-list-tile-title>Chats</v-list-tile-title>
+                        </v-list-tile>
+                    </template>
+                        <v-list-tile
+                                v-for="chat in self.$store.state.chats"
+                                :key="chat.id"
+                                :to="'/chat/' + chat.id"
+                        >
+                            <v-list-tile-title v-text="chat.name"></v-list-tile-title>
+                            <v-list-tile-action>
+
+                            </v-list-tile-action>
+                        </v-list-tile>
+
+                </v-list-group>
+
             </v-list>
         </v-navigation-drawer>
         <v-toolbar class="grey lighten-4" app v-if="">
@@ -61,7 +84,9 @@
         name: "NavigationBar",
         data () {
             return {
+                self: this,
                 drawer: false,
+                chats: this.$store.state.chats,
                 items: [
                     { title: 'Main', icon: 'home', link: '/' },
                     { title: 'Users', icon: 'person', link: '/userpage'},
@@ -79,10 +104,8 @@
             },
             forwardToLoginPage(){
                 this.$router.push('/login')
-            }
+            },
         },
-        mounted() {
-        }
     }
 </script>
 

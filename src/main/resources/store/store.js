@@ -8,7 +8,8 @@ export default new Vuex.Store({
         isAuthorized: isAuthorized,
         user: user,
         userRoles: userRoles,
-        imgFolder: '/img/'
+        imgFolder: '/img/',
+        chats: []
     },
     getters: {
         userRoles: state => {

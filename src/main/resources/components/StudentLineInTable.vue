@@ -84,7 +84,11 @@
                                                       placeholder="Name"
                                                       label="Group Name"
                                                       required
+                                                      :data-vv-name="'group_' + index"
+                                                      v-validate="'required|max:256'"
+                                                      :error-messages="errors.collect('group_' + index)"
                                         ></v-text-field>
+                                        <span>{{ errors.first('myinput') }}</span>
                                     </v-flex>
                                     <v-spacer></v-spacer>
                                     <v-btn alert color="error" @click="deleteGroup(index)">Delete Group</v-btn>
@@ -117,6 +121,8 @@
         data() {
             return {
                 list2: [],
+                errorMessages: '',
+                formHasErrors: false,
                 course: {},
                 dragging: false,
                 currentDay: 0,
@@ -176,16 +182,24 @@
             },
             saveGroup(index) {
                 let self = this;
-                axios.post('/groups', self.groups[index])
-                    .then(function (response) {
-                        self.groups[index].id = response.data;
-                        self.successAutoClosable('Group  ' + self.groups[index].name + ' has been saved')
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        self.errorAutoClosable(error.response.data);
+                this.$validator.validate('group_' + index, self.groups[index].name).then((result) => {
+                    if (result) {
+                        axios.post('/groups', self.groups[index])
+                            .then(function (response) {
+                                self.groups[index].id = response.data;
+                                self.successAutoClosable('Group  ' + self.groups[index].name + ' has been saved')
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                                self.errorAutoClosable(error.response.data);
+                            });
+                        return;
+                    }
+                    if(!result){
+                        self.errorAutoClosable("Valid group name required")
+                    }
+                });
 
-                    });
             },
             deleteGroup(index) {
                 let self = this;
@@ -201,24 +215,32 @@
                     });
 
             },
-            saveAll() {
+            saveAll: function () {
                 let self = this;
-                for (let i = 0; i < this.groups.length; i++) {
-                    axios.post('/groups', self.groups[i])
-                        .then(function (response) {
-                            console.log(response);
-                            self.groups[i].id = response.data;
-                            self.successAutoClosable('All groups has been saved')
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                            self.errorAutoClosable(error.response.data);
-                        });
-                }
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+                        for (let i = 0; i < this.groups.length; i++) {
+                            axios.post('/groups', self.groups[i])
+                                .then(function (response) {
+                                    console.log(response);
+                                    self.groups[i].id = response.data;
+                                    self.successAutoClosable('All groups has been saved')
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                    self.errorAutoClosable(error.response.data);
+                                });
+                        }
+                        return;
+                    }
+                    if(!result){
+                        self.errorAutoClosable("Valid group name required")
+                    }
+                });
             }
         },
         mounted() {
-
+            this.$validator.localize('en', this.dictionary);
             if (store.getters.isAdmin) {
                 let self = this;
                 axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/ungrouped')

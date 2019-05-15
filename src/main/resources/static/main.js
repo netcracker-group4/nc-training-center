@@ -10,6 +10,9 @@ import store from '../store/store'
 import Notifications from 'vue-notification'
 import velocity from 'velocity-animate'
 import Snotify, {SnotifyPosition} from 'vue-snotify'
+import { connect } from '../websocket/ws'
+
+connect()
 
 const options = {
     toast: {

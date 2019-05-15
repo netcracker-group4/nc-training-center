@@ -121,10 +121,37 @@
                 </v-layout>
                 <v-layout row wrap style="margin-bottom: 40px">
                     <v-spacer></v-spacer>
-                    <v-btn color="success" large>Message</v-btn>
+                    <div class="text-xs-center">
+                        <v-dialog v-model="sendMessageWindowShow" width="500">
+                            <template v-slot:activator="{ on }">
+                                <v-btn color="success" large @click="sendMessageWindowShow = ! sendMessageWindowShow">Message</v-btn>
+                            </template>
+
+                            <v-card>
+                                <v-card-title class="headline grey lighten-2" primary-title>Send message to {{user.firstName + ' ' + user.lastName}}</v-card-title>
+                                <v-divider></v-divider>
+                                <v-layout row wrap>
+                                    <v-flex xs10 offset-xs1 class="message-textarea">
+                                        <v-textarea
+                                                v-model="message"
+                                                solo
+                                                name="input-7-4"
+                                                label="Type message"
+                                        ></v-textarea>
+                                    </v-flex>
+                                </v-layout>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="primary" flat @click="sendMessageWindowShow = false">Cancel</v-btn>
+                                    <v-btn color="primary" flat @click="sendMessage">Send</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </div>
                 </v-layout>
             </div>
         </v-container>
+
     </v-layout>
 </template>
 <script>
@@ -133,9 +160,12 @@
 
     export default {
         name: 'basic-user-info-component',
+        components: {},
         props: {elemName: String, user: {}, ifNullMessage: String, trainers : Array, groups : Array},
         data: function () {
             return {
+                message: '',
+                sendMessageWindowShow: false,
                 dialog: false,
                 editUser: {
                     id: 0,
@@ -155,6 +185,17 @@
         },
 
         methods: {
+            sendMessage(){
+                let form = new FormData();
+                let request = new XMLHttpRequest();
+                request.open('POST', 'http://localhost:8080/messages');
+                    form.append('text', this.message);
+                    form.append('senderId', this.$store.state.user.id);
+                    form.append('receiverId', this.user.id);
+                    request.send(form);
+                this.message = ''
+                this.sendMessageWindowShow = false
+            },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
                     timeout: 2000,
@@ -286,5 +327,8 @@
     .cursor {
         cursor: pointer;
         margin-right: 10px;
+    }
+    .message-textarea{
+        margin-top: 20px;
     }
 </style>
