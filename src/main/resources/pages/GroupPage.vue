@@ -44,6 +44,12 @@
                     <td class="my-link">
                         <div>{{ props.item.topic}}</div>
                     </td>
+                    <td>
+                        <div>{{props.item.timeDate.toString()}}</div>
+                    </td>
+                    <td>
+                        <div>{{ lessonStatus(props.item.isCanceled)}}</div>
+                    </td>
                 </tr>
             </template>
         </v-data-table>
@@ -91,12 +97,25 @@
                     {   text: 'Lesson topic',
                         align: 'left',
                         value: 'topic'
+                    },
+                    {
+                     text: 'Date', value: 'timeDate.toString()', align: 'left'
+                    },
+                    {
+                     text: 'Status', value: 'isCanceled', align: 'left'
                     }
+
                 ],
                 isAdmin: this.$store.getters.isAdmin,
             }
         },
         methods:{
+            lessonStatus(flag){
+                if(flag == true){
+                    return 'Canceled';
+                }
+                return 'OK';
+                },
             deleteStudent(id) {
                 if (confirm("Are you sure you want to delete " + this.findUserById(id).firstName +' '+ this.findUserById(id).lastName)) {
                     axios.delete('http://localhost:8080/groups/' + self.id + '/user' + id)
@@ -106,11 +125,11 @@
             },
             hasRights(){
                 if(store.getters.isAdmin)
-                    return true
+                    {return true;}
                 return store.getters.user.id == this.trainer.id;
             },
             findUserById(id){
-                return this.students.find(s => s.id === id);
+                return this.students.find(s => s.id == id);
             },
             setGroup(){
                 let self = this;
