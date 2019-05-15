@@ -24,28 +24,35 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public void add(Integer lessonId, Attachment attachment) {
 
-        if (attachmentDao.getByUrl(attachment.getUrl()) == null) {
+        if (attachmentDao.getByName(attachment.getName()) == null) {
 
             attachmentDao.insert(attachment);
         }
-        link(lessonId, attachmentDao.getByUrl(attachment.getUrl()).getId());
+        link(lessonId, attachmentDao.getByName(attachment.getName()).getId());
     }
 
     @Override
-    public void add(Integer lessonId, String url, String description) {
+    public void add(Integer lessonId, String url, String name, Integer trainerId, String description) {
         System.out.println("Add method 2 used");
-        Attachment attachment = new Attachment(url, description);
+        Attachment attachment = new Attachment(url, name, trainerId, description);
         add(lessonId, attachment);
     }
 
     @Override
     public void delete(Integer id) {
-        attachmentDao.delete(id);
+        File file = new File(attachmentDao.getEntityById(id).getUrl());
+        if (file.delete()){
+            log.info("File removed from directory");
+        }
+        else{
+            log.trace("File not found");
+        }
         lessonAttachmentDao.deleteByAttachmentId(id);
+        attachmentDao.delete(id);
     }
 
     @Override
-    public void uploadFile(Integer lessonId, MultipartFile file) {
+    public void uploadFile(Integer lessonId, Integer trainerId, String description, MultipartFile file) {
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
@@ -53,14 +60,14 @@ public class AttachmentServiceImpl implements AttachmentService {
                 String name = file.getOriginalFilename();
 
                 String rootPath = "src/main/resources";
-                File dir = new File(rootPath + File.separator + "attachments");
+                File dir = new File(rootPath + File.separator + "attachments"+ File.separator + trainerId.toString());
 
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
                 String filePath = dir.getAbsolutePath() + File.separator + name;
 
-                if (attachmentDao.getByUrl(filePath) == null) {
+                if (attachmentDao.getByName(filePath) == null) {
 
                     log.info("File is not in base");
                     File uploadedFile = new File(filePath);
@@ -69,7 +76,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                         stream.write(bytes);
                     }
                 }
-                add(lessonId, name, null);
+                add(lessonId,filePath, name, trainerId, description);
             } catch (Exception e) {
                 log.trace(e);
             }
@@ -78,10 +85,8 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public FileInputStream downloadFile(Integer id) {
-        System.out.println("Service called");
-        String path = "src/main/resources/attachments/";
         Attachment attachment = attachmentDao.getEntityById(id);
-        path = path + attachment.getUrl();
+        String path = attachment.getUrl();
         try {
             return new FileInputStream(path);
         } catch (FileNotFoundException e) {
@@ -94,6 +99,11 @@ public class AttachmentServiceImpl implements AttachmentService {
     public void link(Integer lessonId, Integer attachmentId) {
         LessonAttachment lessonAttachment = new LessonAttachment(attachmentId, lessonId);
         lessonAttachmentDao.insertAttachment(lessonAttachment);
+    }
+
+    @Override
+    public void unlink(Integer lessonId, Integer attachmentId) {
+        lessonAttachmentDao.unlink(lessonId,attachmentId);
     }
 
 }
