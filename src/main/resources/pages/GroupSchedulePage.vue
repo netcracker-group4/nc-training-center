@@ -256,7 +256,7 @@
                         "id": null,
                         "topic": "",
                         "groupId": this.$route.params.id,
-                        "trainerId": a.state.user.id,
+                        "trainerId": this.group.trainerId,
                         "timeDate": new Date().toISOString(),
                         "attachments": [],
                         "isCanceled": false,
