@@ -54,8 +54,11 @@ public class GroupsServiceImpl implements GroupsService {
 
     //method created to avoid usages of dao in controller
     @Override
-    public Group getGroupById(int groupId) {
-        return groupDao.getGroupById(groupId);
+    public DtoGroup getGroupById(int groupId) {
+        List<Level> levels = levelDao.getAll();
+        List<Group> groups = new ArrayList<>();
+        groups.add(groupDao.getGroupById(groupId));
+        return getDtoGroups(levels, groups).get(0);
     }
 
     @Override

@@ -16,6 +16,9 @@
                     v-model="lesson.topic"
                     label="Name"
                     required
+                    :data-vv-name="'lesson topic'"
+                    v-validate="'required|max:256'"
+                    :error-messages="errors.collect('lesson topic')"
             ></v-text-field>
             <v-select
                     v-model="lesson.trainerId"
@@ -232,14 +235,31 @@
             }
         },
         methods: {
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             save() {
-                this.lesson.timeDate = this.date + ' ' + this.time + this.appendix;
-                this.lesson.attachments = this.selectedAttachments;
-                let trainer = this.trainers.filter(e => {
-                    return e.id === this.lesson.trainerId;
-                })[0];
-                this.lesson.trainerName = trainer.firstName + ' ' + trainer.lastName;
-                this.$emit('saving-event', this.lesson);
+                let self = this;
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+                        self.lesson.timeDate = self.date + ' ' + self.time + self.appendix;
+                        self.lesson.attachments = self.selectedAttachments;
+                        let trainer = self.trainers.filter(e => {
+                            return e.id === self.lesson.trainerId;
+                        })[0];
+                        self.lesson.trainerName = trainer.firstName + ' ' + trainer.lastName;
+                        self.$emit('saving-event', self.lesson);
+                        return;
+                    }
+                    if(!result){
+                        self.errorAutoClosable("Valid lesson topic required")
+                    }
+                });
             },
             deleteLesson() {
                 this.$emit('delete-event', this.lesson);

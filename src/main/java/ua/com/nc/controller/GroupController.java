@@ -81,7 +81,7 @@ public class GroupController {
     @RequestMapping(value = "/{id}")
     @ResponseBody
     public String getGroup(@PathVariable Integer id) {
-        return gson.toJson(groupDao.getEntityById(id));
+        return gson.toJson(groupsService.getGroupById(id));
     }
 
     @RequestMapping(value = "/{id}/users", method = RequestMethod.GET)
