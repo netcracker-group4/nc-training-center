@@ -19,12 +19,8 @@ import TestPage from '../pages/TestPage.vue'
 import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
 import AllGroups from "../pages/AllGroups.vue";
 import NotFound from "../pages/NotFound.vue";
-<<<<<<< Updated upstream
 import ChatPage from '../pages/ChatPage.vue'
-=======
 import InfodeskRequest from "../pages/InfodeskRequest.vue";
-
->>>>>>> Stashed changes
 import JoinCoursePage from "../pages/JoinCoursePage.vue";
 import LessonPage from "../pages/LessonPage.vue";
 
@@ -54,11 +50,8 @@ const routes = [
     {path: '/lesson/:id', component: LessonPage},
     {path: '/test', component: TestPage},
     {path: '/allgroups', component: AllGroups},
-<<<<<<< Updated upstream
     {path: '/chat/:id', component: ChatPage},
-=======
     {path: '/requests', component: InfodeskRequest},
->>>>>>> Stashed changes
     {path: '/404', component: NotFound },
     {path: '*', redirect: '/404'}
 ];
