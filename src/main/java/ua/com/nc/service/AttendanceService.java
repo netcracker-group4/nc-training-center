@@ -12,7 +12,7 @@ public interface AttendanceService {
 
     List<Attendance> getAttendanceByStudentIdAndGroupId(Integer studentId, Integer groupId);
 
-    List<Attendance> getAttendanceByGroupIdAndLessonId(Integer groupId, Integer lessonId);
+    List<Attendance> getAttendanceByLessonId(Integer lessonId);
 
     void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId);
 }
