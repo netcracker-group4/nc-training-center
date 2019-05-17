@@ -23,9 +23,9 @@
 </template>
 
 <script>
-    import DashBoardTableLevelAndQuantity from "../components/DashBoardTableLevelAndQuantity.vue";
-    import DashBoardTableLevelAndTrainers from "../components/DashBoardTableLevelAndTrainers.vue";
-    import DashBoardTableTrainingAndQuantity from "../components/DashBoardTableTrainingAndQuantity.vue";
+    import DashBoardTableLevelAndQuantity from "../components/DashBoard/DashBoardTableLevelAndQuantity.vue";
+    import DashBoardTableLevelAndTrainers from "../components/DashBoard/DashBoardTableLevelAndTrainers.vue";
+    import DashBoardTableTrainingAndQuantity from "../components/DashBoard/DashBoardTableTrainingAndQuantity.vue";
     import store from "../store/store.js";
 
     export default {
