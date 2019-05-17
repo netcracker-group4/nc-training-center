@@ -32,6 +32,12 @@ public class FeedbackController {
 
     }
 
+    @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        feedbackService.delete(id);
+        return ResponseEntity.ok().body("Feedback removed");
+    }
+
     @RequestMapping(value = "/get-by-user", method = RequestMethod.GET)
     public ResponseEntity<?> getAllByUserId(@RequestParam Integer userId) {
         return new ResponseEntity<>(feedbackService.getAllByUserId(userId), HttpStatus.OK);
