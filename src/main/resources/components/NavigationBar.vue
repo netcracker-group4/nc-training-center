@@ -96,7 +96,7 @@
                     { title: 'Courses', icon: 'view_list', link: '/admincourses'},
                     { title: 'Groups', icon: 'group', link: '/allgroups'},
                     { title: 'Dashboard', icon: 'dashboard', link: '/dashboard'},
-                 ]
+                ]
             }
         },
         methods:{

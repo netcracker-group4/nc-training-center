@@ -1,8 +1,14 @@
 package ua.com.nc.service;
 
+import ua.com.nc.domain.Problem;
+
+import java.util.List;
+
 public interface InfodeskRequestService {
 
-    void createRequest (int id, String description, String message);
+    int createRequest (int id, String description, String message);
 
-//    void updateRequest (int id, ProblemStatus status);
+    List<Problem> getAllRequestsOfType (String requestType);
+
+    void updateRequestType (int requestId, String requestType);
 }
