@@ -91,8 +91,11 @@ public class CustomSecurityService {
 
     public boolean hasPermissionToRetrieveLessons(Authentication authentication, Integer groupId) {
         User user = (User) authentication.getPrincipal();
+        UserGroup userGroup = userGroupDao.getByUserAndGroup(user.getId(), groupId);
         return user.getRoles().contains(Role.ADMIN)
-                || userDao.getTrainerByGroupId(groupId).getId().equals(user.getId());
+                || user.getRoles().contains(Role.TRAINER)
+                || userDao.getTrainerByGroupId(groupId).getId().equals(user.getId())
+                || userGroup != null;
     }
 
     public boolean hasPermissionToRetrieveGroups(Authentication authentication, Integer employeeId) {

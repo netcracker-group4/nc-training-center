@@ -1,187 +1,201 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-        <div class="subheading pt-3">
-            <b>{{course.name}}</b>
-            <p>
-                <b>Trainer</b>
-                <b class="clickable" @click="forwardToUserPage(teacher.id)">{{teacher.firstName}} {{teacher.lastName}}</b>
-            </p>
-            <v-icon v-if="hasRights()"  @click="forwardToGroupSchedulePage" >
-                event
-            </v-icon>
-        </div>
-        <div>Group with  {{ id }}  number</div>
-        <v-data-table
-            :headers="headers"
-            :items="students"
-            :expand="true"
-            item-key="id"
-        >
-            <template v-slot:items="props" >
-                <tr class="clickable" @click="forwardToUserPage(props.item.id)">
-                    <td >
-                        <div>{{ props.item.id }}</div>
-                    </td>
-                    <td class="text-xs-left clickable">{{ props.item.firstName +' '+ props.item.lastName }}</td>
-                    <td class="text-xs-left" v-if="isAdmin">
-                        {{props.item.email}}
-                    </td>
-                    <td class="text-xs-right" v-if="isAdmin">
-                        <v-btn color="error" @click="deleteStudent(props.item.id)" v-if="isAdmin">Delete</v-btn>
-                    </td>
-                </tr>
-            </template>
-        </v-data-table>
-        <v-data-table
-                :headers="headers2"
-                :items="lessons"
-                :expand="true"
-                item-key="id"
-                no-data-text = "No lessons available"
-        >
-            <template v-slot:items="props">
-                <tr class="clickable" @click="forwardToLessonPage(props.item.id)">
-                    <td class="my-link">
-                        <div>{{ props.item.topic}}</div>
-                    </td>
-                    <td>
-                        <div>{{props.item.timeDate.toString()}}</div>
-                    </td>
-                    <td>
-                        <div>{{ lessonStatus(props.item.isCanceled)}}</div>
-                    </td>
-                </tr>
-            </template>
-        </v-data-table>
-        <v-container v-if="$store.getters.isAdmin || $store.getters.isTrainer">
-            <group-attendance class="margin" :groupId="id"/>
-        </v-container>
-    </div>
+    <v-container>
+
+        <!--        тренер урока должен видеть только свои уроки-->
+        <!--        Ученики могут видеть все уроки но не видят панели редактирования-->
+        <!--        Админ и супертренер видят все-->
+
+        <v-layout row wrap>
+            <v-flex xs12 sm12 style="margin-bottom: 50px">
+                <v-layout>
+                    <span class="grey--text" style="font-size: 22px; margin-top: 15px">Group :  </span>
+                    <span style="font-size: 22px; margin-top: 15px" class="font-weight-medium">{{ group.title}}</span>
+                    <v-spacer></v-spacer>
+                    <v-btn large flat v-on:click="$router.push('/courses/' + course.id)">
+                        <b>Course: {{course.name}}</b></v-btn>
+                    <v-btn large flat v-on:click="forwardToUserPage(teacher.id)">
+                        <b>Trainer: {{teacher.firstName + ' ' + teacher.lastName}}</b></v-btn>
+
+                </v-layout>
+            </v-flex>
+            <v-flex xs12 sm12 style="margin-bottom: 50px">
+                <v-data-table
+                        :headers="headers"
+                        :items="students"
+                        :expand="true"
+                        item-key="id"
+                >
+                    <template v-slot:items="props">
+                        <tr>
+                            <td class="text-xs-right" @click="forwardToUserPage(props.item.id)">
+                                <div>
+                                    {{ props.item.id }}
+                                </div>
+                            </td>
+                            <td class="text-xs-left clickable" @click="forwardToUserPage(props.item.id)">
+                                {{props.item.firstName +' '+ props.item.lastName }}
+                            </td>
+                            <td class="text-xs-left clickable" @click="forwardToUserPage(props.item.id)">
+                                {{props.item.email}}
+                            </td>
+                            <td class="text-xs-right" v-if="isAdmin">
+                                <v-btn color="error" @click="deleteStudent(props.item.id)" v-if="isAdmin">Remove</v-btn>
+                            </td>
+                        </tr>
+                    </template>
+                </v-data-table>
+            </v-flex>
+            <v-flex xs12 sm12 style="margin-bottom: 50px">
+                <group-schedule-component :course-trainer-id="teacher.id"
+                                          :is-student-of-group="isStudentOfGroup()"></group-schedule-component>
+            </v-flex>
+
+            <v-flex style="margin-bottom: 50px" xs12 sm12 v-if="$store.getters.isAdmin || $store.getters.isTrainer">
+                <group-attendance class="margin" :groupId="id"/>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
     import axios from 'axios';
     import store from '../store/store.js';
     import GroupAttendance from "../components/GroupAttendance.vue";
+    import GroupScheduleComponent from "../components/GroupScheduleComponent.vue";
 
     export default {
         props: ['id'],
         name: "GroupPage",
-        components: {GroupAttendance},
-        data: function(){
-            return{
+        components: {GroupAttendance, GroupScheduleComponent},
+        data: function () {
+            return {
+                group: {},
                 students: [],
                 teacher: [],
                 course: [],
-                lessons:[],
-                headers: [
-                    {
-                        text: 'Student Id',
-                        align: 'left',
-                        value: 'id'
-                    },
-                    {
-                        text: 'Student name', value: 'firstName'+'lastName',
-                        align: 'left'
-                    },
-                    {
-                        text: '@email', value: 'email',
-                        width: "40", align: 'right'
-                    },
-                    {
-                        text: 'action', value: 'action',
-                        width: "30", align: 'right'
-                    }
-                ],
+                lessons: [],
                 headers2: [
-                    {   text: 'Lesson topic',
+                    {
+                        text: 'Lesson topic',
                         align: 'left',
                         value: 'topic'
                     },
                     {
-                     text: 'Date', value: 'timeDate.toString()', align: 'left'
+                        text: 'Date', value: 'timeDate.toString()', align: 'left'
                     },
                     {
-                     text: 'Status', value: 'isCanceled', align: 'left'
+                        text: 'Status', value: 'isCanceled', align: 'left'
                     }
 
                 ],
                 isAdmin: this.$store.getters.isAdmin,
             }
         },
-        methods:{
-            lessonStatus(flag){
-                if(flag == true){
-                    return 'Canceled';
-                }
-                return 'OK';
-                },
+        methods: {
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             deleteStudent(id) {
-                if (confirm("Are you sure you want to delete " + this.findUserById(id).firstName +' '+ this.findUserById(id).lastName)) {
-                    axios.delete('http://localhost:8080/groups/' + self.id + '/user' + id)
+                let self = this;
+                if (confirm("Are you sure you want to delete " + this.findUserById(id).firstName + ' ' + this.findUserById(id).lastName)) {
+                    axios.delete('http://localhost:8080/groups/' + this.group.id + '/user/' + id)
                         .then(function (response) {
+                            self.successAutoClosable('Employee has been removed from group');
+                            self.students = self.students.filter(function (e) {
+                                return e.id !== id;
+                            })
+                        })
+                        .catch(function (error) {
+                            self.errorAutoClosable('Error occured')
                         });
                 }
             },
-            hasRights(){
+            hasRights() {
                 return store.getters.user.id == this.teacher.id || store.getters.isAdmin;
             },
-            findUserById(id){
+            findUserById(id) {
                 return this.students.find(s => s.id == id);
             },
-            setGroup(){
-                let self = this;
-                let c;
-                axios.get('http://localhost:8080/groups/'+self.id+'/course')
-                    .then(function (response) {
-                        c = response.data;
-                        self.course = c;
-                    }).catch(function (error) {
-                    console.log(error);
-                });
-                axios.get('http://localhost:8080/groups/'+self.id+'/trainer')
-                    .then(function (response) {
-                        self.teacher = response.data;
-                    });
-                axios.get('http://localhost:8080/groups/'+self.id+'/users')
-                    .then(function (response) {
-                        self.students = response.data;
-                    }).catch(function (error) {
-                    console.log(error);
-                });
-                axios.get('http://localhost:8080/schedule/'+self.id)
-                    .then(function (response) {
-                        self.lessons = response.data;
-                    }).catch(function (error) {
-                    console.log(error);
-                });
-            },
-            forwardToUserPage(id){
+            forwardToUserPage(id) {
                 this.$router.push('/userpage/' + id)
             },
-            forwardToTrainerPage(id){
-                this.$router.push('/trainers/' + id)
-            },
-            forwardToLessonPage(id){
-                this.$router.push('/lesson/' + id)
-            },
-            forwardToGroupSchedulePage(){
+            isStudentOfGroup() {
                 let self = this;
-                this.$router.push('/groups/' + self.id + '/schedule')
-            }
+                return this.students.filter(e => e.id === self.$store.state.user.id).length > 0;
+            },
 
         },
-        mounted(){
+        mounted() {
             let self = this;
-            console.log(self);
-            self.setGroup();
-            //alert((self.$store.state.userRoles.find(r => r === "TRAINER"))); //self.$store.getters.isTrainer
-            console.log(self);
-            /*if(!((self.$store.state.userRoles.find(r => r === "TRAINER")) || self.isAdmin)){
-                alert("You don`t have permission");
-                self.$router.push("/");
-            }*/
+            axios.get('http://localhost:8080/groups/' + self.id)
+                .then(function (response) {
+                    self.group = response.data;
+                }).catch(function (error) {
+                console.log(error);
+            });
+            axios.get('http://localhost:8080/groups/' + self.id + '/course')
+                .then(function (response) {
+                    self.course = response.data;
+                }).catch(function (error) {
+                console.log(error);
+            });
+            axios.get('http://localhost:8080/groups/' + self.id + '/trainer')
+                .then(function (response) {
+                    self.teacher = response.data;
+                });
+            axios.get('http://localhost:8080/groups/' + self.id + '/users')
+                .then(function (response) {
+                    self.students = response.data;
+                    if (self.$store.state.userRoles.includes('ADMIN') ||
+                        parseInt(self.$store.state.user.id) === parseInt(self.course.teacher.id) ||
+                        self.isStudentOfGroup()) {
+                    } else {
+                        self.$router.push('/403');
+                    }
+
+                }).catch(function (error) {
+                console.log(error);
+            });
         },
+        computed: {
+            headers() {
+                let h = [
+                    {
+                        text: 'Student Id',
+                        align: 'left',
+                        value: 'id'
+                    },
+                    {
+                        text: 'Student name', value: 'firstName' + 'lastName',
+                        align: 'left'
+                    },
+                    {
+                        text: '@email', value: 'email',
+                        width: "40", align: 'right'
+                    }
+                ];
+                if (this.isAdmin) {
+                    h.push({
+                        text: 'action', value: 'action',
+                        width: "30", align: 'right'
+                    });
+                }
+                return h;
+            }
+        }
 
     }
 </script>
