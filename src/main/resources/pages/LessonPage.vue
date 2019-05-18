@@ -69,6 +69,8 @@
                     </v-data-table>
                 </v-flex>
             </v-layout>
+            <lesson-attendance-table :lessonId="this.$route.params.id"
+                                     :key="this.$route.params.id"/>
         </v-container>
     </div>
 </template>
@@ -77,8 +79,10 @@
 
     import axios from 'axios';
     import store from '../store/store.js';
+    import LessonAttendanceTable from "../components/LessonAttendanceTable.vue";
     export default {
         name: "AbsenceReasons",
+        components: {LessonAttendanceTable},
         data: function(){
           return{
                 dialog: false,

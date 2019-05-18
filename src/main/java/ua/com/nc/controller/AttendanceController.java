@@ -33,9 +33,9 @@ public class AttendanceController {
             List<Attendance> attendances = attendanceService.getAttendanceByStudentIdAndCourseId(userId, courseId);
             return ResponseEntity.ok().body(new Gson().toJson(attendances));
         }
-        if (groupId != null && lessonId != null) {
+        if (lessonId != null) {
             Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
-            List<Attendance> attendances = attendanceService.getAttendanceByGroupIdAndLessonId(groupId, lessonId);
+            List<Attendance> attendances = attendanceService.getAttendanceByLessonId(lessonId);
             return ResponseEntity.ok().body(gson.toJson(attendances));
         }
         if (userId != null && groupId != null) {
