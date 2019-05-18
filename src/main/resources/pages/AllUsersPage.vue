@@ -5,15 +5,14 @@
                 <v-toolbar flat color="white">
                     <v-toolbar-title>Users</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <template>
-                        <v-btn color="primary" dark class="mb-2" @click="goToNewUserPage">Add new user</v-btn>
-                    </template>
+                    <v-btn flat color="primary" class="mb-2" @click="goToNewUserPage">Add new user</v-btn>
                 </v-toolbar>
                 <v-data-table
                         :headers="headers"
                         :items="allUsers"
                         :expand="true"
                         item-key="id"
+                        :rows-per-page-items="nums"
                 >
                     <template v-slot:items="props">
                         <tr class="my-link" @click="goToUserPage(props.item.id)">
@@ -47,6 +46,7 @@
         name: "AllUsersPage",
         data: function () {
             return {
+                nums: [10, 25, {"text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1}],
                 headers: [
                     {
                         text: 'First name', value: 'firstName',

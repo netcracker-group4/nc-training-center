@@ -4,9 +4,8 @@
             <v-flex xs12 sm12>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>Courses</v-toolbar-title>
-                    <span class="text-xs-right">
-                <v-btn flat color="primary" @click="createCourse">Create new course</v-btn>
-            </span>
+                    <v-spacer></v-spacer>
+                    <v-btn flat color="primary" @click="createCourse">Create new course</v-btn>
                 </v-toolbar>
             </v-flex>
             <v-flex>
@@ -15,6 +14,7 @@
                         :items="coursesAndQuantities"
                         :expand="true"
                         item-key="course.id"
+                        :rows-per-page-items="nums"
                 >
                     <template v-slot:items="props">
                         <tr>
@@ -43,6 +43,7 @@
         name: "AdminCourses",
         data: function () {
             return {
+                nums: [10, 25, {"text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1}],
                 headers: [
                     {
                         text: 'Name of the course',

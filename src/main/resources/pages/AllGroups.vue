@@ -12,6 +12,7 @@
                         :items="groupsAndQuantities"
                         :expand="true"
                         item-key="id"
+                        :rows-per-page-items="nums"
                 >
                     <template v-slot:items="props">
                         <tr>
@@ -39,6 +40,7 @@
         name: "AllGroups",
         data: function () {
             return {
+                nums : [10,25,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}],
                 headers: [
                     {
                         text: 'Group id',
