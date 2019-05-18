@@ -3,7 +3,7 @@
         <v-toolbar flat color="white">
             <v-toolbar-title>Courses</v-toolbar-title>
             <span class="text-xs-right">
-                <v-btn flat color="primary" @click="createCourse">Create new course</v-btn>
+                <v-btn flat color="primary" v-if="isAdmin" @click="createCourse">Create new course</v-btn>
             </span>
 
         </v-toolbar>

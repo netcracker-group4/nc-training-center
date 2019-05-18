@@ -38,7 +38,7 @@ public class DashBoardController {
 
     @RequestMapping(value = {"/training-and-quantity"}, method = RequestMethod.GET)
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
     public String getTrainingAndQuantity() {
         return gson.toJson(dashBoardService.getTrainingAndQuantity());
     }

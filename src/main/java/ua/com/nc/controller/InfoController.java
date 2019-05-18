@@ -50,11 +50,4 @@ public class InfoController {
         Arrays.stream(statuses).forEach(s -> list.add(s.getName()));
         return gson.toJson(list);
     }
-    /*@RequestMapping(value = "courses/src/main/resources/img/{imageName}", method = RequestMethod.GET,
-            produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody byte[] getImage(@PathVariable String imageName) throws IOException {
-        InputStream in = getClass()
-                .getResourceAsStream("/src/main/resources/img/"+imageName);
-        return IOUtils.toByteArray(in);
-    }*/
 }

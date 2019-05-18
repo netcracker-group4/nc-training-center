@@ -1,6 +1,9 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <div class="title mb-1">{{name}}</div>
+        <div class="title mb-1">
+            {{name}}
+            <v-btn v-if="this.$store.getters.userRoles.includes('EMPLOYEE')" @click="sign()">Sign course</v-btn>
+        </div>
 
             <v-container
                     fluid
@@ -10,10 +13,8 @@
                     <v-flex xs5>
                         <v-layout column>
                             <div class="subheading pt-3"> <b>{{courseStatus}}</b>
-                             <b>{{level.title}}</b>
-                                <v-btn v-if="this.$store.getters.userRoles.includes('EMPLOYEE')" @click="sign()">Sign course</v-btn>
+                             <p>Level: {{level.title}}</p>
                             </div>
-                            <!--<v-img sizes="" src="https://picsum.photos/510/300?random" aspect-ratio="2" wight="100%"></v-img>-->
                             <v-img :src="'../'+'img/'+imageUrl+'.jpg'" aspect-ratio="2"></v-img>
                             <div v-if="isAdmin">
                                 <v-text-field label="Select Image" @click='pickFile' v-model='imageUrl' prepend-icon='attach_file'></v-text-field>
@@ -29,6 +30,13 @@
                     </v-flex>
                     <v-flex  xs5 offset-xs0 offset-lg0 style="margin-left: 2%">
                         <v-layout column>
+                            <div>
+                                <b>Starts on: {{startDay}}
+                                <p >Ends on: {{endDay}}</p></b>
+                                <p>
+                                    <CourseDate :inNotAdmin="isNotAdmin" :start-date="startDay" :end-date="endDay"/>
+                                </p>
+                            </div>
                             <div class="subheading pt-3"> <b>Trainer</b></div>
                             <div v-for="tr in trainer" > <b @click="goTrainerPage(tr.id)"> {{tr.firstName }}   {{tr.lastName}} </b>
                             </div>
@@ -47,7 +55,7 @@
                                             <div @click="">{{ props.item.id }}</div>
                                         </td>
                                         <td class="my-link clickable">
-                                            <div @click="goToGroupPage(props.item.id)">{{props.item.title}}</div>
+                                            <div @click="goGroupPage(props.item.id)">{{props.item.title}}</div>
                                         </td>
                                         <td class="text-xs-right">
                                             <v-btn v-if="isAdmin" @click="manageSchedule(props.item.id)">Manage schedule</v-btn>
@@ -85,9 +93,11 @@
 
 <script>
     import axios from 'axios'
+    import CourseDate from "../components/CourseDate.vue";
 
     export default {
         name: "CoursePage",
+        components: {CourseDate},
         data() {
             return{
                 id: this.$route.params.id,
@@ -103,8 +113,9 @@
                 startDay: null,
                 endDay: null,
                 trainer: null,
-                groups: null,
+                groups: [],
                 isAdmin: this.$store.getters.isAdmin,
+                isNotAdmin: this.isAdmin=="false",
                 trainers: null,
                 dialog: null,
                 statuses:[],
@@ -118,7 +129,7 @@
                         text: 'Group title', value: 'title'
                     },
                     {
-                        text: 'Action',
+                        text: 'Action',value: '',
                         width: "20", align: 'right'
                     }
                 ]
@@ -138,14 +149,12 @@
                         self.isOnLandingPage = dat.isOnLandingPage;
                         self.imageUrl = dat.imageUrl;
                         self.description = dat.description;
-                        self.startDay = dat.startDay;
-                        self.endDay = dat.endDay;
+                        self.startDay = new Date(dat.startDate).toDateString();
+                        self.endDay = new Date(dat.endDate).toDateString();
                         self.getTrainer();
                         self.getGroups();
-                        if(self.isAdmin){
-                            self.getTrainers();
-                        }
-                        console.log(self);
+                        self.getTrainers();
+                        console.log(dat);
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -185,7 +194,7 @@
                 this.$router.push('/userpage/' + id);
             },
             goGroupPage(id){
-                this.$router.push('/groups/' + id);
+                this.$router.push('/group/' + id);
             },
             sign(){
                 this.$router.push('/courses/'+this.id+'/join');
@@ -269,19 +278,10 @@
             try {
                 let self = this;
                 self.setCourse();
-
-                /*axios.get('http://localhost:8080/getcourses/{id}/trainer)
-                    .then(function (response) {
-                        self.courseStatus = response.data;
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });*/
-
+                console.log(self);
             }catch (e) {
                 console.log(e);
             }
-            console.log(this);
         }
     }
 </script>
