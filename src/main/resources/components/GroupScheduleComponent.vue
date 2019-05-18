@@ -288,7 +288,7 @@
                         "id": null,
                         "topic": "",
                         "groupId": this.$route.params.id,
-                        "trainerId": this.group.trainerId,
+                        "trainerId": this.courseTrainerId,
                         "timeDate": new Date().toISOString(),
                         "attachments": [],
                         "isCanceled": false,

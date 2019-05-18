@@ -202,7 +202,7 @@
 </template>
 
 <script>
-    import groupSchedule from './GroupSchedule.vue';
+    import groupSchedule from './GroupDesiredScheduleComponent.vue';
 
     export default {
         name: "LessonEditingComponent",

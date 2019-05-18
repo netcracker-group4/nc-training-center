@@ -23,7 +23,8 @@
                             <draggable v-model="allSchedules" tag="tbody" group="people">
                                 <tr v-for="item in allSchedules" :key="item.userId" style="cursor: pointer">
                                     <td>{{ item.userId }}</td>
-                                    <td  v-bind:class="{'notAttending': !item.isAttending}" v-bind:style="{width: '30%'}">{{ item.userName }}</td>
+                                    <td  class="student-name" v-bind:class="{'notAttending': !item.isAttending}"
+                                         v-bind:style="{width: '30%'}">{{ item.userName }}</td>
                                     <td v-for="forInterval in item.scheduleForIntervals"
                                         v-bind:style="{backgroundColor: getColor(forInterval)}">
                                     </td>
@@ -86,6 +87,7 @@
                 axios.get('http://localhost:8080/getcourses/desired/' + this.groupId)
                     .then(function (response) {
                         self.allSchedules = response.data;
+                        console.log(response.data);
                     })
                     .catch(function (error) {
                         console.log(error);
