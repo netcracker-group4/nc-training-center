@@ -15,13 +15,8 @@ public class AbsenceReasonServiceImpl implements AbsenceReasonService {
     private AbsenceReasonDao absenceReasonDao;
 
     @Override
-    public void add(AbsenceReason reason) {
-        absenceReasonDao.insert(reason);
-    }
-
-    @Override
-    public void add(String title) {
-        AbsenceReason reason = new AbsenceReason(title);
-        add(reason);
+    public Integer add(AbsenceReason absenceReason) {
+        absenceReasonDao.insert(absenceReason);
+        return absenceReason.getId();
     }
 }

@@ -8,7 +8,7 @@
             <v-list class="pa-1">
                 <v-list-tile avatar>
                     <v-list-tile-avatar>
-                       <v-icon>account_circle</v-icon>
+                        <v-icon>account_circle</v-icon>
                     </v-list-tile-avatar>
                     <v-list-tile-content class="cursor-pointer" v-on:click="goToMyPage()">
                         <v-list-tile-title v-if="this.$store.getters.isAuthorized">
@@ -18,25 +18,25 @@
                 </v-list-tile>
             </v-list>
 
-             <v-list class="pt-0" dense>
+            <v-list class="pt-0" dense>
                 <v-divider></v-divider>
 
-                 <v-list-tile
+                <v-list-tile
                         v-for="item in items"
                         :key="item.title"
                         @click=""
                         :to="item.link"
                 >
-                    <v-list-tile-action>
+                    <v-list-tile-action v-if="item.canBeShown">
                         <v-icon>{{ item.icon }}</v-icon>
                     </v-list-tile-action>
 
-                     <v-list-tile-content>
+                    <v-list-tile-content>
                         <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
 
-                 <v-list-group
+                <v-list-group
                         prepend-icon="chat"
                         no-action
                         v-if="self.$store.state.chats != null &
@@ -48,20 +48,20 @@
                             <v-list-tile-title>Chats</v-list-tile-title>
                         </v-list-tile>
                     </template>
-                        <v-list-tile
-                                v-for="chat in self.$store.state.chats"
-                                :key="chat.id"
-                                :to="'/chat/' + chat.id"
-                        >
-                            <v-list-tile-title v-text="chat.name"></v-list-tile-title>
-                            <v-list-tile-action>
+                    <v-list-tile
+                            v-for="chat in self.$store.state.chats"
+                            :key="chat.id"
+                            :to="'/chat/' + chat.id"
+                    >
+                        <v-list-tile-title v-text="chat.name"></v-list-tile-title>
+                        <v-list-tile-action>
 
-                             </v-list-tile-action>
-                        </v-list-tile>
+                        </v-list-tile-action>
+                    </v-list-tile>
 
-                 </v-list-group>
+                </v-list-group>
 
-             </v-list>
+            </v-list>
         </v-navigation-drawer>
         <v-toolbar class="grey lighten-4" app v-if="">
             <v-toolbar-items class="hidden-sm-and-down" v-if="this.$store.getters.isAuthorized">
@@ -80,40 +80,50 @@
         </v-toolbar>
     </div>
 
- </template>
+</template>
 
- <script>
+<script>
     export default {
         name: "NavigationBar",
-        data () {
+        data() {
             return {
                 self: this,
                 drawer: false,
                 chats: this.$store.state.chats,
                 items: [
-                    { title: 'Main', icon: 'home', link: '/' },
-                    { title: 'Users', icon: 'person', link: '/userpage'},
-                    { title: 'Courses', icon: 'view_list', link: '/admincourses'},
-                    { title: 'Groups', icon: 'group', link: '/allgroups'},
-                    { title: 'Dashboard', icon: 'dashboard', link: '/dashboard'},
-                    { title: 'Infodesk', icon: 'contact_support', link: '/infodesk'}
-                 ]
+                    {title: 'Main', icon: 'home', link: '/', canBeShown: () => true},
+                    {title: 'Users', icon: 'person', link: '/userpage', canBeShown: () => true},
+                    {title: 'Courses', icon: 'view_list', link: '/admincourses', canBeShown: () => true},
+                    {title: 'Groups', icon: 'group', link: '/allgroups', canBeShown: () => true},
+                    {
+                        title: 'Dashboard', icon: 'dashboard', link: '/dashboard',
+                        canBeShown: () => this.$store.getters.isAdmin
+                    },
+                    {
+                        title: 'Infodesk', icon: 'contact_support', link: '/infodesk',
+                        canBeShown: () => this.$store.getters.isAdmin || this.$store.state.userRoles.includes('EMPLOYEE')
+                    },
+                    {
+                        title: 'Absence reasons', icon: 'add', link: '/infodesk',
+                        canBeShown: () => this.$store.getters.isAdmin
+                    }
+                ]
             }
         },
-        methods:{
-            goToMyPage(){
+        methods: {
+            goToMyPage() {
                 this.$router.push('/userpage/' + this.$store.state.user.id);
-                this.drawer=false;
+                this.drawer = false;
             },
-            forwardToLoginPage(){
+            forwardToLoginPage() {
                 this.$router.push('/login')
             },
         },
     }
 </script>
 
- <style scoped>
-    .cursor-pointer{
+<style scoped>
+    .cursor-pointer {
         cursor: pointer;
     }
 </style>

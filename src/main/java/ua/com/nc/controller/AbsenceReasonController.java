@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.interfaces.AbsenceReasonDao;
+import ua.com.nc.domain.AbsenceReason;
 import ua.com.nc.service.AbsenceReasonService;
 
 @Log4j
@@ -33,13 +34,16 @@ public class AbsenceReasonController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @ResponseBody
     public void deleteReason(@PathVariable String id) {
         absenceReasonDao.delete(Integer.parseInt(id));
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void add(@RequestParam(name = "title") String title) {
-        service.add(title);
+    @ResponseBody
+    public Integer add(@RequestBody AbsenceReason absenceReason) {
+        log.info("absenceReason from RequestBody  " + absenceReason);
+        return service.add(absenceReason);
     }
 
 }

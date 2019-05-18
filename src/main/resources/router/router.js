@@ -16,7 +16,6 @@ import AbsenceReasons from '../pages/AbsenceReasons.vue'
 import DesiredSchedulePage from "../pages/DesiredSchedulePage.vue";
 import AttachmentsPage from "../pages/AttachmentsPage.vue"
 import TestPage from '../pages/TestPage.vue'
-import GroupSchedulePage from "../components/GroupScheduleComponent.vue";
 import AllGroups from "../pages/AllGroups.vue";
 import NotFound from "../pages/NotFound.vue";
 import ChatPage from '../pages/ChatPage.vue'
@@ -34,9 +33,7 @@ const routes = [
     {path: '/registration', component: RegistrationPage},
     {path: '/dashboard', component: DashBoardPage},
     {path: '/login', component: LoginPage},
-    {path: '/dashboard', component: DashBoardPage},
     {path: '/group/:id', component: GroupPage, props: true},
-    {path: '/groups/:id/schedule', component: GroupSchedulePage},
     {path: '/courses/:id', component: CoursePage, props: true},
     {path: '/courses/:id/join', component: JoinCoursePage, props: true},
     {path: '/admincourses', component: AdminCourses},
