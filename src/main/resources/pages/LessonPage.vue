@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <v-container
                 fluid
@@ -69,6 +69,8 @@
                     </v-data-table>
                 </v-flex>
             </v-layout>
+            <lesson-attendance-table :lessonId="this.$route.params.id"
+                                     :key="this.$route.params.id"/>
         </v-container>
     </div>
 </template>
@@ -77,13 +79,15 @@
 
     import axios from 'axios';
     import store from '../store/store.js';
+    import LessonAttendanceTable from "../components/LessonAttendanceTable.vue";
     export default {
         name: "AbsenceReasons",
+        components: {LessonAttendanceTable},
         data: function(){
           return{
                 dialog: false,
                 topic:null,
-                trainer:null,
+                trainer: [],
                 firstName:null,
                 lastName:null,
                 date:null,
@@ -163,7 +167,7 @@
                 this.dialog = false;
             },
             isLessonTrainer(){
-                return store.getters.user.id == this.trainer.id;
+                return this.$store.state.user.id == this.trainer.id;
              },
              unlink(id){
                 let form = new FormData();

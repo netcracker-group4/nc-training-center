@@ -39,6 +39,11 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    public void delete(Integer id) {
+        feedbackDao.delete(id);
+    }
+
+    @Override
     public List<DtoFeedback> getAllByUserId(Integer id) {
         List<Feedback> feedbacks = feedbackDao.getAllByUserId(id);
         return getDtoFeedback(feedbacks, id);

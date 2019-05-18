@@ -26,8 +26,8 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
     @Value("${attendance.select-by-student-id-and-course-id}")
     private String selectAttendanceByStudentIdAndCourseId;
 
-    @Value("${attendance.select-by-group-id-and-lesson-id}")
-    private String selectAttendanceByGroupIdAndLessonId;
+    @Value("${attendance.select-by-lesson-id}")
+    private String selectAttendanceByLessonId;
 
     @Value("${attendance.update}")
     private String attendanceUpdate;
@@ -75,7 +75,7 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
 
     private List<Attendance> getAttendances(Integer studentId, Integer courseId, String selectAttendanceByStudentIdAndCourseId) {
         List<Attendance> list;
-        log.debug(selectAttendanceByStudentIdAndCourseId);
+        log.info(selectAttendanceByStudentIdAndCourseId);
         try (PreparedStatement statement = connection.prepareStatement(selectAttendanceByStudentIdAndCourseId)) {
             statement.setInt(1, studentId);
             statement.setInt(2, courseId);
@@ -88,14 +88,25 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
         return list;
     }
 
+    private List<Attendance> getAttendances(Integer lessonId, String selectAttendanceByLessonId) {
+        log.info(selectAttendanceByLessonId);
+        try (PreparedStatement statement = connection.prepareStatement(selectAttendanceByLessonId)) {
+            statement.setInt(1, lessonId);
+            return parseResultSet(statement.executeQuery());
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+    }
+
     @Override
     public List<Attendance> getAttendanceByStudentIdAndGroupId(Integer studentId, Integer groupId) {
         return getAttendances(studentId, groupId, selectAttendanceByStudentIdAndGroupId);
     }
 
     @Override
-    public List<Attendance> getAttendanceByGroupIdAndLessonId(Integer groupId, Integer lessonId) {
-        return getAttendances(groupId, lessonId, selectAttendanceByGroupIdAndLessonId);
+    public List<Attendance> getAttendanceByLessonId(Integer lessonId) {
+        return getAttendances(lessonId, selectAttendanceByLessonId);
     }
 
 

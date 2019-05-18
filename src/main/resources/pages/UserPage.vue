@@ -124,8 +124,7 @@
                 return (this.user.roles !== undefined) &&
                     ((store.state.userRoles.includes("ADMIN")) ||
                         (store.state.userRoles.includes("MANAGER") && store.state.user.id === this.user.dtoManager.id) ||
-                        (store.state.userRoles.includes("TRAINER") && this.courses.length > 0) ||
-                        (store.state.userRoles.includes("EMPLOYEE") && store.state.user.id === this.user.id)) &&
+                        (store.state.userRoles.includes("TRAINER") && this.courses.length > 0)) &&
                     (this.user.roles.includes("EMPLOYEE"));
             },
             canShowSchedule() {

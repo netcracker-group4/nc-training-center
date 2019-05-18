@@ -22,6 +22,7 @@ public class IndexPageController {
     @Autowired
     private RoleService roleService;
 
+
     @GetMapping
     public String showIndexPage(@AuthenticationPrincipal User user, Model model) {
         boolean isAuthorized = false;

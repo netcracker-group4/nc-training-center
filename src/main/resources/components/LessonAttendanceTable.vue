@@ -20,7 +20,9 @@
                                 </v-select>
                             </v-flex>
                             <v-flex xs12 sm12 md10>
-                                <v-select v-model="editedItem.reason" :items="reasons" label="Change reason" :disabled="editedItem.status == null || editedItem.status.id != 2">
+                                <v-select v-model="editedItem.reason"
+                                          :items="reasons" label="Change reason"
+                                          :disabled="editedItem.status == null || editedItem.status.id != 2">
                                     <template slot="selection" slot-scope="status">
                                         {{ status.item.title}}
                                     </template>
@@ -40,24 +42,25 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-data-table
-                :headers="headers"
-                :items="attendances"
-                :rows-per-page-items="[10, 20, 50]"
-        >
-            <template v-slot:items="props">
-                <td class="clickable" @click="forwardToUserPage(props.item.userId)">
-                    <div>{{ props.item.studentFirstName + ' ' + props.item.studentLastName}}</div>
-                </td>
-                <!--<td class="text-xs-left">{{ props.item.topic}}</td>-->
-                <td class="text-xs-left">{{ props.item.timeDate}}</td>
-                <td class="text-xs-left">{{ props.item.status }}</td>
-                <td class="text-xs-left">{{ props.item.reason }}</td>
-                <td class="justify-center layout px-0">
-                    <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-                </td>
-            </template>
-        </v-data-table>
+        <v-flex sm6 offset-sm3>
+            <v-data-table
+                    :headers="headers"
+                    :items="attendances"
+                    :rows-per-page-items="[10, 20, 50]"
+                    no-data-text = "No attendance to show">
+
+                <template v-slot:items="props">
+                    <td class="clickable" @click="forwardToUserPage(props.item.userId)">
+                        <div>{{ props.item.studentFirstName + ' ' + props.item.studentLastName}}</div>
+                    </td>
+                    <td class="text-xs-left">{{ props.item.status }}</td>
+                    <td class="text-xs-center">{{ props.item.reason }}</td>
+                    <td class="justify-center px-0">
+                        <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+                    </td>
+                </template>
+            </v-data-table>
+        </v-flex>
     </div>
 </template>
 
@@ -65,8 +68,8 @@
     import axios from 'axios'
 
     export default {
-        name: "GroupAttendanceTable",
-        props: ['groupId', 'lessonId'],
+        name: "LessonAttendanceTable",
+        props: ['lessonId'],
         data: () => ({
             dialog: false,
             headers: [
@@ -76,10 +79,10 @@
                     sortable: false,
                     value: 'name'
                 },
-                { text: 'Date', value: 'date', sortable: false,},
                 { text: 'Attendance', value: 'attendance', sortable: false, },
-                { text: 'Reason', value: 'reason', sortable: false, },
-                { text: 'Actions', value: 'name', sortable: false }
+                { text: '', value: 'reason', sortable: false, },
+                { text: '', value: 'name', sortable: false }
+
             ],
             statuses: [],
             reasons: [],
@@ -114,7 +117,7 @@
                 let attendanceId = self.editedItem.attendanceId;
                 let statusId = self.editedItem.status.id;
                 let reasonId = null;
-                if(self.editedItem.reason == null || self.editedItem.reason == undefined){
+                if(self.editedItem.reason == null || self.editedItem.reason === "undefined"){
                     reasonId = null
                 }else{
                     reasonId = self.editedItem.reason.id
@@ -128,7 +131,7 @@
                 request.send(form);
                 request.onloadend = function () {
                     if(request.status === 200){
-                        axios.get('http://localhost:8080/attendances?groupId='+ self.groupId + '&lessonId=' + self.lessonId)
+                        axios.get('http://localhost:8080/attendances?lessonId=' + self.lessonId)
                             .then(response => self.attendances = response.data)
                             .catch(error => console.log(error))
                     }
@@ -145,7 +148,7 @@
             },
         },
         mounted() {
-            axios.get('http://localhost:8080/attendances?groupId='+ this.groupId + '&lessonId=' + this.lessonId)
+            axios.get('http://localhost:8080/attendances?lessonId=' + this.lessonId)
                 .then(response => this.attendances = response.data)
                 .catch(error => console.log(error));
 

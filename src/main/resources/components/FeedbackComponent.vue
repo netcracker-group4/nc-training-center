@@ -8,11 +8,7 @@
                 </template>
                 <div class="div_table_item">
                     <template v-if="canShowLeaveFeedbackBlock()">
-                        <v-form
-                                ref="form"
-                                v-model="valid"
-                                lazy-validation
-                        >
+                        <form>
                             <v-container style="display:flex; justify-content: space-between;">
                                 <v-avatar size="60px">
                                     <img
@@ -29,7 +25,9 @@
                                             rows="4"
                                             placeholder="Leave feedback"
                                             v-model="feedbackText"
-                                            :rules="[v => !!v || 'Feedback is required']"
+                                            v-validate="'required'"
+                                            :error-messages="errors.collect('feedback')"
+                                            data-vv-name="feedback"
                                             required
                                     ></v-textarea>
                                     <v-container class="v-container_button" style="display:flex; justify-content: flex-end; margin-top: 10px;">
@@ -43,7 +41,9 @@
                                                     box
                                                     background-color="white"
                                                     label="Select course"
-                                                    :rules="[v => !!v || 'Item is required']"
+                                                    v-validate="'required'"
+                                                    :error-messages="errors.collect('select')"
+                                                    data-vv-name="select"
                                                     required
                                             ></v-select>
                                         </v-flex>
@@ -53,15 +53,18 @@
                                     </v-container>
                                 </div>
                             </v-container>
-                        </v-form>
+                        </form>
                     </template>
                     <v-data-table
                             :items="userFeedback"
                             hide-headers
                             :rows-per-page-items="rows"
+                            :expand="false"
+                            item-key="id"
                     >
                         <template v-slot:items="props">
-                            <div class="table_item">
+                            <div class="table_item" style="position: relative"
+                                 @mouseenter="props.expanded = true" @mouseleave="props.expanded = false">
                                 <td>
                                     <v-avatar size="60px">
                                         <img
@@ -76,6 +79,14 @@
                                     </div>
                                     <div class="div_feedbackText">
                                         {{ props.item.text }}
+                                        <div class="feedback_buttons"
+                                             :class="{ show_buttons: props.expanded }"
+                                             v-if="canShowButtons()"
+                                        >
+                                            <div class="delete" @click="deleteFeedback(props.item)">
+                                                <v-icon>clear</v-icon>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="div_feedbackTimeDate">
                                         {{ props.item.timeDate }}
@@ -94,15 +105,18 @@
     import store from '../store/store.js';
 
     export default {
+        $_veeValidate: {
+            validator: 'new'
+        },
         name: 'feedback-component',
         props: [
             'user',
             'courses'
         ],
         data:() => ({
-            valid: true,
             feedbackText: '',
             userFeedback: [],
+            defaultFeedback: '',
             selectCourse: {
                 id: ''
             },
@@ -110,7 +124,8 @@
                 id: ''
             },
             coursesName: [],
-            rows: [3,5,10,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}]
+            rows: [3,5,10,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}],
+            show: false,
         }),
         methods: {
             getAuthorizationUser() {
@@ -119,31 +134,32 @@
             canShowLeaveFeedbackBlock() {
                 return store.state.userRoles.includes("TRAINER") && this.courses.length > 0;
             },
+            canShowButtons() {
+                return store.state.userRoles.includes("ADMIN") ||
+                    store.state.userRoles.includes("TRAINER");
+            },
             leaveFeedback() {
-                if (this.$refs.form.validate()) {
-                    let self = this;
-                    console.log(self.selectCourse);
-                    axios.post('http://localhost:8080/feedback/add', {
-                        studentId: this.user.id,
-                        teacher: this.getAuthorizationUser(),
-                        course: this.selectCourse,
-                        text: this.feedbackText,
-                    })
-                    .then(response => {
-                        self.feedbackText = '';
-                        self.selectCourse = Object.assign({}, self.defaultSelectCourse);
-                        console.log(response);
-                        if (this.isNotOnlyTrainer()) {
-                            this.getAllFeedback();
-                        } else {
-                            this.getAllFeedbackByTrainer();
-                        }
-                        this.$refs.form.reset();
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-                }
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+                        let self = this;
+                        console.log(self.selectCourse);
+                        axios.post('http://localhost:8080/feedback/add', {
+                            studentId: this.user.id,
+                            teacher: this.getAuthorizationUser(),
+                            course: this.selectCourse,
+                            text: this.feedbackText,
+                        }).then(response => {
+                            self.feedbackText = '';
+                            self.selectCourse = Object.assign({}, self.defaultSelectCourse);
+                            console.log(response);
+                            this.getFeedback();
+                            this.$validator.reset();
+                        })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }
+                })
 
             },
             isNotOnlyTrainer() {
@@ -162,6 +178,19 @@
                         console.log(error);
                     });
             },
+            deleteFeedback(item) {
+                let self = this;
+                axios.delete('http://localhost:8080/feedback/delete/' + item.id)
+                    .then(response => {
+                        console.log(response);
+                        if (response.status === 200) {
+                            let index = self.userFeedback.indexOf(item);
+                            self.userFeedback.splice(index, 1);
+                        } else {
+
+                        }
+                    })
+            },
             getAllFeedbackByTrainer() {
                 let self = this;
                 axios.get('http://localhost:8080/feedback/get-by-rainer-and-by-user?userId=' +
@@ -173,21 +202,33 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-            }
-        },
-        mounted() {
-            if (this.isNotOnlyTrainer()) {
-                this.getAllFeedback();
-            } else {
-                this.getAllFeedbackByTrainer();
-            }
-        },
-        watch: {
-            '$route'(to, from) {
+            },
+            getFeedback() {
                 if (this.isNotOnlyTrainer()) {
                     this.getAllFeedback();
                 } else {
                     this.getAllFeedbackByTrainer();
+                }
+            },
+        },
+        mounted() {
+            this.$validator.localize('en', this.dictionary)
+            this.getFeedback();
+        },
+        watch: {
+            '$route'(to, from) {
+                this.getFeedback();
+            }
+        },
+        dictionary: {
+            custom: {
+                feedback: {
+                    required: () => 'Feedback can not be empty',
+                    max: 'The name field may not be greater than 10 characters'
+                    // custom messages
+                },
+                select: {
+                    required: 'Select field is required'
                 }
             }
         }
@@ -214,6 +255,23 @@
     .div_feedbackText {
         font-size: 14px;
         color: #656266;
+    }
+    .feedback_buttons {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 20px;
+        right: 10px;
+        /*display: none;*/
+        opacity: 0;
+    }
+    .feedback_buttons .delete {
+        cursor: pointer;
+    }
+    .show_buttons {
+        /*display: block;*/
+        opacity: 1;
+        transition-duration: 0.5s;
     }
     .div_feedbackTimeDate {
         color: #999999;

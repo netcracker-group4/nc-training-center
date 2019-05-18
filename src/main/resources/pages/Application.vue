@@ -12,10 +12,15 @@
 
 <script>
     import NavigationBar from "../components/NavigationBar.vue";
+    import axios from 'axios'
 
     export default {
         name: "Application",
-        components: {NavigationBar}
+        components: {NavigationBar},
+        mounted() {
+            axios.get('http://localhost:8080/chats')
+                .then(response => this.$store.state.chats = response.data)
+        }
     }
 </script>
 

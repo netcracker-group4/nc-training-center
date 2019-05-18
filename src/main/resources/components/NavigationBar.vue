@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
         <v-navigation-drawer
                 v-model="drawer"
@@ -18,10 +18,10 @@
                 </v-list-tile>
             </v-list>
 
-            <v-list class="pt-0" dense>
+             <v-list class="pt-0" dense>
                 <v-divider></v-divider>
 
-                <v-list-tile
+                 <v-list-tile
                         v-for="item in items"
                         :key="item.title"
                         @click=""
@@ -31,11 +31,37 @@
                         <v-icon>{{ item.icon }}</v-icon>
                     </v-list-tile-action>
 
-                    <v-list-tile-content>
+                     <v-list-tile-content>
                         <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
-            </v-list>
+
+                 <v-list-group
+                        prepend-icon="chat"
+                        no-action
+                        v-if="self.$store.state.chats != null &
+                              self.$store.state.chats != undefined &
+                                self.$store.state.chats.length > 0"
+                >
+                    <template v-slot:activator>
+                        <v-list-tile>
+                            <v-list-tile-title>Chats</v-list-tile-title>
+                        </v-list-tile>
+                    </template>
+                        <v-list-tile
+                                v-for="chat in self.$store.state.chats"
+                                :key="chat.id"
+                                :to="'/chat/' + chat.id"
+                        >
+                            <v-list-tile-title v-text="chat.name"></v-list-tile-title>
+                            <v-list-tile-action>
+
+                             </v-list-tile-action>
+                        </v-list-tile>
+
+                 </v-list-group>
+
+             </v-list>
         </v-navigation-drawer>
         <v-toolbar class="grey lighten-4" app v-if="">
             <v-toolbar-items class="hidden-sm-and-down" v-if="this.$store.getters.isAuthorized">
@@ -54,22 +80,23 @@
         </v-toolbar>
     </div>
 
-</template>
+ </template>
 
-<script>
+ <script>
     export default {
         name: "NavigationBar",
         data () {
             return {
+                self: this,
                 drawer: false,
+                chats: this.$store.state.chats,
                 items: [
                     { title: 'Main', icon: 'home', link: '/' },
                     { title: 'Users', icon: 'person', link: '/userpage'},
                     { title: 'Courses', icon: 'view_list', link: '/admincourses'},
                     { title: 'Groups', icon: 'group', link: '/allgroups'},
                     { title: 'Dashboard', icon: 'dashboard', link: '/dashboard'},
-
-                ]
+                 ]
             }
         },
         methods:{
@@ -79,14 +106,12 @@
             },
             forwardToLoginPage(){
                 this.$router.push('/login')
-            }
+            },
         },
-        mounted() {
-        }
     }
 </script>
 
-<style scoped>
+ <style scoped>
     .cursor-pointer{
         cursor: pointer;
     }

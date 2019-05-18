@@ -1,4 +1,4 @@
--- noinspection SpellCheckingInspectionForFile
+﻿-- noinspection SpellCheckingInspectionForFile
 
 -- noinspection SqlResolveForFile
 
@@ -481,6 +481,18 @@ values
 	(3, 'normal', 3);
 
 alter sequence suitability_seq restart with 5;
+
+insert into attachment (id, url, description, name, trainer_id)
+values 
+	(1, '//url', 'description', 'attachment-name', 5);
+
+insert into lesson_attachment (lesson_id, attachment_id)
+values 
+	(1, 1),
+	(1, 2),
+	(1, 3);
+
+
 
 update lesson set is_archived = false;
 update lesson set is_canceled = false;
