@@ -2,8 +2,10 @@ package ua.com.nc.service;
 
 import ua.com.nc.dto.DtoLesson;
 
+import java.util.List;
+
 public interface LessonsService {
-    String getAllForGroup(int groupId);
+    List<DtoLesson> getAllForGroup(int groupId);
 
     String updateLesson(DtoLesson toUpdate);
 
@@ -13,7 +15,7 @@ public interface LessonsService {
 
     String cancelLesson(int lessonId);
 
-    String getAllForEmployee(int userId);
+    List<DtoLesson> getAllForEmployee(int userId);
 
-    String getAllForETrainer(Integer userId);
+    List<DtoLesson> getAllForETrainer(Integer userId);
 }

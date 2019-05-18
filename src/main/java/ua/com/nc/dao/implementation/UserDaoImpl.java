@@ -270,7 +270,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
             statement.setInt(4, user.getId());
             statement.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.trace(e);
             throw new PersistException(e);
         }
     }
@@ -284,7 +284,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
             statement.setInt(2, user.getId());
             statement.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.trace(e);
             throw new PersistException(e);
         }
     }
@@ -334,7 +334,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
             statement.setInt(2, id);
             statement.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.trace(e);
             throw new PersistException(e);
         }
     }

@@ -50,10 +50,6 @@
                 </v-flex>
             </v-layout>
         </v-container>
-        <!--        {{ {-->
-        <!--        courseId : $route.params.id,-->
-        <!--        array : desiredSchedule2-->
-        <!--        }}}-->
     </div>
 </template>
 

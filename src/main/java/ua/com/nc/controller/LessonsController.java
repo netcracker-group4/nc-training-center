@@ -2,6 +2,8 @@ package ua.com.nc.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,27 +28,29 @@ public class LessonsController {
     @Autowired
     LessonDao lessonDao;
 
-    private final Gson gson = new Gson();
+    private Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, (JsonSerializer<Timestamp>)
+            (timestamp, type, jsonSerializationContext) -> new JsonPrimitive(timestamp.toString())).create();
+
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/{groupId}")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveLessons(authentication, #groupId)")
     public String getAllForGroup(@PathVariable String groupId) {
-        return lessonsService.getAllForGroup(Integer.parseInt(groupId));
+        return gson.toJson(lessonsService.getAllForGroup(Integer.parseInt(groupId)));
     }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/employee/{userId}")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToSeeScheduleOf(authentication, #userId)")
     public String getAllForEmployee(@PathVariable Integer userId) {
-        return lessonsService.getAllForEmployee(userId);
+        return gson.toJson(lessonsService.getAllForEmployee(userId));
     }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/trainer/{userId}")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToSeeScheduleOf(authentication, #userId)")
     public String getAllForTrainer(@PathVariable Integer userId) {
-        return lessonsService.getAllForETrainer(userId);
+        return gson.toJson(lessonsService.getAllForETrainer(userId));
     }
 
     @ResponseBody
@@ -79,7 +83,7 @@ public class LessonsController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/lesson/{lessonId}")
-    public String getLesson(@PathVariable String lessonId){
+    public String getLesson(@PathVariable String lessonId) {
         return gson.toJson(lessonDao.getEntityById(Integer.parseInt(lessonId)));
     }
 
