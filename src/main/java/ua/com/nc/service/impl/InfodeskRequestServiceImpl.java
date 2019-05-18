@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.ProblemDao;
 import ua.com.nc.dao.interfaces.ProblemStatusDao;
 import ua.com.nc.domain.ProblemStatus;
+import ua.com.nc.domain.Problem;
 import ua.com.nc.service.InfodeskRequestService;
 
 import java.util.List;
@@ -20,8 +21,18 @@ public class InfodeskRequestServiceImpl implements InfodeskRequestService {
     private ProblemStatusDao problemStatusDao;
 
     @Override
-    public void createRequest (int id, String description, String message) {
-        problemDao.createRequest(id, description, message);
+    public int createRequest (int id, String description, String message) {
+        return problemDao.createRequest(id, description, message);
+    }
+
+    @Override
+    public List<Problem> getAllRequestsOfType (String requestType) {
+        return problemDao.getAllRequestsOfType (requestType);
+    }
+
+    @Override
+    public void updateRequestType (int requestId, String requestType) {
+        problemDao.updateRequestType (requestId, requestType);
     }
 
     @Override

@@ -145,7 +145,7 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
             landingPageCourses = parseResultSet(rs);
         } catch (Exception e) {
             log.trace(e);
-            throw new PersistException(e);
+            throw new PersistException(e.getMessage());
         }
         log.info(sql + " find all on landing page");
         return landingPageCourses;
@@ -160,7 +160,7 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
             statement.executeUpdate();
         } catch (Exception e) {
             log.trace(e);
-            throw new PersistException(e);
+            throw new PersistException(e.getMessage());
         }
     }
 
@@ -175,6 +175,8 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
         } catch (SQLException e) {
             log.trace(e);
             throw new PersistException(e);
+            e.printStackTrace();
+            throw new PersistException(e.getMessage());
         }
         return course;
     }
@@ -188,7 +190,7 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
             ResultSet rs = statement.executeQuery();
             courses = parseResultSet(rs);
         } catch (SQLException e) {
-            throw new PersistException(e);
+            throw new PersistException(e.getMessage());
         }
         if (courses == null || courses.size() == 0) {
             return null;
@@ -209,7 +211,7 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
             ResultSet rs = statement.executeQuery();
             courses = parseResultSet(rs);
         } catch (SQLException e) {
-            throw new PersistException(e);
+            throw new PersistException(e.getMessage());
         }
         if (courses == null || courses.size() == 0) {
             return null;

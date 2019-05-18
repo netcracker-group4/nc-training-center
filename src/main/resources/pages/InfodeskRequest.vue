@@ -53,17 +53,26 @@
         },
         methods:{
             send (){
-                if (this.description != null && this.message != null) {
-                        console.log(this.description + " " + this.message);
-                        axios.post('http://localhost:8080/requests/create-request', {
-                            userId: this.userId.toString(),
-                            description: this.description,
-                            message: this.message
-                        })
-                            .then(response => alert("Your request added"))
-                    } else {
-                        alert("Sorry, you can't leave a field empty")
-                    }
+                // if (this.description != null && this.message != null) {
+                //         console.log(this.description + " " + this.message);
+                //         axios.post('http://localhost:8080/requests/create-request', {
+                //             userId: this.userId.toString(),
+                //             description: this.description,
+                //             message: this.message
+                //         })
+                //             .then(response => alert("Your request added"))
+                //     } else {
+                //         alert("Sorry, you can't leave a field empty")
+                //     }
+
+                let form = new FormData();
+
+                let request = new XMLHttpRequest();
+                request.open('POST', 'http://localhost:8080/requests/create-request');
+                form.append('userId', this.userId);
+                form.append('description', this.description);
+                form.append('message', this.message);
+                request.send(form);
             },
             isUserAdmin(){
                 return store.getters.isAdmin;
