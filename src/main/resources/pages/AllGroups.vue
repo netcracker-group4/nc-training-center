@@ -1,30 +1,35 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-        <v-toolbar flat color="white">
-            <v-toolbar-title>Groups</v-toolbar-title>
+    <v-container>
+        <v-layout row wrap>
+            <v-flex xs12 sm12 >
+                <v-toolbar flat color="white">
+                    <v-toolbar-title>Groups</v-toolbar-title>
+                </v-toolbar>
+            </v-flex>
+            <v-flex>
+                <v-data-table
+                        :headers="headers"
+                        :items="groupsAndQuantities"
+                        :expand="true"
+                        item-key="id"
+                >
+                    <template v-slot:items="props">
+                        <tr>
+                            <td class="my-link">
+                                <div @click="">{{ props.item.id }}</div>
+                            </td>
+                            <td class="my-link clickable">
+                                <div @click="goToGroupPage(props.item.id)">{{ props.item.title }}</div>
+                            </td>
+                            <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
 
-        </v-toolbar>
-        <v-data-table
-                :headers="headers"
-                :items="groupsAndQuantities"
-                :expand="true"
-                item-key="id"
-        >
-            <template v-slot:items="props">
-                <tr>
-                    <td class="my-link">
-                        <div @click="">{{ props.item.id }}</div>
-                    </td>
-                    <td class="my-link clickable">
-                        <div @click="goToGroupPage(props.item.id)">{{ props.item.title }}</div>
-                    </td>
-                    <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
 
-
-                </tr>
-            </template>
-        </v-data-table>
-    </div>
+                        </tr>
+                    </template>
+                </v-data-table>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>

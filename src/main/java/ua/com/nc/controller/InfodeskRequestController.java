@@ -29,4 +29,13 @@ public class InfodeskRequestController {
         return ResponseEntity.ok().body("Your request is created");
     }
 
+    @RequestMapping(value = {"/statuses"}, method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?> getStatuses() {
+        return ResponseEntity.ok().body(infodeskRequestService.getStatuses());
+    }
+
+
+
+
 }

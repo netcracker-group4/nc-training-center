@@ -1,20 +1,16 @@
 package ua.com.nc.domain;
 
+import lombok.Data;
+
+@Data
 public class ProblemStatus extends Entity {
 
     private String title;
+    private String description;
 
-    public ProblemStatus (String title) {
+    public ProblemStatus(Integer id, String title, String description) {
+        super(id);
         this.title = title;
+        this.description = description;
     }
-
-    public ProblemStatus (Integer id, String title) {
-        super (id);
-        this.title = title;
-    }
-
-    public String getTitle() { return title; }
-
-    public void setTitle(String title) { this.title = title; }
-
 }

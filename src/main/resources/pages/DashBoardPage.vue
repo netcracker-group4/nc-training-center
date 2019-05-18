@@ -1,25 +1,28 @@
 <template>
-    <form class="table" style="margin-top: 20px">
-        <div class="row">
-            <v-tabs v-model="shownTable" centered>
-                <v-tab>
-                    Trainings and quantity of employee
-                </v-tab>
-                <v-tab>
-                    raining level and quantity of groups
-                </v-tab>
-                <v-tab>
-                    Training level and trainers
-                </v-tab>
-            </v-tabs>
-        </div>
-
-        <v-container style="margin-top: 50px">
-            <DashBoardTableTrainingAndQuantity v-show="shownTable===0"></DashBoardTableTrainingAndQuantity>
-            <DashBoardTableLevelAndQuantity v-show="shownTable===1"></DashBoardTableLevelAndQuantity>
-            <DashBoardTableLevelAndTrainers v-show="shownTable===2"></DashBoardTableLevelAndTrainers>
-        </v-container>
-    </form>
+    <v-container>
+        <v-layout row wrap >
+            <v-flex xs12 sm12>
+                <div class="row" style="margin-bottom: 50px">
+                    <v-tabs v-model="shownTable" fixed-tabs>
+                        <v-tab>
+                            Trainings and quantity of employee
+                        </v-tab>
+                        <v-tab>
+                            raining level and quantity of groups
+                        </v-tab>
+                        <v-tab>
+                            Training level and trainers
+                        </v-tab>
+                    </v-tabs>
+                </div>
+            </v-flex>
+            <v-flex xs12 sm12>
+                <DashBoardTableTrainingAndQuantity v-show="shownTable===0"></DashBoardTableTrainingAndQuantity>
+                <DashBoardTableLevelAndQuantity v-show="shownTable===1"></DashBoardTableLevelAndQuantity>
+                <DashBoardTableLevelAndTrainers v-show="shownTable===2"></DashBoardTableLevelAndTrainers>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>

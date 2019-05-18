@@ -24,6 +24,7 @@ import InfodeskRequest from "../pages/InfodeskRequest.vue";
 import JoinCoursePage from "../pages/JoinCoursePage.vue";
 import LessonPage from "../pages/LessonPage.vue";
 import AccessDenied from "../pages/AccessDenied.vue";
+import InfodeskPage from "../pages/InfodeskPage.vue";
 
 Vue.use(Router);
 
@@ -53,6 +54,7 @@ const routes = [
     {path: '/allgroups', component: AllGroups},
     {path: '/chat/:id', component: ChatPage},
     {path: '/requests', component: InfodeskRequest},
+    {path: '/infodesk', component: InfodeskPage},
     {path: '/404', component: NotFound },
     {path: '/403', component: AccessDenied },
     {path: '*', redirect: '/404'}
