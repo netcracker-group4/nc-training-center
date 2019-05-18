@@ -38,6 +38,8 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     private String userGroupDeleteForUser;
     @Value("${usr_group.select-by-id}")
     private String userGroupSelectById;
+    @Value("${usr_group.select-by-user-id}")
+    private String userGroupSelectByUserId;
 
     @Autowired
     public UserGroupDaoImpl(DataSource dataSource) throws PersistException {
@@ -128,7 +130,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
         }
     }
 
-    @SuppressWarnings("Duplicates")
+
     @Override
     public UserGroup getByUserAndCourse(Integer userId, Integer courseId) {
         String sql = userGroupSelectByUsrAndCourse;
@@ -151,7 +153,6 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
         return list.iterator().next();
     }
 
-    @SuppressWarnings("Duplicates")
     @Override
     public UserGroup getByUserAndGroup(Integer userId, Integer groupId) {
         String sql = userGroupSelectByUsrAndGroup;
@@ -174,5 +175,10 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
         return list.iterator().next();
     }
 
-
+    @Override
+    public List<UserGroup> getByUser(Integer userId) {
+        String sql = userGroupDeleteForGroup;
+        log.info(sql + " LOG getByUser " + userId);
+        return getFromSqlById(sql, userId);
+    }
 }

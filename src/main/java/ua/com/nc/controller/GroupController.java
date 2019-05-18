@@ -98,7 +98,6 @@ public class GroupController {
         UserGroup userGroup = userGroupDao.getByUserAndGroup(userId, id);
         userGroup.setGroupId(null);
         userGroupDao.update(userGroup);
-//        groupDao.deleteUserFromGroup(id, userId);
     }
 
     @RequestMapping(value = "/{id}/course", method = RequestMethod.GET)

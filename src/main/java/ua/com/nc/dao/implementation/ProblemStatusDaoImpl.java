@@ -20,7 +20,7 @@ import java.util.List;
 @PropertySource("classpath:sql_queries.properties")
 public class ProblemStatusDaoImpl extends AbstractDaoImpl<ProblemStatus> implements ProblemStatusDao {
 
-    @Value("${problem_status.select-all}")
+    @Value("${problem-status.select-all}")
     private String selectAllProblemStatus;
 
     @Autowired

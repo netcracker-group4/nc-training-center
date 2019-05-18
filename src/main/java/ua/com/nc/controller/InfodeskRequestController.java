@@ -52,8 +52,6 @@ public class InfodeskRequestController {
     }
 
 
-
-
     @RequestMapping (value={"/change-request-type"}, method = RequestMethod.PATCH)
     @ResponseBody
     public ResponseEntity<?> updateRequestType (@RequestParam (name = "requestId") String requestId,

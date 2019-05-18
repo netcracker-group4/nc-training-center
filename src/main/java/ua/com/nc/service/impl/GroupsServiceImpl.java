@@ -73,9 +73,26 @@ public class GroupsServiceImpl implements GroupsService {
 
     @Override
     public List<DtoGroup> getAllByEmployeeId(Integer employeeId) {
+        List<DtoGroup> dtoGroups = new ArrayList<>();
         List<Level> levels = levelDao.getAll();
-        List<Group> groups = groupDao.getAllGroupsByStudent(employeeId);
-        return getDtoGroups(levels, groups);
+        List<UserGroup> userGroups = userGroupDao.getByUser(employeeId);
+        for (UserGroup userGroup : userGroups) {
+            int courseId = userGroup.getCourseId();
+            Course course = courseDao.getEntityById(courseId);
+            String courseName = course.getName();
+            if (userGroup.getGroupId() == null || userGroup.getGroupId() == 0) {
+                dtoGroups.add(new DtoGroup(null, "", courseId,
+                        courseName, course.getUserId(),
+                        getLevelName(levels, course.getLevel())));
+            } else {
+                Group group = groupDao.getEntityById(userGroup.getGroupId());
+                dtoGroups.add(new DtoGroup(userGroup.getGroupId(), group.getTitle(), courseId,
+                        courseName, course.getUserId(),
+                        getLevelName(levels, course.getLevel())));
+            }
+
+        }
+        return dtoGroups;
     }
 
     private String getLevelName(List<Level> levels, int levelId) {
