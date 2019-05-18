@@ -118,7 +118,7 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
             ResultSet rs = statement.executeQuery();
             return (rs.next()) ?  rs.getInt(1) : 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.trace(e);
             throw new PersistException(e);
         }
     }
@@ -151,7 +151,7 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
             statement.setInt(2, userId);
             statement.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.trace(e);
         }
     }
 }

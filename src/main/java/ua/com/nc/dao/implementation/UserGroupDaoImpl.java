@@ -110,7 +110,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
             setId(statement, groupId);
             statement.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.trace(e);
             throw new PersistException(e);
         }
     }
@@ -123,7 +123,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
             setId(statement, userId);
             statement.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.trace(e);
             throw new PersistException(e);
         }
     }

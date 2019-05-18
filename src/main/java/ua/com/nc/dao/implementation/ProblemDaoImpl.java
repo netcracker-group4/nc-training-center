@@ -16,6 +16,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
+
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
@@ -24,10 +26,17 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     @Value("${problem.create-request}")
     private String createRequest;
 
+    @Value("${problem.select-requests-of-type}")
+    private String selectRequestsOfType;
+
+    @Value ("${problem.update-type-of-request}")
+    private String updateTypeOfRequest;
+
     @Autowired
     public ProblemDaoImpl (DataSource dataSource) throws PersistException {
         super (dataSource);
     }
+
     @Override
     protected List <Problem> parseResultSet(ResultSet rs) throws SQLException {
         List<Problem> list = new ArrayList<>();
@@ -44,19 +53,49 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     }
 
     @Override
-    public void createRequest (int studentId, String description, String message) {
+    public int createRequest (int studentId, String description, String message) {
         String sql = createRequest;
+        int lastInsert;
         log.info (sql + " create a request " + description);
         try (PreparedStatement statement = connection.prepareStatement (sql)) {
             statement.setInt (1, studentId);
             statement.setString(2, description);
             statement.setString (3, message);
-            statement.executeUpdate();
+            ResultSet rs = statement.executeQuery();
+            lastInsert = rs.getInt(1);
         } catch (Exception e) {
             log.trace (e);
             throw new PersistException (e);
         }
+        return lastInsert;
     }
 
+    @Override
+    public List<Problem> getAllRequestsOfType (String requestType) {
+        List<Problem> requests;
+        String sql = selectRequestsOfType;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, requestType);
+            ResultSet rs = statement.executeQuery();
+            requests = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e.getMessage());
+        }
+        log.info (sql + " get all requests of type " + requestType);
+        return requests;
+    }
 
+    @Override
+    public void updateRequestType (int requestId, String requestType) {
+        String sql = updateTypeOfRequest;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, requestType);
+            statement.setInt(2, requestId);
+            statement.executeUpdate();
+        } catch (Exception e) {
+            log.trace (e);
+            throw new PersistException (e.getMessage ());
+        }
+    }
 }

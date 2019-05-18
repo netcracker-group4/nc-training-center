@@ -2,37 +2,36 @@
     <div>
         <v-toolbar>
             <v-select
-                    v-model="selectedCourses"
-                    item-value="course.id"
-                    :items="coursesAndQuantities"
-                    item-text="course.name"
-                    label="Select Trainings"
+                    v-model="selectedLevels"
+                    item-value="level.id"
+                    :items="levelsAndGroupQuantities"
+                    item-text="level.title"
+                    label="Select Levels"
                     multiple
             >
                 <template v-slot:selection="{ item, index }">
                     <v-chip v-if="index === 0">
-                        <span>{{ item.course.name }}</span>
+                        <span>{{ item.level.title }}</span>
                     </v-chip>
                     <span
                             v-if="index === 1"
                             class="grey--text caption"
-                    >(+{{ selectedCourses.length - 1 }} others)</span>
+                    >(+{{ selectedLevels.length - 1 }} others)</span>
                 </template>
             </v-select>
         </v-toolbar>
         <div>
             <v-toolbar flat color="white">
-                <v-toolbar-title>Trainings and quantity of employees</v-toolbar-title>
+                <v-toolbar-title>Levels and quantity of groups</v-toolbar-title>
                 <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel report</v-btn>
                 <v-spacer></v-spacer>
             </v-toolbar>
-
             <v-data-table
                     :headers="headers"
-                    :items="filteredCourses"
+                    :items="filteredLevels"
                     :expand="true"
                     class="elevation-1"
-                    item-key="course.id"
+                    item-key="level.id"
             >
                 <template v-slot:items="props">
                     <tr>
@@ -40,10 +39,10 @@
                             <v-btn smal flat><span v-if="props.expanded">fold</span>
                                 <span v-else>unfold</span></v-btn>
                         </td>
-                        <td @click="goToCoursePage(props.item.course.id)" class="my-link">
-                            <div>{{ props.item.course.name }}</div>
+                        <td>
+                            <div>{{ props.item.level.title }}</div>
                         </td>
-                        <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
+                        <td class="text-xs-right">{{ props.item.numberOfGroups }}</td>
                     </tr>
                 </template>
                 <template v-slot:expand="props">
@@ -54,9 +53,13 @@
                             hide-actions
                     >
                         <template v-slot:items="props">
-                            <tr @click="goToGroupPage(props.item.group.id)" class="inner-table my-link">
-                                <td class="text-xs-right">{{ props.item.group.title }}</td>
-                                <td class="text-xs-right">{{ props.item.quantityOfEmployees }}</td>
+                            <tr class="inner-table">
+                                <td @click="goToGroupPage(props.item.group.id)" class="text-xs-right my-link">
+                                    {{ props.item.group.title }}
+                                </td>
+                                <td @click="goToCoursePage(props.item.course.id)" class="text-xs-right my-link">
+                                    {{props.item.course.name }}
+                                </td>
                             </tr>
                         </template>
                     </v-data-table>
@@ -67,22 +70,23 @@
 </template>
 
 <script>
-    import axios from 'axios'
-    import store from "../store/store.js";
+    import axios from 'axios/index'
+    import store from "../../store/store.js";
 
     export default {
-        name: "DashBoardTableLevelAndTrainers",
+
+        name: "DashBoardTableLevelAndQuantity",
         data: function () {
             return {
                 headers: [
                     {text: '  Fold/Unfold', sortable: false, width: "15", align: 'center'},
                     {
-                        text: 'Name of the course',
+                        text: 'Level',
                         align: 'left',
-                        value: 'course.name'
+                        value: 'level.title'
                     },
                     {
-                        text: 'Number of employees', value: 'quantityOfEmployees',
+                        text: 'Number of groups', value: 'quantityOfGroups',
                         width: "20", align: 'right'
                     },
                 ],
@@ -91,15 +95,12 @@
                         text: 'Group name',
                         align: 'right',
                         sortable: false,
-                        value: 'group.title'
+                        value: 'group.mame'
                     },
-                    {text: 'Number of employees', value: 'quantityOfEmployeesInGroup'},
+                    {text: 'Course name', value: 'course.name'},
                 ],
-                coursesAndQuantities: [],
-                selectedCourses: [],
-                selectedGroups: [],
-                allGroups: [],
-                groupsForCourses: {}
+                levelsAndGroupQuantities: [],
+                selectedLevels : []
             }
         },
         methods: {
@@ -114,8 +115,8 @@
             goToGroupPage(groupId) {
                 this.$router.push('/group/' + groupId);
             },
-            goToCoursePage(courseId) {
-                this.$router.push('/courses/' + courseId);
+            goToCoursePage(levelId) {
+                this.$router.push('/courses/' + levelId);
             },
             downloadDashboardReport(){
                 window.open("http://localhost:8080/download-report/dashboard-report", "_blank");
@@ -124,17 +125,12 @@
         mounted() {
             if(store.getters.isAdmin) {
                 let self = this;
-                axios.get('http://localhost:8080/dashboard/training-and-quantity')
+                axios.get('http://localhost:8080/dashboard/level-and-quantity')
                     .then(function (response) {
-                        self.coursesAndQuantities = response.data;
-                        console.log(response.data);
-                        self.coursesAndQuantities.forEach(function (s) {
-                            self.selectedCourses.push(s.course.id);
-                            s.groups.forEach(function (ee) {
-                                self.allGroups.push(ee.group);
-                            });
-                            self.groupsForCourses[s.course.id] = s.groups;
-                        });
+                        self.levelsAndGroupQuantities = response.data;
+                        self.levelsAndGroupQuantities.forEach(function (value) {
+                            self.selectedLevels.push(value.level.id)
+                        })
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -142,10 +138,10 @@
                     });
             }
         },
-        computed: {
-            filteredCourses() {
-                return this.coursesAndQuantities.filter((i) => {
-                    return this.selectedCourses.includes(i.course.id);
+        computed : {
+            filteredLevels () {
+                return this.levelsAndGroupQuantities.filter((i) => {
+                    return this.selectedLevels.includes(i.level.id);
                 })
             }
         }

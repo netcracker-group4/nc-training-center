@@ -1,12 +1,15 @@
 package ua.com.nc.dao.interfaces;
 
+import ua.com.nc.domain.Problem;
 import ua.com.nc.domain.ProblemStatus;
+
+import java.util.List;
 
 public interface ProblemDao {
 
-    void createRequest (int studentId, String description, String message);
+    int createRequest (int studentId, String description, String message);
 
-   //  TODO
-//    void updateRequest (int id, ProblemStatus status);
+    List<Problem> getAllRequestsOfType (String requestType);
 
+    void updateRequestType (int requestId, String requestType);
 }

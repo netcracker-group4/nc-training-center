@@ -10,7 +10,10 @@ import ua.com.nc.dao.interfaces.MessageDao;
 import ua.com.nc.domain.Message;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +79,7 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
             messages = parseResultSet(resultSet);
         } catch (SQLException e) {
             log.trace(e);
-            e.printStackTrace();
+            log.trace(e);
         }
         return messages;
     }

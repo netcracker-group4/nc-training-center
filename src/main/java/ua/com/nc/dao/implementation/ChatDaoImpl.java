@@ -123,7 +123,7 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
             chats = parseResultSet(resultSet);
         } catch (SQLException e) {
             log.trace(e);
-            e.printStackTrace();
+            log.trace(e);
         }
         return chats;
     }
@@ -140,7 +140,7 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
             chats = parseResultSet(resultSet);
         } catch (SQLException e) {
             log.trace(e);
-            e.printStackTrace();
+            log.trace(e);
         }
         if(chats != null && chats.size() > 0){
             return chats.get(0);

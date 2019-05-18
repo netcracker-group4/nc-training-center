@@ -129,7 +129,7 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
 
             statement.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.trace(e);
             throw new PersistException(e);
         }
     }

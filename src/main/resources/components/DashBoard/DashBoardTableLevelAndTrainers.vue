@@ -70,8 +70,8 @@
 </template>
 
 <script>
-    import axios from 'axios'
-    import store from "../store/store.js";
+    import axios from 'axios/index'
+    import store from "../../store/store.js";
 
     export default {
         name: "DashBoardTableTrainingAndQuantity",

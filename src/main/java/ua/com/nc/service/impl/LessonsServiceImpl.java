@@ -1,9 +1,5 @@
 package ua.com.nc.service.impl;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +10,6 @@ import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoLesson;
 import ua.com.nc.service.LessonsService;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +28,13 @@ public class LessonsServiceImpl implements LessonsService {
     @Autowired
     UserDao userDao;
 
-    private Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, (JsonSerializer<Timestamp>)
-            (timestamp, type, jsonSerializationContext) -> new JsonPrimitive(timestamp.toString())).create();
-
     @Override
-    public String getAllForGroup(int groupId) {
+    public List<DtoLesson> getAllForGroup(int groupId) {
         List<Lesson> lessons = lessonDao.getByGroupId(groupId);
         return createDtoForLessons(lessons);
     }
 
-    private String createDtoForLessons(List<Lesson> lessons) {
+    private List<DtoLesson> createDtoForLessons(List<Lesson> lessons) {
         List<DtoLesson> dtoLessons = new ArrayList<>();
         for (Lesson lesson : lessons) {
             User trainer = userDao.getEntityById(lesson.getTrainerId());
@@ -52,7 +44,7 @@ public class LessonsServiceImpl implements LessonsService {
                     attachmentDao.getByLessonId(lesson.getId()));
             dtoLessons.add(dtoLesson);
         }
-        return gson.toJson(dtoLessons);
+        return dtoLessons;
     }
 
     @Override
@@ -93,13 +85,13 @@ public class LessonsServiceImpl implements LessonsService {
     }
 
     @Override
-    public String getAllForEmployee(int userId) {
+    public List<DtoLesson> getAllForEmployee(int userId) {
         List<Lesson> lessons = lessonDao.getByEmployee(userId);
         return createDtoForLessons(lessons);
     }
 
     @Override
-    public String getAllForETrainer(Integer userId) {
+    public List<DtoLesson> getAllForETrainer(Integer userId) {
         List<Lesson> lessons = lessonDao.getByTrainer(userId);
         return createDtoForLessons(lessons);
     }

@@ -18,8 +18,7 @@ public class ScheduleForInterval {
 
     ScheduleForInterval(int start, int end, List<ParsedSchedule> parsedScheduleList) {
         List<ParsedSchedule> forThisInterval = getForInterval(start, parsedScheduleList);
-        System.out.println("forThisInterval  "+forThisInterval)
-        ;this.start = start;
+        this.start = start;
         this.end = end;
         for (int i = 0; i < 7; i++) {
             ParsedSchedule parsedSchedule = getForDay(forThisInterval, i);
@@ -38,7 +37,6 @@ public class ScheduleForInterval {
             }
         }
         result.sort(Comparator.comparingInt(a -> a.getDayOfWeek().getValue()));
-        System.out.println("for interval " + start + " " + result);
         return result;
     }
 

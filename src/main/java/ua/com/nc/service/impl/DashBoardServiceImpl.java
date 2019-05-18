@@ -1,6 +1,5 @@
 package ua.com.nc.service.impl;
 
-import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,6 @@ public class DashBoardServiceImpl implements DashBoardService {
             }
             dtoLevels.add(new DTOLevel(level, dtoCourseGroups.size(), dtoCourseGroups));
         }
-        log.info("response to get level and quantity " + new Gson().toJson(dtoLevels));
         return dtoLevels;
     }
 
@@ -71,7 +69,6 @@ public class DashBoardServiceImpl implements DashBoardService {
             }
             dtoTrainers.add(new DTOTrainer(trainer, courseAndLevels.size(), courseAndLevels));
         }
-        log.info("response to get level and trainers " + new Gson().toJson(dtoTrainers));
         return dtoTrainers;
     }
 
@@ -91,7 +88,6 @@ public class DashBoardServiceImpl implements DashBoardService {
             }
             courseAndGroups.add(new CourseAndGroups(course, numberOfEmployeesInCourse, groupAndQuantities));
         }
-        log.info("response to get level and trainers " + new Gson().toJson(courseAndGroups));
         return courseAndGroups;
     }
 

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-    import StudentLineInTable from "../components/StudentLineInTable.vue";
+    import StudentLineInTable from "../components/DesiredScheduleDraggableTable.vue";
 
     export default {
         name: "DesiredSchedulePage",
