@@ -13,11 +13,12 @@
                                 :value="StartingDate"
                                 clearable
                                 label="First day"
-                                readonly="isNotAdmin"
+                                readonly
                                 v-on="on"
                         ></v-text-field>
                     </template>
                     <v-date-picker
+                            show-current="Saturday, May 28th 2019"
                             v-model="date1"
                             @change="menu1 = false"
                     ></v-date-picker>
@@ -36,7 +37,7 @@
                                 :value="EndingDate"
                                 clearable
                                 label="The last day"
-                                readonly="props.isNotAdmin"
+                                readonly
                                 v-on="on"
                         ></v-text-field>
                     </template>
@@ -55,11 +56,10 @@
     import format from 'date-fns/format'
 
     export default {
-        props: ['isNotAdmin','startDate','endDate'],
         name: "CourseDate",
         data: () => ({
-            date1: props.startDate,
-            date2: props.endDate,
+            date1: new Date().toISOString().substr(0, 10),
+            date2: new Date().toISOString().substr(0, 10),
             menu1: false,
             menu2: false
         }),

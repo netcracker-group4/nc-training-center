@@ -28,20 +28,65 @@
                             </div>
                         </v-layout>
                     </v-flex>
-                    <v-flex  xs5 offset-xs0 offset-lg0 style="margin-left: 2%">
+                    <v-flex  offset-xs0 offset-lg0 style="margin-left: 2%">
                         <v-layout column>
                             <div>
-                                <b>Starts on: {{startDay}}
-                                <p >Ends on: {{endDay}}</p></b>
-                                <p>
-                                    <CourseDate :inNotAdmin="isNotAdmin" :start-date="startDay" :end-date="endDay"/>
-                                </p>
+                                <v-layout row wrap>
+                                <v-flex xs3>
+                                <v-menu
+                                        :v-model="false"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        lazy
+                                        transition="scale-transition"
+                                        offset-y
+                                        max-width="200px"
+                                        min-width="200px"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-text-field
+                                                v-model="startDay"
+                                                label="Ends on"
+                                                persistent-hint
+                                                prepend-icon="event"
+                                                :readonly="isNotAdmin"
+                                                v-on="on"
+                                        ></v-text-field>
+                                    </template>
+                                    <v-date-picker v-model="startDay" ></v-date-picker>
+                                </v-menu>
+                                </v-flex>
+                                <v-flex xs3>
+                                <v-menu
+                                        :v-model="false"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        lazy
+                                        transition="scale-transition"
+                                        offset-y
+                                        max-width="200px"
+                                        min-width="200px"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-text-field
+                                                v-model="endDay"
+                                                label="Ends on"
+                                                persistent-hint
+                                                prepend-icon="event"
+                                                :readonly="isNotAdmin"
+                                                v-on="on"
+                                        ></v-text-field>
+                                    </template>
+                                    <v-date-picker v-model="endDay" ></v-date-picker>
+                                </v-menu>
+                                </v-flex>
+                                </v-layout>
                             </div>
                             <div class="subheading pt-3"> <b>Trainer</b></div>
                             <div v-for="tr in trainer" > <b @click="goTrainerPage(tr.id)"> {{tr.firstName }}   {{tr.lastName}} </b>
                             </div>
                             <div class="subheading pt-3">
-                                <b>Groups</b> <v-btn v-if="isAdmin" @click="manageGroups()">Manage groups</v-btn>
+                                <b>Groups</b> <v-btn small="true" v-if="isAdmin" @click="manageGroups()">Manage groups</v-btn>
                             </div>
                             <v-data-table
                                     :headers="headers"
@@ -58,7 +103,7 @@
                                             <div @click="goGroupPage(props.item.id)">{{props.item.title}}</div>
                                         </td>
                                         <td class="text-xs-right">
-                                            <v-btn v-if="isAdmin" @click="manageSchedule(props.item.id)">Manage schedule</v-btn>
+                                            <v-btn v-if="isAdmin" small="true" @click="manageSchedule(props.item.id)">Manage schedule</v-btn>
                                         </td>
                                     </tr>
                                 </template>
@@ -115,7 +160,7 @@
                 trainer: null,
                 groups: [],
                 isAdmin: this.$store.getters.isAdmin,
-                isNotAdmin: this.isAdmin=="false",
+                isNotAdmin: this.isAdmin==="false",
                 trainers: null,
                 dialog: null,
                 statuses:[],
@@ -149,8 +194,8 @@
                         self.isOnLandingPage = dat.isOnLandingPage;
                         self.imageUrl = dat.imageUrl;
                         self.description = dat.description;
-                        self.startDay = new Date(dat.startDate).toDateString();
-                        self.endDay = new Date(dat.endDate).toDateString();
+                        self.startDay = new Date(dat.startDate).toISOString().substr(0, 10);
+                        self.endDay = new Date(dat.endDate).toISOString().substr(0, 10);
                         self.getTrainer();
                         self.getGroups();
                         self.getTrainers();
