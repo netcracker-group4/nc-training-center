@@ -30,28 +30,61 @@ Vue.use(Router);
 
 const routes = [
     {path: '/', component: MainPage},
-    {path: '/registration', component: RegistrationPage},
-    {path: '/dashboard', component: DashBoardPage},
+
+    // {path: '/login', component: LoginPage},
     {path: '/login', component: LoginPage},
-    {path: '/group/:id', component: GroupPage, props: true},
+    // {path: '/registration', component: RegistrationPage},
+    {path: '/registration', component: RegistrationPage},
+
+    // {path: '/dashboard', component: DashBoardPage},
+    {path: '/dashboard', component: DashBoardPage},
+
+    // {path: '/allgroups', component: AllGroups},
+    {path: '/groups', component: AllGroups},
+    // {path: '/group/:id', component: GroupPage, props: true},
+    {path: '/groups/:id', component: GroupPage, props: true},
+    // {path: '/lesson/:id', component: LessonPage},
+    {path: '/lessons/:id', component: LessonPage},
+
+    // {path: '/admincourses', component: AdminCourses},
+    {path: '/courses', component: AdminCourses},
+    // {path: '/coursecreate', component: CreateCourse},
+    {path: '/courses/new', component: CreateCourse},
+    // {path: '/courses/:id', component: CoursePage, props: true},
     {path: '/courses/:id', component: CoursePage, props: true},
+    // {path: '/coursecreate/:id', component: CreateCourse,props: true},
+    {path: '/courses/:id/edit', component: CreateCourse,props: true},
+    // {path: '/courses/:id/join', component: JoinCoursePage, props: true},
     {path: '/courses/:id/join', component: JoinCoursePage, props: true},
-    {path: '/admincourses', component: AdminCourses},
-    {path: '/coursecreate', component: CreateCourse},
-    {path: '/coursecreate/:id', component: CreateCourse,props: true},
-    {path: '/userpage', component: AllUsersPage},
-    {path: '/userpage/:id', component: UserPage},
-    {path: '/add-user', component: NewUserPage},
+    // {path: '/desired-schedule/:id', component: DesiredSchedulePage},
+    {path: '/courses/:id/desired-schedule', component: DesiredSchedulePage},
+
+    // {path: '/userpage', component: AllUsersPage},
+    {path: '/users', component: AllUsersPage},
+    // {path: '/add-user', component: NewUserPage},
+    {path: '/users/new', component: NewUserPage},
+    // {path: '/userpage/:id', component: UserPage},
+    {path: '/users/:id', component: UserPage},
+
+    // {path: '/attendance', component: AttendancePage},
     {path: '/attendance', component: AttendancePage},
+    // {path: '/absence-reasons', component: AbsenceReasons},
     {path: '/absence-reasons', component: AbsenceReasons},
-    {path: '/desired-schedule/:id', component: DesiredSchedulePage},
-    {path: '/attachments-page', component: AttachmentsPage},
-    {path: '/lesson/:id', component: LessonPage},
+
+    // {path: '/attachments-page', component: AttachmentsPage},
+    {path: '/attachments', component: AttachmentsPage},
+
+    // {path: '/test', component: TestPage},
     {path: '/test', component: TestPage},
-    {path: '/allgroups', component: AllGroups},
-    {path: '/chat/:id', component: ChatPage},
-    {path: '/requests', component: InfodeskRequest},
-    {path: '/infodesk', component: InfodeskPage},
+
+    // {path: '/chat/:id', component: ChatPage},
+    {path: '/chats/:id', component: ChatPage},
+
+    // {path: '/infodesk', component: InfodeskPage},
+    {path: '/requests', component: InfodeskPage},
+    // {path: '/requests', component: InfodeskRequest},
+    {path: '/requests/new', component: InfodeskRequest},
+
     {path: '/404', component: NotFound },
     {path: '/403', component: AccessDenied },
     {path: '*', redirect: '/404'}

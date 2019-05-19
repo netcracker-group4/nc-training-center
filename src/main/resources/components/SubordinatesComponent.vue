@@ -58,13 +58,13 @@
                 });
             },
             goToUserPage(userId) {
-                this.$router.push('/userpage/' + userId);
+                this.$router.push('/users/' + userId);
                 window.scrollTo(0,0);
             },
             loadInfo() {
                 let self = this;
                 let id = this.$route.params.id;
-                axios.get('http://localhost:8080/users/' + id + '/subordinates')
+                axios.get('/api/users/' + id + '/subordinates')
                     .then(function (response) {
                         self.subordinates = response.data;
                         console.log(self.subordinates)

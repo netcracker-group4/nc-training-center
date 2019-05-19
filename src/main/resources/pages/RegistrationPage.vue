@@ -55,7 +55,7 @@
                 if(this.email != null & this.firstName != null
                     & this.lastName != null & this.password != null){
                     console.log(this.email + " " + this.password)
-                    axios.post('http://localhost:8080/users', {
+                    axios.post('/api/users', {
                         email: this.email,
                         firstName: this.firstName,
                         lastName: this.lastName,

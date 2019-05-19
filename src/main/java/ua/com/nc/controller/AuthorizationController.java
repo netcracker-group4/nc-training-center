@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @Log4j
 @Controller
-//@CrossOrigin(origins = "http://localhost:8000")
 public class AuthorizationController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/login")

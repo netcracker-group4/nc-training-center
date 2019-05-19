@@ -24,8 +24,7 @@ import java.util.List;
 
 @Log4j
 @Controller
-@CrossOrigin(origins = "http://localhost:8000")
-@RequestMapping("/getcourses")
+@RequestMapping("/api/getcourses")
 public class CourseController {
     @Autowired
     private CourseDao courseDao;

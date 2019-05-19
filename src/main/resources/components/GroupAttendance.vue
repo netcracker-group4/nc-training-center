@@ -36,7 +36,7 @@
             }
         },
         mounted() {
-            axios.get('http://localhost:8080/schedule/' + String(this.groupId))
+            axios.get('/api/schedule/' + String(this.groupId))
                 .then(response => this.lessons = response.data)
                 .catch(error => console.log(error));
         }

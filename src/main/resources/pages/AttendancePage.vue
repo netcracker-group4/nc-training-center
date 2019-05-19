@@ -65,7 +65,7 @@
             }
         },
         mounted() {
-            axios.get('http://localhost:8080/attendances')
+            axios.get('/api/attendances')
                 .then(response => {
                     this.attendances = response.data
                 })
@@ -86,7 +86,7 @@
                 }
             },
             downloadAttendance() {
-                window.open("http://localhost:8080/download-report/attendance-report", "_blank");
+                window.open("http://localhost:8080/api/download-report/attendance-report", "_blank");
             },
         }
     }

@@ -16,7 +16,7 @@ import ua.com.nc.service.ChatService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/chats")
+@RequestMapping("/api/chats")
 public class ChatController {
 
     @Autowired

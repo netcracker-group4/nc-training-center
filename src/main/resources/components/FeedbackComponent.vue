@@ -143,7 +143,7 @@
                     if (result) {
                         let self = this;
                         console.log(self.selectCourse);
-                        axios.post('http://localhost:8080/feedback/add', {
+                        axios.post('/api/feedback/add', {
                             studentId: this.user.id,
                             teacher: this.getAuthorizationUser(),
                             course: this.selectCourse,
@@ -169,7 +169,7 @@
             },
             getAllFeedback() {
                 let self = this;
-                axios.get('http://localhost:8080/feedback/get-by-user?userId=' + this.$route.params.id)
+                axios.get('/api/feedback/get-by-user?userId=' + this.$route.params.id)
                     .then(function (response) {
                         self.userFeedback = response.data;
                         console.log(self.userFeedback)
@@ -180,7 +180,7 @@
             },
             deleteFeedback(item) {
                 let self = this;
-                axios.delete('http://localhost:8080/feedback/delete/' + item.id)
+                axios.delete('/api/feedback/delete/' + item.id)
                     .then(response => {
                         console.log(response);
                         if (response.status === 200) {
@@ -193,7 +193,7 @@
             },
             getAllFeedbackByTrainer() {
                 let self = this;
-                axios.get('http://localhost:8080/feedback/get-by-rainer-and-by-user?userId=' +
+                axios.get('/api/feedback/get-by-rainer-and-by-user?userId=' +
                     this.$route.params.id + "&trainerId=" + store.state.user.id)
                     .then(function (response) {
                         self.userFeedback = response.data;

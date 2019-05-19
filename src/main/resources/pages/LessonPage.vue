@@ -78,8 +78,8 @@
 <script>
 
     import axios from 'axios';
-    import store from '../store/store.js';
     import LessonAttendanceTable from "../components/LessonAttendanceTable.vue";
+
     export default {
         name: "AbsenceReasons",
         components: {LessonAttendanceTable},
@@ -114,7 +114,7 @@
         methods: {
             goToTrainerPage() {
                 if (this.trainer !== null) {
-                    this.$router.push('/userpage/' + this.trainer.id);
+                    this.$router.push('/users/' + this.trainer.id);
                 }
                 window.scrollTo(0,0);
             },
@@ -124,12 +124,12 @@
             },
             loadInfo(){
                 let self = this;
-                axios.get('http://localhost:8080/schedule/lesson/' + this.$route.params.id)
+                axios.get('/api/schedule/lesson/' + this.$route.params.id)
                                 .then(function (response) {
                                     let dat = response.data;
                                     self.topic = dat.topic;
                                     self.trainer = dat.trainerId;
-                                    axios.get('http://localhost:8080/users/' + self.trainer)
+                                    axios.get('/api/users/' + self.trainer)
                                                  .then(function (response) {
                                                  self.trainer = response.data;
                                                  self.firstName = self.trainer.firstName;
@@ -146,7 +146,7 @@
                                 .catch(function (error) {
                                     console.log(error);
                                 });
-            axios.get('http://localhost:8080/attachments/lesson/' + this.$route.params.id)
+            axios.get('/api/attachments/lesson/' + this.$route.params.id)
             .then(function (response) {
                 self.attachments= response.data;
             })
@@ -159,7 +159,7 @@
                 let imagefile = document.querySelector('#file');
 
                 let request = new XMLHttpRequest();
-                request.open('POST', 'http://localhost:8080/attachments/upload-file');
+                request.open('POST', 'http://localhost:8080/api/attachments/upload-file');
                 form.append('file', imagefile.files[0]);
                 form.append('lessonId',this.$route.params.id);
                 form.append('descr', '');
@@ -172,7 +172,7 @@
              unlink(id){
                 let form = new FormData();
                 let request = new XMLHttpRequest();
-                request.open('DELETE','http://localhost:8080/attachments/unlink');
+                request.open('DELETE','http://localhost:8080/api/attachments/unlink');
                 form.append('lessonId',this.$route.params.id);
                 form.append('attachmentId', id);
                 request.send(form);

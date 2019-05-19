@@ -1,7 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        {{items}}
-
         <v-navigation-drawer
                 v-model="drawer"
                 fixed
@@ -52,7 +50,7 @@
                     <v-list-tile
                             v-for="chat in self.$store.state.chats"
                             :key="chat.id"
-                            :to="'/chat/' + chat.id"
+                            :to="'/chats/' + chat.id"
                     >
                         <v-list-tile-title v-text="chat.name"></v-list-tile-title>
                         <v-list-tile-action>
@@ -65,7 +63,7 @@
             </v-list>
         </v-navigation-drawer>
         <v-toolbar class="grey lighten-4" app v-if="">
-            <v-toolbar-items class="hidden-sm-and-down" v-if="this.$store.getters.isAuthorized">
+            <v-toolbar-items v-if="this.$store.getters.isAuthorized">
                 <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
             </v-toolbar-items>
             <v-toolbar-items class="hidden-sm-and-down" v-if="  this.$store.getters.isAuthorized &&
@@ -98,17 +96,17 @@
                         }
                     },
                     {
-                        title: 'Users', icon: 'person', link: '/userpage', canBeShown: function () {
+                        title: 'Users', icon: 'person', link: '/users', canBeShown: function () {
                             return true
                         }
                     },
                     {
-                        title: 'Courses', icon: 'view_list', link: '/admincourses', canBeShown: function () {
+                        title: 'Courses', icon: 'view_list', link: '/courses', canBeShown: function () {
                             return true
                         }
                     },
                     {
-                        title: 'Groups', icon: 'group', link: '/allgroups', canBeShown: function () {
+                        title: 'Groups', icon: 'group', link: '/groups', canBeShown: function () {
                             return true
                         }
                     },
@@ -119,7 +117,7 @@
                         }
                     },
                     {
-                        title: 'Infodesk', icon: 'contact_support', link: '/infodesk',
+                        title: 'Infodesk', icon: 'contact_support', link: '/requests',
                         canBeShown: function (self) {
                             return self.$store.getters.isAdmin || self.$store.state.userRoles.includes('EMPLOYEE')
                         }
@@ -135,7 +133,7 @@
         },
         methods: {
             goToMyPage() {
-                this.$router.push('/userpage/' + this.$store.state.user.id);
+                this.$router.push('/users/' + this.$store.state.user.id);
                 this.drawer = false;
             },
             forwardToLoginPage() {

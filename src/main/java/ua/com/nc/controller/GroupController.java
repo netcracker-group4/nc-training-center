@@ -23,8 +23,7 @@ import java.util.List;
 
 @Log4j
 @Controller
-@CrossOrigin(origins = "http://localhost:8000")
-@RequestMapping("/groups")
+@RequestMapping("/api/groups")
 public class GroupController {
     @Autowired
     private GroupDao groupDao;

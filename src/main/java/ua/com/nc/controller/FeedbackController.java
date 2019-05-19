@@ -5,14 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.domain.Feedback;
 import ua.com.nc.dto.DtoFeedback;
-import ua.com.nc.dto.DtoUserSave;
 import ua.com.nc.service.FeedbackService;
 
 @Log4j
 @RestController
-@RequestMapping("/feedback")
+@RequestMapping("/api/feedback")
 public class FeedbackController {
     @Autowired
     FeedbackService feedbackService;

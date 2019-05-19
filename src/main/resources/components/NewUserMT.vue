@@ -95,7 +95,7 @@
         methods: {
             submitUser () {
                 this.$validator.validateAll();
-                axios.post('http://localhost:8080/users', {
+                axios.post('/api/users', {
                     firstName: this.user.firstName,
                     lastName: this.user.lastName,
                     email: this.user.email,

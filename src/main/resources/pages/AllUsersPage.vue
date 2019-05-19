@@ -71,16 +71,16 @@
         methods: {
             goToUserPage(userId) {
                 // this.$emit("sendId", userId);
-                this.$router.push('/userpage/' + userId);
+                this.$router.push('/users/' + userId);
                 window.scrollTo(0, 0);
             },
             goToNewUserPage() {
-                this.$router.push('/add-user');
+                this.$router.push('/users/new');
             }
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/admin')
+            axios.get('/api/admin')
                 .then(function (response) {
                     self.allUsers = response.data;
                     console.log(self.allUsers)

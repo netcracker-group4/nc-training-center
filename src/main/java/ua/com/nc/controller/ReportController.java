@@ -20,7 +20,6 @@ import java.io.IOException;
 
 @Log4j
 @Controller
-@RequestMapping("/download-report") //    /download-report/attendance-report/1
 public class ReportController {     //    /download-report/dashboard-report
 
     @Autowired

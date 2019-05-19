@@ -61,7 +61,7 @@
         methods: {
             submitMailSender () {
                 this.$validator.validateAll()
-                axios.post('http://localhost:8080/users/mail-send', {
+                axios.post('/api/users/mail-send', {
                     to: this.mailSender.email,
                     subject: this.mailSender.subject,
                     text: this.mailSender.text,

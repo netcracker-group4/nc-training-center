@@ -117,7 +117,7 @@
                     courseId: this.$route.params.id,
                     array: this.desiredSchedule2
                 });
-                axios.post('/getcourses/desired/', {
+                axios.post('/api/getcourses/desired/', {
                     courseId: this.$route.params.id,
                     forDays: this.desiredSchedule2
                 }).then(function (response) {
@@ -143,7 +143,7 @@
             },
             loadInfo() {
                 let self = this;
-                axios.get('http://localhost:8080/getcourses/desired/day-intervals')
+                axios.get('/api/getcourses/desired/day-intervals')
                     .then(function (response) {
                         self.dayIntervals = response.data;
                         for (const index of Array(self.days.length).keys()) {
@@ -166,7 +166,7 @@
                         // self.errorAutoClosable(error.response.data);
                         console.log(error);
                     });
-                axios.get('http://localhost:8080/getcourses/' + this.$route.params.id)
+                axios.get('/api/getcourses/' + this.$route.params.id)
                     .then(function (response) {
                         self.course = response.data;
                         console.log(self.course);
@@ -176,7 +176,7 @@
                         console.log(error);
                     });
 
-                axios.get('http://localhost:8080/getcourses/suitabilities')
+                axios.get('/api/getcourses/suitabilities')
                     .then(function (response) {
                         self.suitabilities = response.data;
                         if (self.suitabilities.length > 0) {
@@ -192,7 +192,7 @@
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/getcourses/' + this.$route.params.id + '/course-group')
+            axios.get('/api/getcourses/' + this.$route.params.id + '/course-group')
                 .then(function (response) {
                     console.log(response.data);
                     if (response.data == true) {
