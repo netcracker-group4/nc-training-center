@@ -1,5 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
+        {{items}}
+
         <v-navigation-drawer
                 v-model="drawer"
                 fixed
@@ -20,14 +22,13 @@
 
             <v-list class="pt-0" dense>
                 <v-divider></v-divider>
-
                 <v-list-tile
                         v-for="item in items"
                         :key="item.title"
-                        @click=""
                         :to="item.link"
+                        v-if="item.canBeShown(self)"
                 >
-                    <v-list-tile-action v-if="item.canBeShown">
+                    <v-list-tile-action>
                         <v-icon>{{ item.icon }}</v-icon>
                     </v-list-tile-action>
 
@@ -91,21 +92,43 @@
                 drawer: false,
                 chats: this.$store.state.chats,
                 items: [
-                    {title: 'Main', icon: 'home', link: '/', canBeShown: () => true},
-                    {title: 'Users', icon: 'person', link: '/userpage', canBeShown: () => true},
-                    {title: 'Courses', icon: 'view_list', link: '/admincourses', canBeShown: () => true},
-                    {title: 'Groups', icon: 'group', link: '/allgroups', canBeShown: () => true},
+                    {
+                        title: 'Main', icon: 'home', link: '/', canBeShown: function () {
+                            return true
+                        }
+                    },
+                    {
+                        title: 'Users', icon: 'person', link: '/userpage', canBeShown: function () {
+                            return true
+                        }
+                    },
+                    {
+                        title: 'Courses', icon: 'view_list', link: '/admincourses', canBeShown: function () {
+                            return true
+                        }
+                    },
+                    {
+                        title: 'Groups', icon: 'group', link: '/allgroups', canBeShown: function () {
+                            return true
+                        }
+                    },
                     {
                         title: 'Dashboard', icon: 'dashboard', link: '/dashboard',
-                        canBeShown: () => this.$store.getters.isAdmin
+                        canBeShown: function (self) {
+                            return self.$store.getters.isAdmin
+                        }
                     },
                     {
                         title: 'Infodesk', icon: 'contact_support', link: '/infodesk',
-                        canBeShown: () => this.$store.getters.isAdmin || this.$store.state.userRoles.includes('EMPLOYEE')
+                        canBeShown: function (self) {
+                            return self.$store.getters.isAdmin || self.$store.state.userRoles.includes('EMPLOYEE')
+                        }
                     },
                     {
-                        title: 'Absence reasons', icon: 'add', link: '/infodesk',
-                        canBeShown: () => this.$store.getters.isAdmin
+                        title: 'Absence reasons', icon: 'add', link: '/absence-reasons',
+                        canBeShown: function (self) {
+                            return self.$store.getters.isAdmin
+                        }
                     }
                 ]
             }

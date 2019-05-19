@@ -1,5 +1,6 @@
 <template>
     <v-container>
+        {{items}}
         <v-layout wrap row>
             <v-flex xs10 sm10 md10 offset-xs1 offset-sm1 offset-md1>
                 <v-card v-for="course in courses" :key="course.id" class="course">
@@ -11,7 +12,7 @@
                     <v-card-title primary-title>
                         <div>
                             <h3 class="headline mb-0">{{course.name}}</h3>
-                            <div> {{ course.description}} </div>
+                            <div> {{ course.description}}</div>
                         </div>
                     </v-card-title>
 
@@ -51,33 +52,73 @@
 
     export default {
         name: "MainPage",
-        data: function(){
-          return{
-              courses: [],
-              trainers: []
-          }
+        data: function () {
+            return {
+                courses: [],
+                trainers: [],
+                items: [
+                    {
+                        title: 'Main', icon: 'home', link: '/', canBeShown: function () {
+                            return true
+                        }
+                    },
+                    {
+                        title: 'Users', icon: 'person', link: '/userpage', canBeShown: function () {
+                            return true
+                        }
+                    },
+                    {
+                        title: 'Courses', icon: 'view_list', link: '/admincourses', canBeShown: function () {
+                            return true
+                        }
+                    },
+                    {
+                        title: 'Groups', icon: 'group', link: '/allgroups', canBeShown: function () {
+                            return true
+                        }
+                    },
+                    {
+                        title: 'Dashboard', icon: 'dashboard', link: '/dashboard',
+                        canBeShown: function () {
+                            return this.$store.getters.isAdmin
+                        }
+                    },
+                    {
+                        title: 'Infodesk', icon: 'contact_support', link: '/infodesk',
+                        canBeShown: function () {
+                            return this.$store.getters.isAdmin || this.$store.state.userRoles.includes('EMPLOYEE')
+                        }
+                    },
+                    {
+                        title: 'Absence reasons', icon: 'add', link: '/absence-reasons',
+                        canBeShown: function () {
+                            return this.$store.getters.isAdmin
+                        }
+                    }
+                ]
+            }
         },
         mounted() {
             let self = this;
             axios.get('http://localhost:8080/main-page/courses-on-landing-page')
-                            .then(function (response) {
-                                self.courses = response.data;
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+                .then(function (response) {
+                    self.courses = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
             axios.get('http://localhost:8080/main-page/trainers-on-landing-page')
-                            .then(function (response) {
-                                self.trainers = response.data;
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+                .then(function (response) {
+                    self.trainers = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
 
 
-},
+        },
         methods: {
-            forwardToCoursePage(id){
+            forwardToCoursePage(id) {
                 this.$router.push('/courses/' + id)
             }
         }
@@ -86,23 +127,25 @@
 </script>
 
 <style>
-    .name{
-    position:static;
-    up:5px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    font-size: 2em;
-      }
-    .descr{
-
-    position:absolute;
-    bottom:50px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    font-size: 1em;
-    padding: 5px;
+    .name {
+        position: static;
+        up: 5px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        font-size: 2em;
     }
-    .course{
+
+    .descr {
+
+        position: absolute;
+        bottom: 50px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        font-size: 1em;
+        padding: 5px;
+    }
+
+    .course {
         margin-bottom: 40px;
     }
 </style>

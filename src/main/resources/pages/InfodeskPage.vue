@@ -1,14 +1,13 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container>
         <v-layout row wrap style="margin-bottom: 50px">
-            <v-flex xs12 sm12>
+            <v-layout style="margin-bottom: 50px">
                 <h2>All problems </h2>
                 <v-spacer></v-spacer>
                 <v-btn alert @click="$router.push('/requests')" v-if="isStudent()">Open new Request</v-btn>
-                <!--                            <v-btn v-if="groups.length > 0" alert @click="saveAll">Save All</v-btn>-->
-            </v-flex>
+            </v-layout>
             <v-flex xs12 sm12>
-                <v-tabs fixed-tabs v-model="currentStatus" centered style="width: 100%; margin-bottom: 50px">
+                <v-tabs v-model="currentStatus" centered style="width: 100%; margin-bottom: 50px">
                     <v-tab
                             v-for="n in statuses"
                             :key="n.id"
