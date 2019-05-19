@@ -10,7 +10,6 @@ import AdminCourses from "../pages/AdminCourses.vue";
 import CreateCourse from "../pages/CreateCourse.vue";
 import AllUsersPage from "../pages/AllUsersPage.vue";
 import UserPage from "../pages/UserPage.vue";
-import NewUserPage from "../pages/NewUserPage.vue";
 import AttendancePage from "../pages/AttendancePage.vue";
 import AbsenceReasons from '../pages/AbsenceReasons.vue'
 import DesiredSchedulePage from "../pages/DesiredSchedulePage.vue";
@@ -61,8 +60,6 @@ const routes = [
 
     // {path: '/userpage', component: AllUsersPage},
     {path: '/users', component: AllUsersPage},
-    // {path: '/add-user', component: NewUserPage},
-    {path: '/users/new', component: NewUserPage},
     // {path: '/userpage/:id', component: UserPage},
     {path: '/users/:id', component: UserPage},
 
