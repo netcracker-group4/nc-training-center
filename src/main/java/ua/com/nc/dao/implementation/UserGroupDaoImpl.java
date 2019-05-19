@@ -38,6 +38,8 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     private String userGroupDeleteForUser;
     @Value("${usr_group.select-by-id}")
     private String userGroupSelectById;
+    @Value("${usr_group.select-by-user-id}")
+    private String userGroupSelectByUserId;
 
     @Autowired
     public UserGroupDaoImpl(DataSource dataSource) throws PersistException {
@@ -96,6 +98,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
             log.info(userId);
             log.info(groupId);
             log.info(courseId);
+            log.info(isAttending);
             UserGroup userGroup = new UserGroup(id, userId, groupId, courseId, isAttending);
             list.add(userGroup);
         }
@@ -128,11 +131,15 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
         }
     }
 
-    @SuppressWarnings("Duplicates")
+
     @Override
     public UserGroup getByUserAndCourse(Integer userId, Integer courseId) {
         String sql = userGroupSelectByUsrAndCourse;
         log.info(sql + " getByUserAndCourse usr = " + userId + " course= " + courseId);
+        return getByTwoId(userId, courseId, sql);
+    }
+
+    private UserGroup getByTwoId(Integer userId, Integer courseId, String sql) {
         List<UserGroup> list;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, courseId);
@@ -151,28 +158,17 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
         return list.iterator().next();
     }
 
-    @SuppressWarnings("Duplicates")
     @Override
     public UserGroup getByUserAndGroup(Integer userId, Integer groupId) {
         String sql = userGroupSelectByUsrAndGroup;
         log.info(sql + " getByUserAndGroup usr = " + userId + " group= " + groupId);
-        List<UserGroup> list;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, groupId);
-            statement.setInt(2, userId);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            throw new PersistException(e);
-        }
-        if (list.size() > 1) {
-            throw new PersistException("Returned more than one record");
-        }
-        if (list.size() == 0) {
-            return null;
-        }
-        return list.iterator().next();
+        return getByTwoId(userId, groupId, sql);
     }
 
-
+    @Override
+    public List<UserGroup> getByUser(Integer userId) {
+        String sql = userGroupSelectByUserId;
+        log.info(sql + " LOG getByUser " + userId);
+        return getFromSqlById(sql, userId);
+    }
 }

@@ -23,8 +23,8 @@
         <div>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Trainings and quantity of employees</v-toolbar-title>
-                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel report</v-btn>
                 <v-spacer></v-spacer>
+                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel report</v-btn>
             </v-toolbar>
 
             <v-data-table
@@ -54,8 +54,8 @@
                             hide-actions
                     >
                         <template v-slot:items="props">
-                            <tr @click="goToGroupPage(props.item.group.id)" class="inner-table my-link">
-                                <td class="text-xs-right">{{ props.item.group.title }}</td>
+                            <tr @click="goToGroupPage(props.item.id)" class="inner-table my-link">
+                                <td class="text-xs-right">{{ props.item.title }}</td>
                                 <td class="text-xs-right">{{ props.item.quantityOfEmployees }}</td>
                             </tr>
                         </template>

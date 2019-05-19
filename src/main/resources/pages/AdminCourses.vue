@@ -1,61 +1,70 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-        <v-toolbar flat color="white">
-            <v-toolbar-title>Courses</v-toolbar-title>
-            <span class="text-xs-right">
-                <v-btn flat color="primary" v-if="isAdmin" @click="createCourse">Create new course</v-btn>
-            </span>
+    <v-container>
+        <v-layout row wrap>
+            <v-flex xs12 sm12>
+                <v-toolbar flat color="white">
+                    <v-toolbar-title>Courses</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn flat color="primary" v-if="isAdmin" @click="createCourse">Create new course</v-btn>
+                </v-toolbar>
+            </v-flex>
+            <v-flex>
+                <v-data-table
+                        :headers="headers"
+                        :items="coursesAndQuantities"
+                        :expand="true"
+                        item-key="course.id"
+                        :rows-per-page-items="nums"
+                >
+                    <template v-slot:items="props">
+                        <tr>
+                            <td class="my-link clickable">
+                                <div @click="goToCoursePage(props.item.course.id)">{{ props.item.course.name }}</div>
+                            </td>
+                            <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
+                            <td class="text-xs-right" v-if="isAdmin">
+                                <v-btn color="success" @click="update(props.item.course.id)">Update</v-btn>
+                            </td>
+                            <td class="text-xs-right" v-if="isAdmin">
+                                <v-btn color="error" @click="deleteCourse(props.item.course.id)">Delete</v-btn>
+                            </td>
 
-        </v-toolbar>
-        <v-data-table
-                :headers="headers"
-                :items="coursesAndQuantities"
-                :expand="true"
-                item-key="course.id"
-        >
-            <template v-slot:items="props">
-                <tr>
-                    <td class="my-link clickable">
-                        <div @click="goToCoursePage(props.item.course.id)" >{{ props.item.course.name }}</div>
-                    </td>
-                    <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
-                    <td class="text-xs-right" v-if="isAdmin">
-                        <v-btn color="error" @click="deleteCourse(props.item.course.id)">Delete</v-btn>
-                    </td>
-
-                </tr>
-            </template>
-        </v-data-table>
-    </div>
+                        </tr>
+                    </template>
+                </v-data-table>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 <script>
     import axios from 'axios'
 
     export default {
-    name: "AdminCourses",
- data: function(){
-            return{
-            headers: [
-            {
-                text: 'Name of the course',
-                    align: 'left',
-                value: 'courseName'
-            },
-            {
-                text: 'Number of employees', value: 'quantityOfEmployees',
-                width: "20", align: 'right'
-            },
-                {
-                    text: '', value: 'quantityOfEmployees',
-                    width: "20", align: 'right'
-                },
-                {
-                    text: '', value: 'quantityOfEmployees',
-                     align: 'right'
-                },
-            ],
+        name: "AdminCourses",
+        data: function () {
+            return {
+                nums: [10, 25, {"text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1}],
+                headers: [
+                    {
+                        text: 'Name of the course',
+                        align: 'left',
+                        value: 'courseName'
+                    },
+                    {
+                        text: 'Number of employees', value: 'quantityOfEmployees',
+                        width: "20", align: 'right'
+                    },
+                    {
+                        text: '', value: 'quantityOfEmployees',
+                        width: "20", align: 'right'
+                    },
+                    {
+                        text: '', value: 'quantityOfEmployees',
+                        width: "20", align: 'right'
+                    },
+                ],
                 coursesAndQuantities: [],
-                    isAdmin: this.$store.getters.isAdmin
+                isAdmin: this.$store.getters.isAdmin
             }
     },
     mounted() {

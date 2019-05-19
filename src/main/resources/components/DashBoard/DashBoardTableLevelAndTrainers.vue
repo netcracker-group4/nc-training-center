@@ -27,8 +27,8 @@
         <div>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Training level and trainers</v-toolbar-title>
-                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel report</v-btn>
                 <v-spacer></v-spacer>
+                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel report</v-btn>
             </v-toolbar>
             <v-data-table
                     :headers="headers"

@@ -21,31 +21,28 @@ import java.util.List;
 public class ProblemStatusDaoImpl extends AbstractDaoImpl<ProblemStatus> implements ProblemStatusDao {
 
     @Value("${problem-status.select-all}")
-    private String selectAllProblemStatuses;
+    private String selectAllProblemStatus;
 
     @Autowired
-    public ProblemStatusDaoImpl (DataSource dataSource) throws PersistException {
-        super (dataSource);
+    public ProblemStatusDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override
-    protected List <ProblemStatus> parseResultSet (ResultSet rs) throws SQLException {
-        List <ProblemStatus> list = new ArrayList <> ();
-        while (rs.next ()) {
-            Integer id = rs.getInt("ID");
-            String title = rs.getString("TITLE");
-            String description = rs.getString ("DESCRIPTION");
-            ProblemStatus ps = new ProblemStatus (id, title, description);
-            list.add(ps);
+    protected String getSelectQuery() {
+        return selectAllProblemStatus;
+    }
+
+    @Override
+    protected List<ProblemStatus> parseResultSet(ResultSet rs) throws SQLException {
+        List<ProblemStatus> list = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id");
+            String title = rs.getString("title");
+            String description = rs.getString("description");
+            ProblemStatus problemStatus = new ProblemStatus(id, title, description);
+            list.add(problemStatus);
         }
         return list;
     }
-
-    @Override
-    public List <ProblemStatus> getAll() {
-        String sql = selectAllProblemStatuses;
-        log.info(sql + " select all problem statuses");
-        return getListFromSql(sql);
-    }
-
 }

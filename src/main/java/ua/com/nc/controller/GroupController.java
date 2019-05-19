@@ -15,6 +15,7 @@ import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.User;
+import ua.com.nc.domain.UserGroup;
 import ua.com.nc.dto.schedule.GroupSchedule;
 import ua.com.nc.service.GroupsService;
 
@@ -94,7 +95,9 @@ public class GroupController {
     @ResponseBody
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteStudent(@PathVariable Integer id, @PathVariable Integer userId) {
-        groupDao.deleteUserFromGroup(id, userId);
+        UserGroup userGroup = userGroupDao.getByUserAndGroup(userId, id);
+        userGroup.setGroupId(null);
+        userGroupDao.update(userGroup);
     }
 
     @RequestMapping(value = "/{id}/course", method = RequestMethod.GET)

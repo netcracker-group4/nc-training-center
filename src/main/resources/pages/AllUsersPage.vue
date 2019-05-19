@@ -1,45 +1,44 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-        <v-container>
-            <v-layout row wrap>
-                <v-flex xs12 sm12>
-                    <v-toolbar flat color="white">
-                        <v-toolbar-title>Users</v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <template>
-                            <v-btn color="primary" dark class="mb-2" @click="goToNewUserPage">Add new user</v-btn>
-                        </template>
-                    </v-toolbar>
-                    <v-data-table
-                            :headers="headers"
-                            :items="allUsers"
-                            :expand="true"
-                            item-key="id"
-                    >
-                        <template v-slot:items="props">
-                            <tr class="my-link" @click="goToUserPage(props.item.id)">
-                                <td>
-                                    <div>{{ props.item.firstName }}</div>
-                                </td>
-                                <td>
-                                    <div>{{ props.item.lastName }}</div>
-                                </td>
-                                <td>
-                                    <div v-for="role in props.item.roles" class="role">{{ role }}</div>
-                                </td>
-                                <td class="text-xs-right">{{ props.item.active }}<!--<img src="../img/icon/baseline_done_black_18dp.png"/>--></td>
-                            </tr>
-                        </template>
-                    </v-data-table>
-                </v-flex>
-            </v-layout>
-        </v-container>
-    </div>
+    <v-container>
+        <v-layout row wrap>
+            <v-flex xs12 sm12>
+                <v-toolbar flat color="white">
+                    <v-toolbar-title>Users</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn flat color="primary" class="mb-2" @click="goToNewUserPage">Add new user</v-btn>
+                </v-toolbar>
+                <v-data-table
+                        :headers="headers"
+                        :items="allUsers"
+                        :expand="true"
+                        item-key="id"
+                        :rows-per-page-items="nums"
+                >
+                    <template v-slot:items="props">
+                        <tr class="my-link" @click="goToUserPage(props.item.id)">
+                            <td>
+                                <div>{{ props.item.firstName }}</div>
+                            </td>
+                            <td>
+                                <div>{{ props.item.lastName }}</div>
+                            </td>
+                            <td>
+                                <div v-for="role in props.item.roles" class="role">{{ role }}</div>
+                            </td>
+                            <td class="text-xs-right">{{ props.item.active }}
+                                <!--<img src="../img/icon/baseline_done_black_18dp.png"/>--></td>
+                        </tr>
+                    </template>
+                </v-data-table>
+            </v-flex>
+        </v-layout>
+    </v-container>
+
 </template>
 
 <script>
     import axios from 'axios'
-    // import NavigationDrawer from "../components/NavigationDrawer.vue"
+    // import NavigationDrawer from "../components/ NavigationDrawer.vue"
 
 
     export default {
@@ -47,6 +46,7 @@
         name: "AllUsersPage",
         data: function () {
             return {
+                nums: [10, 25, {"text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1}],
                 headers: [
                     {
                         text: 'First name', value: 'firstName',
@@ -72,7 +72,7 @@
             goToUserPage(userId) {
                 // this.$emit("sendId", userId);
                 this.$router.push('/userpage/' + userId);
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
             },
             goToNewUserPage() {
                 this.$router.push('/add-user');
@@ -103,9 +103,11 @@
     .my-link {
         cursor: pointer;
     }
+
     .role {
         align-items: center;
     }
+
     .clickable {
         cursor: pointer;
         margin-bottom: 5px;

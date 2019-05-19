@@ -1,10 +1,6 @@
 package ua.com.nc.dao.interfaces;
 
 import ua.com.nc.domain.ProblemStatus;
-import java.util.List;
 
-public interface ProblemStatusDao {
-
-    List <ProblemStatus> getAll();
-
+public interface ProblemStatusDao extends GenericDao<ProblemStatus> {
 }

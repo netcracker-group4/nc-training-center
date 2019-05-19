@@ -2,9 +2,7 @@
     <v-app>
         <navigation-bar/>
         <v-content>
-            <v-container fluid>
                 <router-view></router-view>
-            </v-container>
         </v-content>
         <vue-snotify></vue-snotify>
     </v-app>

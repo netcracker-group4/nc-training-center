@@ -9,7 +9,6 @@
                     </div>
                 </v-flex>
             </v-layout>
-            {{desiredSchedule2}}
             <v-layout row wrap>
                 <v-flex d-flex style="margin-bottom: 20px">
                     <v-radio-group v-model="activeSuitability" row>
@@ -45,6 +44,10 @@
                 </v-flex>
             </v-layout>
             <v-layout row wrap>
+                <v-flex d-flex style="margin-bottom: 50px">
+                    <v-btn alert @click="$router.push('/')">Discard</v-btn>
+                </v-flex>
+                <v-spacer></v-spacer>
                 <v-flex d-flex style="margin-bottom: 50px">
                     <v-btn alert @click="save">Save</v-btn>
                 </v-flex>
@@ -118,9 +121,9 @@
                     courseId: this.$route.params.id,
                     forDays: this.desiredSchedule2
                 }).then(function (response) {
-                        console.log(response);
-                        self.successAutoClosable("You successfully joined course!")
-                    })
+                    console.log(response);
+                    self.successAutoClosable("You successfully joined course!")
+                })
                     .catch(function (error) {
                         console.log(error);
                         self.errorAutoClosable(error.response.data);
@@ -189,10 +192,10 @@
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/getcourses/' + this.$route.params.id + '/course-group' )
+            axios.get('http://localhost:8080/getcourses/' + this.$route.params.id + '/course-group')
                 .then(function (response) {
                     console.log(response.data);
-                    if(response.data == true){
+                    if (response.data == true) {
                         self.$router.push('/404');
                     }
                     self.loadInfo();

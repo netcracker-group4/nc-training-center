@@ -45,6 +45,13 @@ public class InfodeskRequestController {
         return gson.toJson(infodeskRequestService.getAllRequestsOfType (requestType));
     }
 
+    @RequestMapping(value = {"/statuses"}, method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?> getStatuses() {
+        return ResponseEntity.ok().body(infodeskRequestService.getStatuses());
+    }
+
+
     @RequestMapping (value={"/change-request-type"}, method = RequestMethod.PATCH)
     @ResponseBody
     public ResponseEntity<?> updateRequestType (@RequestParam (name = "requestId") String requestId,

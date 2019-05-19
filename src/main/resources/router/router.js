@@ -16,7 +16,6 @@ import AbsenceReasons from '../pages/AbsenceReasons.vue'
 import DesiredSchedulePage from "../pages/DesiredSchedulePage.vue";
 import AttachmentsPage from "../pages/AttachmentsPage.vue"
 import TestPage from '../pages/TestPage.vue'
-import GroupSchedulePage from "../pages/GroupSchedulePage.vue";
 import AllGroups from "../pages/AllGroups.vue";
 import NotFound from "../pages/NotFound.vue";
 import ChatPage from '../pages/ChatPage.vue'
@@ -24,6 +23,7 @@ import InfodeskRequest from "../pages/InfodeskRequest.vue";
 import JoinCoursePage from "../pages/JoinCoursePage.vue";
 import LessonPage from "../pages/LessonPage.vue";
 import AccessDenied from "../pages/AccessDenied.vue";
+import InfodeskPage from "../pages/InfodeskPage.vue";
 
 Vue.use(Router);
 
@@ -33,9 +33,7 @@ const routes = [
     {path: '/registration', component: RegistrationPage},
     {path: '/dashboard', component: DashBoardPage},
     {path: '/login', component: LoginPage},
-    {path: '/dashboard', component: DashBoardPage},
     {path: '/group/:id', component: GroupPage, props: true},
-    {path: '/groups/:id/schedule', component: GroupSchedulePage},
     {path: '/courses/:id', component: CoursePage, props: true},
     {path: '/courses/:id/join', component: JoinCoursePage, props: true},
     {path: '/admincourses', component: AdminCourses},
@@ -53,6 +51,7 @@ const routes = [
     {path: '/allgroups', component: AllGroups},
     {path: '/chat/:id', component: ChatPage},
     {path: '/requests', component: InfodeskRequest},
+    {path: '/infodesk', component: InfodeskPage},
     {path: '/404', component: NotFound },
     {path: '/403', component: AccessDenied },
     {path: '*', redirect: '/404'}

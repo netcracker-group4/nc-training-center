@@ -1,5 +1,8 @@
 package ua.com.nc.domain;
 
+import lombok.Data;
+
+@Data
 public class ProblemStatus extends Entity {
 
     private String title;
@@ -9,14 +12,9 @@ public class ProblemStatus extends Entity {
         this.title = title;
     }
 
-    public ProblemStatus (Integer id, String title, String description) {
-        super (id);
+    public ProblemStatus(Integer id, String title, String description) {
+        super(id);
         this.title = title;
         this.description = description;
     }
-
-    public String getTitle() { return title; }
-
-    public void setTitle(String title) { this.title = title; }
-
 }
