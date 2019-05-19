@@ -6,39 +6,35 @@
                 <template v-slot:header>
                     <div>Group's attendance</div>
                 </template>
-                <div class="attendance" v-for="lesson in lessons">
                     <v-card flat>
-                        <v-card-title>
-                            Attendance for '{{ lesson.topic }}'
-                        </v-card-title>
-
-                        <group-attendance-table :group-id="groupId"
-                                                :lessonId="lesson.id"
-                                                :key="lesson.id"/>
+                        <group-attendance-graph :absenceReasons="reasons"/>
                     </v-card>
-                </div>
             </v-expansion-panel-content>
         </v-expansion-panel>
     </div>
 </template>
 <script>
     import axios from 'axios/index'
-    import GroupAttendanceTable from "./GroupAttendanceTable.vue"
+    import GroupAttendanceGraph from "./GroupAttendanceGraph.vue"
 
     export default {
 
         name: 'group-attendance',
-        components: {GroupAttendanceTable},
+        components: {GroupAttendanceGraph},
         props: ['groupId'],
         data() {
             return {
-                lessons: []
+                reasons: []
             }
         },
         mounted() {
-            axios.get('/api/schedule/' + String(this.groupId))
-                .then(response => this.lessons = response.data)
-                .catch(error => console.log(error));
+            axios.get('/api/groups/' + this.groupId + '/attendance-graph')
+                .then(function (response) {
+                    self.reasons = response.data;
+                    console.log(response.data);
+                }).catch(function (error) {
+                console.log(error);
+            });
         }
     }
 </script>

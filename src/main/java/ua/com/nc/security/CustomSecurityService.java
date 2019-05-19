@@ -36,20 +36,6 @@ public class CustomSecurityService {
     @Autowired
     private UserGroupDaoImpl userGroupDao;
 
-    public boolean hasAdminRole(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return user.getRoles().contains(Role.ADMIN);
-    }
-
-    public boolean hasManagerRole(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return user.getRoles().contains(Role.MANAGER);
-    }
-
-    public boolean hasTrainerRole(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return user.getRoles().contains(Role.TRAINER);
-    }
 
     public boolean hasPermissionToSeeScheduleOf(Authentication authentication, Integer userId) {
         User user = (User) authentication.getPrincipal();

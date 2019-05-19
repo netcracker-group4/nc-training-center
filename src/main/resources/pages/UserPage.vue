@@ -5,6 +5,8 @@
             <basic-user-info-component :user="user" :groups="groups" :trainers="trainers"
                                        :elem-name="userComponentHeader"/>
 
+            <v-btn justify-start large flat @click="downloadGroupsAttendanceReport()" v-if="isTrainer() && isMyPage()">Download attendance reports</v-btn>
+
             <user-attendance-progress v-if="canShowAttendance()" :absenceReasons="absenceReasons"/>
 
             <users-attendance v-if="canShowAttendance()" class="margin" :user="user" :groups="groups"/>
@@ -255,6 +257,12 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+            },
+            isMyPage() {
+                return this.$store.state.user.id.toString() === this.$route.params.id;
+            },
+            downloadGroupsAttendanceReport() {
+                window.open("/download-report/attendance-report", "_blank");
             }
         }
         ,
