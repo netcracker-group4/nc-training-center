@@ -2,9 +2,14 @@
     <div>
         <div class="title mb-1">
             {{name}}
+            <v-btn @click="edit()">
+                <v-icon>edit</v-icon>
+            </v-btn>
             <v-btn v-if="this.$store.getters.userRoles.includes('EMPLOYEE')" @click="sign()">Sign course</v-btn>
         </div>
-
+        <v-dialog  v-if="isAdmin" v-model="dialog" max-width="500px">
+            <EditCourseComponent v-bind:trainers="trainers"/>
+        </v-dialog>
             <v-container
                     fluid
                     grid-list-md
@@ -83,7 +88,8 @@
                                 </v-layout>
                             </div>
                             <div class="subheading pt-3"> <b>Trainer</b></div>
-                            <div v-for="tr in trainer" > <b @click="goTrainerPage(tr.id)"> {{tr.firstName }}   {{tr.lastName}} </b>
+                            <div>
+                                <b @click="goTrainerPage(tr.id)"> {{trainer.firstName }}   {{trainer.lastName}} </b>
                             </div>
                             <div class="subheading pt-3">
                                 <b>Groups</b> <v-btn small="true" v-if="isAdmin" @click="manageGroups()">Manage groups</v-btn>
@@ -139,10 +145,11 @@
 <script>
     import axios from 'axios'
     import CourseDate from "../components/CourseDate.vue";
+    import EditCourseComponent from "../components/EditCourseComponent.vue";
 
     export default {
         name: "CoursePage",
-        components: {CourseDate},
+        components: {EditCourseComponent, CourseDate},
         data() {
             return{
                 id: this.$route.params.id,
@@ -161,8 +168,8 @@
                 groups: [],
                 isAdmin: this.$store.getters.isAdmin,
                 isNotAdmin: this.isAdmin==="false",
-                trainers: null,
-                dialog: null,
+                trainers: [],
+                dialog: false,
                 statuses:[],
                 headers: [
                     {
@@ -229,7 +236,9 @@
                 let self = this;
                 axios.get('http://localhost:8080/dashboard/level-and-trainers')
                     .then(function (response) {
-                        self.trainers = response.data;
+                        response.data.forEach(d =>{
+                            self.trainers.push(d.trainer);
+                        });
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -254,18 +263,8 @@
                         console.log(error);
                     });
             },
-            editStatus() {
-                let self = this;
-                this.dialog = true;
-                for (let i = 1; i < 5; i++) {
-                axios.get('http://localhost:8080/getInfo/getStatus/' + i)
-                    .then(function (response) {
-                        self.statuses.push(response.data);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            }
+            edit(){
+              this.dialog =true;
             },
             setLevel(levelId){
                 let self = this;

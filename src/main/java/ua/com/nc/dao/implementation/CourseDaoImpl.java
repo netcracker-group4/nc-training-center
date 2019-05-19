@@ -174,8 +174,6 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
             course = parseResultSet(rs).get(0);
         } catch (SQLException e) {
             log.trace(e);
-            throw new PersistException(e);
-            e.printStackTrace();
             throw new PersistException(e.getMessage());
         }
         return course;
