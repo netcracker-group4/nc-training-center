@@ -20,10 +20,10 @@ import ua.com.nc.dto.schedule.GroupSchedule;
 import ua.com.nc.service.GroupsService;
 
 import java.util.List;
+import java.util.Map;
 
 @Log4j
 @Controller
-@CrossOrigin(origins = "http://localhost:8000")
 @RequestMapping("/groups")
 public class GroupController {
     @Autowired
@@ -133,4 +133,9 @@ public class GroupController {
         return gson.toJson(groupsService.getAllByTrainerId(employeeId));
     }
 
+    @RequestMapping(value = "{id}/getAttendanceGraph")
+    @ResponseBody
+    public Map<String, Double> getAttendanceGraph(@PathVariable Integer id){
+        return groupsService.getAttendanceGraph(id);
+    }
 }

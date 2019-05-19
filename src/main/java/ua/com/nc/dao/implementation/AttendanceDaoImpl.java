@@ -29,6 +29,9 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
     @Value("${attendance.select-by-lesson-id}")
     private String selectAttendanceByLessonId;
 
+    @Value("${attendance.select-by-group-id}")
+    private String selectByGroupId;
+
     @Value("${attendance.update}")
     private String attendanceUpdate;
 
@@ -109,6 +112,10 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
         return getAttendances(lessonId, selectAttendanceByLessonId);
     }
 
+    @Override
+    public List<Attendance> getAttendanceByGroupId(Integer groupId){
+        return getAttendances(groupId, selectByGroupId);
+    }
 
     @Override
     public void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId) {

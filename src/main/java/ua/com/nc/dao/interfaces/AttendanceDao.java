@@ -11,6 +11,8 @@ public interface AttendanceDao extends GenericDao<Attendance> {
 
     List<Attendance> getAttendanceByLessonId(Integer lessonId);
 
+    List<Attendance> getAttendanceByGroupId(Integer groupId);
+
     void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId);
 
 }

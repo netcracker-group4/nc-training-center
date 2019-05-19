@@ -63,7 +63,7 @@ public class ReportController {     //    /download-report/dashboard-report
     //get attendance of groups by their trainer id, authenticated trainer
     //else get full attendance report by admin
     @RequestMapping(value = "/attendance-report", method = RequestMethod.GET)
-    @PreAuthorize("@customSecuritySecurity.hasAdminRole(authentication)")
+    @PreAuthorize("hasAuthority('ADMIN') || hasAuthority('TRAINER')")
     public ResponseEntity<InputStreamResource> excelAttendanceReport(
             @AuthenticationPrincipal User user) throws IOException {
         return getAttendanceReport(user);
@@ -72,7 +72,7 @@ public class ReportController {     //    /download-report/dashboard-report
 
     //get group attendance report by group id
     @RequestMapping(value = "/attendance-report/{groupId}", method = RequestMethod.GET)
-    @PreAuthorize("@customSecuritySecurity.hasAdminRole(authentication)")
+    @PreAuthorize("hasAuthority('ADMIN') || hasAuthority('TRAINER')")
     public ResponseEntity<InputStreamResource> excelGroupAttendanceReport(
             @PathVariable Integer groupId) throws IOException {
         return ResponseEntity.ok()
@@ -87,7 +87,7 @@ public class ReportController {     //    /download-report/dashboard-report
     }
 
     @RequestMapping(value = "/dashboard-report", method = RequestMethod.GET)
-    @PreAuthorize("@customSecuritySecurity.hasAdminRole(authentication)")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<InputStreamResource> excelDashboardReport()
             throws IOException {
         return ResponseEntity.ok()

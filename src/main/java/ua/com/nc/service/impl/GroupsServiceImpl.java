@@ -11,7 +11,9 @@ import ua.com.nc.dto.schedule.ScheduleForUser;
 import ua.com.nc.service.GroupsService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Log4j
 @Service
@@ -26,6 +28,11 @@ public class GroupsServiceImpl implements GroupsService {
     UserDao userDao;
     @Autowired
     LevelDao levelDao;
+    @Autowired
+    AttendanceStatusDao statusDao;
+    @Autowired
+    AttendanceDao attendanceDao;
+
 
     @Override
     public int update(GroupSchedule groupSchedule) {
@@ -166,5 +173,24 @@ public class GroupsServiceImpl implements GroupsService {
             }
         }
         return dtoGroups;
+    }
+
+    @Override
+    public Map<String, Double> getAttendanceGraph(Integer groupId) {
+        Map<String, Integer> attendance = new HashMap<>();
+        statusDao.getAll().forEach(reason -> attendance.put(reason.getTitle().toLowerCase(), 0));
+        List<Attendance> attendances = attendanceDao.getAttendanceByGroupId(groupId);
+        int coefficient = 0;
+        if (attendances != null && !attendances.isEmpty()) {
+            for (Attendance instance : attendanceDao.getAttendanceByGroupId(groupId)) {
+                String status = instance.getStatus().toLowerCase();
+                attendance.put(status, attendance.get(status) + 1);
+                coefficient++;
+            }
+        }
+        final double percentage = 100.0 / coefficient;
+        Map<String, Double> result = new HashMap<>();
+        attendance.forEach((key, value) -> result.put(key, (value * percentage)));
+        return result;
     }
 }
