@@ -42,6 +42,9 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     private String groupSelectByTrainerId;
     @Value("${group.delete-student}")
     private String deleteUserFromGroup;
+    @Value("${group.select-by-user-id-and-group-id}")
+    private String selectByUserIdAndGroupId;
+
 
 
     @Autowired
@@ -152,6 +155,25 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
             statement.executeQuery();
         } catch (SQLException e) {
             log.trace(e);
+        }
+    }
+
+    @Override
+    public Group getByUserIdAndGroupId(Integer userId, Integer groupId) {
+        List<Group> groups = null;
+        String sql = selectByUserIdAndGroupId;
+        try(PreparedStatement statement = connection.prepareStatement(selectByUserIdAndGroupId)) {
+            statement.setInt(1, userId);
+            statement.setInt(2, groupId);
+            ResultSet resultSet = statement.executeQuery();
+            groups = parseResultSet(resultSet);
+        } catch (SQLException e) {
+            log.trace(e + "select group by group id and user id");
+        }
+        if(groups != null & groups.size() > 0){
+            return groups.get(0);
+        }else {
+            return null;
         }
     }
 }

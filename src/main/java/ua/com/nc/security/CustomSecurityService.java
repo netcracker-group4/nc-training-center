@@ -8,10 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.implementation.UserGroupDaoImpl;
 import ua.com.nc.dao.interfaces.*;
-import ua.com.nc.domain.Lesson;
-import ua.com.nc.domain.Role;
-import ua.com.nc.domain.User;
-import ua.com.nc.domain.UserGroup;
+import ua.com.nc.domain.*;
 import ua.com.nc.dto.DateDeserializer;
 import ua.com.nc.dto.DtoLesson;
 import ua.com.nc.dto.schedule.DesiredToSave;
@@ -97,6 +94,16 @@ public class CustomSecurityService {
             throw new LogicException("You can join course only once");
         }
         return true;
+    }
+
+    public boolean canWriteToGroupChat(Integer userId, Integer groupId){
+        Group group = groupDao.getByUserIdAndGroupId(userId, groupId);
+        User trainer = userDao.getTrainerByGroupId(groupId);
+        if(group != null || trainer.getId() == userId){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 

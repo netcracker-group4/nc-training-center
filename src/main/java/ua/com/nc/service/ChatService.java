@@ -6,7 +6,12 @@ import ua.com.nc.domain.Message;
 import java.util.List;
 
 public interface ChatService {
-    Integer addMessage(Message message, Integer receiverId);
+
+    Integer addMessageToGroupChat(Message message, Integer groupId);
+
+    Integer addMessageToChat(Message message, Integer receiverId);
+
+    Integer addMessageToExistingChat(Message message);
 
     List<Chat> getChatsByUserId(Integer userId);
 

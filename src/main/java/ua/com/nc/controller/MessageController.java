@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.com.nc.domain.Chat;
 import ua.com.nc.domain.Message;
 import ua.com.nc.domain.User;
+import ua.com.nc.security.CustomSecurityService;
 import ua.com.nc.service.ChatService;
 import ua.com.nc.service.MessageService;
 
@@ -33,15 +34,18 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private CustomSecurityService customSecurityService;
+
     @MessageMapping("/message")
     @SendTo("/topic/msg")
-    public String getMessage(String jsonMessage){
+    public String addMessageAndReturnToChatPage(String jsonMessage){
         Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd.HH.mm.ss").serializeNulls().create();
         Message message = gson.fromJson(jsonMessage, Message.class);
         Chat chat = chatService.getByUserIdAndChatId(message.getSenderId(), message.getChatId());
         if(chat != null){
             message.setDateTime(new Timestamp(System.currentTimeMillis()));
-            Integer messageId = chatService.addMessage(message, null);
+            Integer messageId = chatService.addMessageToExistingChat(message);
             message.setId(messageId);
             return gson.toJson(message);
         }else{
@@ -65,14 +69,34 @@ public class MessageController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/messages")
+    @RequestMapping(method = RequestMethod.POST, value = "/api/messages")
     public ResponseEntity<?> addMessage(@RequestParam(name="text") String text,
                                         @RequestParam(name="senderId") Integer senderId,
-                                        @RequestParam(required = false, name="receiverId") Integer receiverId){
+                                        @RequestParam(required = false, name="receiverId") Integer receiverId,
+                                        @RequestParam(required = false, name="groupId") Integer groupId ){
 
-        Message message = new Message(null, senderId, new Timestamp(System.currentTimeMillis()), text);
-        chatService.addMessage(message, receiverId);
-        return ResponseEntity.ok().body("Message added");
+
+            Message message = new Message(null, senderId, new Timestamp(System.currentTimeMillis()), text);
+
+            if(receiverId != null & groupId == null){
+                chatService.addMessageToChat(message, receiverId);
+                return ResponseEntity.ok().body("Message added");
+            }
+            if(groupId != null && receiverId == null){
+                if(customSecurityService.canWriteToGroupChat(senderId, groupId)){
+                    log.debug(text + " sender id " + senderId + " receiver id " + receiverId + " group id " + groupId);
+                    chatService.addMessageToGroupChat(message, groupId);
+                    return ResponseEntity.ok().body("Message added");
+                }else{
+                    return ResponseEntity.status(403).body("Access denied");
+                }
+            }
+            if(receiverId == null && groupId == null){
+                return ResponseEntity.badRequest().body("Incorrect data");
+            }else{
+                return ResponseEntity.badRequest().body("Bad request");
+            }
+
     }
 
 }
