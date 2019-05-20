@@ -5,6 +5,8 @@
             <basic-user-info-component :user="user" :groups="groups" :trainers="trainers"
                                        :elem-name="userComponentHeader"/>
 
+            <v-btn justify-start large flat @click="downloadGroupsAttendanceReport()" v-if="isTrainer() && isMyPage()">Download attendance reports</v-btn>
+
             <user-attendance-progress v-if="canShowAttendance()" :absenceReasons="absenceReasons"/>
 
             <users-attendance v-if="canShowAttendance()" class="margin" :user="user" :groups="groups"/>
@@ -42,6 +44,7 @@
     import UsersCourses from "../components/UsersCourses.vue";
     import SubordinatesComponent from "../components/SubordinatesComponent.vue";
     import UserAttendanceProgress from "../components/UserAttendanceProgress.vue";
+
     export default {
         components: {
             UsersAttendance,
@@ -169,7 +172,7 @@
             loadInfo() {
                 let self = this;
                 let id = this.$route.params.id;
-                axios.get('http://localhost:8080/users/' + id)
+                axios.get('/api/users/' + id)
                     .then(function (response) {
                         self.user = response.data;
                         console.log(self.user);
@@ -192,7 +195,7 @@
                 let role;
                 if(this.user.roles.includes('TRAINER')){
                     role = 'trainer/';
-                    axios.get('http://localhost:8080/groups/trainer/' + this.$route.params.id)
+                    axios.get('/api/groups/trainer/' + this.$route.params.id)
                         .then(function (response) {
                             self.groups = response.data;
                             console.log(response.data);
@@ -201,7 +204,7 @@
                         self.errorAutoClosable(error.response.data);
                     });
                 }else role = 'employee/';
-                axios.get('http://localhost:8080/schedule/' + role + this.$route.params.id)
+                axios.get('/api/schedule/' + role + this.$route.params.id)
                     .then(function (response) {
                         console.log(response.data);
                         self.lessons = response.data;
@@ -216,7 +219,7 @@
             },
             loadAdditional() {
                 let self = this;
-                axios.get('http://localhost:8080/users/' + this.$route.params.id + '/trainers')
+                axios.get('/api/users/' + this.$route.params.id + '/trainers')
                     .then(function (response) {
                         self.trainers = response.data;
                         console.log(response.data);
@@ -224,7 +227,7 @@
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
                 });
-                axios.get('http://localhost:8080/users/' + this.$route.params.id + '/getAttendanceGraph')
+                axios.get('/api/users/' + this.$route.params.id + '/getAttendanceGraph')
                     .then(function (response) {
                         self.absenceReasons = response.data;
                         console.log(response.data);
@@ -233,7 +236,7 @@
                     self.errorAutoClosable(error.response.data);
                 });
                 console.log(this.$route.params.id);
-                axios.get('http://localhost:8080/groups/employee/' + this.$route.params.id)
+                axios.get('/api/groups/employee/' + this.$route.params.id)
                     .then(function (response) {
                         self.groups = response.data;
                         console.log(response.data);
@@ -245,7 +248,7 @@
             loadCourses() {
                 let self = this;
                 let id = this.$route.params.id;
-                axios.get('http://localhost:8080/getcourses/get-all-courses-by-trainer-and-employee?trainerId=' +
+                axios.get('/api/getcourses/get-all-courses-by-trainer-and-employee?trainerId=' +
                     store.state.user.id + "&employeeId=" + id)
                     .then(function (response) {
                         self.courses = response.data;
@@ -254,6 +257,12 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+            },
+            isMyPage() {
+                return this.$store.state.user.id.toString() === this.$route.params.id;
+            },
+            downloadGroupsAttendanceReport() {
+                window.open("/download-report/attendance-report", "_blank");
             }
         }
         ,

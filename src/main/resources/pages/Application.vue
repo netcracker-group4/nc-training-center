@@ -12,11 +12,12 @@
     import NavigationBar from "../components/NavigationBar.vue";
     import axios from 'axios'
 
+    axios.defaults.baseURL = 'http://localhost:8080';
     export default {
         name: "Application",
         components: {NavigationBar},
         mounted() {
-            axios.get('http://localhost:8080/chats')
+            axios.get('/api/chats')
                 .then(response => this.$store.state.chats = response.data)
         }
     }

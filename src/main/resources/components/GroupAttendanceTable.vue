@@ -121,14 +121,14 @@
                 }
                 let form = new FormData();
                 let request = new XMLHttpRequest();
-                request.open('PUT', 'http://localhost:8080/attendances');
+                request.open('PUT', 'http://localhost:8080/api/attendances');
                 form.append('attendanceId', attendanceId);
                 form.append('statusId', statusId);
                 form.append('absenceId', reasonId);
                 request.send(form);
                 request.onloadend = function () {
                     if(request.status === 200){
-                        axios.get('http://localhost:8080/attendances?groupId='+ self.groupId + '&lessonId=' + self.lessonId)
+                        axios.get('/api/attendances?groupId='+ self.groupId + '&lessonId=' + self.lessonId)
                             .then(response => self.attendances = response.data)
                             .catch(error => console.log(error))
                     }
@@ -141,19 +141,19 @@
                 this.close();
             },
             forwardToUserPage(id){
-                this.$router.push('/userpage/' + id)
+                this.$router.push('/users/' + id)
             },
         },
         mounted() {
-            axios.get('http://localhost:8080/attendances?groupId='+ this.groupId + '&lessonId=' + this.lessonId)
+            axios.get('/api/attendances?groupId='+ this.groupId + '&lessonId=' + this.lessonId)
                 .then(response => this.attendances = response.data)
                 .catch(error => console.log(error));
 
-            axios.get('http://localhost:8080/attendance-status')
+            axios.get('/api/attendance-status')
                 .then(response => this.statuses = response.data)
                 .catch(error => console.log(error));
 
-            axios.get('http://localhost:8080/absence-reason')
+            axios.get('/api/absence-reason')
                 .then(response => this.reasons = response.data)
                 .catch(error => console.log(error));
 

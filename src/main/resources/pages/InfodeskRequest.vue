@@ -38,7 +38,6 @@
 
 <script>
 
-    import axios from 'axios'
     import store from "../store/store.js";
 
 
@@ -55,7 +54,7 @@
             send (){
                 // if (this.description != null && this.message != null) {
                 //         console.log(this.description + " " + this.message);
-                //         axios.post('http://localhost:8080/requests/create-request', {
+                //         axios.post('http://localhost:8080/api/requests/create-request', {
                 //             userId: this.userId.toString(),
                 //             description: this.description,
                 //             message: this.message
@@ -68,7 +67,7 @@
                 let form = new FormData();
 
                 let request = new XMLHttpRequest();
-                request.open('POST', 'http://localhost:8080/requests/create-request');
+                request.open('POST', 'http://localhost:8080/api/requests/create-request');
                 form.append('userId', this.userId);
                 form.append('description', this.description);
                 form.append('message', this.message);

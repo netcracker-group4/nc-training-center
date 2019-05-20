@@ -145,7 +145,7 @@
         methods:{
             setCourse(){
                 let self = this;
-                axios.get('http://localhost:8080/getcourses/'+self.id)
+                axios.get('/api/getcourses/'+self.id)
                     .then(function (response) {
                         //self.levels = response.data;
                         let dat = response.data;
@@ -168,7 +168,7 @@
             },
             getStatus(id){
                 let self = this;
-                axios.get('http://localhost:8080/getInfo/getStatus/'+id)
+                axios.get('/api/getInfo/getStatus/'+id)
                     .then(function (response) {
                         self.courseStatus = response.data;
                     })
@@ -178,7 +178,7 @@
             },
             getTrainer(){
                 let self = this;
-                axios.get('http://localhost:8080/getcourses/'+this.$route.params.id+'/trainer')
+                axios.get('/api/getcourses/'+this.$route.params.id+'/trainer')
                     .then(function (response) {
                         self.trainer = response.data[0];
                     })
@@ -188,7 +188,7 @@
             },
             getTrainers(){
                 let self = this;
-                axios.get('http://localhost:8080/dashboard/level-and-trainers')
+                axios.get('/api/dashboard/level-and-trainers')
                     .then(function (response) {
                         response.data.forEach(d =>{
                             self.trainers.push(d.trainer);
@@ -199,7 +199,7 @@
                     });
             },
             goTrainerPage(id){
-                this.$router.push('/userpage/' + id);
+                this.$router.push('/users/' + id);
             },
             goGroupPage(id){
                 this.$router.push('/group/' + id);
@@ -209,7 +209,7 @@
             },
             getGroups(){
                 let self = this;
-                axios.get('http://localhost:8080/groups/get-groups/'+self.id)
+                axios.get('/api/groups/get-groups/'+self.id)
                     .then(function (response) {
                         self.groups = response.data;
                     })
@@ -222,7 +222,7 @@
             },
             setLevel(levelId){
                 let self = this;
-                axios.get('http://localhost:8080/getInfo/getLevel/'+levelId)
+                axios.get('/api/getInfo/getLevel/'+levelId)
                     .then(function (response) {
                         self.level = response.data;
                     })
@@ -266,7 +266,7 @@
                 }
             },
             manageGroups(){
-                this.$router.push('/desired-schedule/' + this.$route.params.id);
+                this.$router.push('/courses/' + this.$route.params.id + '/desired-schedule');
             },
             manageSchedule(id){
                 this.$router.push('/groups/'+id+'/schedule');
@@ -276,10 +276,11 @@
             try {
                 let self = this;
                 self.setCourse();
-                console.log(self);
+
             }catch (e) {
                 console.log(e);
             }
+            console.log(this);
         }
     }
 </script>

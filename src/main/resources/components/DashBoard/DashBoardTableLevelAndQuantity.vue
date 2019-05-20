@@ -113,19 +113,19 @@
                 });
             },
             goToGroupPage(groupId) {
-                this.$router.push('/group/' + groupId);
+                this.$router.push('/groups/' + groupId);
             },
             goToCoursePage(levelId) {
                 this.$router.push('/courses/' + levelId);
             },
             downloadDashboardReport(){
-                window.open("http://localhost:8080/download-report/dashboard-report", "_blank");
+                window.open("http://localhost:8080/api/download-report/dashboard-report", "_blank");
             }
         },
         mounted() {
             if(store.getters.isAdmin) {
                 let self = this;
-                axios.get('http://localhost:8080/dashboard/level-and-quantity')
+                axios.get('/api/dashboard/level-and-quantity')
                     .then(function (response) {
                         self.levelsAndGroupQuantities = response.data;
                         self.levelsAndGroupQuantities.forEach(function (value) {

@@ -5,15 +5,13 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ua.com.nc.service.AttendanceStatusService;
 
 @Log4j
 @Controller
-@RequestMapping("/attendance-status")
-@CrossOrigin(origins = "http://localhost:8000")
+@RequestMapping("/api/attendance-status")
 public class AttendanceStatusController {
 
     @Autowired

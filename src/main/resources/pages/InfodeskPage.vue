@@ -4,7 +4,7 @@
             <v-layout style="margin-bottom: 50px">
                 <h2>All problems </h2>
                 <v-spacer></v-spacer>
-                <v-btn alert @click="$router.push('/requests')" v-if="isStudent()">Open new Request</v-btn>
+                <v-btn alert @click="$router.push('/requests/new')" v-if="isStudent()">Open new Request</v-btn>
             </v-layout>
             <v-flex xs12 sm12>
                 <v-tabs v-model="currentStatus" centered style="width: 100%; margin-bottom: 50px">
@@ -24,7 +24,7 @@
                         style="margin-bottom: 50px"
                 >
                     <template v-slot:items="props">
-                        <td v-on:click="$router.push('/userpage/' + props.item.studentId)">{{ props.item.studentId }}
+                        <td v-on:click="$router.push('/users/' + props.item.studentId)">{{ props.item.studentId }}
                         </td>
                         <td class="text-xs-right">{{ props.item.description }}</td>
                         <td class="text-xs-right">
@@ -61,7 +61,7 @@
         methods: {
             loadInfo() {
                 let self = this;
-                axios.get('http://localhost:8080/requests/statuses')
+                axios.get('/api/requests/statuses')
                     .then(function (response) {
                         response.data.forEach(function (e) {
                             self.statuses.push(e);

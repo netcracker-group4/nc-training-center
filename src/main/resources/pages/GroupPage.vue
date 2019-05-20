@@ -11,6 +11,8 @@
                     <span class="grey--text" style="font-size: 22px; margin-top: 15px">Group :  </span>
                     <span style="font-size: 22px; margin-top: 15px" class="font-weight-medium">{{ group.title}}</span>
                     <v-spacer></v-spacer>
+                    <v-btn large flat v-on:click="downloadGroupAttendanceReport()" v-if="hasRights()">
+                        <b>Download group attendance</b></v-btn>
                     <v-btn large flat v-on:click="$router.push('/courses/' + course.id)">
                         <b>Course: {{course.name}}</b></v-btn>
                     <v-btn large flat v-on:click="forwardToUserPage(teacher.id)">
@@ -50,8 +52,8 @@
                                           :is-student-of-group="isStudentOfGroup()"></group-schedule-component>
             </v-flex>
 
-            <v-flex style="margin-bottom: 50px" xs12 sm12 v-if="$store.getters.isAdmin || $store.getters.isTrainer">
-                <group-attendance class="margin" :groupId="id"/>
+            <v-flex style="margin-bottom: 50px" xs12 sm12 v-if="hasRights()">
+                <group-attendance-graph :absenceReasons="reasons"/>
             </v-flex>
         </v-layout>
     </v-container>
@@ -60,13 +62,13 @@
 <script>
     import axios from 'axios';
     import store from '../store/store.js';
-    import GroupAttendance from "../components/GroupAttendance.vue";
+    import GroupAttendanceGraph from "../components/GroupAttendanceGraph.vue";
     import GroupScheduleComponent from "../components/GroupScheduleComponent.vue";
 
     export default {
         props: ['id'],
         name: "GroupPage",
-        components: {GroupAttendance, GroupScheduleComponent},
+        components: {GroupAttendanceGraph, GroupScheduleComponent},
         data: function () {
             return {
                 group: {},
@@ -74,6 +76,7 @@
                 teacher: [],
                 course: [],
                 lessons: [],
+                reasons: [],
                 headers2: [
                     {
                         text: 'Lesson topic',
@@ -111,7 +114,7 @@
             deleteStudent(id) {
                 let self = this;
                 if (confirm("Are you sure you want to delete " + this.findUserById(id).firstName + ' ' + this.findUserById(id).lastName)) {
-                    axios.delete('http://localhost:8080/groups/' + this.group.id + '/user/' + id)
+                    axios.delete('/api/groups/' + this.group.id + '/user/' + id)
                         .then(function (response) {
                             self.successAutoClosable('Employee has been removed from group');
                             self.students = self.students.filter(function (e) {
@@ -130,33 +133,36 @@
                 return this.students.find(s => s.id == id);
             },
             forwardToUserPage(id) {
-                this.$router.push('/userpage/' + id)
+                this.$router.push('/users/' + id)
             },
             isStudentOfGroup() {
                 let self = this;
                 return this.students.filter(e => e.id === self.$store.state.user.id).length > 0;
             },
+            downloadGroupAttendanceReport(){
+                window.open("/download-report/attendance-report/" + this.id, "_blank");
+            },
 
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/groups/' + self.id)
+            axios.get('/api/groups/' + self.id)
                 .then(function (response) {
                     self.group = response.data;
                 }).catch(function (error) {
                 console.log(error);
             });
-            axios.get('http://localhost:8080/groups/' + self.id + '/course')
+            axios.get('/api/groups/' + self.id + '/course')
                 .then(function (response) {
                     self.course = response.data;
                 }).catch(function (error) {
                 console.log(error);
             });
-            axios.get('http://localhost:8080/groups/' + self.id + '/trainer')
+            axios.get('/api/groups/' + self.id + '/trainer')
                 .then(function (response) {
                     self.teacher = response.data;
                 });
-            axios.get('http://localhost:8080/groups/' + self.id + '/users')
+            axios.get('/api/groups/' + self.id + '/users')
                 .then(function (response) {
                     self.students = response.data;
                     if (self.$store.state.userRoles.includes('ADMIN') ||
@@ -166,6 +172,13 @@
                         self.$router.push('/403');
                     }
 
+                }).catch(function (error) {
+                console.log(error);
+            });
+            axios.get('/api/groups/'+ self.id + '/getAttendanceGraph')
+                .then(function (response) {
+                    self.reasons = response.data;
+                    console.log(response.data);
                 }).catch(function (error) {
                 console.log(error);
             });

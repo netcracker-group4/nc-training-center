@@ -4,7 +4,10 @@ import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ua.com.nc.dao.interfaces.CourseStatus;
 import ua.com.nc.dao.interfaces.LevelDao;
 import ua.com.nc.domain.Level;
@@ -15,8 +18,7 @@ import java.util.List;
 
 @Log4j
 @Controller
-@CrossOrigin(origins = "http://localhost:8000")
-@RequestMapping(value = "/getInfo")
+@RequestMapping(value = "/api/getInfo")
 public class InfoController {
     private final Gson gson = new Gson();
     @Autowired

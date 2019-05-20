@@ -160,7 +160,7 @@
             },
             invertAttending(id, userName) {
                 let self = this;
-                axios.get('/groups/invert-attending/' + id)
+                axios.get('/api/groups/invert-attending/' + id)
                     .then(function (response) {
                         self.successAutoClosable('Employee  ' + userName + ' now updated')
                     })
@@ -184,7 +184,7 @@
                 let self = this;
                 this.$validator.validate('group_' + index, self.groups[index].name).then((result) => {
                     if (result) {
-                        axios.post('/groups', self.groups[index])
+                        axios.post('/api/groups', self.groups[index])
                             .then(function (response) {
                                 self.groups[index].id = response.data;
                                 self.successAutoClosable('Group  ' + self.groups[index].name + ' has been saved')
@@ -203,7 +203,7 @@
             },
             deleteGroup(index) {
                 let self = this;
-                axios.delete('/groups/' + self.groups[index].id)
+                axios.delete('/api/groups/' + self.groups[index].id)
                     .then(function (response) {
                         self.allSchedules = self.allSchedules.concat(self.groups[index].groupScheduleList);
                         self.successAutoClosable('Group ' + self.groups[index].name + ' has been deleted');
@@ -220,11 +220,11 @@
                 this.$validator.validateAll().then((result) => {
                     if (result) {
                         for (let i = 0; i < this.groups.length; i++) {
-                            axios.post('/groups', self.groups[i])
+                            axios.post('/api/groups', self.groups[i])
                                 .then(function (response) {
                                     console.log(response);
                                     self.groups[i].id = response.data;
-                                    self.successAutoClosable('All groups has been saved')
+                                    self.successAutoClosable('Group ' + self.groups[i].name + ' has been deleted');
                                 })
                                 .catch(function (error) {
                                     console.log(error);
@@ -243,7 +243,7 @@
             this.$validator.localize('en', this.dictionary);
             if (store.getters.isAdmin) {
                 let self = this;
-                axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/ungrouped')
+                axios.get('/api/getcourses/' + self.$route.params.id + '/desired/ungrouped')
                     .then(function (response) {
                         self.allSchedules = response.data;
                     })
@@ -253,7 +253,7 @@
                     });
 
 
-                axios.get('http://localhost:8080/getcourses/' + self.$route.params.id + '/desired/grouped')
+                axios.get('/api/getcourses/' + self.$route.params.id + '/desired/grouped')
                     .then(function (response) {
                         self.groups = response.data;
                     })
@@ -261,7 +261,7 @@
                         self.errorAutoClosable(error.response.data);
                         console.log(error);
                     });
-                axios.get('http://localhost:8080/getcourses/desired/day-intervals')
+                axios.get('/api/getcourses/desired/day-intervals')
                     .then(function (response) {
                         self.dayIntervals = response.data;
                     })
@@ -269,7 +269,7 @@
                         self.errorAutoClosable(error.response.data);
                         console.log(error);
                     });
-                axios.get('http://localhost:8080/getcourses/' + self.$route.params.id)
+                axios.get('/api/getcourses/' + self.$route.params.id)
                     .then(function (response) {
                         self.course = response.data;
                     })

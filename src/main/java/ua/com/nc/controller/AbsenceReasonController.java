@@ -11,8 +11,7 @@ import ua.com.nc.service.AbsenceReasonService;
 
 @Log4j
 @Controller
-@CrossOrigin(origins = "http://localhost:8000")
-@RequestMapping("/absence-reason")
+@RequestMapping("/api/absence-reason")
 public class AbsenceReasonController {
     @Autowired
     private AbsenceReasonDao absenceReasonDao;

@@ -39,8 +39,7 @@
 
 <script>
     import axios from 'axios'
-    import { sendMessage} from "../websocket/ws";
-    import { addHandler} from "../websocket/ws";
+    import {addHandler, sendMessage} from "../websocket/ws";
 
     export default {
         name: "MessagePage",
@@ -54,7 +53,7 @@
         },
         created() {
            let id = this.$route.params.id;
-            axios.get('http://localhost:8080/messages?chatId=' + id)
+            axios.get('/api/messages?chatId=' + id)
                 .then(response => this.messages = response.data)
 
             addHandler(data => this.messages.push(data))
@@ -79,7 +78,7 @@
         watch:{
             '$route.params.id'(to, from){
                 let id = this.$route.params.id;
-                axios.get('http://localhost:8080/messages?chatId=' + id)
+                axios.get('/api/messages?chatId=' + id)
                     .then(response => this.messages = response.data)
             }
         }

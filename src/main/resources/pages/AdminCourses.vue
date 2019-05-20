@@ -66,40 +66,40 @@
                 coursesAndQuantities: [],
                 isAdmin: this.$store.getters.isAdmin
             }
-    },
-    mounted() {
-        let self = this;
-        axios.get('http://localhost:8080/dashboard/training-and-quantity')
-            .then(function (response) {
-                self.coursesAndQuantities = response.data;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    },
-    methods: {
-        goToCoursePage(id){
-          this.$router.push('/courses/'+ id);
         },
-        deleteCourse(courseId){
-            if(confirm("Are you sure you want to delete "+this.findCourseById(courseId).name)){
-                axios.delete('http://localhost:8080/getcourses/'+courseId)
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+        mounted() {
+            let self = this;
+            axios.get('/api/dashboard/training-and-quantity')
+                .then(function (response) {
+                    self.coursesAndQuantities = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        methods: {
+            goToCoursePage(id) {
+                this.$router.push('/courses/' + id);
+            },
+            deleteCourse(courseId) {
+                if (confirm("Are you sure you want to delete " + this.findCourseById(courseId).name)) {
+                    axios.delete('/api/getcourses/' + courseId)
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            },
+            findCourseById(id) {
+                return this.coursesAndQuantities.find(c => c.course.id === id).course;
+            },
+            update(courseId) {
+                this.$router.push('/courses/' + courseId + '/edit');
+            },
+            createCourse() {
+                this.$router.push('/courses/new');
             }
-        },
-        findCourseById(id){
-            return this.coursesAndQuantities.find(c => c.course.id===id).course;
-        },
-        update(courseId){
-            this.$router.push('/coursecreate/'+ courseId);
-        },
-        createCourse(){
-            this.$router.push('/coursecreate');
         }
     }
-}
 </script>
 
 

@@ -6,6 +6,7 @@ import ua.com.nc.dto.DtoGroup;
 import ua.com.nc.dto.schedule.GroupSchedule;
 
 import java.util.List;
+import java.util.Map;
 
 public interface GroupsService {
     int update(GroupSchedule groupSchedule);
@@ -27,4 +28,6 @@ public interface GroupsService {
     void invertAttending(Integer userGroupId);
 
     List<DtoGroup> getAllByTrainerId(Integer employeeId);
+
+    Map<String, Double> getAttendanceGraph(Integer groupId);
 }

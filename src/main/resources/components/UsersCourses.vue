@@ -73,12 +73,12 @@
                 this.$router.push('/courses/' + courseId);
             },
             goToTrainerPage(trainerId) {
-                this.$router.push('/userpage/' + trainerId);
+                this.$router.push('/users/' + trainerId);
             },
             loadInfo() {
                 let self = this;
                 let id = this.$route.params.id;
-                axios.get('http://localhost:8080/getcourses/trainer/' + id)
+                axios.get('/api/getcourses/trainer/' + id)
                     .then(function (response) {
                         self.courses = response.data;
                         console.log(self.courses)

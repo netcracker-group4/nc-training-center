@@ -492,6 +492,11 @@ values
 	(1, 2),
 	(1, 3);
 
+INSERT INTO problem (user_id, title, problem_status_id, description, chat_id, date_time)
+values 
+(11, 'Problem!', 2, 'trouble', null, '2019-05-17 06:00:23'),
+(12, 'Problems', 3, 'FIXME', null, '2019-05-17 07:00:23'),
+(13, 'Problema', 1, 'fixit', null, '2019-05-17 08:00:23');
 
 
 update lesson set is_archived = false;

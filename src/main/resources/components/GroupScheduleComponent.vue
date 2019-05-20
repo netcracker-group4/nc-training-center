@@ -174,7 +174,7 @@
         props: ['isStudentOfGroup', 'courseTrainerId'],
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/schedule/' + self.$route.params.id)
+            axios.get('/api/schedule/' + self.$route.params.id)
                 .then(function (response) {
                     self.lessons = response.data;
                     self.lessons.forEach(function (one) {
@@ -185,7 +185,7 @@
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
                 });
-            axios.get('http://localhost:8080/groups/' + self.$route.params.id)
+            axios.get('/api/groups/' + self.$route.params.id)
                 .then(function (response) {
                     self.group = response.data;
                 })
@@ -193,7 +193,7 @@
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
                 });
-            axios.get('http://localhost:8080/users/get-all-trainers')
+            axios.get('/api/users/get-all-trainers')
                 .then(function (response) {
                     self.allTrainers = response.data;
                 })
@@ -201,7 +201,7 @@
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
                 });
-            axios.get('http://localhost:8080/attachments/all')
+            axios.get('/api/attachments/all')
                 .then(function (response) {
                     self.allAttachments = response.data;
                 })
@@ -258,7 +258,7 @@
         },
         methods: {
             goToGroupPage() {
-                this.$router.push('/group/' + this.group.id);
+                this.$router.push('/groups/' + this.group.id);
             },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
@@ -299,7 +299,7 @@
             },
             cancelLesson(lesson) {
                 let self = this;
-                axios.post('/schedule/' + lesson.id)
+                axios.post('/api/schedule/' + lesson.id)
                     .then(function (response) {
                         lesson.isCanceled = response.data;
                         lesson.open = false;
@@ -315,7 +315,7 @@
             },
             deleteLesson(lesson) {
                 let self = this;
-                axios.delete('/schedule/' + lesson.id)
+                axios.delete('/api/schedule/' + lesson.id)
                     .then(function (response) {
                         self.lessons = self.lessons.filter(el => el.id !== lesson.id);
                         self.cancel();
@@ -329,7 +329,7 @@
             },
             save(newLesson) {
                 let self = this;
-                axios.post('/schedule', newLesson)
+                axios.post('/api/schedule', newLesson)
                     .then(function (response) {
                         self.lessons = self.lessons.filter(el => el.id !== newLesson.id);
                         newLesson.id = response.data;
@@ -380,7 +380,7 @@
                 return hours + minutes + modifier
             },
             forwardToLessonPage(id) {
-                this.$router.push('/lesson/' + id)
+                this.$router.push('/lessons/' + id)
             },
             userCanEdit(lesson) {
                 return (this.$store.state.user.id == lesson.trainerId) || (this.$store.state.user.roles.includes('ADMIN'))

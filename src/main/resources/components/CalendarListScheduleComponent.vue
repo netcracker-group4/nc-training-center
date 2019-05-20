@@ -245,13 +245,13 @@
                 return parseInt(hours) + 'h ' + parseInt(minutes) + 'm';
             },
             goToGroupPage(groupId) {
-                this.$router.push('/group/' + groupId);
+                this.$router.push('/groups/' + groupId);
             },
             goToCoursePage(courseId) {
                 this.$router.push('/courses/' + courseId);
             },
             goToTrainerPage(trainerId) {
-                this.$router.push('/userpage/' + trainerId);
+                this.$router.push('/users/' + trainerId);
             },
             getGroupName(groupId) {
                 return this.groupsList.filter((e) => {
