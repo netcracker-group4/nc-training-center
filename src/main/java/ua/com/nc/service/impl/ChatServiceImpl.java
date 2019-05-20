@@ -7,7 +7,6 @@ import ua.com.nc.dao.interfaces.ChatDao;
 import ua.com.nc.dao.interfaces.MessageDao;
 import ua.com.nc.domain.Chat;
 import ua.com.nc.domain.Message;
-import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.service.ChatService;
 import ua.com.nc.service.UserService;
@@ -35,7 +34,8 @@ public class ChatServiceImpl implements ChatService {
         }
         if(message.getChatId() != null){
             //message.setChatId(chat.getId());
-            messageId = messageDao.insertMessage(message);
+            messageDao.insert(message);
+            messageId = message.getId();
         }
         else{
             if(receiverId != null) {
@@ -46,7 +46,9 @@ public class ChatServiceImpl implements ChatService {
                 chatDao.addUserToChat(chatId, receiver.getId());
                 chatDao.addUserToChat(chatId, sender.getId());
                 message.setChatId(chatId);
-                messageId = messageDao.insertMessage(message);
+                messageDao.insert(message);
+                messageId = message.getId();
+
             }else{
                 throw new PersistException("Receiver id should be not null");
             }
