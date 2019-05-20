@@ -2,43 +2,29 @@ package ua.com.nc.dto.schedule;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 @Data
 public class ScheduleForInterval {
     private int start;
     private int end;
-    String[] colorsForDays = new String[7];
+    String[] colorsForWeekDays = new String[7];
 
     public ScheduleForInterval() {
     }
 
     ScheduleForInterval(int start, int end, List<ParsedSchedule> parsedScheduleList) {
-        List<ParsedSchedule> forThisInterval = getForInterval(start, parsedScheduleList);
         this.start = start;
         this.end = end;
         for (int i = 0; i < 7; i++) {
-            ParsedSchedule parsedSchedule = getForDay(forThisInterval, i);
+            ParsedSchedule parsedSchedule = getForDay(parsedScheduleList, i);
             if (parsedSchedule != null) {
-                colorsForDays[i] = parsedSchedule.getColor();
-            } else colorsForDays[i] = "grey";
+                colorsForWeekDays[i] = parsedSchedule.getColor();
+            } else colorsForWeekDays[i] = "grey";
         }
-        System.out.println(Arrays.toString(colorsForDays));
     }
 
-    private List<ParsedSchedule> getForInterval(int start, List<ParsedSchedule> parsedScheduleList) {
-        List<ParsedSchedule> result = new ArrayList<>();
-        for (ParsedSchedule parsedSchedule : parsedScheduleList) {
-            if (parsedSchedule.getStart() == start) {
-                result.add(parsedSchedule);
-            }
-        }
-        result.sort(Comparator.comparingInt(a -> a.getDayOfWeek().getValue()));
-        return result;
-    }
+
 
     private ParsedSchedule getForDay(List<ParsedSchedule> forThisInterval, int day){
         for (ParsedSchedule parsedSchedule : forThisInterval) {

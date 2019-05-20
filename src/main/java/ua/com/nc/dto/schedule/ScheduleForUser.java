@@ -23,8 +23,19 @@ public class ScheduleForUser {
         this.userId = user.getId();
         this.userName = user.getFirstName() + "  " + user.getLastName();
         for (int i = start; i < end; i++) {
-            scheduleForIntervals.add(new ScheduleForInterval(i, i + 1, desiredSchedules));
+            List<ParsedSchedule> forInterval = getForInterval(i, desiredSchedules);
+            scheduleForIntervals.add(new ScheduleForInterval(i, i + 1, forInterval));
         }
+    }
+
+    private List<ParsedSchedule> getForInterval(int start, List<ParsedSchedule> parsedScheduleList) {
+        List<ParsedSchedule> result = new ArrayList<>();
+        for (ParsedSchedule parsedSchedule : parsedScheduleList) {
+            if (parsedSchedule.getStart() == start) {
+                result.add(parsedSchedule);
+            }
+        }
+        return result;
     }
 
 

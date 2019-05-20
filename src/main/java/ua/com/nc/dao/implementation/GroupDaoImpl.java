@@ -136,13 +136,6 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     }
 
     @Override
-    public Group getGroupById(Integer groupId) {
-        String sql = groupSelectById;
-        log.info(sql + "select group by id " + groupId);
-        return getUniqueFromSqlById(sql, groupId);
-    }
-
-    @Override
     public List<Group> getGroupByTrainerId(Integer trainerId) {
         String sql = groupSelectByTrainerId;
         log.info(sql + "select all groups for trainer " + trainerId);

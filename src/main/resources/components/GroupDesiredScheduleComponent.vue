@@ -70,7 +70,7 @@
         },
         methods: {
             getColor(forInterval) {
-                return forInterval.colorsForDays[this.currentDay];
+                return forInterval.colorsForWeekDays[this.currentDay];
             },
             errorAutoClosable(title) {
                 this.$snotify.error(title, {

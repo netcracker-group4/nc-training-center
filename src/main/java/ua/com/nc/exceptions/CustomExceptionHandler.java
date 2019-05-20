@@ -42,6 +42,7 @@ public class CustomExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public String handlePersistException(PersistException exception) {
+        log.error(exception.getMessage(), exception);
         log.trace(exception.getMessage(), exception);
         return "Oops \nServer error happened\n" +
                 "Please go watch some YouTube video while we fix it ";

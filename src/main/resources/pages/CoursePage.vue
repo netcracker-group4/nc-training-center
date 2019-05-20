@@ -277,6 +277,14 @@
                 let self = this;
                 self.setCourse();
 
+                /*axios.get('http://localhost:8080/getcourses/{id}/trainer)
+                    .then(function (response) {
+                        self.courseStatus = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });*/
+
             }catch (e) {
                 console.log(e);
             }

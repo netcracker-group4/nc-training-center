@@ -5,6 +5,7 @@ import ua.com.nc.domain.Attachment;
 import ua.com.nc.domain.Lesson;
 import ua.com.nc.domain.LessonAttachment;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +39,14 @@ public class DtoLesson {
 
 
     public Lesson getDomainLesson() {
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.Z");
         String dateString = timeDate.toString().substring(0, 10);
-        java.sql.Date sqlDate = java.sql.Date.valueOf(dateString);
-        return new Lesson(id, groupId, topic, trainerId, sqlDate, timeDate, duration, isCanceled, isPerformed);
+        Date sqlDate = Date.valueOf(dateString);
+        return new Lesson(id, groupId, topic, trainerId,
+                sqlDate, timeDate, duration, isCanceled, isPerformed);
     }
 
 
-    public List<LessonAttachment> getAttachments() {
+    public List<LessonAttachment> getDomainAttachments() {
         List<LessonAttachment> domainAttachments = new ArrayList<>();
         for (Attachment attachment : attachments) {
             domainAttachments.add(new LessonAttachment(attachment.getId(), id));
@@ -53,12 +54,6 @@ public class DtoLesson {
         return domainAttachments;
     }
 
-    public List<LessonAttachment> getAttachmentsForNewLesson(int id) {
-        List<LessonAttachment> domainAttachments = new ArrayList<>();
-        for (Attachment attachment : attachments) {
-            domainAttachments.add(new LessonAttachment(attachment.getId(), id));
-        }
-        return domainAttachments;
-    }
+
 
 }

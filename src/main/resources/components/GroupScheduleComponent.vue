@@ -188,6 +188,7 @@
             axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + self.$route.params.id)
                 .then(function (response) {
                     self.group = response.data;
+                    self.loadAdditional();
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -215,7 +216,7 @@
                 let self = this;
                 let filteredLessons = [];
                 if (this.$store.state.userRoles.includes('ADMIN') ||
-                    parseInt(this.$store.state.user.id) === parseInt(this.groupId) ||
+                    parseInt(this.$store.state.user.id) === parseInt(this.group.userId) ||
                     this.isStudentOfGroup) {
                     filteredLessons = this.lessons
                 } else {
@@ -257,6 +258,36 @@
             }
         },
         methods: {
+            loadAdditional() {
+                let self = this;
+                axios.get(this.$store.state.apiServer +'/api/schedule/' + self.$route.params.id)
+                    .then(function (response) {
+                        self.lessons = response.data;
+                        self.lessons.forEach(function (one) {
+                            one.open = false;
+                        })
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                axios.get(this.$store.state.apiServer +'/api/users/get-all-trainers')
+                    .then(function (response) {
+                        self.allTrainers = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+                axios.get(this.$store.state.apiServer +'/api/attachments/all')
+                    .then(function (response) {
+                        self.allAttachments = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable(error.response.data);
+                    });
+            },
             goToGroupPage() {
                 this.$router.push('/groups/' + this.group.id);
             },

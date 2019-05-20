@@ -1,6 +1,5 @@
 package ua.com.nc.controller;
 
-import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,12 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ua.com.nc.dao.interfaces.CourseDao;
-import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.dao.interfaces.UserDao;
-import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Course;
+import ua.com.nc.domain.Group;
 import ua.com.nc.domain.User;
-import ua.com.nc.domain.UserGroup;
+import ua.com.nc.dto.DtoGroup;
 import ua.com.nc.service.GroupsService;
 
 import java.util.List;
@@ -28,48 +26,42 @@ import java.util.Map;
 @RequestMapping("/api/groups")
 public class GroupController {
     @Autowired
-    private GroupDao groupDao;
-    @Autowired
     private UserDao userDao;
     @Autowired
     private CourseDao courseDao;
     @Autowired
     private GroupsService groupsService;
-    @Autowired
-    private UserGroupDao userGroupDao;
-    private final Gson gson = new Gson();
 
 
     @RequestMapping(value = "/get-all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
-        return new ResponseEntity<>(groupsService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(groupsService.getAllGroups(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/get-groups/{id}")
+    @RequestMapping(value = "/get-groups/{courseId}")
     @ResponseBody
-    public String getGroupsInCourse(@PathVariable Integer id) {
-        return gson.toJson(groupDao.getAllGroupsOfCourse(id));
+    public List<Group> getGroupsInCourse(@PathVariable Integer courseId) {
+        return groupsService.getAllGroupsOfCourse(courseId);
     }
 
-    @RequestMapping(value = "/{id}")
+    @RequestMapping(value = "/{groupId}")
     @ResponseBody
-    public String getGroup(@PathVariable Integer id) {
-        return gson.toJson(groupsService.getGroupById(id));
+    public DtoGroup getGroup(@PathVariable Integer groupId) {
+        log.info("retrieving group with  groupId = " + groupId);
+        return groupsService.getGroupById(groupId);
     }
 
-    @RequestMapping(value = "/{id}/users", method = RequestMethod.GET)
+    @RequestMapping(value = "/{groupId}/users", method = RequestMethod.GET)
     @ResponseBody
-    public List<User> getStudents(@PathVariable Integer id) {
-        return userDao.getByGroupId(id);
+    public List<User> getStudents(@PathVariable Integer groupId) {
+        return userDao.getByGroupId(groupId);
     }
 
-    @RequestMapping(value = "/{id}/user/{userId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{groupId}/user/{userId}", method = RequestMethod.DELETE)
     @ResponseBody
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void deleteStudent(@PathVariable Integer id, @PathVariable Integer userId) {
-        UserGroup userGroup = userGroupDao.getByUserAndGroup(userId, id);
-        userGroup.setGroupId(null);
-        userGroupDao.update(userGroup);
+    public void deleteStudent(@PathVariable Integer groupId, @PathVariable Integer userId) {
+        groupsService.removeStudentFromGroup(userId, groupId);
     }
 
     @RequestMapping(value = "/{id}/course", method = RequestMethod.GET)
@@ -80,8 +72,8 @@ public class GroupController {
 
     @RequestMapping(value = {"/groups-and-quantity"}, method = RequestMethod.GET)
     @ResponseBody
-    public String getLevelAndQuantity() {
-        return gson.toJson(groupsService.getGroupsAndQuantity());
+    public List<DtoGroup> getLevelAndQuantity() {
+        return groupsService.getGroupsAndQuantity();
     }
 
     @RequestMapping(value = {"/{id}/trainer"}, method = RequestMethod.GET)
@@ -94,15 +86,15 @@ public class GroupController {
     @RequestMapping(value = {"/employee/{employeeId}"}, method = RequestMethod.GET)
     @ResponseBody
     @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
-    public String getGroupsByUser(@PathVariable Integer employeeId) {
-        return gson.toJson(groupsService.getAllByEmployeeId(employeeId));
+    public List<DtoGroup> getGroupsByUser(@PathVariable Integer employeeId) {
+        return groupsService.getGroupsOfEmployee(employeeId);
     }
 
     @RequestMapping(value = {"/trainer/{employeeId}"}, method = RequestMethod.GET)
     @ResponseBody
     @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
-    public String getGroupsByTrainer(@PathVariable Integer employeeId) {
-        return gson.toJson(groupsService.getAllByTrainerId(employeeId));
+    public List<DtoGroup> getGroupsByTrainer(@PathVariable Integer employeeId) {
+        return groupsService.getAllByTrainerId(employeeId);
     }
 
     @RequestMapping(value = "{id}/getAttendanceGraph")

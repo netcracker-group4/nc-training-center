@@ -1,5 +1,6 @@
 package ua.com.nc.service;
 
+import ua.com.nc.domain.Lesson;
 import ua.com.nc.dto.DtoLesson;
 
 import java.util.List;
@@ -13,9 +14,11 @@ public interface LessonsService {
 
     String deleteLesson(int toDelete);
 
-    String cancelLesson(int lessonId);
+    String invertIsCanceledForLesson(int lessonId);
 
     List<DtoLesson> getAllForEmployee(int userId);
 
-    List<DtoLesson> getAllForETrainer(Integer userId);
+    List<DtoLesson> getAllForTrainer(Integer userId);
+
+    Lesson getLessonById(int lessonId);
 }
