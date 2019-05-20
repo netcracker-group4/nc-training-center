@@ -10,10 +10,7 @@ import ua.com.nc.dao.interfaces.MessageDao;
 import ua.com.nc.domain.Message;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +51,8 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
         Integer id;
         String sql = messageInsert;
         log.info(sql + " insert message " + message);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, message.getChatId());
             statement.setInt(2, message.getSenderId());
             statement.setTimestamp(3, message.getDateTime());
@@ -73,7 +71,8 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
     public List<Message> getMessagesByChatId(Integer chatId) {
         List<Message> messages = null;
         String sql = selectByChatId;
-        try(PreparedStatement statement = connection.prepareStatement(sql)) {
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, chatId);
             ResultSet resultSet = statement.executeQuery();
             messages = parseResultSet(resultSet);

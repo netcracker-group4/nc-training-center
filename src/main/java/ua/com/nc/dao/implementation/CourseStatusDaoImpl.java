@@ -12,7 +12,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 @Log4j2
 @Component
@@ -24,23 +23,25 @@ public class CourseStatusDaoImpl implements CourseStatus {
     @Value("${status.select-name-by-id}")
     private String getStatusById;
 
-    private Connection connection;
+    private DataSource dataSource;
 
     @Autowired
     CourseStatusDaoImpl(DataSource dataSource) throws PersistException {
-        try {
-            this.connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            log.trace("Error while setting autocommit false", e);
-            throw new PersistException("Error while setting autocommit false", e);
-        }
+        this.dataSource = dataSource;
+//        try {
+//            this.connection = dataSource.getConnection();
+//        } catch (SQLException e) {
+//            log.trace("Error while setting autocommit false", e);
+//            throw new PersistException("Error while setting autocommit false", e);
+//        }
     }
 
     @Override
     public ua.com.nc.domain.CourseStatus getCourseStatusById(int id) {
         String name;
         String sql = getStatusById;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             rs.next();
@@ -56,7 +57,8 @@ public class CourseStatusDaoImpl implements CourseStatus {
     public int getIdByName(String name) {
         int id;
         String sql = getStatusByName;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
             ResultSet rs = statement.executeQuery();
             rs.next();

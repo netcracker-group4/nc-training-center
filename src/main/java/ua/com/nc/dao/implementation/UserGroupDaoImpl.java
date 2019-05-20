@@ -10,6 +10,7 @@ import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.UserGroup;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -109,7 +110,8 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     public void deleteAllForGroup(Integer groupId) {
         String sql = userGroupDeleteForGroup;
         log.info(sql + " LOG deleteAllForGroup " + groupId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, groupId);
             statement.executeUpdate();
         } catch (Exception e) {
@@ -122,7 +124,8 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     public void deleteAllForUser(Integer userId) {
         String sql = userGroupDeleteForUser;
         log.info(sql + " delete all for user " + userId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, userId);
             statement.executeUpdate();
         } catch (Exception e) {
@@ -141,7 +144,8 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
 
     private UserGroup getByTwoId(Integer userId, Integer courseId, String sql) {
         List<UserGroup> list;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, courseId);
             statement.setInt(2, userId);
             ResultSet rs = statement.executeQuery();

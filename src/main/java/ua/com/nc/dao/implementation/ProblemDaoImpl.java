@@ -10,6 +10,7 @@ import ua.com.nc.dao.interfaces.ProblemDao;
 import ua.com.nc.domain.Problem;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,7 +56,8 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
         String sql = createRequest;
         int lastInsert;
         log.info (sql + " create a request " + description);
-        try (PreparedStatement statement = connection.prepareStatement (sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement (sql)) {
             statement.setInt (1, studentId);
             statement.setString(2, description);
             statement.setString (3, message);
@@ -72,7 +74,8 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     public List<Problem> getAllRequestsOfType (String requestType) {
         List<Problem> requests;
         String sql = selectRequestsOfType;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, requestType);
             ResultSet rs = statement.executeQuery();
             requests = parseResultSet(rs);
@@ -87,7 +90,8 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     @Override
     public void updateRequestType (int requestId, String requestType) {
         String sql = updateTypeOfRequest;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, requestType);
             statement.setInt(2, requestId);
             statement.executeUpdate();

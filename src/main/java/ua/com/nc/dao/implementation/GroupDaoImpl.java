@@ -10,6 +10,7 @@ import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.domain.Group;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -113,7 +114,8 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     public int getNumberOfEmployeesInGroup(int groupId) {
         String sql = groupSelectNumberOfEmployees;
         log.info(sql + " select number of emp for a group" + groupId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, groupId);
             ResultSet rs = statement.executeQuery();
             return (rs.next()) ?  rs.getInt(1) : 0;
@@ -146,7 +148,8 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
 
     @Override
     public void deleteUserFromGroup(Integer id, Integer userId) {
-        try (PreparedStatement statement = connection.prepareStatement(deleteUserFromGroup)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(deleteUserFromGroup)) {
             statement.setInt(1, id);
             statement.setInt(2, userId);
             statement.executeQuery();

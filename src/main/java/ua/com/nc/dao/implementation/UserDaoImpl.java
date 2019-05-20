@@ -20,7 +20,6 @@ import java.util.List;
 @PropertySource("classpath:sql_queries.properties")
 public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
-    private final String USER_ID = "ID";
 
     @Value("${usr.select-all}")
     private String usrSelectAll;
@@ -133,7 +132,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     protected List<User> parseResultSet(ResultSet rs) throws SQLException {
         List<User> list = new ArrayList<>();
         while (rs.next()) {
-            Integer userId = rs.getInt(USER_ID);
+            Integer userId = rs.getInt("ID");
             String email = rs.getString("EMAIL");
             String passwordHash = rs.getString("PASSWORD");
             String firstName = rs.getString("FIRST_NAME");
@@ -192,7 +191,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public void addUserRole(Integer userId, String roleName) {
         String sql = usrInsertUserRole;
         log.info(sql + " insert user " + userId + " role " + roleName);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             statement.setString(2, roleName);
             statement.executeUpdate();
@@ -206,7 +206,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public void addUserByAdmin(User user) {
         String sql = usrInsertUserByAdmin;
         log.info(sql + " insert user " + user.getEmail() + " by admin");
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getEmail());
             statement.setString(2, user.getToken());
             statement.setString(3, "firstname");
@@ -263,7 +264,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public void updateUserByAdmin(User user) {
         String sql = usrUpdateUsrByAdmin;
         log.info(sql + " update user by admin user= " + user.toString());
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setInt(3, user.getManagerId());
@@ -279,7 +281,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public void updateActive(User user) {
         String sql = usrUpdateChangeActive;
         log.info(sql + "change active by admin user= " + user.toString());
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, user.isActive());
             statement.setInt(2, user.getId());
             statement.executeUpdate();
@@ -295,7 +298,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         List<User> landingPageTrainers;
         String sql = usrLandingPage;
         log.info(sql + "select trainers on landing page");
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             landingPageTrainers = parseResultSet(rs);
         } catch (Exception e) {
@@ -329,7 +333,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public void updateTrainerLandingPage(int id, boolean isOnLandingPage) {
         String sql = usrUpdateLandingPage;
         log.info(sql + " update trainer on landing page id = " + id + " isOnLandingPage = " + isOnLandingPage);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, isOnLandingPage);
             statement.setInt(2, id);
             statement.executeUpdate();
@@ -359,7 +364,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         List<User> students = new ArrayList<>();
         String sql = selectStudentsAbsentOnLessonWithNoReason;
         log.info(sql + " selectStudentsAbsentOnLessonWithNoReason " + lessonId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, lessonId);
             ResultSet rs = statement.executeQuery();
             students = parseResultSet(rs);
@@ -378,8 +384,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         List<User> admin = new ArrayList<>();
         String sql = getAdmin;
         log.info(sql + " getAdmin");
-        try {
-            Statement statement = connection.createStatement();
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(sql);
             admin = parseResultSet(rs);
         } catch (Exception e) {

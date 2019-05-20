@@ -10,6 +10,7 @@ import ua.com.nc.dao.interfaces.LessonAttachmentDao;
 import ua.com.nc.domain.LessonAttachment;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -70,7 +71,8 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
     public void deleteByAttachmentId(Integer attachmentId) throws PersistException {
         String sql = lessonAttachmentDeleteByAttachmentId;
         log.info(sql + "LOG DeleteQuery " + attachmentId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, attachmentId);
             int count = statement.executeUpdate();
         } catch (Exception e) {
@@ -90,7 +92,8 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
     public void deleteByLessonId(Integer lessonId) throws PersistException {
         String sql = deleteAllByLessonId;
         log.info(sql + "LOG deleteByLessonId " + lessonId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, lessonId);
             statement.executeUpdate();
         } catch (Exception e) {
@@ -103,7 +106,8 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
     public void insertAttachment(LessonAttachment lessonAttachment) throws PersistException {
         String sql = lessonAttachmentInsert;
         log.info(sql + " insert " + lessonAttachment);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForInsert(statement, lessonAttachment);
             statement.execute();
         } catch (Exception e) {
@@ -116,7 +120,8 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
     public void unlink(Integer lessonId, Integer attachmentId) {
         String sql = lessonAttachmentUnlink;
         log.info(sql + "LOG unlink " + "lessonId: " + lessonId + ", attachmentId: " + attachmentId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1,attachmentId);
             statement.setInt(2, lessonId);
             statement.executeUpdate();

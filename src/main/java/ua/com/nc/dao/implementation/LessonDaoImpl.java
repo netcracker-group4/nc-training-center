@@ -120,7 +120,8 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
         List<Lesson> lessons;
         String sql = getSelectByGroupIdAndUserId;
         log.info("getByGroupIdAndUserId groupId " + groupId + " userId " + userId + "   " + sql);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, groupId);
             statement.setInt(2, userId);
             ResultSet rs = statement.executeQuery();
@@ -143,7 +144,8 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     public void archiveLesson(Integer lessonId) {
         String sql = archiveLessonQuery;
         log.info(sql + "  archiveLesson " + lessonId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, lessonId);
             int count = statement.executeUpdate();
             if (count > 1) {

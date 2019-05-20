@@ -79,7 +79,8 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
     private List<Attendance> getAttendances(Integer studentId, Integer courseId, String selectAttendanceByStudentIdAndCourseId) {
         List<Attendance> list;
         log.info(selectAttendanceByStudentIdAndCourseId);
-        try (PreparedStatement statement = connection.prepareStatement(selectAttendanceByStudentIdAndCourseId)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(selectAttendanceByStudentIdAndCourseId)) {
             statement.setInt(1, studentId);
             statement.setInt(2, courseId);
             ResultSet rs = statement.executeQuery();
@@ -93,7 +94,8 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
 
     private List<Attendance> getAttendances(Integer lessonId, String selectAttendanceByLessonId) {
         log.info(selectAttendanceByLessonId);
-        try (PreparedStatement statement = connection.prepareStatement(selectAttendanceByLessonId)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(selectAttendanceByLessonId)) {
             statement.setInt(1, lessonId);
             return parseResultSet(statement.executeQuery());
         } catch (Exception e) {
@@ -121,7 +123,8 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
     public void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId) {
         String sql = attendanceUpdate;
         log.info(sql + " attendance update");
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             if (statusId == null) {
                 statement.setNull(1, Types.INTEGER);
             } else {

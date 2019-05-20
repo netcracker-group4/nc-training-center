@@ -10,6 +10,7 @@ import ua.com.nc.dao.interfaces.LevelDao;
 import ua.com.nc.domain.Level;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -100,7 +101,8 @@ public class LevelDaoImpl extends AbstractDaoImpl<Level> implements LevelDao {
     @Override
     public int getIdByName(String name) {
         String sql = levelSelectByName;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
             ResultSet rs = statement.executeQuery();
             rs.next();
