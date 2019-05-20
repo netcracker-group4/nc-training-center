@@ -9,7 +9,7 @@
                 <div style="padding: 20px;">
                     <v-data-table
                             :headers="headers"
-                            :items="groups"
+                            :items="newGroups"
                             class="elevation-1">
                         <template v-slot:items="props">
                             <td class="clickable" v-on:click="goToCoursePage(props.item.courseId)">
@@ -49,10 +49,12 @@
         },
         methods: {
             getTrainerName(trainerId) {
-                let trainer = this.trainers.filter((e) => {
+                let trainer = this.newTrainers.filter((e) => {
                     return e.id === trainerId;
                 })[0];
-                return trainer.firstName + ' ' + trainer.lastName;
+                if (trainer !== undefined)
+                    return trainer.firstName + ' ' + trainer.lastName;
+                else return '';
             },
 
             goToGroupPage(groupId) {
@@ -64,6 +66,14 @@
             goToTrainerPage(trainerId) {
                 this.$router.push('/users/' + trainerId);
             },
+        },
+        computed: {
+            newTrainers() {
+                return this.trainers;
+            },
+            newGroups() {
+                return this.groups;
+            }
         }
     }
 </script>

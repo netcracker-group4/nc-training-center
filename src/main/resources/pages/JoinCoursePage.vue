@@ -117,7 +117,7 @@
                     courseId: this.$route.params.id,
                     array: this.desiredSchedule2
                 });
-                axios.post('/api/getcourses/desired/', {
+                axios.post('/api/desired-schedule/join/', {
                     courseId: this.$route.params.id,
                     forDays: this.desiredSchedule2
                 }).then(function (response) {
@@ -143,7 +143,7 @@
             },
             loadInfo() {
                 let self = this;
-                axios.get('/api/getcourses/desired/day-intervals')
+                axios.get('/api/desired-schedule/day-intervals')
                     .then(function (response) {
                         self.dayIntervals = response.data;
                         for (const index of Array(self.days.length).keys()) {
@@ -176,7 +176,7 @@
                         console.log(error);
                     });
 
-                axios.get('/api/getcourses/suitabilities')
+                axios.get('/api/desired-schedule/suitabilities')
                     .then(function (response) {
                         self.suitabilities = response.data;
                         if (self.suitabilities.length > 0) {

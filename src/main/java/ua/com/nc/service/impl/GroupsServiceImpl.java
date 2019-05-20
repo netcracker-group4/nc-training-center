@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.dto.DtoGroup;
-import ua.com.nc.dto.schedule.GroupSchedule;
-import ua.com.nc.dto.schedule.ScheduleForUser;
 import ua.com.nc.service.GroupsService;
 
 import java.util.ArrayList;
@@ -19,47 +17,21 @@ import java.util.Map;
 @Service
 public class GroupsServiceImpl implements GroupsService {
     @Autowired
-    GroupDao groupDao;
+    private GroupDao groupDao;
     @Autowired
-    UserGroupDao userGroupDao;
+    private UserGroupDao userGroupDao;
     @Autowired
-    CourseDao courseDao;
+    private CourseDao courseDao;
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
     @Autowired
-    LevelDao levelDao;
+    private LevelDao levelDao;
     @Autowired
-    AttendanceStatusDao statusDao;
+    private AttendanceStatusDao statusDao;
     @Autowired
-    AttendanceDao attendanceDao;
+    private AttendanceDao attendanceDao;
 
 
-    @Override
-    public int update(GroupSchedule groupSchedule) {
-        Group groupToUpdate = groupDao.getEntityById(groupSchedule.getId());
-        groupToUpdate.setTitle(groupSchedule.getName());
-        groupDao.update(groupToUpdate);
-        userGroupDao.deleteAllForGroup(groupToUpdate.getId());
-        updateStudentsForGroup(groupSchedule, groupToUpdate);
-        return groupToUpdate.getId();
-    }
-
-    @Override
-    public boolean delete(int groupId) {
-        userGroupDao.deleteAllForGroup(groupId);
-        groupDao.delete(groupId);
-        return true;
-    }
-
-    @Override
-    public int add(GroupSchedule groupSchedule) {
-        Group groupToInsert = new Group(groupSchedule.getCourseId(), groupSchedule.getName());
-        groupDao.insert(groupToInsert);
-        updateStudentsForGroup(groupSchedule, groupToInsert);
-        return groupToInsert.getId();
-    }
-
-    //method created to avoid usages of dao in controller
     @Override
     public DtoGroup getGroupById(int groupId) {
         List<Level> levels = levelDao.getAll();
@@ -112,22 +84,6 @@ public class GroupsServiceImpl implements GroupsService {
     }
 
 
-    private void updateStudentsForGroup(GroupSchedule groupSchedule, Group group) {
-        List<ScheduleForUser> newUsers = groupSchedule.getGroupScheduleList();
-        for (ScheduleForUser newUser : newUsers) {
-            UserGroup oldUserGroupForThisCourse = userGroupDao.getByUserAndCourse(newUser.getUserId(), group.getCourseId());
-            if (oldUserGroupForThisCourse == null) {
-                //if this user has not been grouped yet for this course
-                userGroupDao.insert(new UserGroup(newUser.getUserId(), group.getId(), true));
-            } else {
-                //if this user already has been saved as a part of another group for this course
-                oldUserGroupForThisCourse.setGroupId(group.getId());
-                userGroupDao.update(oldUserGroupForThisCourse);
-            }
-        }
-    }
-
-
     @Override
     public List<DtoGroup> getGroupsAndQuantity() {
         List<Group> groups = groupDao.getAll();
@@ -145,13 +101,6 @@ public class GroupsServiceImpl implements GroupsService {
         return userDao.getTrainerByGroupId(id);
     }
 
-
-    @Override
-    public void invertAttending(Integer userGroupId) {
-        UserGroup userGroup = userGroupDao.getEntityById(userGroupId);
-        userGroup.setAttending(!userGroup.isAttending());
-        userGroupDao.update(userGroup);
-    }
 
     @Override
     public List<DtoGroup> getAllByTrainerId(Integer trainerId) {

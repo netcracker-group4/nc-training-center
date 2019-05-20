@@ -185,7 +185,7 @@
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
                 });
-            axios.get('/api/groups/' + self.$route.params.id)
+            axios.get('/api/desired-schedule/' + self.$route.params.id)
                 .then(function (response) {
                     self.group = response.data;
                 })

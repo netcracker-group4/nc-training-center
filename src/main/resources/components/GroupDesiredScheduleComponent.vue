@@ -84,7 +84,7 @@
         mounted() {
             if(store.getters.isAdmin || store.getters.isTrainer) {
                 let self = this;
-                axios.get('/api/getcourses/desired/' + this.groupId)
+                axios.get('/api/desired-schedule/' + this.groupId)
                     .then(function (response) {
                         self.allSchedules = response.data;
                         console.log(response.data);
@@ -93,7 +93,7 @@
                         console.log(error);
                         self.errorAutoClosable(error.response.data);
                     });
-                axios.get('/api/getcourses/desired/day-intervals')
+                axios.get('/api/desired-schedule/day-intervals')
                     .then(function (response) {
                         self.dayIntervals = response.data;
                     })

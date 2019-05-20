@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ua.com.nc.dao.interfaces.CourseDao;
 import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.dao.interfaces.UserDao;
@@ -16,7 +18,6 @@ import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.User;
 import ua.com.nc.domain.UserGroup;
-import ua.com.nc.dto.schedule.GroupSchedule;
 import ua.com.nc.service.GroupsService;
 
 import java.util.List;
@@ -38,35 +39,6 @@ public class GroupController {
     private UserGroupDao userGroupDao;
     private final Gson gson = new Gson();
 
-
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public String addGroup(@RequestBody GroupSchedule groupSchedule) {
-        int newId;
-        if (groupSchedule.getId() == 0) {
-            newId = groupsService.add(groupSchedule);
-        } else {
-            newId = groupsService.update(groupSchedule);
-        }
-        return Integer.toString(newId);
-    }
-
-    @RequestMapping(path = "/invert-attending/{userGroupId}", method = RequestMethod.GET)
-    @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public String invertUser(@PathVariable Integer userGroupId) {
-        groupsService.invertAttending(userGroupId);
-        return "User updated";
-    }
-
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public String deleteGroup(@PathVariable Integer id) {
-        groupsService.delete(id);
-        return "Group deleted";
-    }
 
     @RequestMapping(value = "/get-all", method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
