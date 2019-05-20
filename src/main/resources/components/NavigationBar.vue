@@ -119,7 +119,9 @@
                     {
                         title: 'Infodesk', icon: 'contact_support', link: '/requests',
                         canBeShown: function (self) {
-                            return self.$store.getters.isAdmin || self.$store.state.userRoles.includes('EMPLOYEE')
+                            if(self.$store.state.isAuthorized){
+                                return self.$store.getters.isAdmin || self.$store.state.userRoles.includes('EMPLOYEE')
+                            }
                         }
                     },
                     {
