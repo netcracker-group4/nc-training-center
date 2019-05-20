@@ -30,22 +30,26 @@ public class User extends Entity implements UserDetails {
     public User() {
     }
 
-    public User(Integer id, String email, String password, String firstName, String lastName, Integer managerId, String image, boolean isActive) {
+    public User(Integer id, String email, String password, String firstName, String lastName, String token, OffsetDateTime created, Integer managerId, String image, boolean isActive) {
         super(id);
         this.setEmail(email);
         this.setPassword(password);
         this.setFirstName(firstName);
         this.setLastName(lastName);
+        this.setToken(token);
+        this.setCreated(created);
         this.setManagerId(managerId);
         this.setImageUrl(image);
         this.setActive(isActive);
     }
 
-    public User(String email, String password, String firstName, String lastName, Integer managerId, String image, boolean isActive) {
+    public User(String email, String password, String firstName, String lastName, String token, OffsetDateTime created, Integer managerId, String image, boolean isActive) {
         this.setEmail(email);
         this.setPassword(password);
         this.setFirstName(firstName);
         this.setLastName(lastName);
+        this.setToken(token);
+        this.setCreated(created);
         this.setManagerId(managerId);
         this.setImageUrl(image);
         this.setActive(isActive);
