@@ -8,7 +8,8 @@
             <v-btn v-if="this.$store.getters.userRoles.includes('EMPLOYEE')" @click="sign()">Sign course</v-btn>
         </div>
         <v-dialog  v-if="isAdmin" v-model="dialog" max-width="500px">
-            <EditCourseComponent v-bind:trainers="trainers"/>
+            <EditCourseComponent :trainers="trainers" :starting-day="startDay" :ending-day="endDay"
+                                :descr="description"/>
         </v-dialog>
             <v-container
                     fluid
@@ -20,7 +21,8 @@
                             <div class="subheading pt-3"> <b>{{courseStatus}}</b>
                              <p>Level: {{level.title}}</p>
                             </div>
-                            <v-img :src="'../'+'img/'+imageUrl+'.jpg'" aspect-ratio="2"></v-img>
+                                <v-img v-if="imageUrl" :src="'../'+'img/'+imageUrl+'.jpg'" aspect-ratio="2"></v-img>
+                            <v-progress-linear v-if="!imageUrl" :indeterminate="true"></v-progress-linear>
                             <div v-if="isAdmin">
                                 <v-text-field label="Select Image" @click='pickFile' v-model='imageUrl' prepend-icon='attach_file'></v-text-field>
                                 <input
@@ -36,63 +38,17 @@
                     <v-flex  offset-xs0 offset-lg0 style="margin-left: 2%">
                         <v-layout column>
                             <div>
-                                <v-layout row wrap>
-                                <v-flex xs3>
-                                <v-menu
-                                        :v-model="false"
-                                        :close-on-content-click="false"
-                                        :nudge-right="40"
-                                        lazy
-                                        transition="scale-transition"
-                                        offset-y
-                                        max-width="200px"
-                                        min-width="200px"
-                                >
-                                    <template v-slot:activator="{ on }">
-                                        <v-text-field
-                                                v-model="startDay"
-                                                label="Ends on"
-                                                persistent-hint
-                                                prepend-icon="event"
-                                                :readonly="isNotAdmin"
-                                                v-on="on"
-                                        ></v-text-field>
-                                    </template>
-                                    <v-date-picker v-model="startDay" ></v-date-picker>
-                                </v-menu>
-                                </v-flex>
-                                <v-flex xs3>
-                                <v-menu
-                                        :v-model="false"
-                                        :close-on-content-click="false"
-                                        :nudge-right="40"
-                                        lazy
-                                        transition="scale-transition"
-                                        offset-y
-                                        max-width="200px"
-                                        min-width="200px"
-                                >
-                                    <template v-slot:activator="{ on }">
-                                        <v-text-field
-                                                v-model="endDay"
-                                                label="Ends on"
-                                                persistent-hint
-                                                prepend-icon="event"
-                                                :readonly="isNotAdmin"
-                                                v-on="on"
-                                        ></v-text-field>
-                                    </template>
-                                    <v-date-picker v-model="endDay" ></v-date-picker>
-                                </v-menu>
-                                </v-flex>
-                                </v-layout>
+                                <b>
+                                    <p>Starts on: {{startDay}}</p>
+                                    <p>Ends on: {{endDay}}</p>
+                                </b>
                             </div>
                             <div class="subheading pt-3"> <b>Trainer</b></div>
                             <div>
                                 <b @click="goTrainerPage(tr.id)"> {{trainer.firstName }}   {{trainer.lastName}} </b>
                             </div>
                             <div class="subheading pt-3">
-                                <b>Groups</b> <v-btn small="true" v-if="isAdmin" @click="manageGroups()">Manage groups</v-btn>
+                                <b>Groups</b> <v-btn :small="true" v-if="isAdmin" @click="manageGroups()">Manage groups</v-btn>
                             </div>
                             <v-data-table
                                     :headers="headers"
@@ -109,7 +65,7 @@
                                             <div @click="goGroupPage(props.item.id)">{{props.item.title}}</div>
                                         </td>
                                         <td class="text-xs-right">
-                                            <v-btn v-if="isAdmin" small="true" @click="manageSchedule(props.item.id)">Manage schedule</v-btn>
+                                            <v-btn :small="true"  v-if="isAdmin" @click="manageSchedule(props.item.id)">Manage schedule</v-btn>
                                         </td>
                                     </tr>
                                 </template>
@@ -155,7 +111,7 @@
                 id: this.$route.params.id,
                 name: null,
                 levelId: null,
-                level: null,
+                level: {title: ''},
                 courseStatus: null,
                 courseStatusId: null,
                 imageUrl: null,
@@ -164,13 +120,12 @@
                 description: null,
                 startDay: null,
                 endDay: null,
-                trainer: null,
+                trainer: {firstName: '', lastName: ''},
                 groups: [],
                 isAdmin: this.$store.getters.isAdmin,
                 isNotAdmin: this.isAdmin==="false",
                 trainers: [],
                 dialog: false,
-                statuses:[],
                 headers: [
                     {
                         text: 'Group id',
@@ -206,7 +161,6 @@
                         self.getTrainer();
                         self.getGroups();
                         self.getTrainers();
-                        console.log(dat);
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -226,7 +180,7 @@
                 let self = this;
                 axios.get('http://localhost:8080/getcourses/'+this.$route.params.id+'/trainer')
                     .then(function (response) {
-                        self.trainer = response.data;
+                        self.trainer = response.data[0];
                     })
                     .catch(function (error) {
                         console.log(error);

@@ -44,10 +44,11 @@ public class InfoController {
     }
 
     @RequestMapping(value = "/getStatuses", method = RequestMethod.GET)
-    public String getAllStatuses() {
+    @ResponseBody
+    public List<String> getAllStatuses() {
         ua.com.nc.domain.CourseStatus[] statuses = ua.com.nc.domain.CourseStatus.values();
         List<String> list = new ArrayList<>();
         Arrays.stream(statuses).forEach(s -> list.add(s.getName()));
-        return gson.toJson(list);
+        return list;
     }
 }
