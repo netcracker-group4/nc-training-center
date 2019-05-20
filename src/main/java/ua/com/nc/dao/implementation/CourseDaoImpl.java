@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -10,14 +10,11 @@ import ua.com.nc.dao.interfaces.CourseDao;
 import ua.com.nc.domain.Course;
 
 import javax.sql.DataSource;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Log4j
+@Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao {
@@ -46,6 +43,8 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     private String selectCourseByFeedbackId;
     @Value("${course.select-course-by-trainer-and-by-employee}")
     private String courseSelectAllByTrainerAndEmployee;
+    @Value("${course.edit}")
+    private String editCourse;
 
 
     @Autowired
@@ -140,7 +139,8 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     public List<Course> getLandingPageCourses() {
         List<Course> landingPageCourses;
         String sql = courseLandingPage;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             landingPageCourses = parseResultSet(rs);
         } catch (Exception e) {
@@ -154,7 +154,8 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     @Override
     public void updateCourseLandingPage(int id, boolean isOnLandingPage) {
         String sql = courseUpdateLandingPage;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, isOnLandingPage);
             statement.setInt(2, id);
             statement.executeUpdate();
@@ -167,55 +168,36 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     @Override
     public Course getCourseByGroup(int id) {
         String sql = selectCourseByGroupId;
-        Course course;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            course = parseResultSet(rs).get(0);
-        } catch (SQLException e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        return course;
+        return getUniqueFromSqlById(sql, id);
     }
 
     @Override
     public Course getCourseByFeedback(Integer feedbackId) {
-        List<Course> courses;
         String sql = selectCourseByFeedbackId;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, feedbackId);
-            ResultSet rs = statement.executeQuery();
-            courses = parseResultSet(rs);
-        } catch (SQLException e) {
-            throw new PersistException(e.getMessage());
-        }
-        if (courses == null || courses.size() == 0) {
-            return null;
-        }
-        if (courses.size() > 1) {
-            throw new PersistException("Received more than one record.");
-        }
-        return courses.get(0);
+        return getUniqueFromSqlById(selectCourseByFeedbackId, feedbackId);
     }
 
     @Override
     public List<Course> getAllCourseByTrainerAndByEmployee(Integer trainerId, Integer employeeId) {
-        List<Course> courses;
         String sql = courseSelectAllByTrainerAndEmployee;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, trainerId);
-            statement.setInt(2, employeeId);
-            ResultSet rs = statement.executeQuery();
-            courses = parseResultSet(rs);
-        } catch (SQLException e) {
-            throw new PersistException(e.getMessage());
-        }
-        if (courses == null || courses.size() == 0) {
-            return null;
-        }
-        return courses;
+        return getFromSqlByTwoId(sql, trainerId, employeeId);
     }
 
-
+    @Override
+    public void edit(int id, String name, int lvl, int statusId, boolean isLanding, java.sql.Date starts, java.sql.Date ends, String desc) {
+        String sql = editCourse;
+        try(PreparedStatement statement = dataSource.getConnection().prepareStatement(sql)){
+            statement.setString(1,name);
+            statement.setInt(2,lvl);
+            statement.setInt(3,statusId);
+            statement.setDate(4,starts);
+            statement.setDate(5,ends);
+            statement.setBoolean(6,isLanding);
+            statement.setString(7,desc);
+            statement.setInt(8,id);
+            statement.executeQuery();
+        } catch (SQLException e) {
+            log.trace(e);
+        }
+    }
 }

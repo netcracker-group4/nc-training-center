@@ -15,12 +15,14 @@
                         Add new user
                     </v-btn>
                 </v-toolbar>
+                <progress-circular-component v-if="loading"></progress-circular-component>
                 <v-data-table
                         :headers="headers"
                         :items="allUsers"
                         :expand="true"
                         item-key="id"
                         :rows-per-page-items="nums"
+                        v-if="!loading"
                 >
                     <template v-slot:items="props">
                         <tr class="my-link" @click="goToUserPage(props.item.id)">
@@ -47,6 +49,7 @@
 <script>
     import axios from 'axios';
     import store from '../store/store.js';
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
 
     export default {
@@ -54,6 +57,7 @@
         name: "AllUsersPage",
         data: function () {
             return {
+                loading: true,
                 nums: [10, 25, {"text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1}],
                 headers: [
                     {
@@ -94,6 +98,7 @@
             axios.get('/api/admin')
                 .then(function (response) {
                     self.allUsers = response.data;
+                    self.loading = false;
                     console.log(self.allUsers)
                 })
                 .catch(function (error) {
@@ -101,7 +106,7 @@
                 });
         },
         components: {
-            // NavigationDrawer
+            ProgressCircularComponent
         }
     }
 </script>

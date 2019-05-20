@@ -142,7 +142,6 @@
                 this.$validator.validateAll().then((result) => {
                     if (result) {
                         let self = this;
-                        console.log(self.selectCourse);
                         axios.post('/api/feedback/add', {
                             studentId: this.user.id,
                             teacher: this.getAuthorizationUser(),
@@ -154,10 +153,9 @@
                             console.log(response);
                             this.getFeedback();
                             this.$validator.reset();
-                        })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                        });
                     }
                 })
 

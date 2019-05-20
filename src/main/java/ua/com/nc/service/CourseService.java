@@ -3,9 +3,6 @@ package ua.com.nc.service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.domain.Course;
 import ua.com.nc.dto.DtoCourse;
-import ua.com.nc.dto.schedule.DesiredToSave;
-import ua.com.nc.dto.schedule.GroupSchedule;
-import ua.com.nc.dto.schedule.ScheduleForUser;
 
 import java.util.List;
 
@@ -18,17 +15,10 @@ public interface CourseService {
                              String imageUrl, String isOnLandingPage, String desc, String startDay, String endDay);
 
 
-    List<ScheduleForUser> getDesiredScheduleForUngroupedStudentsOfCourse(int courseId) throws Exception;
-
-    List<GroupSchedule> getDesiredScheduleForFormedGroupsForCourse(int courseId) throws Exception;
-
-    List<String> getDayIntervals();
-
     String uploadImage(MultipartFile image);
-
-    List<ScheduleForUser> getDesiredScheduleForGroup(int groupId) throws Exception;
 
     List<DtoCourse> getAllByTrainerAndEmployee(Integer trainerId, Integer employeeId);
 
-    String saveDesired(Integer id, DesiredToSave desiredToSave);
+    void edit(int id, String name, String level, String courseStatus, String isOnLandingPage, String desc, String startDay, String endDay);
+
 }

@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@Log4j
+@Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageDao {
@@ -36,7 +36,7 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
     @Override
     protected List<Message> parseResultSet(ResultSet rs) throws SQLException {
         List<Message> messages = new ArrayList<>();
-        while (rs.next()){
+        while (rs.next()) {
             Integer id = rs.getInt("id");
             Integer chat_id = rs.getInt("chat_id");
             Integer senderId = rs.getInt("user_id");
@@ -48,39 +48,23 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
         return messages;
     }
 
-
-
-    public Integer insertMessage(Message message) throws PersistException {
-        Integer id;
-        String sql = messageInsert;
-        log.info(sql + " insert message " + message);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, message.getChatId());
-            statement.setInt(2, message.getSenderId());
-            statement.setTimestamp(3, message.getDateTime());
-            statement.setString(4, message.getText());
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            id = resultSet.getInt(1);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        return id;
+    @Override
+    protected void prepareStatementForInsert(PreparedStatement statement, Message entity) throws SQLException {
+        statement.setInt(1, entity.getChatId());
+        statement.setInt(2, entity.getSenderId());
+        statement.setTimestamp(3, entity.getDateTime());
+        statement.setString(4, entity.getText());
     }
 
     @Override
+    protected String getInsertQuery() {
+        return messageInsert;
+    }
+
+
+    @Override
     public List<Message> getMessagesByChatId(Integer chatId) {
-        List<Message> messages = null;
         String sql = selectByChatId;
-        try(PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, chatId);
-            ResultSet resultSet = statement.executeQuery();
-            messages = parseResultSet(resultSet);
-        } catch (SQLException e) {
-            log.trace(e);
-            log.trace(e);
-        }
-        return messages;
+        return getFromSqlById(sql, chatId);
     }
 }

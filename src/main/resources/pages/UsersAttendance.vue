@@ -6,7 +6,7 @@
                 <template v-slot:header>
                     <div>Employee's attendance</div>
                 </template>
-                <div class="attendance" v-for="group in groups">
+                <div class="attendance" v-for="group in groups" v-if="group.id != 0 && group.id != undefined">
                     <v-card flat>
                         <v-card-title>
                             Attendance of user {{user.firstName + ' ' + user.lastName}}

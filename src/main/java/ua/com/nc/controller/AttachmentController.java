@@ -2,7 +2,7 @@ package ua.com.nc.controller;
 
 
 import com.google.gson.Gson;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -21,14 +21,14 @@ import ua.com.nc.service.RoleService;
 import java.io.FileInputStream;
 
 
-@Log4j
+@Log4j2
 @Controller
 @RequestMapping("/api/attachments")
 public class AttachmentController {
     @Autowired
-    AttachmentDao attachmentDao;
+    private AttachmentDao attachmentDao;
     @Autowired
-    AttachmentService service;
+    private AttachmentService service;
     @Autowired
     private RoleService roleService;
 

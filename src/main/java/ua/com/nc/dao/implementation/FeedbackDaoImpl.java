@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -17,7 +17,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Log4j
+@Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements FeedbackDao {
@@ -105,38 +105,16 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
 
     @Override
     public List<Feedback> getAllByUserId(Integer userId) {
-        List<Feedback> feedbacks;
         String sql = feedbackSelectAllByUser;
         log.info(sql + " select all feedback by user " + userId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, userId);
-            ResultSet rs = statement.executeQuery();
-            feedbacks = parseResultSet(rs);
-        } catch (Exception e) {
-            throw new PersistException(e);
-        }
-        if (feedbacks.size() == 0) {
-            return null;
-        }
-        return feedbacks;
+        return getFromSqlById(sql, userId);
     }
+
 
     @Override
     public List<Feedback> getAllByTrainerIdAndUserId(Integer userId, Integer trainerId) {
-        List<Feedback> feedbacks;
         String sql = feedbackSelectAllByTrainerIdAndByUserId;
         log.info(sql + " select all feedback by trainer " + trainerId + " and by user " + userId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, userId);
-            statement.setInt(2, trainerId);
-            ResultSet rs = statement.executeQuery();
-            feedbacks = parseResultSet(rs);
-        } catch (Exception e) {
-            throw new PersistException(e);
-        }
-        if (feedbacks.size() == 0) {
-            return null;
-        }
-        return feedbacks;
+        return getFromSqlByTwoId(sql, userId, trainerId);
     }
 }

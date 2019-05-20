@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -10,6 +10,7 @@ import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.UserGroup;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //import static jdk.nashorn.internal.objects.NativeMath.log;
-@Log4j
+@Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements UserGroupDao {
@@ -94,11 +95,6 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
             Integer groupId = rs.getInt("group_id");
             Integer courseId = rs.getInt("course_id");
             boolean isAttending = rs.getBoolean("is_attending");
-            log.info(id);
-            log.info(userId);
-            log.info(groupId);
-            log.info(courseId);
-            log.info(isAttending);
             UserGroup userGroup = new UserGroup(id, userId, groupId, courseId, isAttending);
             list.add(userGroup);
         }
@@ -109,7 +105,8 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     public void deleteAllForGroup(Integer groupId) {
         String sql = userGroupDeleteForGroup;
         log.info(sql + " LOG deleteAllForGroup " + groupId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, groupId);
             statement.executeUpdate();
         } catch (Exception e) {
@@ -122,7 +119,8 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     public void deleteAllForUser(Integer userId) {
         String sql = userGroupDeleteForUser;
         log.info(sql + " delete all for user " + userId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, userId);
             statement.executeUpdate();
         } catch (Exception e) {
@@ -136,19 +134,11 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     public UserGroup getByUserAndCourse(Integer userId, Integer courseId) {
         String sql = userGroupSelectByUsrAndCourse;
         log.info(sql + " getByUserAndCourse usr = " + userId + " course= " + courseId);
-        return getByTwoId(userId, courseId, sql);
+        return getUniqueByTwoId(sql, userId, courseId);
     }
 
-    private UserGroup getByTwoId(Integer userId, Integer courseId, String sql) {
-        List<UserGroup> list;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, courseId);
-            statement.setInt(2, userId);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            throw new PersistException(e);
-        }
+    private UserGroup getUniqueByTwoId(String sql, Integer id1, Integer id2) {
+        List<UserGroup> list = getFromSqlByTwoId(sql, id1, id2);
         if (list.size() > 1) {
             throw new PersistException("Returned more than one record");
         }
@@ -162,7 +152,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     public UserGroup getByUserAndGroup(Integer userId, Integer groupId) {
         String sql = userGroupSelectByUsrAndGroup;
         log.info(sql + " getByUserAndGroup usr = " + userId + " group= " + groupId);
-        return getByTwoId(userId, groupId, sql);
+        return getUniqueByTwoId(sql, userId, groupId);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package ua.com.nc.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.util.Objects;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class Group extends Entity {
     private int courseId;
@@ -23,18 +23,4 @@ public class Group extends Entity {
         this.title = title;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Group group = (Group) o;
-        return getCourseId() == group.getCourseId() &&
-                Objects.equals(getTitle(), group.getTitle());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), getCourseId(), getTitle());
-    }
 }

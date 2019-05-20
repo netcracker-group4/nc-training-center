@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,15 +17,15 @@ import ua.com.nc.service.LessonsService;
 
 import java.sql.Timestamp;
 
-@Log4j
+@Log4j2
 @Controller
 @RequestMapping(value = "/api/schedule")
 public class LessonsController {
 
     @Autowired
-    LessonsService lessonsService;
+    private LessonsService lessonsService;
     @Autowired
-    LessonDao lessonDao;
+    private LessonDao lessonDao;
 
     private Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, (JsonSerializer<Timestamp>)
             (timestamp, type, jsonSerializationContext) -> new JsonPrimitive(timestamp.toString())).create();

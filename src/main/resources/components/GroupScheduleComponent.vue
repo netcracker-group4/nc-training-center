@@ -185,7 +185,7 @@
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
                 });
-            axios.get('/api/groups/' + self.$route.params.id)
+            axios.get('/api/desired-schedule/' + self.$route.params.id)
                 .then(function (response) {
                     self.group = response.data;
                 })
@@ -293,7 +293,8 @@
                         "attachments": [],
                         "isCanceled": false,
                         "duration": '01:00',
-                        isNew: true
+                        isNew: true,
+                        "isPerformed": false,
                     };
                 window.scrollTo(0, document.body.scrollHeight);
             },

@@ -1,6 +1,6 @@
 package ua.com.nc.service.impl;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +12,7 @@ import ua.com.nc.service.AttachmentService;
 
 import java.io.*;
 
-@Log4j
+@Log4j2
 @Service
 public class AttachmentServiceImpl implements AttachmentService {
     @Autowired
@@ -98,7 +98,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public void link(Integer lessonId, Integer attachmentId) {
         LessonAttachment lessonAttachment = new LessonAttachment(attachmentId, lessonId);
-        lessonAttachmentDao.insertAttachment(lessonAttachment);
+        lessonAttachmentDao.insert(lessonAttachment);
     }
 
     @Override

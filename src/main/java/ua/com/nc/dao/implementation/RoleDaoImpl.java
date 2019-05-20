@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -17,30 +17,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Log4j
+@Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class RoleDaoImpl implements RoleDao {
 
-    Connection connection;
+    private final DataSource dataSource;
 
     @Value("${role.select-by-user-id}")
     private String findRolesByUserId;
 
     @Autowired
     RoleDaoImpl(DataSource dataSource) throws PersistException {
-        try {
-            this.connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            log.trace("Error while setting autocommit false", e);
-            throw new PersistException("Error while setting autocommit false", e);
-        }
+       this.dataSource = dataSource;
     }
     @Override
     public List<Role> findAllByUserId(Integer id) {
         List<Role> roles = new ArrayList<>();
         String sql = findRolesByUserId;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {

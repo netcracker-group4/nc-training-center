@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -10,15 +10,14 @@ import ua.com.nc.dao.interfaces.ProblemDao;
 import ua.com.nc.domain.Problem;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
-
-@Log4j
+@Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemDao {
@@ -57,7 +56,8 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
         String sql = createRequest;
         int lastInsert;
         log.info (sql + " create a request " + description);
-        try (PreparedStatement statement = connection.prepareStatement (sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement (sql)) {
             statement.setInt (1, studentId);
             statement.setString(2, description);
             statement.setString (3, message);
@@ -74,7 +74,8 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     public List<Problem> getAllRequestsOfType (String requestType) {
         List<Problem> requests;
         String sql = selectRequestsOfType;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, requestType);
             ResultSet rs = statement.executeQuery();
             requests = parseResultSet(rs);
@@ -89,7 +90,8 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     @Override
     public void updateRequestType (int requestId, String requestType) {
         String sql = updateTypeOfRequest;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, requestType);
             statement.setInt(2, requestId);
             statement.executeUpdate();

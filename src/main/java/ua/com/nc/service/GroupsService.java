@@ -3,17 +3,11 @@ package ua.com.nc.service;
 
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoGroup;
-import ua.com.nc.dto.schedule.GroupSchedule;
 
 import java.util.List;
 import java.util.Map;
 
 public interface GroupsService {
-    int update(GroupSchedule groupSchedule);
-
-    boolean delete(int groupId);
-
-    int add(GroupSchedule groupSchedule);
 
     DtoGroup getGroupById(int groupId);
 
@@ -24,8 +18,6 @@ public interface GroupsService {
     List<DtoGroup> getGroupsAndQuantity();
 
     User getTrainer(int id);
-
-    void invertAttending(Integer userGroupId);
 
     List<DtoGroup> getAllByTrainerId(Integer employeeId);
 

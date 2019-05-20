@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.GenericDao;
 import ua.com.nc.domain.Entity;
@@ -16,21 +16,16 @@ import java.util.List;
  * @param <E> entity typeSqlQueriesProperties
  */
 
-@Log4j
+@Log4j2
 public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E> {
 
-    Connection connection;
+    protected DataSource dataSource;
 
     AbstractDaoImpl() {
     }
 
     AbstractDaoImpl(DataSource dataSource) throws PersistException {
-        try {
-            this.connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            log.trace("Error while getting connection ", e);
-            throw new PersistException("Error while getting connection ", e);
-        }
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -38,7 +33,8 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         List<E> list;
         String sql = getSelectQuery();
         log.info(sql + "   find all");
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
@@ -53,7 +49,8 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         List<E> list;
         String sql = getSelectByIdQuery();
         log.info(sql + " select by id with id " + id.toString());
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, id);
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
@@ -75,7 +72,8 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     public void update(E entity) throws PersistException {
         String sql = getUpdateQuery();
         log.info(sql + "  update with arguments " + entity.toString());
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForUpdate(statement, entity); // заполнение аргументов запроса оставим на совесть потомков
             int count = statement.executeUpdate();
             if (count > 1) {
@@ -91,7 +89,8 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     public void delete(Integer id) throws PersistException {
         String sql = getDeleteQuery();
         log.info(sql + " delete with id " + id.toString());
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, id); // заполнение аргументов запроса оставим на совесть потомков
             int count = statement.executeUpdate();
             if (count > 1) {
@@ -110,7 +109,8 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         }
         String sql = getInsertQuery();
         log.info(sql + " insert with parameters" + entity.toString());
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForInsert(statement, entity);
             ResultSet rs = statement.executeQuery();
             entity.setId(parseId(rs));
@@ -126,33 +126,23 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         } else throw new PersistException("No value returned!");
     }
 
-    @Override
-    public void close() throws PersistException {
-        try {
-            this.connection.close();
-        } catch (SQLException e) {
-            log.trace("Error while closing connection", e);
-            throw new PersistException("Error while closing connection", e);
-        }
-    }
-
-    protected String getSelectByIdQuery(){
+    protected String getSelectByIdQuery() {
         throw new PersistException("SelectByIdQuery is not defined");
     }
 
-    protected String getSelectQuery(){
+    protected String getSelectQuery() {
         throw new PersistException("SelectAllQuery is not defined");
     }
 
-    protected String getInsertQuery(){
+    protected String getInsertQuery() {
         throw new PersistException("InsertQuery is not defined");
     }
 
-    protected String getDeleteQuery(){
+    protected String getDeleteQuery() {
         throw new PersistException("DeleteQuery is not defined");
     }
 
-    protected String getUpdateQuery(){
+    protected String getUpdateQuery() {
         throw new PersistException("UpdateQuery is not defined");
     }
 
@@ -160,11 +150,11 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         statement.setInt(1, id);
     }
 
-    protected void prepareStatementForInsert(PreparedStatement statement, E entity) throws SQLException{
+    protected void prepareStatementForInsert(PreparedStatement statement, E entity) throws SQLException {
         throw new PersistException("prepareStatementForInsert method is not defined");
     }
 
-    protected void prepareStatementForUpdate(PreparedStatement statement, E entity) throws SQLException{
+    protected void prepareStatementForUpdate(PreparedStatement statement, E entity) throws SQLException {
         throw new PersistException("prepareStatementForUpdate method is not defined");
     }
 
@@ -173,8 +163,24 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
 
     List<E> getFromSqlById(String sql, Integer id) {
         List<E> list;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        return list;
+    }
+
+    List<E> getFromSqlByTwoId(String sql, Integer id1, Integer id2) {
+        List<E> list;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id1);
+            statement.setInt(2, id2);
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
@@ -186,7 +192,8 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
 
     List<E> getListFromSql(String sql) {
         List<E> list;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
@@ -212,7 +219,8 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
 
     E getUniqueFromSqlByString(String sql, String string) {
         List<E> list;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, string);
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);

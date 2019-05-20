@@ -1,6 +1,6 @@
 package ua.com.nc.service.impl;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.UserDao;
@@ -9,7 +9,7 @@ import ua.com.nc.service.AttendanceReminderService;
 
 import java.util.HashMap;
 
-@Log4j
+@Log4j2
 @Service
 public class AttendanceReminderServiceImpl implements AttendanceReminderService {
 

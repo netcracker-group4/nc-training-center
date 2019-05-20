@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -10,13 +10,14 @@ import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.domain.Group;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Log4j
+@Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
@@ -116,7 +117,8 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     public int getNumberOfEmployeesInGroup(int groupId) {
         String sql = groupSelectNumberOfEmployees;
         log.info(sql + " select number of emp for a group" + groupId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, groupId);
             ResultSet rs = statement.executeQuery();
             return (rs.next()) ?  rs.getInt(1) : 0;
@@ -149,7 +151,8 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
 
     @Override
     public void deleteUserFromGroup(Integer id, Integer userId) {
-        try (PreparedStatement statement = connection.prepareStatement(deleteUserFromGroup)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(deleteUserFromGroup)) {
             statement.setInt(1, id);
             statement.setInt(2, userId);
             statement.executeQuery();

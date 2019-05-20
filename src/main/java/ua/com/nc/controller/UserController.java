@@ -1,6 +1,6 @@
 package ua.com.nc.controller;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import ua.com.nc.service.UserService;
 
 import java.util.Map;
 
-@Log4j
+@Log4j2
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -84,12 +84,6 @@ public class UserController {
     public ResponseEntity<?> getAllTrainers() {
         return new ResponseEntity<>(userService.getAllTrainers(), HttpStatus.OK);
     }
-
-//    @RequestMapping(value = "/mail-send", method = RequestMethod.POST)
-//    public ResponseEntity<?> addEmployeeByAdmin(@RequestBody DtoMailSender dtoMailSender) {
-//        userService.addEmployeeByAdmin(dtoMailSender);
-//        return ResponseEntity.ok().body("Send mail");
-//    }
 
     @RequestMapping(value = "/activate/{token}", method = RequestMethod.GET)
     public RedirectView activate(@PathVariable String token) {

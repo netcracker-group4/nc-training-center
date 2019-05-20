@@ -38,8 +38,6 @@ public interface UserDao extends GenericDao<User> {
 
     void addUserRole(Integer userId, String roleName);
 
-    void addUserByAdmin(User user);
-
     HashMap<User, User> getStudentsAbsentWitNoReason(int lessonId);
 
     User getAdmin();

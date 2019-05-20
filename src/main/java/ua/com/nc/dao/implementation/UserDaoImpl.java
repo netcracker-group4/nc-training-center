@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -11,16 +11,16 @@ import ua.com.nc.domain.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@Log4j
+@Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
-    private final String USER_ID = "ID";
 
     @Value("${usr.select-all}")
     private String usrSelectAll;
@@ -133,16 +133,18 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     protected List<User> parseResultSet(ResultSet rs) throws SQLException {
         List<User> list = new ArrayList<>();
         while (rs.next()) {
-            Integer userId = rs.getInt(USER_ID);
+            Integer userId = rs.getInt("ID");
             String email = rs.getString("EMAIL");
             String passwordHash = rs.getString("PASSWORD");
             String firstName = rs.getString("FIRST_NAME");
             String lastName = rs.getString("LAST_NAME");
+            String token = rs.getString("TOKEN");
+            OffsetDateTime created = rs.getObject("CREATED", OffsetDateTime.class);
             Integer managerId = rs.getInt("MANAGER_ID");
             String imageUrl = rs.getString("IMAGE_URL");
             boolean isActive = rs.getBoolean("IS_ACTIVE");
             User user = new User(userId, email, passwordHash, firstName,
-                    lastName, managerId, imageUrl, isActive);
+                    lastName, token, created, managerId, imageUrl, isActive);
             list.add(user);
         }
         return list;
@@ -175,43 +177,19 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     @Override
     public User getTrainerByFeedback(Integer id) {
-        List<User> list;
         String sql = usrSelectTrainerByFeedback;
         log.info(sql + " find trainer by feedback " + id);
-        list = getFromSqlById(sql, id);
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        if (list.size() > 1) {
-            throw new PersistException("Received more than one record.");
-        }
-        return list.iterator().next();
+        return getUniqueFromSqlById(sql, id);
     }
 
     @Override
     public void addUserRole(Integer userId, String roleName) {
         String sql = usrInsertUserRole;
         log.info(sql + " insert user " + userId + " role " + roleName);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             statement.setString(2, roleName);
-            statement.executeUpdate();
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-    }
-
-    @Override
-    public void addUserByAdmin(User user) {
-        String sql = usrInsertUserByAdmin;
-        log.info(sql + " insert user " + user.getEmail() + " by admin");
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, user.getEmail());
-            statement.setString(2, user.getToken());
-            statement.setString(3, "firstname");
-            statement.setString(4, "lastname");
-            statement.setString(5, "ss");
             statement.executeUpdate();
         } catch (Exception e) {
             log.trace(e);
@@ -237,15 +215,12 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     @Override
     public List<User> getByGroupId(Integer id) {
-        List<User> users;
         String sql = usrSelectByGroupId;
-        users = getFromSqlById(sql, id);
-        return users;
+        return getFromSqlById(sql, id);
     }
 
     @Override
     public List<User> getUngroupedByCourse(Integer courseId) {
-        List<User> allUsersForCourse;
         String sql = usrSelectUngroupedByCourseId;
         log.info(sql + " select Ungrouped users for a course " + courseId);
         return getFromSqlById(sql, courseId);
@@ -253,7 +228,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     @Override
     public List<User> getAllForCourse(int courseId) {
-        List<User> allUsersForCourse;
         String sql = usrSelectAllByCourse;
         log.info(sql + " select all users for a course " + courseId);
         return getFromSqlById(sql, courseId);
@@ -263,7 +237,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public void updateUserByAdmin(User user) {
         String sql = usrUpdateUsrByAdmin;
         log.info(sql + " update user by admin user= " + user.toString());
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setInt(3, user.getManagerId());
@@ -279,7 +254,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public void updateActive(User user) {
         String sql = usrUpdateChangeActive;
         log.info(sql + "change active by admin user= " + user.toString());
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, user.isActive());
             statement.setInt(2, user.getId());
             statement.executeUpdate();
@@ -292,19 +268,9 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     @Override
     public List<User> getLandingPageTrainers() {
-        List<User> landingPageTrainers;
         String sql = usrLandingPage;
         log.info(sql + "select trainers on landing page");
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            landingPageTrainers = parseResultSet(rs);
-        } catch (Exception e) {
-            throw new PersistException(e);
-        }
-        if (landingPageTrainers.size() == 0) {
-            return null;
-        }
-        return landingPageTrainers;
+        return getListFromSql(sql);
     }
 
     @Override
@@ -318,18 +284,15 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public List<User> getAllTrainersById(Integer id) {
         String sql = usrSelectAllTrainersById;
         log.info(sql + " find all trainers by id = " + id);
-        List<User> list = getFromSqlById(sql, id);
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        return list;
+        return getFromSqlById(sql, id);
     }
 
     @Override
     public void updateTrainerLandingPage(int id, boolean isOnLandingPage) {
         String sql = usrUpdateLandingPage;
         log.info(sql + " update trainer on landing page id = " + id + " isOnLandingPage = " + isOnLandingPage);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, isOnLandingPage);
             statement.setInt(2, id);
             statement.executeUpdate();
@@ -359,7 +322,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         List<User> students = new ArrayList<>();
         String sql = selectStudentsAbsentOnLessonWithNoReason;
         log.info(sql + " selectStudentsAbsentOnLessonWithNoReason " + lessonId);
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, lessonId);
             ResultSet rs = statement.executeQuery();
             students = parseResultSet(rs);
@@ -375,16 +339,9 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
     public User getAdmin() {
-        List<User> admin = new ArrayList<>();
         String sql = getAdmin;
         log.info(sql + " getAdmin");
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(sql);
-            admin = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-        }
+        List<User> admin = getListFromSql(sql);
         if (admin == null || admin.size() == 0) {
             return null;
         }

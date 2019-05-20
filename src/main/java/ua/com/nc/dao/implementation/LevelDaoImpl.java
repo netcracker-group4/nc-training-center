@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -10,13 +10,14 @@ import ua.com.nc.dao.interfaces.LevelDao;
 import ua.com.nc.domain.Level;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Log4j
+@Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class LevelDaoImpl extends AbstractDaoImpl<Level> implements LevelDao {
@@ -100,7 +101,8 @@ public class LevelDaoImpl extends AbstractDaoImpl<Level> implements LevelDao {
     @Override
     public int getIdByName(String name) {
         String sql = levelSelectByName;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
             ResultSet rs = statement.executeQuery();
             rs.next();

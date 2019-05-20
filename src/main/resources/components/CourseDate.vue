@@ -10,7 +10,6 @@
                 >
                     <template v-slot:activator="{ on }">
                         <v-text-field
-                                :rules="[rules.required]"
                                 :value="StartingDate"
                                 clearable
                                 label="First day"
@@ -19,6 +18,7 @@
                         ></v-text-field>
                     </template>
                     <v-date-picker
+                            show-current="Saturday, May 28th 2019"
                             v-model="date1"
                             @change="menu1 = false"
                     ></v-date-picker>
@@ -34,7 +34,6 @@
                 >
                     <template v-slot:activator="{ on }">
                         <v-text-field
-                                :rules="[rules.required]"
                                 :value="EndingDate"
                                 clearable
                                 label="The last day"
@@ -57,15 +56,12 @@
     import format from 'date-fns/format'
 
     export default {
-        name: "ChooserDate",
+        name: "CourseDate",
         data: () => ({
             date1: new Date().toISOString().substr(0, 10),
             date2: new Date().toISOString().substr(0, 10),
             menu1: false,
-            menu2: false,
-            rules: {
-                required: value => !!value || 'Required.',
-            }
+            menu2: false
         }),
 
         computed: {
