@@ -2,7 +2,7 @@
     <v-container>
         <v-layout row wrap>
             <v-flex xs12 sm12>
-                <v-toolbar flat color="white">
+                <v-toolbar flat color="white" v-if="!loading">
                     <v-toolbar-title>Users</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn

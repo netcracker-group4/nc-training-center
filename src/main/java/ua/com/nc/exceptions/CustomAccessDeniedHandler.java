@@ -19,7 +19,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
             HttpServletRequest request,
             HttpServletResponse response,
             AccessDeniedException exc) throws IOException {
-        log.trace(exc);
+        log.error(exc);
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.getWriter().write("Access denied!");
         response.getWriter().flush();

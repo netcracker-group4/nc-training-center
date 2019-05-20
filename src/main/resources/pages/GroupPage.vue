@@ -1,11 +1,8 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container>
+        <progress-circular-component v-if="loading"></progress-circular-component>
 
-        <!--        тренер урока должен видеть только свои уроки-->
-        <!--        Ученики могут видеть все уроки но не видят панели редактирования-->
-        <!--        Админ и супертренер видят все-->
-
-        <v-layout row wrap>
+        <v-layout v-if="!loading" row wrap>
             <v-flex xs12 sm12 style="margin-bottom: 50px">
                 <v-layout>
                     <span class="grey--text" style="font-size: 22px; margin-top: 15px">Group :  </span>
@@ -20,7 +17,7 @@
 
                 </v-layout>
             </v-flex>
-                        <v-flex xs12 sm12 style="margin-bottom: 50px">
+            <v-flex xs12 sm12 style="margin-bottom: 50px">
                 <v-data-table
                         :headers="headers"
                         :items="students"
@@ -56,16 +53,17 @@
                 <group-attendance-graph :absenceReasons="reasons"/>
             </v-flex>
         </v-layout>
-        <v-layout row wrap style="margin-bottom: 40px">
+        <v-layout v-if="!loading" row wrap style="margin-bottom: 40px">
             <v-spacer></v-spacer>
             <div class="text-xs-center">
                 <v-dialog v-model="sendMessageWindowShow" width="500">
                     <template v-slot:activator="{ on }">
-                        <v-btn color="success" large @click="sendMessageWindowShow = ! sendMessageWindowShow">Message</v-btn>
+                        <v-btn color="success" large @click="sendMessageWindowShow = ! sendMessageWindowShow">Message
+                        </v-btn>
                     </template>
 
                     <v-card>
-                        <v-card-title class="headline grey lighten-2" primary-title>Send message to </v-card-title>
+                        <v-card-title class="headline grey lighten-2" primary-title>Send message to</v-card-title>
                         <v-divider></v-divider>
                         <v-layout row wrap>
                             <v-flex xs10 offset-xs1 class="message-textarea">
@@ -94,11 +92,12 @@
     import store from '../store/store.js';
     import GroupAttendanceGraph from "../components/GroupAttendanceGraph.vue";
     import GroupScheduleComponent from "../components/GroupScheduleComponent.vue";
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         props: ['id'],
         name: "GroupPage",
-        components: {GroupAttendanceGraph, GroupScheduleComponent},
+        components: {GroupAttendanceGraph, GroupScheduleComponent, ProgressCircularComponent},
         data: function () {
             return {
                 message: '',
@@ -110,6 +109,7 @@
                 course: [],
                 lessons: [],
                 reasons: [],
+                loading: true,
                 headers2: [
                     {
                         text: 'Lesson topic',
@@ -128,7 +128,7 @@
             }
         },
         methods: {
-            sendMessage(){
+            sendMessage() {
                 let form = new FormData();
                 let request = new XMLHttpRequest();
                 request.open('POST', this.$store.state.apiServer + '/api/messages');

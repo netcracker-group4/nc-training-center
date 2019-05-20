@@ -1,5 +1,7 @@
 <template>
     <div class="row">
+        <progress-circular-component v-if="loading"></progress-circular-component>
+
         <v-tabs fixed-tabs v-model="currentDay" centered>
             <v-tab
                     v-for="n in days"
@@ -12,7 +14,7 @@
         <br/>
         <br/>
         <br/>
-        <v-container fluid grid-list-md>
+        <v-container v-if="!loading" fluid grid-list-md>
             <v-layout row wrap>
                 <v-flex d-flex style="margin-bottom: 50px">
                     <div>
@@ -112,14 +114,16 @@
     import draggable from "vuedraggable";
     import axios from 'axios';
     import store from "../store/store.js";
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         name: "StudentLineInTable",
         display: "Table",
         order: 8,
-        components: {draggable},
+        components: {draggable, ProgressCircularComponent},
         data() {
             return {
+                loading : false,
                 list2: [],
                 errorMessages: '',
                 formHasErrors: false,
@@ -246,6 +250,7 @@
                 axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + self.$route.params.id + '/ungrouped')
                     .then(function (response) {
                         self.allSchedules = response.data;
+                        self.loading = false;
                     })
                     .catch(function (error) {
                         self.errorAutoClosable(error.response.data);

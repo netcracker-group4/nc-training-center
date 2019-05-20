@@ -1,6 +1,7 @@
 <template>
     <v-container>
-        <v-layout wrap row>
+        <progress-circular-component v-if="loading"></progress-circular-component>
+        <v-layout v-if="!loading" wrap row>
             <v-flex xs10 sm10 md10 offset-xs1 offset-sm1 offset-md1>
                 <v-card v-for="course in courses" :key="course.id" class="course">
                     <v-img
@@ -48,13 +49,18 @@
 <script>
 
     import axios from 'axios'
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         name: "MainPage",
+        components: {
+            ProgressCircularComponent
+        },
         data: function () {
             return {
                 courses: [],
-                trainers: []
+                trainers: [],
+                loading :true
             }
         },
         mounted() {
@@ -62,6 +68,7 @@
             axios.get(this.$store.state.apiServer + '/api/main-page/courses-on-landing-page')
                 .then(function (response) {
                     self.courses = response.data;
+                    self.loading = false;
                 })
                 .catch(function (error) {
                     console.log(error);

@@ -1,107 +1,111 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-        <v-container
-                fluid
-                grid-list-md
-        >
-            <v-layout row wrap >
-                <v-flex xs12 sm6 offset-sm3>
-                    <template>
-                        <v-card>
-                            <v-card-text>
+    <v-container
+            fluid
+            grid-list-md
+    >
+        <progress-circular-component v-if="loading"></progress-circular-component>
+
+        <v-layout  v-if="!loading" row wrap>
+            <v-flex xs12 >
+                <template>
+                    <v-card>
+                        <v-card-text>
                             Topic: {{topic}}
-                            </v-card-text>
-                            <v-card-text @click="goToTrainerPage()">
+                        </v-card-text>
+                        <v-card-text @click="goToTrainerPage()">
                             Trainer: {{firstName}} {{lastName}}
-                            </v-card-text>
-                            <v-card-text>
+                        </v-card-text>
+                        <v-card-text>
                             Date: {{date}}
-                            </v-card-text>
-                            <v-card-text>
+                        </v-card-text>
+                        <v-card-text>
                             Duration: {{duration}}
-                            </v-card-text>
-                            <v-card-text>
+                        </v-card-text>
+                        <v-card-text>
                             Status: {{status}}
-                            </v-card-text>
-                        </v-card>
-                    </template>
-                </v-flex>
-            </v-layout>
-            <v-layout row wrap >
-                <v-flex xs12 sm6 offset-sm3>
-                    <v-toolbar flat color="white">
+                        </v-card-text>
+                    </v-card>
+                </template>
+            </v-flex>
+        </v-layout>
+        <v-layout  v-if="!loading" row wrap>
+            <v-flex xs12 >
+                <v-toolbar flat color="white">
                     <span>Lesson attachments</span>
-                    <v-dialog  v-if="isLessonTrainer()" v-model="dialog" max-width="500px">
+                    <v-dialog v-if="isLessonTrainer()" v-model="dialog" max-width="500px">
                         <template v-slot:activator="{ on }">
-                            <v-icon  @click="uploadForm" style="margin-left: 75%">
+                            <v-icon @click="uploadForm" style="margin-left: 75%">
                                 present_to_all
                             </v-icon>
                         </template>
                         <v-card>
                             <form id="uploadForm" name="uploadForm" enctype="multipart/form-data">
 
-                                <input type="file" id="file" name="file" ><br>
+                                <input type="file" id="file" name="file"><br>
                             </form>
-                            <v-btn color="green" @click = "uploadFile">Upload</v-btn>
+                            <v-btn color="green" @click="uploadFile">Upload</v-btn>
                         </v-card>
                     </v-dialog>
-                    </v-toolbar>
-                    <v-data-table
-                            :headers="headers"
-                            :items="attachments"
-                            :expand="true"
-                            item-key="id"
-                            no-data-text = "No attachments available"
-                    >
-                        <template v-slot:items="props">
-                            <tr>
-                                <td class="my-link">
-                                    <div>{{ props.item.name }}</div>
-                                </td>
-                                <td>
-                                    <v-btn color="green" @click="downloadFile(props.item.id)">Download</v-btn>
-                                </td>
-                                <td>
-                                    <v-btn color="error" @click="unlink(props.item.id)">Delete</v-btn>
-                                </td>
-                            </tr>
-                        </template>
-                    </v-data-table>
-                </v-flex>
-            </v-layout>
-            <lesson-attendance-table :lessonId="this.$route.params.id"
-                                     :key="this.$route.params.id"/>
-        </v-container>
-    </div>
+                </v-toolbar>
+                <v-data-table
+                        :headers="headers"
+                        :items="attachments"
+                        :expand="true"
+                        item-key="id"
+                        no-data-text="No attachments available"
+                >
+                    <template v-slot:items="props">
+                        <tr>
+                            <td class="my-link">
+                                <div>{{ props.item.name }}</div>
+                            </td>
+                            <td>
+                                <v-btn color="green" @click="downloadFile(props.item.id)">Download</v-btn>
+                            </td>
+                            <td>
+                                <v-btn color="error" @click="unlink(props.item.id)">Delete</v-btn>
+                            </td>
+                        </tr>
+                    </template>
+                </v-data-table>
+            </v-flex>
+        </v-layout>
+        <lesson-attendance-table  v-if="!loading"
+                                  :lessonId="this.$route.params.id"
+                                 :key="this.$route.params.id"/>
+    </v-container>
+
 </template>
 
 <script>
 
     import axios from 'axios';
     import LessonAttendanceTable from "../components/LessonAttendanceTable.vue";
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         name: "AbsenceReasons",
-        components: {LessonAttendanceTable},
-        data: function(){
-          return{
+        components: {LessonAttendanceTable, ProgressCircularComponent},
+        data: function () {
+            return {
                 dialog: false,
-                topic:null,
+                topic: null,
                 trainer: [],
-                firstName:null,
-                lastName:null,
-                date:null,
-                duration:null,
-                status:"Active",
-                attachments:[],
+                firstName: null,
+                lastName: null,
+                date: null,
+                duration: null,
+                status: "Active",
+                attachments: [],
                 headers: [
-                  {
-                      text: 'Name',
-                      align: 'left',
-                      value: 'title'
-                  }
-                ]
-          }
+                    {
+                        text: 'Name',
+                        align: 'left',
+                        value: 'title'
+                    },
+                ],
+                loading :true
+            }
         },
         mounted() {
             this.loadInfo();
@@ -116,13 +120,13 @@
                 if (this.trainer !== null) {
                     this.$router.push('/users/' + this.trainer.id);
                 }
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
             },
-            uploadForm(){
+            uploadForm() {
                 this.dialog = true;
 
             },
-            loadInfo(){
+            loadInfo() {
                 let self = this;
                 axios.get(this.$store.state.apiServer + '/api/schedule/lesson/' + this.$route.params.id)
                                 .then(function (response) {
@@ -161,15 +165,15 @@
                 let request = new XMLHttpRequest();
                 request.open('POST', this.$store.state.apiServer + '/api/attachments/upload-file');
                 form.append('file', imagefile.files[0]);
-                form.append('lessonId',this.$route.params.id);
+                form.append('lessonId', this.$route.params.id);
                 form.append('descr', '');
-               request.send(form);
+                request.send(form);
                 this.dialog = false;
             },
-            isLessonTrainer(){
+            isLessonTrainer() {
                 return this.$store.state.user.id == this.trainer.id;
-             },
-             unlink(id){
+            },
+            unlink(id) {
                 let form = new FormData();
                 let request = new XMLHttpRequest();
                 request.open('DELETE', this.$store.state.apiServer + '/api/attachments/unlink');
@@ -177,7 +181,7 @@
                 form.append('attachmentId', id);
                 request.send(form);
 
-             }
+            }
 
         }
     }
