@@ -8,7 +8,8 @@
     "url": "git+https://github.com/netcracker-group4/nc-training-center.git"
   },
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "build": "webpack"
   },
   "author": "",
   "license": "ISC",

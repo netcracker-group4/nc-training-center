@@ -37,11 +37,10 @@ public class MessageController {
 
     @MessageMapping("/message")
     @SendTo("/topic/msg")
-    public String getMessage(@AuthenticationPrincipal User user,
-                            String json){
+    public String getMessage(String jsonMessage){
         Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd.HH.mm.ss").serializeNulls().create();
-        Message message = gson.fromJson(json, Message.class);
-        Chat chat = chatService.getByUserIdAndChatId(user.getId(), message.getChatId());
+        Message message = gson.fromJson(jsonMessage, Message.class);
+        Chat chat = chatService.getByUserIdAndChatId(message.getSenderId(), message.getChatId());
         if(chat != null){
             message.setDateTime(new Timestamp(System.currentTimeMillis()));
             Integer messageId = chatService.addMessage(message, null);
