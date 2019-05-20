@@ -1,12 +1,9 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <v-container
-            fluid
-            grid-list-md
-    >
+    <v-container>
         <progress-circular-component v-if="loading"></progress-circular-component>
 
-        <v-layout  v-if="!loading" row wrap>
-            <v-flex xs12 >
+        <v-layout v-if="!loading" row wrap>
+            <v-flex xs12>
                 <template>
                     <v-card>
                         <v-card-text>
@@ -28,8 +25,8 @@
                 </template>
             </v-flex>
         </v-layout>
-        <v-layout  v-if="!loading" row wrap>
-            <v-flex xs12 >
+        <v-layout v-if="!loading" row wrap>
+            <v-flex xs12>
                 <v-toolbar flat color="white">
                     <span>Lesson attachments</span>
                     <v-dialog v-if="isLessonTrainer()" v-model="dialog" max-width="500px">
@@ -70,8 +67,8 @@
                 </v-data-table>
             </v-flex>
         </v-layout>
-        <lesson-attendance-table  v-if="!loading"
-                                  :lessonId="this.$route.params.id"
+        <lesson-attendance-table v-if="!loading"
+                                 :lessonId="this.$route.params.id"
                                  :key="this.$route.params.id"/>
     </v-container>
 
@@ -104,7 +101,7 @@
                         value: 'title'
                     },
                 ],
-                loading :true
+                loading: true
             }
         },
         mounted() {
@@ -129,39 +126,44 @@
             loadInfo() {
                 let self = this;
                 axios.get(this.$store.state.apiServer + '/api/schedule/lesson/' + this.$route.params.id)
-                                .then(function (response) {
-                                    let dat = response.data;
-                                    self.topic = dat.topic;
-                                    self.trainer = dat.trainerId;
-                                    axios.get(this.$store.state.apiServer + '/api/users/' + self.trainer)
-                                                 .then(function (response) {
-                                                 self.trainer = response.data;
-                                                 self.firstName = self.trainer.firstName;
-                                                 self.lastName = self.trainer.lastName;
-                                                 })
-                                                 .catch(function (error) {
-                                                     console.log(error);
-                                                 });
-                                    self.date = dat.time;
-                                    self.duration = dat.duration;
-                                    if(dat.isCanceled == true){
-                                    self.status = "Canceled";}
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
-            axios.get(this.$store.state.apiServer + '/api/attachments/lesson/' + this.$route.params.id)
-            .then(function (response) {
-                self.attachments= response.data;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-                },
-            uploadFile(){
+                    .then(function (response) {
+                        let dat = response.data;
+                        console.log(dat);
+                        self.topic = dat.topic;
+                        self.trainer = dat.trainerId;
+                        self.loading = false;
+                        axios.get(self.$store.state.apiServer + '/api/users/' + self.trainer)
+                            .then(function (response) {
+                                self.trainer = response.data;
+                                self.firstName = self.trainer.firstName;
+                                self.lastName = self.trainer.lastName;
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                        self.date = dat.time;
+                        self.duration = dat.duration;
+                        if (dat.isCanceled == true) {
+                            self.status = "Canceled";
+                        }
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                axios.get(this.$store.state.apiServer + '/api/attachments/lesson/' + this.$route.params.id)
+                    .then(function (response) {
+                        self.attachments = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            uploadFile() {
                 let form = new FormData(document.getElementById('uploadForm'));
                 let imagefile = document.querySelector('#file');
 
+                console.log(this.$store.state.apiServer);
                 let request = new XMLHttpRequest();
                 request.open('POST', this.$store.state.apiServer + '/api/attachments/upload-file');
                 form.append('file', imagefile.files[0]);
@@ -177,7 +179,7 @@
                 let form = new FormData();
                 let request = new XMLHttpRequest();
                 request.open('DELETE', this.$store.state.apiServer + '/api/attachments/unlink');
-                form.append('lessonId',this.$route.params.id);
+                form.append('lessonId', this.$route.params.id);
                 form.append('attachmentId', id);
                 request.send(form);
 

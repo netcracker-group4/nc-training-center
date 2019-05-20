@@ -2,7 +2,7 @@
     <v-container>
         <progress-circular-component v-if="loading"></progress-circular-component>
 
-        <v-layout v-if="loading" row wrap>
+        <v-layout v-if="!loading" row wrap>
             <v-flex xs12 sm12>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>Courses</v-toolbar-title>

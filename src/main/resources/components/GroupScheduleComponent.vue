@@ -174,6 +174,10 @@
         props: ['isStudentOfGroup', 'courseTrainerId'],
         mounted() {
             let self = this;
+            console.log(self.$route.params.id)
+            console.log(this.$route.params.id)
+            let id = this.$route.params.id;
+            console.log(id)
             axios.get(this.$store.state.apiServer + '/api/schedule/' + self.$route.params.id)
                 .then(function (response) {
                     self.lessons = response.data;
@@ -188,7 +192,7 @@
             axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + self.$route.params.id)
                 .then(function (response) {
                     self.group = response.data;
-                    self.loadAdditional();
+                    self.loadAdditional(id);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -258,9 +262,11 @@
             }
         },
         methods: {
-            loadAdditional() {
+            loadAdditional(id) {
                 let self = this;
-                axios.get(this.$store.state.apiServer +'/api/schedule/' + self.$route.params.id)
+                console.log(id);
+                // console.log(self.$route.params.id);
+                axios.get(this.$store.state.apiServer + '/api/schedule/' + id)
                     .then(function (response) {
                         self.lessons = response.data;
                         self.lessons.forEach(function (one) {
@@ -271,7 +277,7 @@
                         console.log(error);
                         self.errorAutoClosable(error.response.data);
                     });
-                axios.get(this.$store.state.apiServer +'/api/users/get-all-trainers')
+                axios.get(this.$store.state.apiServer + '/api/users/get-all-trainers')
                     .then(function (response) {
                         self.allTrainers = response.data;
                     })
@@ -279,7 +285,7 @@
                         console.log(error);
                         self.errorAutoClosable(error.response.data);
                     });
-                axios.get(this.$store.state.apiServer +'/api/attachments/all')
+                axios.get(this.$store.state.apiServer + '/api/attachments/all/' + id)
                     .then(function (response) {
                         self.allAttachments = response.data;
                     })

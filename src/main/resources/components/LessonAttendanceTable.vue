@@ -42,7 +42,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-flex sm6 offset-sm3>
+        <v-flex sx12 >
             <v-data-table
                     :headers="headers"
                     :items="attendances"

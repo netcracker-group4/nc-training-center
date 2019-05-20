@@ -19,6 +19,8 @@ import ua.com.nc.service.AttachmentService;
 import ua.com.nc.service.RoleService;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Log4j2
@@ -53,36 +55,56 @@ public class AttachmentController {
         return null;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/all/{lessonId}")
+    @ResponseBody
+    public String getAllAttachmentsForLessonAndTrainer(@AuthenticationPrincipal User user, @PathVariable Integer lessonId) {
+        List<Attachment> attachmentList = new ArrayList<>();
+        if (user != null && roleService.findAllByUserId(user.getId()).contains(Role.ADMIN)) {
+            attachmentList.addAll(attachmentDao.getAll());
+        } else if (user != null && roleService.findAllByUserId(user.getId()).contains(Role.TRAINER)) {
+            attachmentList.addAll(attachmentDao.getByTrainerId(user.getId()));
+        }
+        attachmentList.addAll(attachmentDao.getByLessonId(lessonId));
+        return gson.toJson(attachmentList);
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
     public String getAttachment(@PathVariable String id) {
         return gson.toJson(attachmentDao.getEntityById(Integer.parseInt(id)));
     }
 
+    @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/upload-file")
-    public void uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("lessonId") String lessonId, @RequestParam("descr") String description,
+    public void uploadFile(@RequestParam("file") MultipartFile file,
+                           @RequestParam("lessonId") String lessonId,
+                           @RequestParam("descr") String description,
                            @AuthenticationPrincipal User user) {
         if (user != null && roleService.findAllByUserId(user.getId()).contains(Role.TRAINER)){
             service.uploadFile(Integer.parseInt(lessonId),user.getId(), description, file);
         }
     }
 
+    @ResponseBody
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public void deleteAttachment(@PathVariable String id) {
         service.delete(Integer.parseInt(id));
     }
 
+    @ResponseBody
     @RequestMapping(method = RequestMethod.DELETE, value = "/unlink")
     public void unlink(@RequestParam("attachmentId") String attachmentId,@RequestParam("lessonId") String lessonId) {
         service.unlink(Integer.parseInt(lessonId),Integer.parseInt(attachmentId));
     }
 
 
+    @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/link")
     public void linkFile(@RequestParam("lessonId") String lessonId, @RequestParam("attachmentId") String attachmentId) {
         service.link(Integer.parseInt(lessonId), Integer.parseInt(attachmentId));
     }
 
+    @ResponseBody
     @RequestMapping(value = "/download/{fileId}", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileId) {
         Integer attachmentId = Integer.parseInt(fileId);

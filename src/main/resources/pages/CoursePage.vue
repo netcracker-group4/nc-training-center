@@ -202,7 +202,7 @@
                 this.$router.push('/users/' + id);
             },
             goGroupPage(id){
-                this.$router.push('/group/' + id);
+                this.$router.push('/groups/' + id);
             },
             sign(){
                 this.$router.push('/courses/'+this.id+'/join');

@@ -158,7 +158,8 @@
             },
             deleteStudent(id) {
                 let self = this;
-                if (confirm("Are you sure you want to delete " + this.findUserById(id).firstName + ' ' + this.findUserById(id).lastName)) {
+                if (confirm("Are you sure you want to delete " +
+                    this.findUserById(id).firstName + ' ' + this.findUserById(id).lastName)) {
                     axios.delete(this.$store.state.apiServer + '/api/groups/' + this.group.id + '/user/' + id)
                         .then(function (response) {
                             self.successAutoClosable('Employee has been removed from group');
@@ -184,43 +185,46 @@
                 let self = this;
                 return this.students.filter(e => e.id === self.$store.state.user.id).length > 0;
             },
-            downloadGroupAttendanceReport(){
+            downloadGroupAttendanceReport() {
                 window.open(this.$store.state.apiServer + "/download-report/attendance-report/" + this.id, "_blank");
             },
 
         },
         mounted() {
             let self = this;
-            axios.get(this.$store.state.apiServer + '/api/groups/' + self.id)
+            axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id)
                 .then(function (response) {
                     self.group = response.data;
+                    self.loading = false;
                 }).catch(function (error) {
                 console.log(error);
             });
-            axios.get(this.$store.state.apiServer + '/api/groups/' + self.id + '/course')
+            axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/course')
                 .then(function (response) {
                     self.course = response.data;
-                }).catch(function (error) {
-                console.log(error);
-            });
-            axios.get(this.$store.state.apiServer + '/api/groups/' + self.id + '/trainer')
-                .then(function (response) {
-                    self.teacher = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
                 });
-            axios.get(this.$store.state.apiServer + '/api/groups/' + self.id + '/users')
+
+            axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/users')
                 .then(function (response) {
                     self.students = response.data;
-                    if (self.$store.state.userRoles.includes('ADMIN') ||
-                        parseInt(self.$store.state.user.id) === parseInt(self.course.teacher.id) ||
-                        self.isStudentOfGroup()) {
-                    } else {
-                        self.$router.push('/403');
-                    }
-
-                }).catch(function (error) {
-                console.log(error);
-            });
-            axios.get(this.$store.state.apiServer + '/api/groups/'+ self.id + '/getAttendanceGraph')
+                    axios.get(self.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/trainer')
+                        .then(function (response) {
+                            self.teacher = response.data;
+                            if (self.$store.state.userRoles.includes('ADMIN') ||
+                                self.$store.state.userRoles.includes('TRAINER') ||
+                                self.isStudentOfGroup()) {
+                            } else {
+                                self.$router.push('/403');
+                            }
+                        });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/getAttendanceGraph')
                 .then(function (response) {
                     self.reasons = response.data;
                     console.log(response.data);
