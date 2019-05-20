@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ChatDao;
 import ua.com.nc.domain.Chat;
+import ua.com.nc.domain.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -33,6 +34,9 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
 
     @Value("${chat.select-by-user-id-and-chat-id}")
     private String chatSelectByUserIdAndChatId;
+
+    @Value("${chat.select-by-group-id}")
+    private String chatSelectByGroupId;
 
     @Autowired
     public ChatDaoImpl(DataSource dataSource) throws PersistException {
@@ -118,7 +122,6 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
             chats = parseResultSet(resultSet);
         } catch (SQLException e) {
             log.trace(e);
-            log.trace(e);
         }
         return chats;
     }
@@ -135,4 +138,24 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
             return null;
         }
     }
+
+    @Override
+    public Chat getByGroupId(Integer groupId) {
+        List<Chat> chats = null;
+        String sql = chatSelectByGroupId;
+        log.info(sql + " get chat by group id");
+        try(   Connection connection = dataSource.getConnection();
+               PreparedStatement statement = connection.prepareStatement(chatSelectByGroupId)) {
+            statement.setInt(1, groupId);
+            ResultSet resultSet = statement.executeQuery();
+            chats = parseResultSet(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }if(chats != null && chats.size() > 0){
+            return chats.get(0);
+        }else{
+            return null;
+        }
+    }
+
 }
