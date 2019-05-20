@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 @Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class CourseStatusDaoImpl implements CourseStatusDao {
+public class CourseStatusDaoDaoImpl implements CourseStatusDao {
 
     @Value("${status.select-id-by-name}")
     private String getStatusByName;
@@ -26,7 +26,7 @@ public class CourseStatusDaoImpl implements CourseStatusDao {
     private final DataSource dataSource;
 
     @Autowired
-    CourseStatusDaoImpl(DataSource dataSource) throws PersistException {
+    CourseStatusDaoDaoImpl(DataSource dataSource) throws PersistException {
         this.dataSource = dataSource;
     }
 
