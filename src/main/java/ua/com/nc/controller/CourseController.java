@@ -52,6 +52,7 @@ public class CourseController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseBody
     public void deleteCourse(@PathVariable String id) {
         courseDao.delete(Integer.parseInt(id));
     }
@@ -73,6 +74,7 @@ public class CourseController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/create")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseBody
     public void update(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                        @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
                        @RequestParam(name = "image") MultipartFile image,
@@ -88,6 +90,7 @@ public class CourseController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/edit")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseBody
     public void edit(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                        @RequestParam(name = "courseStatus") String courseStatus,
                        @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,

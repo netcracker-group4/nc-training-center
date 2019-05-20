@@ -23,9 +23,6 @@
                             </td>
                             <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
                             <td class="text-xs-right" v-if="isAdmin">
-                                <v-btn color="success" @click="update(props.item.course.id)">Update</v-btn>
-                            </td>
-                            <td class="text-xs-right" v-if="isAdmin">
                                 <v-btn color="error" @click="deleteCourse(props.item.course.id)">Delete</v-btn>
                             </td>
 

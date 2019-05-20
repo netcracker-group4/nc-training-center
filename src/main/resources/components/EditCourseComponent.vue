@@ -1,10 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <!--<template v-slot:activator="{ on }">
-            <v-icon @click="editItem" style="margin-left: 30px">
-                edit
-            </v-icon>
-        </template>-->
         <v-card>
             <v-card-title>
                 <span class="headline">Edit course</span>
@@ -26,7 +21,7 @@
                                         :item-text="trainerName"
                                         :menu-props="{ maxHeight: '300' }"
                                         label="Set trainer"
-
+                                        :rules="[rules.required]"
                                 ></v-select>
                             </v-flex>
                         </v-flex>
@@ -36,7 +31,7 @@
                                         v-model="status"
                                         item-value="id"
                                         :items="statuses"
-
+                                        :rules="[rules.required]"
                                         :menu-props="{ maxHeight: '300' }"
                                         label="Set status"
 
@@ -51,6 +46,7 @@
                                             :key="lvl.id"
                                             :label="lvl.title"
                                             :value="lvl.title"
+                                            :rules="[rules.required]"
                                     ></v-radio>
                                 </v-radio-group>
                             </v-flex>
@@ -149,10 +145,9 @@
             trainerName: item => item.firstName +" "+ item.lastName,
             save(){
                 let self = this;
-                console.log(self);
-                alert(self.id);
                 let form = new FormData();
                 let request = new XMLHttpRequest();
+                self.checkFields();
                 try {
                     request.open('PUT', 'http://localhost:8080/api/getcourses/'+self.id+'/edit');
                     form.append('id',self.id);
@@ -165,19 +160,36 @@
                     form.append('startDay', self.startDay);
                     form.append('endDay', self.endDay);
                     request.send(form);
+                    this.$snotify.success('Course updated', {
+                        timeout: 2000,
+                        showProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true
+                    });
+                    this.$router.push("/courses/"+self.id);
                 }catch (e) {
-                    alert(e.toString());
+                    this.$snotify.error("Error occured, course wasn`t updated.", {
+                        timeout: 2000,
+                        showProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true
+                    });
                 }
-                alert('Course updated');
-                this.$router.push("/admincourses/"+self.id);
+            },
+            checkFields(){
+                if(!this.description){
+                    this.description= this.descr;
+                }
+                if(!this.name)
+                    this.name= this.nm;
+                if(!this.startDay)
+                    this.startDay=this.startingDay;
+                if(!this.endDay)
+                    this.endDay=this.endingDay;
             }
         },
         mounted(){
             let self = this;
-            /*self.name = self.nm;
-            self.description = self.descr;
-            self.startDay = self.startingDay;
-            self.endDay = self.endingDay;*/
             axios.get('api/getInfo/getStatuses')
                 .then(function (response) {
                     self.statuses = response.data;

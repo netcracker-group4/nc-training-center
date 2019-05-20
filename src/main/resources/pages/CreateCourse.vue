@@ -5,7 +5,7 @@
                 <v-container>
                     <v-layout row wrap>
                         <v-flex xs12 sm12>
-                            <v-text-field v-model="name" label="name"></v-text-field>
+                            <v-text-field :rules="[rules.required]" v-model="name" label="name"></v-text-field>
                         </v-flex>
                         <!--<v-flex xs12 sm12>
                             <v-text-field v-model="imageUrl" label="image url" clearable></v-text-field>
@@ -13,7 +13,7 @@
                         </v-flex>-->
                         <v-flex xs12 sm12 class="text-xs-center text-sm-center text-md-center text-lg-center">
                             <img :src="imageUrl" height="150" v-if="imageUrl"/>
-                            <v-text-field label="Select Image" @click='pickFile' v-model='imageUrl' prepend-icon='attach_file'></v-text-field>
+                            <v-text-field :rules="[rules.required]" label="Select Image" @click='pickFile' v-model='imageUrl' prepend-icon='attach_file'></v-text-field>
                             <input
                                     type="file"
                                     style="display: none"
@@ -29,6 +29,7 @@
                                         :key="lvl.id"
                                         :label="lvl.title"
                                         :value="lvl.title"
+                                        v-validate="'required'"
                                 ></v-radio>
                             </v-radio-group>
                         </v-flex>
@@ -40,11 +41,12 @@
                                     :item-text="trainerName"
                                     :menu-props="{ maxHeight: '300' }"
                                     label="Set trainer"
-
+                                    :rules="[rules.required]"
                             ></v-select>
                         </v-flex>
                         <v-flex xs12 sm12>
                             <v-select
+                                    :rules="[rules.required]"
                                     v-model="courseStatus"
                                     item-value="id"
                                     :items="statuses"
@@ -60,6 +62,7 @@
                                 <v-textarea
                                         id="course-descr-text"
                                         box
+                                        :rules="[rules.required]"
                                         name="input-7-4"
                                         label="Course description"
                                         auto-grow
@@ -99,7 +102,10 @@
                 endDay: null,
                 levels: [],
                 trainers: [],
-                statuses: []
+                statuses: [],
+                rules: {
+                    required: value => !!value || 'Required.',
+                }
             }
         },
 
@@ -133,15 +139,24 @@
             }
         },
         methods:{
-
             setData(){
                 this.description=document.querySelector('#course-descr-text')._value;
                 this.startDay = ChooserDate.data().date1;
                 this.endDay = ChooserDate.data().date2;
             },
+            check(){
+              return this.level!==false;
+            },
             submit(){
-                console.log(this);
-                    this.setData();
+                if(this.check()){
+                    this.$snotify.error('Level is required!', {
+                        timeout: 2000,
+                        showProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true
+                    });
+                }else{
+                this.setData();
                 let form = new FormData();
                 let request = new XMLHttpRequest();
                 try {
@@ -161,11 +176,22 @@
                     form.append('startDay', this.startDay);
                     form.append('endDay', this.endDay);
                     request.send(form);
+                    this.$snotify.success('Course created', {
+                        timeout: 2000,
+                        showProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true
+                    });
                 }catch (e) {
-                    alert(e.toString());
+                    this.$snotify.error(e.toString(), {
+                        timeout: 2000,
+                        showProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true
+                    });
                 }
-                alert('Course created');
                 this.$router.push("/courses");
+                }
             },
             pickFile () {
                 this.$refs.image.click ()
