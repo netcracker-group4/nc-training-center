@@ -85,12 +85,6 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllTrainers(), HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/mail-send", method = RequestMethod.POST)
-//    public ResponseEntity<?> addEmployeeByAdmin(@RequestBody DtoMailSender dtoMailSender) {
-//        userService.addEmployeeByAdmin(dtoMailSender);
-//        return ResponseEntity.ok().body("Send mail");
-//    }
-
     @RequestMapping(value = "/activate/{token}", method = RequestMethod.GET)
     public RedirectView activate(@PathVariable String token) {
         userService.activateUser(token);

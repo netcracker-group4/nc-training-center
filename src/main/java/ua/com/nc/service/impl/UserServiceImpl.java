@@ -16,6 +16,7 @@ import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
 
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Log4j2
@@ -50,18 +51,19 @@ public class UserServiceImpl implements UserService {
         user.setCreated(OffsetDateTime.now());
 
         if (dtoUserSave.getRole() != null) {
-            userDao.addUserRole(user.getId(), dtoUserSave.getRole().name());
             user.setActive(true);
             userDao.insert(user);
+            userDao.addUserRole(user.getId(), dtoUserSave.getRole().name());
         } else {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             userDao.insert(user);
+            userDao.addUserRole(user.getId(), "EMPLOYEE");
 
             DtoMailSender dtoMailSender = new DtoMailSender();
             dtoMailSender.setTo(user.getEmail());
             dtoMailSender.setSubject("Invite");
-            dtoMailSender.setText("http://localhost:8080/users/activate/" + token);
+            dtoMailSender.setText("http://localhost:8080/api/users/activate/" + token);
             emailService.sendSimpleMessage(dtoMailSender);
         }
     }
@@ -72,14 +74,7 @@ public class UserServiceImpl implements UserService {
         List<User> users = userDao.getAll();
         if (!users.isEmpty()) {
             for (User user : users) {
-//            List<DTOGroup> dtoGroups = new ArrayList<>();
-//            List<Group> groups = groupDao.getAllGroupsByStudent(user.getId());
                 List<Role> roles = roleDao.findAllByUserId(user.getId());
-//            User manager = userDao.getManagerByUser(user.getId());
-//            DtoManager dtoManager = null;
-//            if (manager != null) {
-//                dtoManager = new DtoManager(manager.getFirstName(), manager.getLastName());
-//            }
                 dtoUsers.add(new DtoUser(
                         user.getId(),
                         user.getFirstName(),
@@ -169,26 +164,18 @@ public class UserServiceImpl implements UserService {
         return dtoTrainers;
     }
 
-//    @Override
-//    public void addEmployeeByAdmin(DtoMailSender dtoMailSender) {
-//        User user = new User();
-//        user.setEmail(dtoMailSender.getTo());
-//
-//        String token = UUID.randomUUID().toString();
-//        user.setToken(token);
-//        dtoMailSender.setText(dtoMailSender.getText() + "/" + token);
-//
-//        userDao.addUserByAdmin(user);
-//        emailService.sendSimpleMessage(dtoMailSender);
-//    }
-
     @Override
     public boolean activateUser(String token) {
         User user = userDao.getByToken(token);
+
         if (user == null) {
             return false;
         }
-        user.setToken(null);
+
+        if (ChronoUnit.HOURS.between(user.getCreated(), OffsetDateTime.now()) > 24) {
+            return false;
+        }
+//        user.setToken(null);
         user.setActive(true);
         userDao.updateActive(user);
 

@@ -9,17 +9,9 @@
                                 <label v-if="isAdmin()" class="user_block_label">Add manager or trainer</label>
                                 <label v-if="!isAdmin()" class="user_block_label">
                                     Registration
-                                    <label
-                                            class="label_button_to_login"
-                                            @click="toLoginPage()"
-                                    >
-                                        back to login
-                                    </label>
                                 </label>
                             </div>
                             <form>
-    <!--                            <input type="file" style="display: none" @change="onFileSelected" ref="fileInput"/>-->
-    <!--                            <v-btn @click="$refs.fileInput.click()">Pick photo</v-btn>-->
                                 <v-text-field
                                         v-model="user.firstName"
                                         v-validate="'required'"
@@ -65,10 +57,27 @@
                                     <v-radio label="Trainer" value="TRAINER"></v-radio>
                                 </v-radio-group>
 
-                                <v-btn @click="clearUser" color="error" fab small dark>
-                                    <v-icon>clear</v-icon>
-                                </v-btn>
-                                <v-btn @click="submitUser">submit</v-btn>
+                                <div class="buttons">
+                                    <v-btn
+                                            @click="clearUser"
+                                            fab
+                                            small
+                                            dark
+                                            color="#e6e4ee"
+                                    >
+                                        <v-icon>clear</v-icon>
+                                    </v-btn>
+                                    <v-btn @click="submitUser">submit</v-btn>
+                                    <v-btn
+                                            @click="toLoginPage()"
+                                            flat
+                                            color="primary"
+                                            class="mb-2 login"
+                                            v-if="!isAdmin()"
+                                    >
+                                        Login
+                                    </v-btn>
+                                </div>
                             </form>
                         </div>
                     </v-container>
@@ -93,8 +102,7 @@
                 lastName: '',
                 email: '',
                 password: '',
-                role: '',
-                // imageUrl: null
+                role: null,
             },
             dictionary: {
                 attributes: {
@@ -130,19 +138,22 @@
                 this.$router.push('/login');
             },
             submitUser () {
-                this.$validator.validateAll().then(result => {
+                this.$validator.validateAll().then((result) => {
                     if (result) {
+                        let self = this;
+                        console.log(this.user);
                         axios.post('/api/users', {
                             firstName: this.user.firstName,
                             lastName: this.user.lastName,
                             email: this.user.email,
                             password: this.user.password,
                             role: this.user.role
+                        }).then(response => {
+                            console.log(response);
+                            self.$validator.reset();
                         });
-                        this.$validator.reset();
                     }
                 })
-
             },
             clearUser () {
                 this.user.firstName = '';
@@ -152,9 +163,6 @@
                 this.user.role = '';
                 this.$validator.reset();
             },
-            // onFileSelected(event) {
-            //     this.user.imageUrl = event.target.files[0]
-            // }
         },
 
         mounted () {
@@ -175,15 +183,15 @@
     }
     .div_wrapper {
         margin: 0 auto;
-        width: 50%;
+        width: 30%;
     }
     .user_block_label {
         font-size: 20px;
     }
-    .user_block_label .label_button_to_login {
-        font-size: 16px;
-        color: #4a89dc;
-        cursor: pointer;
+    .buttons {
+        position: relative;
+    }
+    .buttons .login {
         position: absolute;
         right: 0;
     }

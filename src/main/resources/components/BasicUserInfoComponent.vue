@@ -65,6 +65,8 @@
                         <v-avatar style="margin: auto" size="75%" class="avatar">
                             <img src="https://png.pngtree.com/svg/20161212/f93e57629c.svg" alt="avatar">
                         </v-avatar>
+                        <input type="file" style="display: none" @change="onFileSelected()" ref="fileInput"/>
+                        <v-btn @click="$refs.fileInput.click()">Pick photo</v-btn>
                     </v-flex>
                     <v-flex xs12 md7 class="text-xs-right" style="padding: 20px 0">
                         <v-list two-line>
@@ -173,7 +175,7 @@
                     firstName: '',
                     lastName: '',
                     email: '',
-                    image: '',
+                    image: null,
                     roles: [],
                     dtoManager: '',
                     dtoTeachers: [],
@@ -199,6 +201,9 @@
                     request.send(form);
                 this.message = ''
                 this.sendMessageWindowShow = false
+            },
+            onFileSelected(event) {
+                this.user.image = event.target.files[0]
             },
             successAutoClosable(title) {
                 this.$snotify.success(title, {

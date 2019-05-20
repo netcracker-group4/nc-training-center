@@ -11,6 +11,7 @@ import ua.com.nc.domain.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,11 +138,13 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
             String passwordHash = rs.getString("PASSWORD");
             String firstName = rs.getString("FIRST_NAME");
             String lastName = rs.getString("LAST_NAME");
+            String token = rs.getString("TOKEN");
+            OffsetDateTime created = rs.getObject("CREATED", OffsetDateTime.class);
             Integer managerId = rs.getInt("MANAGER_ID");
             String imageUrl = rs.getString("IMAGE_URL");
             boolean isActive = rs.getBoolean("IS_ACTIVE");
             User user = new User(userId, email, passwordHash, firstName,
-                    lastName, managerId, imageUrl, isActive);
+                    lastName, token, created, managerId, imageUrl, isActive);
             list.add(user);
         }
         return list;
@@ -187,24 +190,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             statement.setString(2, roleName);
-            statement.executeUpdate();
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-    }
-
-    @Override
-    public void addUserByAdmin(User user) {
-        String sql = usrInsertUserByAdmin;
-        log.info(sql + " insert user " + user.getEmail() + " by admin");
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, user.getEmail());
-            statement.setString(2, user.getToken());
-            statement.setString(3, "firstname");
-            statement.setString(4, "lastname");
-            statement.setString(5, "ss");
             statement.executeUpdate();
         } catch (Exception e) {
             log.trace(e);
