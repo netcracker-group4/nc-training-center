@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ua.com.nc.dao.interfaces.CourseStatus;
+import ua.com.nc.dao.interfaces.CourseStatusDao;
 import ua.com.nc.dao.interfaces.LevelDao;
 import ua.com.nc.domain.Level;
 
@@ -24,7 +24,7 @@ public class InfoController {
     @Autowired
     private LevelDao levelDao;
     @Autowired
-    private CourseStatus status;
+    private CourseStatusDao status;
 
     @RequestMapping(value = "/getLevels", method = RequestMethod.GET)
     @ResponseBody

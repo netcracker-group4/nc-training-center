@@ -148,28 +148,28 @@
         methods:{
             trainerName: item => item.firstName +" "+ item.lastName,
             save(){
+                let self = this;
+                console.log(self);
+                alert(self.id);
                 let form = new FormData();
                 let request = new XMLHttpRequest();
                 try {
-                    if(this.id===undefined){
-                        request.open('POST', 'http://localhost:8080/getcourses/'+id+'/edit');
-                    } else{
-                        request.open('PUT', 'http://localhost:8080/getcourses/'+id+'/edit');
-                    }
-                    form.append('name', this.name);
-                    form.append('level', this.level);
-                    form.append('courseStatus', this.courseStatus);
-                    form.append('trainer', this.trainer);
-                    form.append('isOnLandingPage', this.isOnLandingPage);
-                    form.append('description', this.description);
-                    form.append('startDay', this.startDay);
-                    form.append('endDay', this.endDay);
+                    request.open('PUT', 'http://localhost:8080/api/getcourses/'+self.id+'/edit');
+                    form.append('id',self.id);
+                    form.append('name', self.name);
+                    form.append('level', self.level);
+                    form.append('courseStatus', self.status);
+                    form.append('trainer', self.trainer);
+                    form.append('isOnLandingPage', self.isOnLandingPage);
+                    form.append('description', self.description);
+                    form.append('startDay', self.startDay);
+                    form.append('endDay', self.endDay);
                     request.send(form);
                 }catch (e) {
                     alert(e.toString());
                 }
                 alert('Course updated');
-                this.$router.push("/admincourses/"+id);
+                this.$router.push("/admincourses/"+self.id);
             }
         },
         mounted(){
@@ -178,14 +178,14 @@
             self.description = self.descr;
             self.startDay = self.startingDay;
             self.endDay = self.endingDay;*/
-            axios.get('http://localhost:8080/getInfo/getStatuses')
+            axios.get('api/getInfo/getStatuses')
                 .then(function (response) {
                     self.statuses = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-            axios.get('http://localhost:8080/getInfo/getLevels')
+            axios.get('api/getInfo/getLevels')
                 .then(function (response) {
                     self.levels = response.data;
                 })

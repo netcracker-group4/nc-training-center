@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.CourseStatus;
+import ua.com.nc.dao.interfaces.CourseStatusDao;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -17,7 +17,7 @@ import java.sql.SQLException;
 @Log4j
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class CourseStatusDaoImpl implements CourseStatus {
+public class CourseStatusDaoDaoImpl implements CourseStatusDao {
 
     @Value("${status.select-id-by-name}")
     private String getStatusByName;
@@ -27,7 +27,7 @@ public class CourseStatusDaoImpl implements CourseStatus {
     private Connection connection;
 
     @Autowired
-    CourseStatusDaoImpl(DataSource dataSource) throws PersistException {
+    CourseStatusDaoDaoImpl(DataSource dataSource) throws PersistException {
         try {
             this.connection = dataSource.getConnection();
         } catch (SQLException e) {

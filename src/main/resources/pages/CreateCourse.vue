@@ -43,6 +43,16 @@
 
                             ></v-select>
                         </v-flex>
+                        <v-flex xs12 sm12>
+                            <v-select
+                                    v-model="courseStatus"
+                                    item-value="id"
+                                    :items="statuses"
+                                    :menu-props="{ maxHeight: '300' }"
+                                    label="Set status"
+
+                            ></v-select>
+                        </v-flex>
                         <v-flex>
                             <p style="margin-top: 3%"><v-checkbox v-model="isOnLandingPage" :label="`Is on landing page? `"></v-checkbox></p>
                         </v-flex>
@@ -88,8 +98,8 @@
                 startDay: null,
                 endDay: null,
                 levels: [],
-                courseStatuses: [],
-                trainers: []
+                trainers: [],
+                statuses: []
             }
         },
 
@@ -110,6 +120,13 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+                axios.get('/api/getInfo/getStatuses')
+                    .then(function (response) {
+                        self.statuses = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
 
             }catch (e) {
                 console.log(e);
@@ -123,6 +140,7 @@
                 this.endDay = ChooserDate.data().date2;
             },
             submit(){
+                console.log(this);
                     this.setData();
                 let form = new FormData();
                 let request = new XMLHttpRequest();

@@ -73,7 +73,7 @@ public class CourseController {
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT, value = "{id}/create")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/create")
     @PreAuthorize("hasAuthority('ADMIN')")
     public void update(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                        @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
@@ -88,7 +88,7 @@ public class CourseController {
         courseDao.update(course);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "{id}/edit")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/edit")
     @PreAuthorize("hasAuthority('ADMIN')")
     public void edit(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                        @RequestParam(name = "courseStatus") String courseStatus,
