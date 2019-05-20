@@ -28,7 +28,7 @@
             }
         },
         mounted() {
-            axios.get('/api/groups/' + this.groupId + '/attendance-graph')
+            axios.get(this.$store.state.apiServer + '/api/groups/' + this.groupId + '/attendance-graph')
                 .then(function (response) {
                     self.reasons = response.data;
                     console.log(response.data);

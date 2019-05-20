@@ -64,7 +64,7 @@
             loadInfo() {
                 let self = this;
                 let id = this.$route.params.id;
-                axios.get('/api/users/' + id + '/subordinates')
+                axios.get(this.$store.state.apiServer + '/api/users/' + id + '/subordinates')
                     .then(function (response) {
                         self.subordinates = response.data;
                         console.log(self.subordinates)

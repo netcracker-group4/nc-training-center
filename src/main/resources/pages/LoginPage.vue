@@ -66,7 +66,7 @@
                 if(this.emailValidation(this.email) && this.passwordValidation(this.password)){
                     let form = new FormData();
                     let request = new XMLHttpRequest();
-                    request.open('POST', 'http://localhost:8080/login');
+                    request.open('POST', this.$store.state.apiServer + '/login');
                     form.append('username', this.email);
                     form.append('password', this.password);
                     request.send(form);

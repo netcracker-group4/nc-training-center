@@ -65,7 +65,7 @@
             }
         },
         mounted() {
-            axios.get('/api/attendances')
+            axios.get(this.$store.state.apiServer + '/api/attendances')
                 .then(response => {
                     this.attendances = response.data
                 })
@@ -86,7 +86,7 @@
                 }
             },
             downloadAttendance() {
-                window.open("http://localhost:8080/api/download-report/attendance-report", "_blank");
+                window.open(this.$store.state.apiServer + "/api/download-report/attendance-report", "_blank");
             },
         }
     }

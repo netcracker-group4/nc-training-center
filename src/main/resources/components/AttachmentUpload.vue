@@ -38,7 +38,7 @@
                 let imagefile = document.querySelector('#file');
 
                 let request = new XMLHttpRequest();
-                request.open('POST', 'http://localhost:8080/api/attachments/upload-file');
+                request.open('POST', this.$store.state.apiServer + '/api/attachments/upload-file');
                 form.append('file', imagefile.files[0]);
                 form.append('lessonId',this.lessonId);
                 request.send(form);

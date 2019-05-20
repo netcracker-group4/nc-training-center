@@ -66,7 +66,7 @@
         },
         mounted() {
             let self = this;
-            axios.get('/api/groups/groups-and-quantity')
+            axios.get(this.$store.state.apiServer + '/api/groups/groups-and-quantity')
                 .then(function (response) {
                     self.groupsAndQuantities = response.data;
                 })

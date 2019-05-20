@@ -117,7 +117,7 @@
                     courseId: this.$route.params.id,
                     array: this.desiredSchedule2
                 });
-                axios.post('/api/desired-schedule/join/', {
+                axios.post(this.$store.state.apiServer + '/api/desired-schedule/join/', {
                     courseId: this.$route.params.id,
                     forDays: this.desiredSchedule2
                 }).then(function (response) {
@@ -143,7 +143,7 @@
             },
             loadInfo() {
                 let self = this;
-                axios.get('/api/desired-schedule/day-intervals')
+                axios.get(this.$store.state.apiServer + '/api/desired-schedule/day-intervals')
                     .then(function (response) {
                         self.dayIntervals = response.data;
                         for (const index of Array(self.days.length).keys()) {
@@ -166,7 +166,7 @@
                         // self.errorAutoClosable(error.response.data);
                         console.log(error);
                     });
-                axios.get('/api/getcourses/' + this.$route.params.id)
+                axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id)
                     .then(function (response) {
                         self.course = response.data;
                         console.log(self.course);
@@ -176,7 +176,7 @@
                         console.log(error);
                     });
 
-                axios.get('/api/desired-schedule/suitabilities')
+                axios.get(this.$store.state.apiServer + '/api/desired-schedule/suitabilities')
                     .then(function (response) {
                         self.suitabilities = response.data;
                         if (self.suitabilities.length > 0) {
@@ -192,7 +192,7 @@
         },
         mounted() {
             let self = this;
-            axios.get('/api/getcourses/' + this.$route.params.id + '/course-group')
+            axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id + '/course-group')
                 .then(function (response) {
                     console.log(response.data);
                     if (response.data == true) {

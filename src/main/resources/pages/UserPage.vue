@@ -172,7 +172,7 @@
             loadInfo() {
                 let self = this;
                 let id = this.$route.params.id;
-                axios.get('/api/users/' + id)
+                axios.get(this.$store.state.apiServer + '/api/users/' + id)
                     .then(function (response) {
                         self.user = response.data;
                         console.log(self.user);
@@ -195,7 +195,7 @@
                 let role;
                 if(this.user.roles.includes('TRAINER')){
                     role = 'trainer/';
-                    axios.get('/api/groups/trainer/' + this.$route.params.id)
+                    axios.get(this.$store.state.apiServer + '/api/groups/trainer/' + this.$route.params.id)
                         .then(function (response) {
                             self.groups = response.data;
                             console.log(response.data);
@@ -204,7 +204,7 @@
                         self.errorAutoClosable(error.response.data);
                     });
                 }else role = 'employee/';
-                axios.get('/api/schedule/' + role + this.$route.params.id)
+                axios.get(this.$store.state.apiServer + '/api/schedule/' + role + this.$route.params.id)
                     .then(function (response) {
                         console.log(response.data);
                         self.lessons = response.data;
@@ -219,7 +219,7 @@
             },
             loadAdditional() {
                 let self = this;
-                axios.get('/api/users/' + this.$route.params.id + '/trainers')
+                axios.get(this.$store.state.apiServer + '/api/users/' + this.$route.params.id + '/trainers')
                     .then(function (response) {
                         self.trainers = response.data;
                         console.log(response.data);
@@ -227,7 +227,7 @@
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
                 });
-                axios.get('/api/users/' + this.$route.params.id + '/getAttendanceGraph')
+                axios.get(this.$store.state.apiServer + '/api/users/' + this.$route.params.id + '/getAttendanceGraph')
                     .then(function (response) {
                         self.absenceReasons = response.data;
                         console.log(response.data);
@@ -236,7 +236,7 @@
                     self.errorAutoClosable(error.response.data);
                 });
                 console.log(this.$route.params.id);
-                axios.get('/api/groups/employee/' + this.$route.params.id)
+                axios.get(this.$store.state.apiServer + '/api/groups/employee/' + this.$route.params.id)
                     .then(function (response) {
                         self.groups = response.data;
                         console.log(response.data);
@@ -248,7 +248,7 @@
             loadCourses() {
                 let self = this;
                 let id = this.$route.params.id;
-                axios.get('/api/getcourses/get-all-courses-by-trainer-and-employee?trainerId=' +
+                axios.get(this.$store.state.apiServer + '/api/getcourses/get-all-courses-by-trainer-and-employee?trainerId=' +
                     store.state.user.id + "&employeeId=" + id)
                     .then(function (response) {
                         self.courses = response.data;
@@ -262,7 +262,7 @@
                 return this.$store.state.user.id.toString() === this.$route.params.id;
             },
             downloadGroupsAttendanceReport() {
-                window.open("/download-report/attendance-report", "_blank");
+                window.open(this.$store.state.apiServer + "/download-report/attendance-report", "_blank");
             }
         }
         ,

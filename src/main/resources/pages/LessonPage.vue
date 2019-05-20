@@ -124,12 +124,12 @@
             },
             loadInfo(){
                 let self = this;
-                axios.get('/api/schedule/lesson/' + this.$route.params.id)
+                axios.get(this.$store.state.apiServer + '/api/schedule/lesson/' + this.$route.params.id)
                                 .then(function (response) {
                                     let dat = response.data;
                                     self.topic = dat.topic;
                                     self.trainer = dat.trainerId;
-                                    axios.get('/api/users/' + self.trainer)
+                                    axios.get(this.$store.state.apiServer + '/api/users/' + self.trainer)
                                                  .then(function (response) {
                                                  self.trainer = response.data;
                                                  self.firstName = self.trainer.firstName;
@@ -146,7 +146,7 @@
                                 .catch(function (error) {
                                     console.log(error);
                                 });
-            axios.get('/api/attachments/lesson/' + this.$route.params.id)
+            axios.get(this.$store.state.apiServer + '/api/attachments/lesson/' + this.$route.params.id)
             .then(function (response) {
                 self.attachments= response.data;
             })
@@ -159,7 +159,7 @@
                 let imagefile = document.querySelector('#file');
 
                 let request = new XMLHttpRequest();
-                request.open('POST', 'http://localhost:8080/api/attachments/upload-file');
+                request.open('POST', this.$store.state.apiServer + '/api/attachments/upload-file');
                 form.append('file', imagefile.files[0]);
                 form.append('lessonId',this.$route.params.id);
                 form.append('descr', '');
@@ -172,7 +172,7 @@
              unlink(id){
                 let form = new FormData();
                 let request = new XMLHttpRequest();
-                request.open('DELETE','http://localhost:8080/api/attachments/unlink');
+                request.open('DELETE', this.$store.state.apiServer + '/api/attachments/unlink');
                 form.append('lessonId',this.$route.params.id);
                 form.append('attachmentId', id);
                 request.send(form);

@@ -5,6 +5,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        apiServer: 'http://localhost:8080',
+        //apiServer: 'http://45.66.10.81:8080',
         isAuthorized: isAuthorized,
         user: user,
         userRoles: userRoles,

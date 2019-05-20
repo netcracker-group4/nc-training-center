@@ -67,7 +67,7 @@
                 let form = new FormData();
 
                 let request = new XMLHttpRequest();
-                request.open('POST', 'http://localhost:8080/api/requests/create-request');
+                request.open('POST', this.$store.state.apiServer + '/api/requests/create-request');
                 form.append('userId', this.userId);
                 form.append('description', this.description);
                 form.append('message', this.message);

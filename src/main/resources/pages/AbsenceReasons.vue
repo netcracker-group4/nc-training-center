@@ -93,7 +93,7 @@
             },
             deleteReason(idReason) {
                 let self = this;
-                axios.delete('/api/absence-reason/' + idReason)
+                axios.delete(this.$store.state.apiServer + '/api/absence-reason/' + idReason)
                     .then(function (response) {
                         self.reasons = self.reasons.filter(function (e) {
                             return e.id !== idReason;
@@ -107,7 +107,7 @@
             },
             loadInfo() {
                 let self = this;
-                axios.get('/api/absence-reason')
+                axios.get(this.$store.state.apiServer + '/api/absence-reason')
                     .then(function (response) {
                         self.reasons = response.data;
                     })
@@ -120,7 +120,7 @@
                 let self = this;
                 this.$validator.validateAll().then((result) => {
                     if (result) {
-                        axios.post('/api/absence-reason', {title: this.title})
+                        axios.post(this.$store.state.apiServer + '/api/absence-reason', {title: this.title})
                             .then(function (response) {
                                 self.reasons.push({
                                     id: response.data,

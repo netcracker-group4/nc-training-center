@@ -95,7 +95,7 @@
         },
         mounted() {
             let self = this;
-            axios.get('/api/admin')
+            axios.get(this.$store.state.apiServer + '/api/admin')
                 .then(function (response) {
                     self.allUsers = response.data;
                     self.loading = false;

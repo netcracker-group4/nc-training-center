@@ -59,14 +59,14 @@
         },
         mounted() {
             let self = this;
-            axios.get('/api/main-page/courses-on-landing-page')
+            axios.get(this.$store.state.apiServer + '/api/main-page/courses-on-landing-page')
                 .then(function (response) {
                     self.courses = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-            axios.get('/api/main-page/trainers-on-landing-page')
+            axios.get(this.$store.state.apiServer + '/api/main-page/trainers-on-landing-page')
                 .then(function (response) {
                     self.trainers = response.data;
                 })

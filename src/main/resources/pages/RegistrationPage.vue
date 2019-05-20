@@ -142,7 +142,7 @@
                     if (result) {
                         let self = this;
                         console.log(this.user);
-                        axios.post('/api/users', {
+                        axios.post(this.$store.state.apiServer + '/api/users', {
                             firstName: this.user.firstName,
                             lastName: this.user.lastName,
                             email: this.user.email,

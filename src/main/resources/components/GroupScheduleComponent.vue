@@ -174,7 +174,7 @@
         props: ['isStudentOfGroup', 'courseTrainerId'],
         mounted() {
             let self = this;
-            axios.get('/api/schedule/' + self.$route.params.id)
+            axios.get(this.$store.state.apiServer + '/api/schedule/' + self.$route.params.id)
                 .then(function (response) {
                     self.lessons = response.data;
                     self.lessons.forEach(function (one) {
@@ -185,7 +185,7 @@
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
                 });
-            axios.get('/api/desired-schedule/' + self.$route.params.id)
+            axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + self.$route.params.id)
                 .then(function (response) {
                     self.group = response.data;
                 })
@@ -193,7 +193,7 @@
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
                 });
-            axios.get('/api/users/get-all-trainers')
+            axios.get(this.$store.state.apiServer + '/api/users/get-all-trainers')
                 .then(function (response) {
                     self.allTrainers = response.data;
                 })
@@ -201,7 +201,7 @@
                     console.log(error);
                     self.errorAutoClosable(error.response.data);
                 });
-            axios.get('/api/attachments/all')
+            axios.get(this.$store.state.apiServer + '/api/attachments/all')
                 .then(function (response) {
                     self.allAttachments = response.data;
                 })
@@ -300,7 +300,7 @@
             },
             cancelLesson(lesson) {
                 let self = this;
-                axios.post('/api/schedule/' + lesson.id)
+                axios.post(this.$store.state.apiServer + '/api/schedule/' + lesson.id)
                     .then(function (response) {
                         lesson.isCanceled = response.data;
                         lesson.open = false;
@@ -316,7 +316,7 @@
             },
             deleteLesson(lesson) {
                 let self = this;
-                axios.delete('/api/schedule/' + lesson.id)
+                axios.delete(this.$store.state.apiServer + '/api/schedule/' + lesson.id)
                     .then(function (response) {
                         self.lessons = self.lessons.filter(el => el.id !== lesson.id);
                         self.cancel();
@@ -330,7 +330,7 @@
             },
             save(newLesson) {
                 let self = this;
-                axios.post('/api/schedule', newLesson)
+                axios.post(this.$store.state.apiServer + '/api/schedule', newLesson)
                     .then(function (response) {
                         self.lessons = self.lessons.filter(el => el.id !== newLesson.id);
                         newLesson.id = response.data;

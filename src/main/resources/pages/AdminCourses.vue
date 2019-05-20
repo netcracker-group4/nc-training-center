@@ -80,7 +80,7 @@
             },
             deleteCourse(courseId) {
                 if (confirm("Are you sure you want to delete " + this.findCourseById(courseId).name)) {
-                    axios.delete('/api/getcourses/' + courseId)
+                    axios.delete(this.$store.state.apiServer + '/api/getcourses/' + courseId)
                         .catch(function (error) {
                             console.log(error);
                         });

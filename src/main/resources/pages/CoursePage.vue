@@ -145,7 +145,7 @@
         methods:{
             setCourse(){
                 let self = this;
-                axios.get('/api/getcourses/'+self.id)
+                axios.get(this.$store.state.apiServer + '/api/getcourses/'+self.id)
                     .then(function (response) {
                         //self.levels = response.data;
                         let dat = response.data;
@@ -168,7 +168,7 @@
             },
             getStatus(id){
                 let self = this;
-                axios.get('/api/getInfo/getStatus/'+id)
+                axios.get(this.$store.state.apiServer + '/api/getInfo/getStatus/'+id)
                     .then(function (response) {
                         self.courseStatus = response.data;
                     })
@@ -178,7 +178,7 @@
             },
             getTrainer(){
                 let self = this;
-                axios.get('/api/getcourses/'+this.$route.params.id+'/trainer')
+                axios.get(this.$store.state.apiServer + '/api/getcourses/'+this.$route.params.id+'/trainer')
                     .then(function (response) {
                         self.trainer = response.data[0];
                     })
@@ -188,7 +188,7 @@
             },
             getTrainers(){
                 let self = this;
-                axios.get('/api/dashboard/level-and-trainers')
+                axios.get(this.$store.state.apiServer + '/api/dashboard/level-and-trainers')
                     .then(function (response) {
                         response.data.forEach(d =>{
                             self.trainers.push(d.trainer);
@@ -209,7 +209,7 @@
             },
             getGroups(){
                 let self = this;
-                axios.get('/api/groups/get-groups/'+self.id)
+                axios.get(this.$store.state.apiServer + '/api/groups/get-groups/'+self.id)
                     .then(function (response) {
                         self.groups = response.data;
                     })
@@ -222,7 +222,7 @@
             },
             setLevel(levelId){
                 let self = this;
-                axios.get('/api/getInfo/getLevel/'+levelId)
+                axios.get(this.$store.state.apiServer + '/api/getInfo/getLevel/'+levelId)
                     .then(function (response) {
                         self.level = response.data;
                     })
@@ -234,7 +234,7 @@
                 this.description=document.querySelector('#course-descr-text')._value;
                 let form = new FormData();
                 let request = new XMLHttpRequest();
-                    request.open('PUT', 'http://localhost:8080/getcourses/'+this.$route.params.id+'/create');
+                    request.open('PUT', this.$store.state.apiServer + '/getcourses/'+this.$route.params.id+'/create');
                     form.append('name', this.name);
                     form.append('level', this.level.title);
                     form.append('courseStatus', this.courseStatus);
