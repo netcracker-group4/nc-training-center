@@ -63,7 +63,7 @@
                                             fab
                                             small
                                             dark
-                                            color="#e6e4ee"
+                                            color="#F66F6F"
                                     >
                                         <v-icon>clear</v-icon>
                                     </v-btn>
