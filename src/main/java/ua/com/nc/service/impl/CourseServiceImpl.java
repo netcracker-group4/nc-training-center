@@ -39,7 +39,7 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private UserGroupDao userGroupDao;
 
-    private CourseStatus statusDao;
+//    private CourseStatusDao statusDao;
 
     @Override
     public void add(Course course) {

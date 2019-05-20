@@ -42,9 +42,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
-//        to enable 404 error page in case of access denied error
-//                .and()
-//                .exceptionHandling().accessDeniedPage("/error.html");
     }
 
     @Bean

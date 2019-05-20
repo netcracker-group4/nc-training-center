@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
-import ua.com.nc.dao.interfaces.CourseStatus;
+import ua.com.nc.dao.interfaces.CourseStatusDao;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -16,24 +16,18 @@ import java.sql.ResultSet;
 @Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class CourseStatusDaoImpl implements CourseStatus {
+public class CourseStatusDaoImpl implements CourseStatusDao {
 
     @Value("${status.select-id-by-name}")
     private String getStatusByName;
     @Value("${status.select-name-by-id}")
     private String getStatusById;
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     @Autowired
     CourseStatusDaoImpl(DataSource dataSource) throws PersistException {
         this.dataSource = dataSource;
-//        try {
-//            this.connection = dataSource.getConnection();
-//        } catch (SQLException e) {
-//            log.trace("Error while setting autocommit false", e);
-//            throw new PersistException("Error while setting autocommit false", e);
-//        }
     }
 
     @Override

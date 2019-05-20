@@ -174,17 +174,9 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     @Override
     public User getTrainerByFeedback(Integer id) {
-        List<User> list;
         String sql = usrSelectTrainerByFeedback;
         log.info(sql + " find trainer by feedback " + id);
-        list = getFromSqlById(sql, id);
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        if (list.size() > 1) {
-            throw new PersistException("Received more than one record.");
-        }
-        return list.iterator().next();
+        return getUniqueFromSqlById(sql, id);
     }
 
     @Override
@@ -238,15 +230,12 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     @Override
     public List<User> getByGroupId(Integer id) {
-        List<User> users;
         String sql = usrSelectByGroupId;
-        users = getFromSqlById(sql, id);
-        return users;
+        return getFromSqlById(sql, id);
     }
 
     @Override
     public List<User> getUngroupedByCourse(Integer courseId) {
-        List<User> allUsersForCourse;
         String sql = usrSelectUngroupedByCourseId;
         log.info(sql + " select Ungrouped users for a course " + courseId);
         return getFromSqlById(sql, courseId);
@@ -254,7 +243,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     @Override
     public List<User> getAllForCourse(int courseId) {
-        List<User> allUsersForCourse;
         String sql = usrSelectAllByCourse;
         log.info(sql + " select all users for a course " + courseId);
         return getFromSqlById(sql, courseId);
@@ -295,20 +283,9 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     @Override
     public List<User> getLandingPageTrainers() {
-        List<User> landingPageTrainers;
         String sql = usrLandingPage;
         log.info(sql + "select trainers on landing page");
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            landingPageTrainers = parseResultSet(rs);
-        } catch (Exception e) {
-            throw new PersistException(e);
-        }
-        if (landingPageTrainers.size() == 0) {
-            return null;
-        }
-        return landingPageTrainers;
+        return getListFromSql(sql);
     }
 
     @Override
@@ -322,11 +299,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public List<User> getAllTrainersById(Integer id) {
         String sql = usrSelectAllTrainersById;
         log.info(sql + " find all trainers by id = " + id);
-        List<User> list = getFromSqlById(sql, id);
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        return list;
+        return getFromSqlById(sql, id);
     }
 
     @Override
@@ -381,16 +354,9 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
     public User getAdmin() {
-        List<User> admin = new ArrayList<>();
         String sql = getAdmin;
         log.info(sql + " getAdmin");
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(sql);
-            admin = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-        }
+        List<User> admin = getListFromSql(sql);
         if (admin == null || admin.size() == 0) {
             return null;
         }

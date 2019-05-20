@@ -73,50 +73,22 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
 
     @Override
     public List<Attendance> getAttendanceByStudentIdAndCourseId(Integer studentId, Integer courseId) {
-        return getAttendances(studentId, courseId, selectAttendanceByStudentIdAndCourseId);
-    }
-
-    private List<Attendance> getAttendances(Integer studentId, Integer courseId, String selectAttendanceByStudentIdAndCourseId) {
-        List<Attendance> list;
-        log.info(selectAttendanceByStudentIdAndCourseId);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(selectAttendanceByStudentIdAndCourseId)) {
-            statement.setInt(1, studentId);
-            statement.setInt(2, courseId);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        return list;
-    }
-
-    private List<Attendance> getAttendances(Integer lessonId, String selectAttendanceByLessonId) {
-        log.info(selectAttendanceByLessonId);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(selectAttendanceByLessonId)) {
-            statement.setInt(1, lessonId);
-            return parseResultSet(statement.executeQuery());
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
+        return getFromSqlByTwoId(selectAttendanceByStudentIdAndCourseId, studentId, courseId);
     }
 
     @Override
     public List<Attendance> getAttendanceByStudentIdAndGroupId(Integer studentId, Integer groupId) {
-        return getAttendances(studentId, groupId, selectAttendanceByStudentIdAndGroupId);
+        return getFromSqlByTwoId(selectAttendanceByStudentIdAndCourseId, studentId, groupId);
     }
 
     @Override
     public List<Attendance> getAttendanceByLessonId(Integer lessonId) {
-        return getAttendances(lessonId, selectAttendanceByLessonId);
+        return getFromSqlById(selectAttendanceByLessonId, lessonId);
     }
 
     @Override
     public List<Attendance> getAttendanceByGroupId(Integer groupId){
-        return getAttendances(groupId, selectByGroupId);
+        return getFromSqlById(selectByGroupId, groupId);
     }
 
     @Override

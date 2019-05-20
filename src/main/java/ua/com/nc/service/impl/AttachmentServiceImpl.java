@@ -98,7 +98,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public void link(Integer lessonId, Integer attachmentId) {
         LessonAttachment lessonAttachment = new LessonAttachment(attachmentId, lessonId);
-        lessonAttachmentDao.insertAttachment(lessonAttachment);
+        lessonAttachmentDao.insert(lessonAttachment);
     }
 
     @Override

@@ -95,11 +95,6 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
             Integer groupId = rs.getInt("group_id");
             Integer courseId = rs.getInt("course_id");
             boolean isAttending = rs.getBoolean("is_attending");
-            log.info(id);
-            log.info(userId);
-            log.info(groupId);
-            log.info(courseId);
-            log.info(isAttending);
             UserGroup userGroup = new UserGroup(id, userId, groupId, courseId, isAttending);
             list.add(userGroup);
         }
@@ -139,20 +134,11 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     public UserGroup getByUserAndCourse(Integer userId, Integer courseId) {
         String sql = userGroupSelectByUsrAndCourse;
         log.info(sql + " getByUserAndCourse usr = " + userId + " course= " + courseId);
-        return getByTwoId(userId, courseId, sql);
+        return getUniqueByTwoId(sql, userId, courseId);
     }
 
-    private UserGroup getByTwoId(Integer userId, Integer courseId, String sql) {
-        List<UserGroup> list;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, courseId);
-            statement.setInt(2, userId);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            throw new PersistException(e);
-        }
+    private UserGroup getUniqueByTwoId(String sql, Integer id1, Integer id2) {
+        List<UserGroup> list = getFromSqlByTwoId(sql, id1, id2);
         if (list.size() > 1) {
             throw new PersistException("Returned more than one record");
         }
@@ -166,7 +152,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     public UserGroup getByUserAndGroup(Integer userId, Integer groupId) {
         String sql = userGroupSelectByUsrAndGroup;
         log.info(sql + " getByUserAndGroup usr = " + userId + " group= " + groupId);
-        return getByTwoId(userId, groupId, sql);
+        return getUniqueByTwoId(sql, userId, groupId);
     }
 
     @Override

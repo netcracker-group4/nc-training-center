@@ -22,7 +22,7 @@ import java.util.List;
 @PropertySource("classpath:sql_queries.properties")
 public class RoleDaoImpl implements RoleDao {
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     @Value("${role.select-by-user-id}")
     private String findRolesByUserId;

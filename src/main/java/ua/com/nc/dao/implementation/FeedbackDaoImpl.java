@@ -10,7 +10,6 @@ import ua.com.nc.dao.interfaces.FeedbackDao;
 import ua.com.nc.domain.Feedback;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -106,40 +105,16 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
 
     @Override
     public List<Feedback> getAllByUserId(Integer userId) {
-        List<Feedback> feedbacks;
         String sql = feedbackSelectAllByUser;
         log.info(sql + " select all feedback by user " + userId);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, userId);
-            ResultSet rs = statement.executeQuery();
-            feedbacks = parseResultSet(rs);
-        } catch (Exception e) {
-            throw new PersistException(e);
-        }
-        if (feedbacks.size() == 0) {
-            return null;
-        }
-        return feedbacks;
+        return getFromSqlById(sql, userId);
     }
+
 
     @Override
     public List<Feedback> getAllByTrainerIdAndUserId(Integer userId, Integer trainerId) {
-        List<Feedback> feedbacks;
         String sql = feedbackSelectAllByTrainerIdAndByUserId;
         log.info(sql + " select all feedback by trainer " + trainerId + " and by user " + userId);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, userId);
-            statement.setInt(2, trainerId);
-            ResultSet rs = statement.executeQuery();
-            feedbacks = parseResultSet(rs);
-        } catch (Exception e) {
-            throw new PersistException(e);
-        }
-        if (feedbacks.size() == 0) {
-            return null;
-        }
-        return feedbacks;
+        return getFromSqlByTwoId(sql, userId, trainerId);
     }
 }

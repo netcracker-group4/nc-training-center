@@ -19,8 +19,6 @@ import java.util.List;
 @Log4j2
 public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E> {
 
-//    Connection connection;
-
     protected DataSource dataSource;
 
     AbstractDaoImpl() {
@@ -28,12 +26,6 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
 
     AbstractDaoImpl(DataSource dataSource) throws PersistException {
         this.dataSource = dataSource;
-//        try {
-//            this.connection = dataSource.getConnection();
-//        } catch (SQLException e) {
-//            log.trace("Error while getting connection ", e);
-//            throw new PersistException("Error while getting connection ", e);
-//        }
     }
 
     @Override
@@ -174,6 +166,21 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        return list;
+    }
+
+    List<E> getFromSqlByTwoId(String sql, Integer id1, Integer id2) {
+        List<E> list;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id1);
+            statement.setInt(2, id2);
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {

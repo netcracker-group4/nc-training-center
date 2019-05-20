@@ -108,7 +108,8 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
             Timestamp time = rs.getTimestamp("time_date");
             boolean isCanceled = rs.getBoolean("is_canceled");
             String duration = rs.getString("duration");
-            Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate, time, duration, isCanceled);
+            Lesson lesson = new Lesson(id, groupId, topic, trainerId,
+                    timeDate, time, duration, isCanceled);
             lessons.add(lesson);
         }
         return lessons;
@@ -117,20 +118,9 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
 
     @Override
     public List<Lesson> getByGroupIdAndUserId(Integer groupId, Integer userId) {
-        List<Lesson> lessons;
         String sql = getSelectByGroupIdAndUserId;
         log.info("getByGroupIdAndUserId groupId " + groupId + " userId " + userId + "   " + sql);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, groupId);
-            statement.setInt(2, userId);
-            ResultSet rs = statement.executeQuery();
-            lessons = parseResultSetForAttendance(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        return lessons;
+        return getFromSqlByTwoId(sql, groupId, userId);
     }
 
     @Override
@@ -174,7 +164,8 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
             Date timeDate = rs.getDate("time_date");
             String absenceReason = rs.getString("absence_reason");
             String absenceStatus = rs.getString("absence_status");
-            Lesson lesson = new Lesson(id, groupId, topic, trainerId, timeDate, absenceReason, absenceStatus);
+            Lesson lesson = new Lesson(id, groupId, topic, trainerId,
+                    timeDate, absenceReason, absenceStatus);
             lessons.add(lesson);
         }
         return lessons;

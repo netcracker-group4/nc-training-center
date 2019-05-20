@@ -166,57 +166,19 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     @Override
     public Course getCourseByGroup(int id) {
         String sql = selectCourseByGroupId;
-        Course course;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            course = parseResultSet(rs).get(0);
-        } catch (SQLException e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        return course;
+        return getUniqueFromSqlById(sql, id);
     }
 
     @Override
     public Course getCourseByFeedback(Integer feedbackId) {
-        List<Course> courses;
         String sql = selectCourseByFeedbackId;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, feedbackId);
-            ResultSet rs = statement.executeQuery();
-            courses = parseResultSet(rs);
-        } catch (SQLException e) {
-            throw new PersistException(e.getMessage());
-        }
-        if (courses == null || courses.size() == 0) {
-            return null;
-        }
-        if (courses.size() > 1) {
-            throw new PersistException("Received more than one record.");
-        }
-        return courses.get(0);
+        return getUniqueFromSqlById(selectCourseByFeedbackId, feedbackId);
     }
 
     @Override
     public List<Course> getAllCourseByTrainerAndByEmployee(Integer trainerId, Integer employeeId) {
-        List<Course> courses;
         String sql = courseSelectAllByTrainerAndEmployee;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, trainerId);
-            statement.setInt(2, employeeId);
-            ResultSet rs = statement.executeQuery();
-            courses = parseResultSet(rs);
-        } catch (SQLException e) {
-            throw new PersistException(e.getMessage());
-        }
-        if (courses == null || courses.size() == 0) {
-            return null;
-        }
-        return courses;
+        return getFromSqlByTwoId(sql, trainerId, employeeId);
     }
 
 

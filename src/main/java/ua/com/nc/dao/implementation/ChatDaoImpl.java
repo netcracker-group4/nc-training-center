@@ -59,17 +59,8 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
         List<Chat> list;
         String sql = selectChatBySenderIdAndReceiverId;
         log.info(sql + " select chat by sender and receiver");
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(selectChatBySenderIdAndReceiverId)) {
-            statement.setInt(1, senderId);
-            statement.setInt(2, receiverId);
-            ResultSet rs = statement.executeQuery();
-            list = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-        if(list.size() > 1 || list.size() == 0){
+        list = getFromSqlByTwoId(selectChatBySenderIdAndReceiverId, senderId, receiverId);
+        if(list.size() != 1){
             return null;
         }else{
             return list.iterator().next();
@@ -134,19 +125,10 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
 
     @Override
     public Chat getByUserIdAndChatId(Integer userId, Integer chatId) {
-        List<Chat> chats = null;
+        List<Chat> chats;
         String sql = chatSelectByUserIdAndChatId;
         log.info(sql + "get chat by user id and chat id");
-        try(Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(chatSelectByUserIdAndChatId)) {
-            statement.setInt(1, userId);
-            statement.setInt(2, chatId);
-            ResultSet resultSet = statement.executeQuery();
-            chats = parseResultSet(resultSet);
-        } catch (SQLException e) {
-            log.trace(e);
-            log.trace(e);
-        }
+        chats = getFromSqlByTwoId(sql, userId, chatId);
         if(chats != null && chats.size() > 0){
             return chats.get(0);
         }else{
