@@ -144,7 +144,8 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
         List<Chat> chats = null;
         String sql = chatSelectByGroupId;
         log.info(sql + " get chat by group id");
-        try(PreparedStatement statement = connection.prepareStatement(chatSelectByGroupId)) {
+        try(   Connection connection = dataSource.getConnection();
+               PreparedStatement statement = connection.prepareStatement(chatSelectByGroupId)) {
             statement.setInt(1, groupId);
             ResultSet resultSet = statement.executeQuery();
             chats = parseResultSet(resultSet);

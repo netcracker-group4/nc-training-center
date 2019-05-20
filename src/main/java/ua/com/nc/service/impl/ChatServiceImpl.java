@@ -56,7 +56,7 @@ public class ChatServiceImpl implements ChatService {
 
             message.setChatId(newChatId);
 
-            return messageDao.insertMessage(message);
+            return messageDao.insertMessageReturningId(message);
         }
 
     }
@@ -81,14 +81,14 @@ public class ChatServiceImpl implements ChatService {
 
             message.setChatId(newChatId);
 
-            return messageDao.insertMessage(message);
+            return messageDao.insertMessageReturningId(message);
 
         }
     }
 
     @Override
     public Integer addMessageToExistingChat(Message message) {
-        return messageDao.insertMessage(message);
+        return messageDao.insertMessageReturningId(message);
     }
 
     @Override

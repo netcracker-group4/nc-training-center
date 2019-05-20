@@ -165,7 +165,8 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     public Group getByUserIdAndGroupId(Integer userId, Integer groupId) {
         List<Group> groups = null;
         String sql = selectByUserIdAndGroupId;
-        try(PreparedStatement statement = connection.prepareStatement(selectByUserIdAndGroupId)) {
+        try(    Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(selectByUserIdAndGroupId)) {
             statement.setInt(1, userId);
             statement.setInt(2, groupId);
             ResultSet resultSet = statement.executeQuery();
