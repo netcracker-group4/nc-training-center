@@ -1,7 +1,7 @@
 package ua.com.nc.controller;
 
 import com.google.gson.Gson;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +22,7 @@ import ua.com.nc.service.GroupsService;
 import java.util.List;
 import java.util.Map;
 
-@Log4j
+@Log4j2
 @Controller
 @RequestMapping("/api/groups")
 public class GroupController {

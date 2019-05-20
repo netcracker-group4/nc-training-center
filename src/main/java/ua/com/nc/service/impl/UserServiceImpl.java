@@ -1,6 +1,6 @@
 package ua.com.nc.service.impl;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,7 +18,7 @@ import ua.com.nc.service.UserService;
 import java.time.OffsetDateTime;
 import java.util.*;
 
-@Log4j
+@Log4j2
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired

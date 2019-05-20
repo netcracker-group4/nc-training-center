@@ -1,7 +1,7 @@
 package ua.com.nc.controller;
 
 import com.google.gson.Gson;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +9,7 @@ import ua.com.nc.dao.interfaces.AbsenceReasonDao;
 import ua.com.nc.domain.AbsenceReason;
 import ua.com.nc.service.AbsenceReasonService;
 
-@Log4j
+@Log4j2
 @Controller
 @RequestMapping("/api/absence-reason")
 public class AbsenceReasonController {

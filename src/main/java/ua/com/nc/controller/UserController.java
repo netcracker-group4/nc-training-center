@@ -1,6 +1,6 @@
 package ua.com.nc.controller;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import ua.com.nc.service.UserService;
 
 import java.util.Map;
 
-@Log4j
+@Log4j2
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

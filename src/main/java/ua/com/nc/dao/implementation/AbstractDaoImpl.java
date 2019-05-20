@@ -1,6 +1,6 @@
 package ua.com.nc.dao.implementation;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.GenericDao;
 import ua.com.nc.domain.Entity;
@@ -16,7 +16,7 @@ import java.util.List;
  * @param <E> entity typeSqlQueriesProperties
  */
 
-@Log4j
+@Log4j2
 public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E> {
 
     Connection connection;

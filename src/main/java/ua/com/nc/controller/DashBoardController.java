@@ -1,7 +1,7 @@
 package ua.com.nc.controller;
 
 import com.google.gson.Gson;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ua.com.nc.service.DashBoardService;
 
-@Log4j
+@Log4j2
 @Controller
 @RequestMapping("/api/dashboard")
 public class DashBoardController {

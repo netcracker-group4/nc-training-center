@@ -1,6 +1,6 @@
 package ua.com.nc.controller;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,7 @@ import ua.com.nc.service.RoleService;
 
 import java.util.List;
 
-@Log4j
+@Log4j2
 @Controller
 @RequestMapping("/")
 public class IndexPageController {

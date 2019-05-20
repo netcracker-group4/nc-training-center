@@ -2,7 +2,7 @@ package ua.com.nc.security;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import ua.com.nc.exceptions.LogicException;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Log4j
+@Log4j2
 @Component("customSecuritySecurity")
 public class CustomSecurityService {
     @Autowired

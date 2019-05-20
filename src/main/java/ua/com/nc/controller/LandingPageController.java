@@ -1,7 +1,7 @@
 package ua.com.nc.controller;
 
 import com.google.gson.Gson;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ua.com.nc.service.LandingPageService;
 
 
-@Log4j
+@Log4j2
 @Controller
 @RequestMapping("/api/main-page")
 public class LandingPageController {

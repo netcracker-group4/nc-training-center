@@ -2,7 +2,7 @@ package ua.com.nc.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ import ua.com.nc.service.AttendanceService;
 
 import java.util.List;
 
-@Log4j
+@Log4j2
 @Controller
 @RequestMapping("/api/attendances")
 public class AttendanceController {

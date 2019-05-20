@@ -41,5 +41,5 @@ secrets.yml
 
 package-lock.json
 node_modules
-log
-log/*
+logs
+logs/*

@@ -1,6 +1,6 @@
 package ua.com.nc.controller;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +18,7 @@ import ua.com.nc.service.ReportService;
 
 import java.io.IOException;
 
-@Log4j
+@Log4j2
 @Controller
 public class ReportController {     //    /download-report/dashboard-report
 
