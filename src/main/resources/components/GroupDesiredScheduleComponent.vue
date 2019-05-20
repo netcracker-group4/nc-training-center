@@ -70,7 +70,7 @@
         },
         methods: {
             getColor(forInterval) {
-                return forInterval.colorsForDays[this.currentDay];
+                return forInterval.colorsForWeekDays[this.currentDay];
             },
             errorAutoClosable(title) {
                 this.$snotify.error(title, {
@@ -84,7 +84,7 @@
         mounted() {
             if(store.getters.isAdmin || store.getters.isTrainer) {
                 let self = this;
-                axios.get('/api/desired-schedule/' + this.newGroupId)
+                axios.get('/api/desired-schedule/' + this.$route.params.id)
                     .then(function (response) {
                         self.allSchedules = response.data;
                         console.log(response.data);

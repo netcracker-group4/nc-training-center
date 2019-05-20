@@ -134,7 +134,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     public UserGroup getByUserAndCourse(Integer userId, Integer courseId) {
         String sql = userGroupSelectByUsrAndCourse;
         log.info(sql + " getByUserAndCourse usr = " + userId + " course= " + courseId);
-        return getUniqueByTwoId(sql, userId, courseId);
+        return getUniqueByTwoId(sql, courseId, userId);
     }
 
     private UserGroup getUniqueByTwoId(String sql, Integer id1, Integer id2) {
@@ -152,7 +152,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     public UserGroup getByUserAndGroup(Integer userId, Integer groupId) {
         String sql = userGroupSelectByUsrAndGroup;
         log.info(sql + " getByUserAndGroup usr = " + userId + " group= " + groupId);
-        return getUniqueByTwoId(sql, userId, groupId);
+        return getUniqueByTwoId(sql, groupId, userId);
     }
 
     @Override

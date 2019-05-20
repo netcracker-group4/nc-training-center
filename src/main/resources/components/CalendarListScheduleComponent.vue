@@ -81,6 +81,9 @@
                                                             <h3>{{computedTime(lesson.timeDate.substr(11, 5))}}</h3>
                                                             <v-spacer></v-spacer>
                                                             <h3>{{computedInterval(lesson.duration)}}</h3>
+                                                            <v-btn icon flat v-on:click="$router.push('/lessons/' + lesson.id)">
+                                                                <v-icon>arrow_forward</v-icon>
+                                                            </v-btn>
                                                         </v-toolbar>
 
                                                         <v-card-title primary-title>
@@ -125,6 +128,9 @@
                                     </span>
                                     <v-spacer></v-spacer>
                                     <span class="title font-weight-light">{{lesson.duration}} </span>
+                                    <v-btn icon flat v-on:click="$router.push('/lessons/' + lesson.id)">
+                                        <v-icon>arrow_forward</v-icon>
+                                    </v-btn>
                                 </v-card-title>
 
                                 <v-card-text class="headline font-weight-bold">

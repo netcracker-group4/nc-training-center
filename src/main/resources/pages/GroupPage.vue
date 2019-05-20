@@ -139,49 +139,54 @@
                 let self = this;
                 return this.students.filter(e => e.id === self.$store.state.user.id).length > 0;
             },
-            downloadGroupAttendanceReport(){
+            downloadGroupAttendanceReport() {
                 window.open("/download-report/attendance-report/" + this.id, "_blank");
             },
+            loadAdditional() {
+                let self = this;
+                axios.get('/api/groups/' + self.id + '/course')
+                    .then(function (response) {
+                        self.course = response.data;
+                    }).catch(function (error) {
+                    console.log(error);
+                });
+                axios.get('/api/groups/' + self.id + '/trainer')
+                    .then(function (response) {
+                        self.teacher = response.data;
+                    });
+                axios.get('/api/groups/' + self.id + '/users')
+                    .then(function (response) {
+                        self.students = response.data;
+                        if (self.$store.state.userRoles.includes('ADMIN') ||
+                            parseInt(self.$store.state.user.id) === parseInt(self.course.teacher.id) ||
+                            self.isStudentOfGroup()) {
+                        } else {
+                            self.$router.push('/403');
+                        }
 
+                    }).catch(function (error) {
+                    console.log(error);
+                });
+                axios.get('/api/groups/' + self.id + '/getAttendanceGraph')
+                    .then(function (response) {
+                        self.reasons = response.data;
+                        console.log(response.data);
+                    }).catch(function (error) {
+                    console.log(error);
+                });
+            }
         },
         mounted() {
             let self = this;
             axios.get('/api/groups/' + self.id)
                 .then(function (response) {
                     self.group = response.data;
-                }).catch(function (error) {
-                console.log(error);
-            });
-            axios.get('/api/groups/' + self.id + '/course')
-                .then(function (response) {
-                    self.course = response.data;
-                }).catch(function (error) {
-                console.log(error);
-            });
-            axios.get('/api/groups/' + self.id + '/trainer')
-                .then(function (response) {
-                    self.teacher = response.data;
+                    self.loadAdditional();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    self.$router.push('/404')
                 });
-            axios.get('/api/groups/' + self.id + '/users')
-                .then(function (response) {
-                    self.students = response.data;
-                    if (self.$store.state.userRoles.includes('ADMIN') ||
-                        parseInt(self.$store.state.user.id) === parseInt(self.course.teacher.id) ||
-                        self.isStudentOfGroup()) {
-                    } else {
-                        self.$router.push('/403');
-                    }
-
-                }).catch(function (error) {
-                console.log(error);
-            });
-            axios.get('/api/groups/'+ self.id + '/getAttendanceGraph')
-                .then(function (response) {
-                    self.reasons = response.data;
-                    console.log(response.data);
-                }).catch(function (error) {
-                console.log(error);
-            });
         },
         computed: {
             headers() {

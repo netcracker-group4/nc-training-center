@@ -39,8 +39,6 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private UserGroupDao userGroupDao;
 
-//    private CourseStatusDao statusDao;
-
     @Override
     public void add(Course course) {
         courseDao.insert(course);

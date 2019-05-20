@@ -16,7 +16,7 @@
             <v-layout row wrap>
                 <v-flex d-flex style="margin-bottom: 50px">
                     <div>
-                        <h2>All ungrouped students for a course " {{this.course.name}} "</h2>
+                        <h2>All ungrouped students for a course " {{course.name}} "</h2>
                         <table class="zui-table ">
                             <thead class="thead-dark">
                             <tr>
@@ -170,7 +170,7 @@
                     });
             },
             getColor(forInterval) {
-                return forInterval.colorsForDays[this.currentDay];
+                return forInterval.colorsForWeekDays[this.currentDay];
             },
             addGroup() {
                 this.groups.push({
@@ -269,7 +269,7 @@
                         self.errorAutoClosable(error.response.data);
                         console.log(error);
                     });
-                axios.get('/api/desired-schedule/' + self.$route.params.id)
+                axios.get('/api/getcourses/' + self.$route.params.id)
                     .then(function (response) {
                         self.course = response.data;
                     })

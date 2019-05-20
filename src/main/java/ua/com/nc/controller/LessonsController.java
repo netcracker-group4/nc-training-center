@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ua.com.nc.dao.interfaces.LessonDao;
 import ua.com.nc.dto.DateDeserializer;
 import ua.com.nc.dto.DtoLesson;
 import ua.com.nc.service.LessonsService;
@@ -24,9 +23,8 @@ public class LessonsController {
 
     @Autowired
     private LessonsService lessonsService;
-    @Autowired
-    private LessonDao lessonDao;
 
+    // default converter doesn't have custom adapter specified
     private Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, (JsonSerializer<Timestamp>)
             (timestamp, type, jsonSerializationContext) -> new JsonPrimitive(timestamp.toString())).create();
 
@@ -49,7 +47,7 @@ public class LessonsController {
     @RequestMapping(method = RequestMethod.GET, value = "/trainer/{userId}")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToSeeScheduleOf(authentication, #userId)")
     public String getAllForTrainer(@PathVariable Integer userId) {
-        return gson.toJson(lessonsService.getAllForETrainer(userId));
+        return gson.toJson(lessonsService.getAllForTrainer(userId));
     }
 
     @ResponseBody
@@ -77,13 +75,13 @@ public class LessonsController {
     @RequestMapping(method = RequestMethod.POST, value = "/{lessonId}")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToCancelLesson(authentication, #lessonId)")
     public String cancelLesson(@PathVariable Integer lessonId) {
-        return lessonsService.cancelLesson(lessonId);
+        return lessonsService.invertIsCanceledForLesson(lessonId);
     }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/lesson/{lessonId}")
     public String getLesson(@PathVariable String lessonId) {
-        return gson.toJson(lessonDao.getEntityById(Integer.parseInt(lessonId)));
+        return gson.toJson(lessonsService.getLessonById(Integer.parseInt(lessonId)));
     }
 
 

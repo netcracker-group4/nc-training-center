@@ -24,71 +24,87 @@ import java.util.List;
 @Service
 public class DashBoardServiceImpl implements DashBoardService {
     @Autowired
-    private
-    LevelDao levelDao;
+    private LevelDao levelDao;
     @Autowired
-    private
-    CourseDao courseDao;
+    private CourseDao courseDao;
     @Autowired
-    private
-    UserDao userDao;
+    private UserDao userDao;
     @Autowired
-    private
-    GroupDao groupDao;
+    private GroupDao groupDao;
 
     @Override
     public List<DTOLevel> getLevelAndQuantity() {
         List<DTOLevel> dtoLevels = new ArrayList<>();
         List<Level> levelList = levelDao.getAll();
         for (Level level : levelList) {
-            List<DTOLevel.DTOCourseGroup> dtoCourseGroups = new ArrayList<>();
-            List<Course> courses = courseDao.getAllByLevel(level.getId());
-
-            for (Course course : courses) {
-                List<Group> groups = groupDao.getAllGroupsOfCourse(course.getId());
-                for (Group group : groups) {
-                    dtoCourseGroups.add(new DTOLevel.DTOCourseGroup(course, group));
-                }
-            }
-            dtoLevels.add(new DTOLevel(level, dtoCourseGroups.size(), dtoCourseGroups));
+            dtoLevels.add(getDtoLevel(level));
         }
         return dtoLevels;
     }
+
+    private DTOLevel getDtoLevel(Level level) {
+        List<DTOLevel.DTOCourseGroup> dtoCourseGroups = new ArrayList<>();
+        List<Course> courses = courseDao.getAllByLevel(level.getId());
+        for (Course course : courses) {
+            dtoCourseGroups.addAll(getAllGroupsOfCourse(course));
+        }
+        return new DTOLevel(level, dtoCourseGroups.size(), dtoCourseGroups);
+    }
+
+    private List<DTOLevel.DTOCourseGroup> getAllGroupsOfCourse(Course course) {
+        List<DTOLevel.DTOCourseGroup> dtoGroupsForCourse = new ArrayList<>();
+        List<Group> groups = groupDao.getAllGroupsOfCourse(course.getId());
+        groups.forEach(g -> dtoGroupsForCourse.add(new DTOLevel.DTOCourseGroup(course, g)));
+        return dtoGroupsForCourse;
+    }
+
 
     @Override
     public List<DTOTrainer> getLevelAndTrainers() {
         List<DTOTrainer> dtoTrainers = new ArrayList<>();
         List<User> trainers = userDao.getAllTrainers();
         for (User trainer : trainers) {
-            List<DTOTrainer.CourseAndLevel> courseAndLevels = new ArrayList<>();
-            List<Level> levels = levelDao.getAllByTrainer(trainer.getId());
-            List<Course> courses = courseDao.getAllByTrainer(trainer.getId());
-            for (Course course : courses) {
-                Level level = findById(levels, course.getLevel());
-                courseAndLevels.add(new DTOTrainer.CourseAndLevel(course, level));
-            }
-            dtoTrainers.add(new DTOTrainer(trainer, courseAndLevels.size(), courseAndLevels));
+            DTOTrainer dtoTrainer = getDtoTrainer(trainer);
+            dtoTrainers.add(dtoTrainer);
         }
         return dtoTrainers;
     }
+
+    private DTOTrainer getDtoTrainer(User trainer) {
+        List<Course> courses = courseDao.getAllByTrainer(trainer.getId());
+        List<DTOTrainer.CourseAndLevel> courseAndLevels = new ArrayList<>();
+        List<Level> levels = levelDao.getAllByTrainer(trainer.getId());
+        for (Course course : courses) {
+            Level level = findById(levels, course.getLevel());
+            DTOTrainer.CourseAndLevel courseAndLevel = new DTOTrainer.CourseAndLevel(course, level);
+            courseAndLevels.add(courseAndLevel);
+        }
+        return new DTOTrainer(trainer, courseAndLevels.size(), courseAndLevels);
+    }
+
 
     @Override
     public List<CourseAndGroups> getTrainingAndQuantity() {
         List<Course> courses = courseDao.getAll();
         List<CourseAndGroups> courseAndGroups = new ArrayList<>();
         for (Course course : courses) {
-            int numberOfEmployeesInCourse = 0;
-            List<Group> groups = groupDao.getAllGroupsOfCourse(course.getId());
-            List<DtoGroup> groupAndQuantities = new ArrayList<>();
-            for (Group group : groups) {
-                int numberOfEmployeesInGroup = groupDao.getNumberOfEmployeesInGroup(group.getId());
-                numberOfEmployeesInCourse += numberOfEmployeesInGroup;
-                groupAndQuantities.add(new DtoGroup(group.getId(), group.getTitle(),
-                        numberOfEmployeesInGroup));
-            }
-            courseAndGroups.add(new CourseAndGroups(course, numberOfEmployeesInCourse, groupAndQuantities));
+            CourseAndGroups courseAndGroups1 = getCourseAndGroups(course);
+            courseAndGroups.add(courseAndGroups1);
         }
         return courseAndGroups;
+    }
+
+    private CourseAndGroups getCourseAndGroups(Course course) {
+        int numberOfEmployeesInCourse = 0;
+        List<Group> groups = groupDao.getAllGroupsOfCourse(course.getId());
+        List<DtoGroup> groupAndQuantities = new ArrayList<>();
+        for (Group group : groups) {
+            int numberOfEmployeesInGroup = groupDao.getNumberOfEmployeesInGroup(group.getId());
+            numberOfEmployeesInCourse += numberOfEmployeesInGroup;
+            groupAndQuantities.add(
+                    new DtoGroup(group.getId(), group.getTitle(), numberOfEmployeesInGroup));
+        }
+        return new CourseAndGroups(course, numberOfEmployeesInCourse, groupAndQuantities);
     }
 
 
