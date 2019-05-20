@@ -1,6 +1,7 @@
 <template>
     <div>
-        <v-container>
+        <progress-circular-component v-if="loading"></progress-circular-component>
+        <v-container v-if="!loading">
 
             <basic-user-info-component :user="user" :groups="groups" :trainers="trainers"
                                        :elem-name="userComponentHeader"/>
@@ -44,6 +45,7 @@
     import UsersCourses from "../components/UsersCourses.vue";
     import SubordinatesComponent from "../components/SubordinatesComponent.vue";
     import UserAttendanceProgress from "../components/UserAttendanceProgress.vue";
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         components: {
@@ -54,10 +56,12 @@
             UsersGroupsAndCourses,
             UsersCourses,
             SubordinatesComponent,
-            UserAttendanceProgress
+            UserAttendanceProgress,
+            ProgressCircularComponent
         },
         data: function () {
             return {
+                loading :true,
                 dialog: false,
                 user: '',
                 right: null,
@@ -185,6 +189,7 @@
                         if (self.isTrainer) {
                             self.loadCourses();
                         }
+                        self.loading = false;
                     }).catch(function (error) {
                     console.log(error);
                     self.errorAutoClosable(error.response.data);

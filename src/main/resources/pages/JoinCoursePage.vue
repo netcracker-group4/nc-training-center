@@ -1,7 +1,9 @@
 <!--suppress ALL -->
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div class="row">
-        <v-container fluid grid-list-md>
+        <progress-circular-component v-if="loading"></progress-circular-component>
+
+        <v-container v-if="!loading" fluid grid-list-md>
             <v-layout row wrap>
                 <v-flex d-flex style="margin-bottom: 50px">
                     <div>
@@ -58,9 +60,13 @@
 
 <script>
     import axios from 'axios';
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         name: "JoinCoursePage",
+        components: {
+            ProgressCircularComponent
+        },
         display: "Table",
         data() {
             return {
@@ -84,7 +90,8 @@
                     value: 'dayOfWeek'
                 }],
                 suitabilities: [],
-                activeSuitability: null
+                activeSuitability: null,
+                loading : true
             }
         },
         methods: {
@@ -161,6 +168,7 @@
                         }));
                         console.log(self.dayIntervals);
                         console.log(self.desiredSchedule);
+                        self.loading = false;
                     })
                     .catch(function (error) {
                         // self.errorAutoClosable(error.response.data);

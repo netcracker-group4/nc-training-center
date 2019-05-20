@@ -133,6 +133,7 @@
                             s.groups.forEach(function (ee) {
                                 self.allGroups.push(ee.group);
                             });
+                            self.$emit('loaded');
                             self.groupsForCourses[s.course.id] = s.groups;
                         });
                     })

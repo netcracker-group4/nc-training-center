@@ -1,6 +1,8 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container>
-        <v-layout row wrap>
+        <progress-circular-component v-if="loading"></progress-circular-component>
+
+        <v-layout v-if="loading" row wrap>
             <v-flex xs12 sm12>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>Courses</v-toolbar-title>
@@ -35,12 +37,17 @@
 </template>
 <script>
     import axios from 'axios'
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         name: "AdminCourses",
+        components: {
+            ProgressCircularComponent
+        },
         data: function () {
             return {
                 nums: [10, 25, {"text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1}],
+                loading: true,
                 headers: [
                     {
                         text: 'Name of the course',
@@ -69,6 +76,7 @@
             axios.get('/api/dashboard/training-and-quantity')
                 .then(function (response) {
                     self.coursesAndQuantities = response.data;
+                    self.loading = false;
                 })
                 .catch(function (error) {
                     console.log(error);

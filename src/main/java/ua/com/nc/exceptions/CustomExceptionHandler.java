@@ -43,7 +43,6 @@ public class CustomExceptionHandler {
     @ResponseBody
     public String handlePersistException(PersistException exception) {
         log.error(exception.getMessage(), exception);
-        log.trace(exception.getMessage(), exception);
         return "Oops \nServer error happened\n" +
                 "Please go watch some YouTube video while we fix it ";
     }
@@ -58,7 +57,7 @@ public class CustomExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public String  handleLogicException(LogicException exception) {
-        log.trace(exception.getMessage(), exception);
+        log.error(exception.getMessage(), exception);
         return exception.getMessage();
     }
 
@@ -66,7 +65,7 @@ public class CustomExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public String handleAccessDeniedException(AccessDeniedException exception) {
-        log.trace(exception.getMessage(), exception);
+        log.error(exception.getMessage(), exception);
         return "Access denied";
     }
 
