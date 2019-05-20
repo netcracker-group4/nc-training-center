@@ -23,8 +23,7 @@ import java.io.FileInputStream;
 
 @Log4j
 @Controller
-@CrossOrigin(origins = "http://localhost:8000")
-@RequestMapping("/attachments")
+@RequestMapping("/api/attachments")
 public class AttachmentController {
     @Autowired
     AttachmentDao attachmentDao;

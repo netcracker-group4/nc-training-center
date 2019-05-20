@@ -18,8 +18,7 @@ import java.util.Map;
 
 @Log4j
 @RestController
-//@CrossOrigin(origins = "http://localhost:8000")
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
     @Autowired
     private UserService userService;

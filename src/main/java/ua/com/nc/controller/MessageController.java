@@ -10,19 +10,17 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import ua.com.nc.dao.interfaces.ChatDao;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ua.com.nc.domain.Chat;
 import ua.com.nc.domain.Message;
 import ua.com.nc.domain.User;
-import ua.com.nc.exceptions.CustomAccessDeniedHandler;
 import ua.com.nc.service.ChatService;
 import ua.com.nc.service.MessageService;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Log4j
@@ -52,7 +50,7 @@ public class MessageController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/messages")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/messages")
     public ResponseEntity<?> getAll(@AuthenticationPrincipal User user,
                                     @RequestParam(name="chatId") Integer chatId){
         Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd.HH.mm.ss").serializeNulls().create();

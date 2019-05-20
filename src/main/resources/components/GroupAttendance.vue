@@ -28,7 +28,7 @@
             }
         },
         mounted() {
-            axios.get('http://localhost:8080/groups/' + this.groupId + '/attendance-graph')
+            axios.get('/api/groups/' + this.groupId + '/attendance-graph')
                 .then(function (response) {
                     self.reasons = response.data;
                     console.log(response.data);
@@ -39,5 +39,33 @@
     }
 </script>
 <style scoped>
+
+    .table_user td:first-child {
+        background: #e6e4ee;
+        /*border-bottom: 2px solid #e6e4ee;*/
+        border-left: none;
+    }
+
+    .table_user td {
+        border-right: 20px solid white;
+        border-left: 20px solid white;
+        border-bottom: 2px solid #e6e4ee;
+        padding: 12px 10px;
+        color: #8b8e91;
+    }
+
+    .table_user tr:last-child td {
+        border-bottom: none;
+    }
+
+    .attendance {
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    .margin {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
 
 </style>

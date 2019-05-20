@@ -56,7 +56,7 @@
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/attachments/all')
+            axios.get('/api/attachments/all')
             .then(function (response) {
                 self.attachments= response.data;
             })
@@ -70,18 +70,18 @@
                 let imagefile = document.querySelector('#file');
 
                 let request = new XMLHttpRequest();
-                request.open('POST', 'http://localhost:8080/attachments/upload-file');
+                request.open('POST', 'http://localhost:8080/api/attachments/upload-file');
                 form.append('file', imagefile.files[0]);
                 form.append('lessonId',this.lessonId);
                 request.send(form);
 
             },
             downloadFile(Id){
-                window.open('http://localhost:8080/attachments/download/'+Id);
+                window.open('http://localhost:8080/api/attachments/download/'+Id);
             },
 
             deleteFile(fileId){
-                axios.delete('http://localhost:8080/attachments/' + fileId)
+                axios.delete('/api/attachments/' + fileId)
                     .catch(function (error) {
                         console.log(error);
                     });

@@ -114,7 +114,7 @@
             deleteStudent(id) {
                 let self = this;
                 if (confirm("Are you sure you want to delete " + this.findUserById(id).firstName + ' ' + this.findUserById(id).lastName)) {
-                    axios.delete('http://localhost:8080/groups/' + this.group.id + '/user/' + id)
+                    axios.delete('/api/groups/' + this.group.id + '/user/' + id)
                         .then(function (response) {
                             self.successAutoClosable('Employee has been removed from group');
                             self.students = self.students.filter(function (e) {
@@ -133,7 +133,7 @@
                 return this.students.find(s => s.id == id);
             },
             forwardToUserPage(id) {
-                this.$router.push('/userpage/' + id)
+                this.$router.push('/users/' + id)
             },
             isStudentOfGroup() {
                 let self = this;
@@ -146,23 +146,23 @@
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/groups/' + self.id)
+            axios.get('/api/groups/' + self.id)
                 .then(function (response) {
                     self.group = response.data;
                 }).catch(function (error) {
                 console.log(error);
             });
-            axios.get('http://localhost:8080/groups/' + self.id + '/course')
+            axios.get('/api/groups/' + self.id + '/course')
                 .then(function (response) {
                     self.course = response.data;
                 }).catch(function (error) {
                 console.log(error);
             });
-            axios.get('http://localhost:8080/groups/' + self.id + '/trainer')
+            axios.get('/api/groups/' + self.id + '/trainer')
                 .then(function (response) {
                     self.teacher = response.data;
                 });
-            axios.get('http://localhost:8080/groups/' + self.id + '/users')
+            axios.get('/api/groups/' + self.id + '/users')
                 .then(function (response) {
                     self.students = response.data;
                     if (self.$store.state.userRoles.includes('ADMIN') ||
@@ -175,7 +175,7 @@
                 }).catch(function (error) {
                 console.log(error);
             });
-            axios.get('http://localhost:8080/groups/'+ self.id + '/getAttendanceGraph')
+            axios.get('/api/groups/'+ self.id + '/getAttendanceGraph')
                 .then(function (response) {
                     self.reasons = response.data;
                     console.log(response.data);

@@ -3,7 +3,6 @@ package ua.com.nc.controller;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
 import ua.com.nc.domain.User;
 import ua.com.nc.service.AttendanceReminderService;
@@ -16,7 +15,6 @@ import java.util.Set;
 
 @Log4j
 @Controller
-@CrossOrigin(origins = "http://localhost:8000")
 public class AttendanceReminderController {
 
     @Autowired

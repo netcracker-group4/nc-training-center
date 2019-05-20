@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Log4j
 @Controller
-@RequestMapping("/groups")
+@RequestMapping("/api/groups")
 public class GroupController {
     @Autowired
     private GroupDao groupDao;

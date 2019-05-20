@@ -61,12 +61,12 @@
         },
         methods: {
             goToGroupPage(id) {
-                this.$router.push("/group/" + id)
+                this.$router.push("/groups/" + id)
             }
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/groups/groups-and-quantity')
+            axios.get('/api/groups/groups-and-quantity')
                 .then(function (response) {
                     self.groupsAndQuantities = response.data;
                 })

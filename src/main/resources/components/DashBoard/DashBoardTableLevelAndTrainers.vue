@@ -112,20 +112,20 @@
                 });
             },
             goToTrainerPage(trainerId) {
-                this.$router.push('/userpage/' + trainerId);
+                this.$router.push('/users/' + trainerId);
             },
             goToCoursePage(trainerId) {
                 this.$router.push('/courses/' + trainerId);
             },
             downloadDashboardReport(){
-                window.open("http://localhost:8080/download-report/dashboard-report", "_blank");
+                window.open("http://localhost:8080/api/download-report/dashboard-report", "_blank");
             },
             trainerName: item => item.trainer.firstName + ' ' + item.trainer.lastName
         },
         mounted() {
             if(store.getters.isAdmin) {
                 let self = this;
-                axios.get('http://localhost:8080/dashboard/level-and-trainers')
+                axios.get('/api/dashboard/level-and-trainers')
                     .then(function (response) {
                         self.trainersAndLevels = response.data;
                         self.trainersAndLevels.forEach(function (value) {

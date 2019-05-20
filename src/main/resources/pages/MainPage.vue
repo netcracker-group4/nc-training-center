@@ -1,6 +1,5 @@
 <template>
     <v-container>
-        {{items}}
         <v-layout wrap row>
             <v-flex xs10 sm10 md10 offset-xs1 offset-sm1 offset-md1>
                 <v-card v-for="course in courses" :key="course.id" class="course">
@@ -55,59 +54,19 @@
         data: function () {
             return {
                 courses: [],
-                trainers: [],
-                items: [
-                    {
-                        title: 'Main', icon: 'home', link: '/', canBeShown: function () {
-                            return true
-                        }
-                    },
-                    {
-                        title: 'Users', icon: 'person', link: '/userpage', canBeShown: function () {
-                            return true
-                        }
-                    },
-                    {
-                        title: 'Courses', icon: 'view_list', link: '/admincourses', canBeShown: function () {
-                            return true
-                        }
-                    },
-                    {
-                        title: 'Groups', icon: 'group', link: '/allgroups', canBeShown: function () {
-                            return true
-                        }
-                    },
-                    {
-                        title: 'Dashboard', icon: 'dashboard', link: '/dashboard',
-                        canBeShown: function () {
-                            return this.$store.getters.isAdmin
-                        }
-                    },
-                    {
-                        title: 'Infodesk', icon: 'contact_support', link: '/infodesk',
-                        canBeShown: function () {
-                            return this.$store.getters.isAdmin || this.$store.state.userRoles.includes('EMPLOYEE')
-                        }
-                    },
-                    {
-                        title: 'Absence reasons', icon: 'add', link: '/absence-reasons',
-                        canBeShown: function () {
-                            return this.$store.getters.isAdmin
-                        }
-                    }
-                ]
+                trainers: []
             }
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/main-page/courses-on-landing-page')
+            axios.get('/api/main-page/courses-on-landing-page')
                 .then(function (response) {
                     self.courses = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-            axios.get('http://localhost:8080/main-page/trainers-on-landing-page')
+            axios.get('/api/main-page/trainers-on-landing-page')
                 .then(function (response) {
                     self.trainers = response.data;
                 })

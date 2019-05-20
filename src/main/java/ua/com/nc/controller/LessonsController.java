@@ -19,8 +19,7 @@ import java.sql.Timestamp;
 
 @Log4j
 @Controller
-@CrossOrigin(origins = "http://localhost:8000")
-@RequestMapping(value = "/schedule")
+@RequestMapping(value = "/api/schedule")
 public class LessonsController {
 
     @Autowired

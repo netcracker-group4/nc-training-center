@@ -69,7 +69,7 @@
         },
         mounted() {
             let self = this;
-            axios.get('http://localhost:8080/dashboard/training-and-quantity')
+            axios.get('/api/dashboard/training-and-quantity')
                 .then(function (response) {
                     self.coursesAndQuantities = response.data;
                 })
@@ -83,7 +83,7 @@
             },
             deleteCourse(courseId) {
                 if (confirm("Are you sure you want to delete " + this.findCourseById(courseId).name)) {
-                    axios.delete('http://localhost:8080/getcourses/' + courseId)
+                    axios.delete('/api/getcourses/' + courseId)
                         .catch(function (error) {
                             console.log(error);
                         });
@@ -93,10 +93,10 @@
                 return this.coursesAndQuantities.find(c => c.course.id === id).course;
             },
             update(courseId) {
-                this.$router.push('/coursecreate/' + courseId);
+                this.$router.push('/courses/' + courseId + '/edit');
             },
             createCourse() {
-                this.$router.push('/coursecreate');
+                this.$router.push('/courses/new');
             }
         }
     }
