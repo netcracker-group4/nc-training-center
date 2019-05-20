@@ -46,6 +46,8 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     private String selectCourseByFeedbackId;
     @Value("${course.select-course-by-trainer-and-by-employee}")
     private String courseSelectAllByTrainerAndEmployee;
+    @Value("${course.edit}")
+    private String editCourse;
 
 
     @Autowired
@@ -217,5 +219,21 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
         return courses;
     }
 
-
+    @Override
+    public void edit(int id, String name, int lvl, int statusId, boolean isLanding, java.sql.Date starts, java.sql.Date ends, String desc) {
+        String sql = editCourse;
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1,name);
+            statement.setInt(2,lvl);
+            statement.setInt(3,statusId);
+            statement.setDate(4,starts);
+            statement.setDate(5,ends);
+            statement.setBoolean(6,isLanding);
+            statement.setString(7,desc);
+            statement.setInt(8,id);
+            statement.executeQuery();
+        } catch (SQLException e) {
+            log.trace(e);
+        }
+    }
 }

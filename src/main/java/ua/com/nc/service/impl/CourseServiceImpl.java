@@ -58,6 +58,23 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public void edit(int id, String name, String level, String courseStatus, String isOnLandingPage, String desc, String startDay, String endDay) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date starts = new Date();
+        Date ends = starts;
+        try {
+            starts = format.parse(startDay);
+            ends = format.parse(endDay);
+        } catch (ParseException e) {
+            log.trace(e);
+        }
+        int lvl = levelDao.getIdByName(level.trim());
+        int statusId = statusDao.getIdByName(courseStatus);
+        boolean isLanding = Boolean.parseBoolean(isOnLandingPage);
+        courseDao.edit(id,name,lvl, statusId, isLanding,new java.sql.Date(starts.getTime()),new java.sql.Date(ends.getTime()),desc);
+    }
+
+    @Override
     public Course stringToObjCourse(String name, String user, String level,
                                     String courseStatus, String imageUrl, String isOnLandingPage,
                                     String desc, String startDay, String endDay) {
@@ -75,7 +92,7 @@ public class CourseServiceImpl implements CourseService {
         } catch (ParseException e) {
             log.trace(e);
         }
-        int statusId = 1;
+        int statusId = statusDao.getIdByName(courseStatus);
         int lvl = levelDao.getIdByName(level.trim());
 
         return new Course(name, lvl, statusId, userId, imageUrl,

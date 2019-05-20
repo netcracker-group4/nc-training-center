@@ -9,7 +9,7 @@
         </div>
         <v-dialog  v-if="isAdmin" v-model="dialog" max-width="500px">
             <EditCourseComponent :trainers="trainers" :starting-day="startDay" :ending-day="endDay"
-                                :descr="description"/>
+                                :descr="description" :id="id"/>
         </v-dialog>
             <v-container
                     fluid

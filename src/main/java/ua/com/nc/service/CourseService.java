@@ -31,4 +31,7 @@ public interface CourseService {
     List<DtoCourse> getAllByTrainerAndEmployee(Integer trainerId, Integer employeeId);
 
     String saveDesired(Integer id, DesiredToSave desiredToSave);
+
+    void edit(int id, String name, String level, String courseStatus, String isOnLandingPage, String desc, String startDay, String endDay);
+
 }

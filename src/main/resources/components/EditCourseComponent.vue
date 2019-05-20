@@ -38,10 +38,27 @@
                                         :items="statuses"
 
                                         :menu-props="{ maxHeight: '300' }"
-                                        label="Set trainer"
+                                        label="Set status"
 
                                 ></v-select>
                             </v-flex>
+                        </v-flex>
+                        <v-flex xs10>
+                            <v-flex xs12 sm12>
+                                <v-radio-group v-model="level">
+                                    <v-radio
+                                            v-for="lvl in levels"
+                                            :key="lvl.id"
+                                            :label="lvl.title"
+                                            :value="lvl.title"
+                                    ></v-radio>
+                                </v-radio-group>
+                            </v-flex>
+                        </v-flex>
+                        <v-flex>
+                            <p style="margin-top: 3%">
+                                    <v-checkbox v-model="isOnLandingPage" :label="`Is on landing page? `">
+                                </v-checkbox></p>
                         </v-flex>
                         <v-layout row wrap>
                             <v-flex xs4>
@@ -111,16 +128,19 @@
     import axios from 'axios'
 
     export default {
-        props: {trainers: Array, endingDay: '', startingDay: '', descr: '',nm: ''},
+        props: {trainers: Array, endingDay: '', startingDay: '', descr: '',nm: '',id: 0},
         name: "EditCourseComponent",
         data(){
             return{
                 name: '',
                 status: '',
+                level:{title: ''},
                 description: '',
                 startDay: '',
                 endDay: '',
                 trainer: {firstName: '', lastName: ''},
+                isOnLandingPage: false,
+                levels: [],
                 statuses: [],
             }
 
@@ -128,7 +148,28 @@
         methods:{
             trainerName: item => item.firstName +" "+ item.lastName,
             save(){
-
+                let form = new FormData();
+                let request = new XMLHttpRequest();
+                try {
+                    if(this.id===undefined){
+                        request.open('POST', 'http://localhost:8080/getcourses/'+id+'/edit');
+                    } else{
+                        request.open('PUT', 'http://localhost:8080/getcourses/'+id+'/edit');
+                    }
+                    form.append('name', this.name);
+                    form.append('level', this.level);
+                    form.append('courseStatus', this.courseStatus);
+                    form.append('trainer', this.trainer);
+                    form.append('isOnLandingPage', this.isOnLandingPage);
+                    form.append('description', this.description);
+                    form.append('startDay', this.startDay);
+                    form.append('endDay', this.endDay);
+                    request.send(form);
+                }catch (e) {
+                    alert(e.toString());
+                }
+                alert('Course updated');
+                this.$router.push("/admincourses/"+id);
             }
         },
         mounted(){
@@ -140,6 +181,13 @@
             axios.get('http://localhost:8080/getInfo/getStatuses')
                 .then(function (response) {
                     self.statuses = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            axios.get('http://localhost:8080/getInfo/getLevels')
+                .then(function (response) {
+                    self.levels = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
