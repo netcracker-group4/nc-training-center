@@ -13,7 +13,7 @@ import ua.com.nc.service.FeedbackService;
 @RequestMapping("/api/feedback")
 public class FeedbackController {
     @Autowired
-    FeedbackService feedbackService;
+    private FeedbackService feedbackService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity<?> save(@RequestBody DtoFeedback dtoFeedback) {

@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 public class DesiredSchedule extends Entity {
     private int userId;
     private int courseId;
-    // m1 h1 m2 h2 day in [1,2,3,4,5,6,7]
+    // m1 h1 m2 h2 day in [0,1,2,3,4,5,6]
     private String cronInterval;
     private int suitability;
 
@@ -27,13 +27,4 @@ public class DesiredSchedule extends Entity {
         this.suitability = suitability;
     }
 
-    @Override
-    public String toString() {
-        return "DesiredSchedule{" +
-                "userId=" + userId +
-                ", courseId=" + courseId +
-                ", cronInterval='" + cronInterval + '\'' +
-                ", suitability=" + suitability +
-                '}';
-    }
 }

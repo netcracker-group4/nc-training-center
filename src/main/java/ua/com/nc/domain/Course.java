@@ -1,10 +1,11 @@
 package ua.com.nc.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.sql.Date;
-import java.util.Objects;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class Course extends Entity {
     private String name;
@@ -46,42 +47,4 @@ public class Course extends Entity {
         this.description = description;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Course)) return false;
-        if (!super.equals(o)) return false;
-        Course course = (Course) o;
-        return level == course.level &&
-                courseStatusId == course.courseStatusId &&
-                userId == course.userId &&
-                Objects.equals(name, course.name) &&
-                Objects.equals(imageUrl, course.imageUrl) &&
-                Objects.equals(startDate.toString(), course.startDate.toString()) &&
-                Objects.equals(endDate.toString(), course.endDate.toString()) &&
-                Objects.equals(isOnLandingPage, course.isOnLandingPage) &&
-                Objects.equals(description, course.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), name, level, courseStatusId,
-                userId, imageUrl, startDate.toString(), endDate.toString(),
-                isOnLandingPage, description);
-    }
-
-    @Override
-    public String toString() {
-        return "Course{" +
-                "name='" + name + '\'' +
-                ", level=" + level +
-                ", courseStatusId=" + courseStatusId +
-                ", userId=" + userId +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", isOnLandingPage=" + isOnLandingPage +
-                ", description='" + description + '\'' +
-                '}';
-    }
 }

@@ -1,10 +1,10 @@
 package ua.com.nc.domain;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Setter;
 
 @EqualsAndHashCode(callSuper = true)
-@Setter
+@Data
 public class UserGroup extends Entity {
     private Integer userId;
     private Integer groupId;
@@ -35,19 +35,4 @@ public class UserGroup extends Entity {
         this.attending = attending;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public Integer getGroupId() {
-        return groupId;
-    }
-
-    public Integer getCourseId() {
-        return courseId;
-    }
-
-    public boolean isAttending() {
-        return attending;
-    }
 }

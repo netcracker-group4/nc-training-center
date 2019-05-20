@@ -293,7 +293,8 @@
                         "attachments": [],
                         "isCanceled": false,
                         "duration": '01:00',
-                        isNew: true
+                        isNew: true,
+                        "isPerformed": false,
                     };
                 window.scrollTo(0, document.body.scrollHeight);
             },

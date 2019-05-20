@@ -26,9 +26,9 @@ import java.io.FileInputStream;
 @RequestMapping("/api/attachments")
 public class AttachmentController {
     @Autowired
-    AttachmentDao attachmentDao;
+    private AttachmentDao attachmentDao;
     @Autowired
-    AttachmentService service;
+    private AttachmentService service;
     @Autowired
     private RoleService roleService;
 

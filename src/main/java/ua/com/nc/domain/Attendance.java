@@ -22,12 +22,4 @@ public class Attendance extends Entity {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "id=" + id +
-                ", lessonId=" + lessonId +
-                ", userId=" + userId +
-                ", reason='" + reason + '\'' +
-                ", status='" + status + '\'';
-    }
 }

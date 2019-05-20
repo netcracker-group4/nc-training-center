@@ -32,13 +32,10 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     private String lessonDelete;
     @Value("${lesson.select-by-group-id}")
     private String selectByGroupId;
-
     @Value("${lesson.select-by-group-id-and-user-id}")
     private String getSelectByGroupIdAndUserId;
-
     @Value("${lesson.archive}")
     private String archiveLessonQuery;
-
     @Value("${lesson.select-by-employee-id}")
     private String selectByEmployeeId;
     @Value("${lesson.select-by-trainer-id}")
@@ -88,12 +85,13 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
         String[] intervalElems = entity.getDuration().split(":");
         statement.setString(5, intervalElems[0] + "h " + intervalElems[1] + "m");
         statement.setBoolean(6, entity.isCanceled());
+        statement.setBoolean(7, entity.isPerformed());
     }
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Lesson entity) throws SQLException {
         setAllFields(statement, entity);
-        statement.setInt(7, entity.getId());
+        statement.setInt(8, entity.getId());
     }
 
     @Override
@@ -107,9 +105,10 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
             Date timeDate = rs.getDate("time_date");
             Timestamp time = rs.getTimestamp("time_date");
             boolean isCanceled = rs.getBoolean("is_canceled");
+            boolean isPerformed = rs.getBoolean("performed");
             String duration = rs.getString("duration");
             Lesson lesson = new Lesson(id, groupId, topic, trainerId,
-                    timeDate, time, duration, isCanceled);
+                    timeDate, time, duration, isCanceled, isPerformed);
             lessons.add(lesson);
         }
         return lessons;

@@ -1,6 +1,7 @@
 package ua.com.nc.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,9 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class User extends Entity implements UserDetails {
     private String email;
@@ -50,110 +51,110 @@ public class User extends Entity implements UserDetails {
         this.setActive(isActive);
     }
 
-    public String getEmail() {
-        return email;
-    }
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        if (email != null) {
+//            this.email = email.trim();
+//        }
+//    }
+//
+//    public String getFirstName() {
+//        return firstName;
+//    }
+//
+//    public void setFirstName(String firstName) {
+//        if (firstName != null) {
+//            this.firstName = firstName.trim();
+//        }
+//    }
+//
+//    public String getLastName() {
+//        return lastName;
+//    }
+//
+//    public void setLastName(String lastName) {
+//        if (lastName != null) {
+//            this.lastName = lastName.trim();
+//        }
+//    }
+//
+//    public Integer getManagerId() {
+//        return managerId;
+//    }
+//
+//    public void setManagerId(Integer managerId) {
+//        if (managerId != null) {
+//            this.managerId = managerId;
+//        }
+//    }
+//
 
-    public void setEmail(String email) {
-        if (email != null) {
-            this.email = email.trim();
-        }
-    }
+//    public String getImageUrl() {
+//        return imageUrl;
+//    }
+//
+//    public void setImageUrl(String imageUrl) {
+//        if (imageUrl != null) {
+//            this.imageUrl = imageUrl;
+//        }
+//    }
+//
+//    public String getToken() {
+//        return token;
+//    }
+//
+//    public void setToken(String token) {
+//        this.token = token;
+//    }
+//
+//    public OffsetDateTime getCreated() {
+//        return created;
+//    }
+//
+//    public void setCreated(OffsetDateTime created) {
+//        this.created = created;
+//    }
+//
+//    public boolean isActive() {
+//        return isActive;
+//    }
+//
+//    public void setActive(boolean active) {
+//        isActive = active;
+//    }
 
-    public String getFirstName() {
-        return firstName;
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof User)) return false;
+//        User user = (User) o;
+//        return isActive() == user.isActive() &&
+//                Objects.equals(getEmail(), user.getEmail()) &&
+//                Objects.equals(getPassword(), user.getPassword()) &&
+//                Objects.equals(getFirstName(), user.getFirstName()) &&
+//                Objects.equals(getLastName(), user.getLastName()) &&
+//                Objects.equals(getManagerId(), user.getManagerId());
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(getEmail(), getPassword(), getFirstName(), getLastName(), getManagerId(), isActive());
+//    }
 
-    public void setFirstName(String firstName) {
-        if (firstName != null) {
-            this.firstName = firstName.trim();
-        }
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        if (lastName != null) {
-            this.lastName = lastName.trim();
-        }
-    }
-
-    public Integer getManagerId() {
-        return managerId;
-    }
-
-    public void setManagerId(Integer managerId) {
-        if (managerId != null) {
-            this.managerId = managerId;
-        }
-    }
-
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        if (imageUrl != null) {
-            this.imageUrl = imageUrl;
-        }
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public OffsetDateTime getCreated() {
-        return created;
-    }
-
-    public void setCreated(OffsetDateTime created) {
-        this.created = created;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return isActive() == user.isActive() &&
-                Objects.equals(getEmail(), user.getEmail()) &&
-                Objects.equals(getPassword(), user.getPassword()) &&
-                Objects.equals(getFirstName(), user.getFirstName()) &&
-                Objects.equals(getLastName(), user.getLastName()) &&
-                Objects.equals(getManagerId(), user.getManagerId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getEmail(), getPassword(), getFirstName(), getLastName(), getManagerId(), isActive());
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "email='" + getEmail() + '\'' +
-                ", password='" + getPassword() + '\'' +
-                ", firstName='" + getFirstName() + '\'' +
-                ", lastName='" + getLastName() + '\'' +
-                ", managerId=" + getManagerId() +
-                ", isActive=" + isActive() +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "email='" + getEmail() + '\'' +
+//                ", password='" + getPassword() + '\'' +
+//                ", firstName='" + getFirstName() + '\'' +
+//                ", lastName='" + getLastName() + '\'' +
+//                ", managerId=" + getManagerId() +
+//                ", isActive=" + isActive() +
+//                '}';
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -176,9 +177,9 @@ public class User extends Entity implements UserDetails {
         return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -200,11 +201,11 @@ public class User extends Entity implements UserDetails {
         return isActive;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
+//    public Set<Role> getRoles() {
+//        return roles;
+//    }
+//
+//    public void setRoles(Set<Role> roles) {
+//        this.roles = roles;
+//    }
 }

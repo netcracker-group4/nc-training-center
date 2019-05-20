@@ -84,7 +84,7 @@
         mounted() {
             if(store.getters.isAdmin || store.getters.isTrainer) {
                 let self = this;
-                axios.get('/api/desired-schedule/' + this.groupId)
+                axios.get('/api/desired-schedule/' + this.newGroupId)
                     .then(function (response) {
                         self.allSchedules = response.data;
                         console.log(response.data);
@@ -101,6 +101,11 @@
                         console.log(error);
                         self.errorAutoClosable(error.response.data);
                     });
+            }
+        },
+        computed:{
+            newGroupId(){
+                return this.groupId;
             }
         }
     }

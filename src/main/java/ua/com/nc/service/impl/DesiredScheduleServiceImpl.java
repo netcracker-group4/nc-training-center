@@ -151,13 +151,31 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
         List<Suitability> all = suitabilityDao.getAll();
         for (User user : userDao.getByGroupId(groupId)) {
             UserGroup byUserAndGroup = userGroupDao.getByUserAndGroup(user.getId(), groupId);
-            scheduleForUsers.add(new ScheduleForUser(byUserAndGroup.getId(), user,
-                    byUserAndGroup.isAttending(),
-                    parseSchedules(desiredScheduleList, all),
-                    startOfDay, endOfDay));
+            if (byUserAndGroup != null) {
+                scheduleForUsers.add(new ScheduleForUser(byUserAndGroup.getId(), user,
+                        byUserAndGroup.isAttending(),
+                        parseSchedules(desiredScheduleList, all),
+                        startOfDay, endOfDay));
+            }
         }
         return scheduleForUsers;
     }
+//  @Override
+//    public List<ScheduleForUser> getDesiredScheduleForGroup(int groupId) throws Exception {
+//        List<DesiredSchedule> desiredScheduleList = desiredScheduleDao.getAllForGroup(groupId);
+//        List<ScheduleForUser> scheduleForUsers = new ArrayList<>();
+//        List<Suitability> all = suitabilityDao.getAll();
+//        for (User user : userDao.getByGroupId(groupId)) {
+//            UserGroup byUserAndGroup = userGroupDao.getByUserAndGroup(user.getId(), groupId);
+//            if (byUserAndGroup != null) {
+//                scheduleForUsers.add(new ScheduleForUser(byUserAndGroup.getId(), user,
+//                        byUserAndGroup.isAttending(),
+//                        parseSchedules(desiredScheduleList, all),
+//                        startOfDay, endOfDay));
+//            }
+//        }
+//        return scheduleForUsers;
+//    }
 
 
     @Override

@@ -1,8 +1,11 @@
 package ua.com.nc.domain;
 
-import java.util.Objects;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class AttendanceStatus extends Entity {
     private String title;
 
@@ -15,25 +18,4 @@ public class AttendanceStatus extends Entity {
         this.title = title;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Course)) return false;
-        if (!super.equals(o)) return false;
-        AttendanceStatus status = (AttendanceStatus) o;
-        return title.equals(status.title);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), title);
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 }

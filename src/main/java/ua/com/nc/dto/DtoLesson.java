@@ -20,6 +20,7 @@ public class DtoLesson {
     private Timestamp timeDate;
     private String duration;
     private boolean isCanceled;
+    private boolean isPerformed;
     private List<Attachment> attachments;
 
     public DtoLesson(Lesson lesson, String trainerName, List<Attachment> attachments) {
@@ -32,6 +33,7 @@ public class DtoLesson {
         this.timeDate = lesson.getTime();
         this.duration = lesson.getDuration();
         this.attachments = attachments;
+        this.isPerformed = lesson.isPerformed();
     }
 
 
@@ -39,7 +41,7 @@ public class DtoLesson {
 //        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.Z");
         String dateString = timeDate.toString().substring(0, 10);
         java.sql.Date sqlDate = java.sql.Date.valueOf(dateString);
-        return new Lesson(id, groupId, topic, trainerId, sqlDate, timeDate, duration, isCanceled);
+        return new Lesson(id, groupId, topic, trainerId, sqlDate, timeDate, duration, isCanceled, isPerformed);
     }
 
 

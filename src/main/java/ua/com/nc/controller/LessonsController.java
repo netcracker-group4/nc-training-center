@@ -23,9 +23,9 @@ import java.sql.Timestamp;
 public class LessonsController {
 
     @Autowired
-    LessonsService lessonsService;
+    private LessonsService lessonsService;
     @Autowired
-    LessonDao lessonDao;
+    private LessonDao lessonDao;
 
     private Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, (JsonSerializer<Timestamp>)
             (timestamp, type, jsonSerializationContext) -> new JsonPrimitive(timestamp.toString())).create();
