@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.CourseDao;
-import ua.com.nc.dao.interfaces.SuitabilityDao;
 import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Course;
@@ -30,8 +29,8 @@ public class CourseController {
     private CourseService courseService;
     @Autowired
     private UserDao userDao;
-    @Autowired
-    private SuitabilityDao suitabilityDao;
+    /*@Autowired
+    private SuitabilityDao suitabilityDao;*/
 
     private final Gson gson = new Gson();
     @Autowired
@@ -52,6 +51,7 @@ public class CourseController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseBody
     public void deleteCourse(@PathVariable String id) {
         courseDao.delete(Integer.parseInt(id));
     }
@@ -71,8 +71,9 @@ public class CourseController {
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT, value = "{id}/create")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/create")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseBody
     public void update(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                        @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
                        @RequestParam(name = "image") MultipartFile image,
@@ -86,7 +87,25 @@ public class CourseController {
         courseDao.update(course);
     }
 
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/edit")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseBody
+    public void edit(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
+                       @RequestParam(name = "courseStatus") String courseStatus,
+                       @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
+                       @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
+                       @PathVariable int id) {
+        courseService.edit(id,name, level, courseStatus,
+                isOnLandingPage, desc, startDay, endDay);
+    }
 
+    /*@RequestMapping(value = {"/{id}/desired/ungrouped"}, method = RequestMethod.GET)
+    @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String getDesiredScheduleForUngroupedStudentsForCourse(@PathVariable("id") Integer id) throws Exception {
+        return gson.toJson(courseService.getDesiredScheduleForUngroupedStudentsOfCourse(id));
+    }
+*/
 
 
     @RequestMapping(value = "/{id}/trainer", method = RequestMethod.GET)

@@ -10,6 +10,7 @@
                 >
                     <template v-slot:activator="{ on }">
                         <v-text-field
+                                :rules="[rules.required]"
                                 :value="StartingDate"
                                 clearable
                                 label="First day"
@@ -33,6 +34,7 @@
                 >
                     <template v-slot:activator="{ on }">
                         <v-text-field
+                                :rules="[rules.required]"
                                 :value="EndingDate"
                                 clearable
                                 label="The last day"
@@ -60,7 +62,10 @@
             date1: new Date().toISOString().substr(0, 10),
             date2: new Date().toISOString().substr(0, 10),
             menu1: false,
-            menu2: false
+            menu2: false,
+            rules: {
+                required: value => !!value || 'Required.',
+            }
         }),
 
         computed: {

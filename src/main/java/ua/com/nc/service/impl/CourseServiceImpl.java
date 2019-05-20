@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.Course;
+import ua.com.nc.domain.CourseStatus;
 import ua.com.nc.dto.DtoCourse;
 import ua.com.nc.service.CourseService;
 
@@ -76,8 +77,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
 
-
-
     /**
      * @return local image link;
      */
@@ -130,5 +129,22 @@ public class CourseServiceImpl implements CourseService {
         return dtoCourses;
     }
 
+    @Override
+    public void edit(int id, String name, String level, String courseStatus, String isOnLandingPage, String desc, String startDay, String endDay) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        CourseStatus status = CourseStatus.valueOf(courseStatus);
+        Date starts = new Date();
+        Date ends = starts;
+        try {
+            starts = format.parse(startDay);
+            ends = format.parse(endDay);
+        } catch (ParseException e) {
+            log.trace(e);
+        }
+        int lvl = levelDao.getIdByName(level.trim());
+        int statusId = status.ordinal();
+        boolean isLanding = Boolean.parseBoolean(isOnLandingPage);
+        courseDao.edit(id,name,lvl, statusId, isLanding,new java.sql.Date(starts.getTime()),new java.sql.Date(ends.getTime()),desc);
+    }
 
 }

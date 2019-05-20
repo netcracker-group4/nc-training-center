@@ -5,7 +5,7 @@
                 <v-toolbar flat color="white">
                     <v-toolbar-title>Courses</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-btn flat color="primary" @click="createCourse">Create new course</v-btn>
+                    <v-btn flat color="primary" v-if="isAdmin" @click="createCourse">Create new course</v-btn>
                 </v-toolbar>
             </v-flex>
             <v-flex>
@@ -22,9 +22,6 @@
                                 <div @click="goToCoursePage(props.item.course.id)">{{ props.item.course.name }}</div>
                             </td>
                             <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
-                            <td class="text-xs-right" v-if="isAdmin">
-                                <v-btn color="success" @click="update(props.item.course.id)">Update</v-btn>
-                            </td>
                             <td class="text-xs-right" v-if="isAdmin">
                                 <v-btn color="error" @click="deleteCourse(props.item.course.id)">Delete</v-btn>
                             </td>

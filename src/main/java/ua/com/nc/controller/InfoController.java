@@ -24,7 +24,7 @@ public class InfoController {
     @Autowired
     private LevelDao levelDao;
     @Autowired
-    private CourseStatusDao statusDao;
+    private CourseStatusDao status;
 
     @RequestMapping(value = "/getLevels", method = RequestMethod.GET)
     @ResponseBody
@@ -42,21 +42,15 @@ public class InfoController {
     @RequestMapping(value = "/getStatus/{id}", method = RequestMethod.GET)
     @ResponseBody
     public String getStatus(@PathVariable String id) {
-        return gson.toJson(statusDao.getCourseStatusById(Integer.parseInt(id)));
+        return gson.toJson(status.getCourseStatusById(Integer.parseInt(id)));
     }
 
     @RequestMapping(value = "/getStatuses", method = RequestMethod.GET)
-    public String getAllStatuses() {
+    @ResponseBody
+    public List<String> getAllStatuses() {
         ua.com.nc.domain.CourseStatus[] statuses = ua.com.nc.domain.CourseStatus.values();
         List<String> list = new ArrayList<>();
         Arrays.stream(statuses).forEach(s -> list.add(s.getName()));
-        return gson.toJson(list);
+        return list;
     }
-    /*@RequestMapping(value = "courses/src/main/resources/img/{imageName}", method = RequestMethod.GET,
-            produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody byte[] getImage(@PathVariable String imageName) throws IOException {
-        InputStream in = getClass()
-                .getResourceAsStream("/src/main/resources/img/"+imageName);
-        return IOUtils.toByteArray(in);
-    }*/
 }
