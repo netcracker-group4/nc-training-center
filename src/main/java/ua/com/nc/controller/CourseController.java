@@ -30,8 +30,8 @@ public class CourseController {
     private CourseService courseService;
     @Autowired
     private UserDao userDao;
-    @Autowired
-    private SuitabilityDao suitabilityDao;
+    /*@Autowired
+    private SuitabilityDao suitabilityDao;*/
 
     private final Gson gson = new Gson();
     @Autowired
@@ -97,13 +97,13 @@ public class CourseController {
                 isOnLandingPage, desc, startDay, endDay);
     }
 
-    @RequestMapping(value = {"/{id}/desired/ungrouped"}, method = RequestMethod.GET)
+    /*@RequestMapping(value = {"/{id}/desired/ungrouped"}, method = RequestMethod.GET)
     @ResponseBody
     @PreAuthorize("hasAuthority('ADMIN')")
     public String getDesiredScheduleForUngroupedStudentsForCourse(@PathVariable("id") Integer id) throws Exception {
         return gson.toJson(courseService.getDesiredScheduleForUngroupedStudentsOfCourse(id));
     }
-
+*/
 
 
     @RequestMapping(value = "/{id}/trainer", method = RequestMethod.GET)
