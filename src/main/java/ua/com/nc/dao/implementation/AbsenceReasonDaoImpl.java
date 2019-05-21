@@ -1,5 +1,6 @@
 package ua.com.nc.dao.implementation;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
 public class AbsenceReasonDaoImpl extends AbstractDaoImpl<AbsenceReason> implements AbsenceReasonDao {
@@ -81,6 +83,7 @@ public class AbsenceReasonDaoImpl extends AbstractDaoImpl<AbsenceReason> impleme
             AbsenceReason reason = new AbsenceReason(id, title);
             list.add(reason);
         }
+        log.info("AbsenceReasons retrieved object from database" +  list);
         return list;
     }
 

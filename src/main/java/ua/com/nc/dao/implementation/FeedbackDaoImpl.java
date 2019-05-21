@@ -95,18 +95,19 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
             Integer trainerId = rs.getInt("trainer_id");
             Integer courseId = rs.getInt("course_id");
             String text = rs.getString("text");
-//            Date timeDate = rs.getDate("date_time");
             OffsetDateTime offsetDateTime = rs.getObject("date_time", OffsetDateTime.class);
-            Feedback feedback = new Feedback(id, studentId, trainerId, courseId, text, offsetDateTime);
+            Feedback feedback = new Feedback(id, studentId, trainerId,
+                    courseId, text, offsetDateTime);
             feedbacks.add(feedback);
         }
+        log.info("Retrieved Feedbacks from database " + feedbacks);
         return feedbacks;
     }
 
     @Override
     public List<Feedback> getAllByUserId(Integer userId) {
         String sql = feedbackSelectAllByUser;
-        log.info(sql + " select all feedback by user " + userId);
+        log.info("select all feedbacks by userId " + userId + " " + sql);
         return getFromSqlById(sql, userId);
     }
 
@@ -114,7 +115,7 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
     @Override
     public List<Feedback> getAllByTrainerIdAndUserId(Integer userId, Integer trainerId) {
         String sql = feedbackSelectAllByTrainerIdAndByUserId;
-        log.info(sql + " select all feedback by trainer " + trainerId + " and by user " + userId);
+        log.info("select all feedbacks by trainer " + trainerId + " and by employee " + userId  + " " +sql);
         return getFromSqlByTwoId(sql, userId, trainerId);
     }
 }

@@ -64,8 +64,8 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, UserGroup entity) throws SQLException {
-        //user_id, group_id, is_attending, course_id
         statement.setInt(1, entity.getUserId());
+        // if groupId is null then users has not been grouped yet
         if (entity.getGroupId() == null || entity.getGroupId() == 0) {
             statement.setNull(2, java.sql.Types.INTEGER);
         } else {
@@ -77,6 +77,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, UserGroup entity) throws SQLException {
+        // if groupId is null then users has not been grouped yet
         if (entity.getGroupId() == null || entity.getGroupId() == 0) {
             statement.setNull(1, java.sql.Types.INTEGER);
         } else {
@@ -98,33 +99,20 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
             UserGroup userGroup = new UserGroup(id, userId, groupId, courseId, isAttending);
             list.add(userGroup);
         }
+        log.info("Retrieved UserGroups from database " + list);
         return list;
     }
 
     @Override
     public void deleteAllForGroup(Integer groupId) {
         String sql = userGroupDeleteForGroup;
-        log.info(sql + " LOG deleteAllForGroup " + groupId);
+        log.info("delete employees from group  " + groupId + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, groupId);
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
-    }
-
-    @Override
-    public void deleteAllForUser(Integer userId) {
-        String sql = userGroupDeleteForUser;
-        log.info(sql + " delete all for user " + userId);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            setId(statement, userId);
-            statement.executeUpdate();
-        } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -133,7 +121,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     @Override
     public UserGroup getByUserAndCourse(Integer userId, Integer courseId) {
         String sql = userGroupSelectByUsrAndCourse;
-        log.info(sql + " getByUserAndCourse usr = " + userId + " course= " + courseId);
+        log.info("get UserGroup by userId " + userId + " courseId " + courseId + " " + sql);
         return getUniqueByTwoId(sql, courseId, userId);
     }
 
@@ -142,7 +130,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
         if (list.size() > 1) {
             throw new PersistException("Returned more than one record");
         }
-        if (list.size() == 0) {
+        if(list.isEmpty()){
             return null;
         }
         return list.iterator().next();
@@ -151,14 +139,14 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     @Override
     public UserGroup getByUserAndGroup(Integer userId, Integer groupId) {
         String sql = userGroupSelectByUsrAndGroup;
-        log.info(sql + " getByUserAndGroup usr = " + userId + " group= " + groupId);
+        log.info(" UserAndGroup by userId " + userId + " groupId " + groupId + " " + sql);
         return getUniqueByTwoId(sql, groupId, userId);
     }
 
     @Override
     public List<UserGroup> getByUser(Integer userId) {
         String sql = userGroupSelectByUserId;
-        log.info(sql + " LOG getByUser " + userId);
+        log.info("get all userGroups by userId " + userId);
         return getFromSqlById(sql, userId);
     }
 }

@@ -128,7 +128,7 @@
                 request.send(form);
                 request.onloadend = function () {
                     if (request.status == 200) {
-                        axios.get('/api/attendances?userId=' + self.userId + '&groupId=' + self.groupId)
+                        axios.get(this.$store.state.apiServer +'/api/attendances?userId=' + self.userId + '&groupId=' + self.groupId)
                             .then(response => self.attendances = response.data)
                             .catch(error => console.log(error))
                     }

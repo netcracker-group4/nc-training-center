@@ -9,7 +9,7 @@ public interface LessonDao extends GenericDao<Lesson> {
 
     List<Lesson> getByGroupId(Integer groupId);
 
-    void archiveLesson(Integer lessonId);
+//    void archiveLesson(Integer lessonId);
 
     List<Lesson> getByEmployee(int userId);
 

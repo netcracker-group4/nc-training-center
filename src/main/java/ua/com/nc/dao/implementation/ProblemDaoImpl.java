@@ -48,6 +48,7 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
             Problem problem = new Problem (id, studentId, description, status, message);
             list.add(problem);
         }
+        log.info("Retrieved Problems from database " + list);
         return list;
     }
 
@@ -64,7 +65,7 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
             ResultSet rs = statement.executeQuery();
             lastInsert = rs.getInt(1);
         } catch (Exception e) {
-            log.trace (e);
+            log.error (e);
             throw new PersistException (e);
         }
         return lastInsert;
@@ -80,7 +81,7 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
             ResultSet rs = statement.executeQuery();
             requests = parseResultSet(rs);
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e.getMessage());
         }
         log.info (sql + " get all requests of type " + requestType);
@@ -96,7 +97,7 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
             statement.setInt(2, requestId);
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace (e);
+            log.error (e);
             throw new PersistException (e.getMessage ());
         }
     }

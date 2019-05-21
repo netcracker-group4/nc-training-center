@@ -15,7 +15,9 @@ import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.User;
+import ua.com.nc.dto.CourseAndGroups;
 import ua.com.nc.service.CourseService;
+import ua.com.nc.service.DashBoardService;
 
 import java.util.List;
 
@@ -36,11 +38,13 @@ public class CourseController {
     @Autowired
     private UserGroupDao userGroupDao;
 
+    @Autowired
+    private DashBoardService dashBoardService;
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<Course> getCourses() {
-        return courseDao.getAll();
+    public List<CourseAndGroups> getCourses() {
+        return dashBoardService.getTrainingAndQuantity();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")

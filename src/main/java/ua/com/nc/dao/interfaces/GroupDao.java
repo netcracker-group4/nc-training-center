@@ -14,7 +14,5 @@ public interface GroupDao extends GenericDao<Group> {
 
     List<Group> getGroupByTrainerId(Integer id);
 
-    void deleteUserFromGroup(Integer id, Integer userId);
-
     Group getByUserIdAndGroupId(Integer userId, Integer groupId);
 }

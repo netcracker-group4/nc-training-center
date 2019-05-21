@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
     public DtoUserProfiles getById(Integer id) {
         User user = userDao.getEntityById(id);
         List<Role> role = roleDao.findAllByUserId(id);
-        User manager = userDao.getManagerById(id);
+        User manager = userDao.getManagerByEmployeeId(id);
 
         DtoTeacherAndManager dtoManager = null;
         if (manager != null) {
@@ -183,7 +183,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<DtoTeacherAndManager> getTrainersOfEmployee(Integer id) {
-        List<User> trainers = userDao.getAllTrainersById(id);
+        List<User> trainers = userDao.getEmployeeTrainersByEmployeeId(id);
         List<DtoTeacherAndManager> dtoTeachers = new ArrayList<>();
         if (trainers != null && trainers.size() != 0) {
             for (User trainer : trainers) {

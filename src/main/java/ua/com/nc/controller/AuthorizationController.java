@@ -21,8 +21,10 @@ public class AuthorizationController {
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public String login(@RequestParam(required = false, name = "error") String error) {
         if (error != null) {
+            log.warn("Error while logging in");
             throw new NoSuchUserException("There is no user with such email and password");
         }
+        log.info("returning index page");
         return "index";
     }
 
@@ -31,8 +33,10 @@ public class AuthorizationController {
                          HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
+            log.info("log outing");
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
+        log.info("redirecting to login page after logout");
         return "redirect:/login";
     }
 }

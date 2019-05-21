@@ -51,11 +51,24 @@ public class CustomSecurityService {
         return user.getRoles().contains(Role.ADMIN) || getTrainerId(toAdd).equals(user.getId());
     }
 
+    public boolean hasPermissionToUpdateLesson(Authentication authentication, String toAdd) {
+        User user = (User) authentication.getPrincipal();
+        DtoLesson toAdd1 = getDtoLesson(toAdd);
+        Lesson oldLesson  = lessonDao.getEntityById(toAdd1.getId());
+        return user.getRoles().contains(Role.ADMIN) ||
+                getTrainerId(toAdd).equals(user.getId()) ||
+                oldLesson.getTrainerId().equals(user.getId());
+    }
+
     private Integer getTrainerId(String toAdd) {
+        DtoLesson toAdd1 = getDtoLesson(toAdd);
+        return courseDao.getCourseByGroup(toAdd1.getGroupId()).getUserId();
+    }
+
+    private DtoLesson getDtoLesson(String toAdd) {
         Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class,
                 new DateDeserializer()).create();
-        DtoLesson toAdd1 = gson.fromJson(toAdd, DtoLesson.class);
-        return courseDao.getCourseByGroup(toAdd1.getGroupId()).getUserId();
+        return gson.fromJson(toAdd, DtoLesson.class);
     }
 
     public boolean hasPermissionToDeleteLesson(Authentication authentication, Integer lessonId) {
