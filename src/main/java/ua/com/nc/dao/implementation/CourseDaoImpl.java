@@ -180,19 +180,9 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
 
     @Override
     public void edit(int id, String name, int lvl, int statusId, boolean isLanding, java.sql.Date starts, java.sql.Date ends, String desc) {
-        String sql = editCourse;
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(sql)) {
-            statement.setString(1, name);
-            statement.setInt(2, lvl);
-            statement.setInt(3, statusId);
-            statement.setDate(4, starts);
-            statement.setDate(5, ends);
-            statement.setBoolean(6, isLanding);
-            statement.setString(7, desc);
-            statement.setInt(8, id);
-            statement.executeQuery();
-        } catch (SQLException e) {
-            log.error(e);
-        }
+        Course course = getEntityById(id);
+        String imageUrl = course.getImageUrl();
+        Course c = new Course(id,name,lvl,statusId,course.getUserId(),imageUrl,starts,ends,isLanding,desc);
+        update(c);
     }
 }

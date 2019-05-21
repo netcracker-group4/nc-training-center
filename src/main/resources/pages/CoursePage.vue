@@ -8,7 +8,7 @@
             <v-btn v-if="this.$store.getters.userRoles.includes('EMPLOYEE')" @click="sign()">Sign course</v-btn>
         </div>
         <v-dialog  v-if="isAdmin" v-model="dialog" max-width="500px">
-            <EditCourseComponent :trainers="trainers" :starting-day="startDay" :ending-day="endDay"
+            <EditCourseComponent :starting-day="startDay" :ending-day="endDay"
                                 :descr="description" :id="id"/>
         </v-dialog>
             <v-container
@@ -124,7 +124,6 @@
                 groups: [],
                 isAdmin: this.$store.getters.isAdmin,
                 isNotAdmin: this.isAdmin==="false",
-                trainers: [],
                 dialog: false,
                 headers: [
                     {
@@ -181,18 +180,6 @@
                 axios.get(this.$store.state.apiServer + '/api/getcourses/'+this.$route.params.id+'/trainer')
                     .then(function (response) {
                         self.trainer = response.data[0];
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            },
-            getTrainers(){
-                let self = this;
-                axios.get(this.$store.state.apiServer + '/api/dashboard/level-and-trainers')
-                    .then(function (response) {
-                        response.data.forEach(d =>{
-                            self.trainers.push(d.trainer);
-                        });
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -276,15 +263,6 @@
             try {
                 let self = this;
                 self.setCourse();
-
-                /*axios.get('http://localhost:8080/getcourses/{id}/trainer)
-                    .then(function (response) {
-                        self.courseStatus = response.data;
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });*/
-
             }catch (e) {
                 console.log(e);
             }
