@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.AttachmentDao;
 import ua.com.nc.domain.Attachment;
+import ua.com.nc.domain.LessonAttachment;
 import ua.com.nc.domain.Role;
 import ua.com.nc.domain.User;
 import ua.com.nc.service.AttachmentService;
@@ -76,13 +77,13 @@ public class AttachmentController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/upload-file")
-    public void uploadFile(@RequestParam("file") MultipartFile file,
-                           @RequestParam("lessonId") String lessonId,
-                           @RequestParam("descr") String description,
+
+    public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("lessonId") String lessonId, @RequestParam("descr") String description,
                            @AuthenticationPrincipal User user) {
         if (user != null && roleService.findAllByUserId(user.getId()).contains(Role.TRAINER)){
-            service.uploadFile(Integer.parseInt(lessonId),user.getId(), description, file);
+            return gson.toJson(service.uploadFile(Integer.parseInt(lessonId),user.getId(), description, file));
         }
+        return null;
     }
 
     @ResponseBody
@@ -91,10 +92,11 @@ public class AttachmentController {
         service.delete(Integer.parseInt(id));
     }
 
-    @ResponseBody
+
     @RequestMapping(method = RequestMethod.DELETE, value = "/unlink")
-    public void unlink(@RequestParam("attachmentId") String attachmentId,@RequestParam("lessonId") String lessonId) {
-        service.unlink(Integer.parseInt(lessonId),Integer.parseInt(attachmentId));
+    @ResponseBody
+    public void unlink(@RequestBody LessonAttachment lessonAttachment) {
+        service.unlink(lessonAttachment.getLessonId(),lessonAttachment.getAttachmentId());
     }
 
 
@@ -112,7 +114,7 @@ public class AttachmentController {
 
         HttpHeaders headers = new HttpHeaders();
         Attachment attachment = attachmentDao.getEntityById(attachmentId);
-        String headerValue = "attachment; filename = " + attachment.getUrl();
+        String headerValue = "attachment; filename = " + attachment.getName();
         headers.add("Content-Disposition",
                 headerValue);
 

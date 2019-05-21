@@ -81,7 +81,7 @@
     import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
-        name: "AbsenceReasons",
+        name: "LessonPage",
         components: {LessonAttendanceTable, ProgressCircularComponent},
         data: function () {
             return {
@@ -119,7 +119,23 @@
                 }
                 window.scrollTo(0, 0);
             },
-            uploadForm() {
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            uploadForm(){
                 this.dialog = true;
 
             },
@@ -160,6 +176,7 @@
                     });
             },
             uploadFile() {
+                let self = this;
                 let form = new FormData(document.getElementById('uploadForm'));
                 let imagefile = document.querySelector('#file');
 
@@ -169,19 +186,29 @@
                 form.append('file', imagefile.files[0]);
                 form.append('lessonId', this.$route.params.id);
                 form.append('descr', '');
+
                 request.send(form);
                 this.dialog = false;
             },
             isLessonTrainer() {
                 return this.$store.state.user.id == this.trainer.id;
             },
-            unlink(id) {
-                let form = new FormData();
-                let request = new XMLHttpRequest();
-                request.open('DELETE', this.$store.state.apiServer + '/api/attachments/unlink');
-                form.append('lessonId', this.$route.params.id);
-                form.append('attachmentId', id);
-                request.send(form);
+            unlink(idFile){
+
+                let self = this;
+                axios.delete('/api/attachments/unlink',{data:{lessonId: this.$route.params.id ,
+                 attachmentId: idFile}})
+                    .then(function (response) {
+                        self.attachments = self.attachments.filter(function (e) {
+                            return e.id !== idFile;
+                        });
+                        self.successAutoClosable('File has been unlinked from this lesson');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        self.errorAutoClosable('Error occurred');
+                    });
+
 
             }
 

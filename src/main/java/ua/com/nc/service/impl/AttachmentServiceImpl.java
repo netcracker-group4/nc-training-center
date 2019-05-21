@@ -52,7 +52,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public void uploadFile(Integer lessonId, Integer trainerId, String description, MultipartFile file) {
+    public Attachment uploadFile(Integer lessonId, Integer trainerId, String description, MultipartFile file) {
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
@@ -77,10 +77,12 @@ public class AttachmentServiceImpl implements AttachmentService {
                     }
                 }
                 add(lessonId,filePath, name, trainerId, description);
+                return attachmentDao.getByName(name);
             } catch (Exception e) {
                 log.trace(e);
             }
         }
+        return null;
     }
 
     @Override
