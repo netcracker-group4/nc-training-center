@@ -20,6 +20,7 @@ import ua.com.nc.service.AttachmentService;
 import ua.com.nc.service.RoleService;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,7 +111,7 @@ public class AttachmentController {
     @RequestMapping(value = "/download/{fileId}", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileId) {
         Integer attachmentId = Integer.parseInt(fileId);
-        FileInputStream in = service.downloadFile(attachmentId);
+        InputStream in = service.downloadFile(attachmentId);
 
         HttpHeaders headers = new HttpHeaders();
         Attachment attachment = attachmentDao.getEntityById(attachmentId);

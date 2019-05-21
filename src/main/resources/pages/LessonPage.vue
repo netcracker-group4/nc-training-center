@@ -119,6 +119,9 @@
                 }
                 window.scrollTo(0, 0);
             },
+            downloadFile(fileId){
+                window.open(this.$store.state.apiServer + '/api/attachments/download/'+fileId);
+            },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
                     timeout: 2000,

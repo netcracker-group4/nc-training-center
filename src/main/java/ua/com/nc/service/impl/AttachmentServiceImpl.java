@@ -19,7 +19,8 @@ public class AttachmentServiceImpl implements AttachmentService {
     private AttachmentDao attachmentDao;
     @Autowired
     private LessonAttachmentDao lessonAttachmentDao;
-
+    @Autowired
+    private FiletransferServiceImpl fileService;
 
     @Override
     public void add(Integer lessonId, Attachment attachment) {
@@ -76,6 +77,11 @@ public class AttachmentServiceImpl implements AttachmentService {
                         stream.write(bytes);
                     }
                 }
+
+                FileInputStream stream = new FileInputStream(filePath);
+                String path = "/attachments";
+                filePath = path + "/" + name;
+                fileService.uploadFileToServer(path,name,stream);
                 add(lessonId,filePath, name, trainerId, description);
                 return attachmentDao.getByName(name);
             } catch (Exception e) {
@@ -86,15 +92,17 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public FileInputStream downloadFile(Integer id) {
+    public InputStream downloadFile(Integer id) {
         Attachment attachment = attachmentDao.getEntityById(id);
         String path = attachment.getUrl();
+       /*
         try {
             return new FileInputStream(path);
         } catch (FileNotFoundException e) {
             log.trace(e);
         }
-        return null;
+        */
+        return fileService.downloadFileFromServer(path);
     }
 
     @Override

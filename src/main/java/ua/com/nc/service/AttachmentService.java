@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.domain.Attachment;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 
 public interface AttachmentService {
     void add(Integer lessonId, Attachment attachment);
@@ -14,7 +15,7 @@ public interface AttachmentService {
 
     Attachment uploadFile(Integer lessonId, Integer trainerId, String description, MultipartFile file);
 
-    FileInputStream downloadFile(Integer id);
+    InputStream downloadFile(Integer id);
 
     void link(Integer lessonId, Integer attachmentId);
     void unlink(Integer lessonId, Integer attachmentId);
