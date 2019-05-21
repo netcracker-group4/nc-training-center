@@ -20,6 +20,7 @@ import java.util.List;
 @Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
+//TODO delete it?????
 public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> implements LessonAttachmentDao {
     @Value("${lesson_attachment.insert}")
     private String lessonAttachmentInsert;
@@ -64,19 +65,20 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
             LessonAttachment lessonAttachment = new LessonAttachment(attachmentId, lessonId);
             lessonAttachments.add(lessonAttachment);
         }
+        log.info("Retrieved LessonAttachments from database " + lessonAttachments);
         return lessonAttachments;
     }
 
     @Override
     public void deleteByAttachmentId(Integer attachmentId) throws PersistException {
         String sql = lessonAttachmentDeleteByAttachmentId;
-        log.info(sql + "LOG DeleteQuery " + attachmentId);
+        log.info("delete attachments for all lessons " + attachmentId + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, attachmentId);
             int count = statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -84,20 +86,20 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
     @Override
     public List<LessonAttachment> getAllByLessonId(Integer lessonId) throws PersistException {
         String sql = selectAllByLessonId;
-        log.info(sql + "getAllByLessonId " + lessonId);
+        log.info("find attachments for lesson by lessonId " + lessonId + " " + sql );
         return getFromSqlById(sql, lessonId);
     }
 
     @Override
     public void deleteByLessonId(Integer lessonId) throws PersistException {
         String sql = deleteAllByLessonId;
-        log.info(sql + "LOG deleteByLessonId " + lessonId);
+        log.info("delete attachments for lesson with id " + lessonId + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, lessonId);
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -105,13 +107,13 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
     @Override
     public void insertAttachment(LessonAttachment lessonAttachment) throws PersistException {
         String sql = lessonAttachmentInsert;
-        log.info(sql + " insert " + lessonAttachment);
+        log.info("insert attachment " + lessonAttachment + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForInsert(statement, lessonAttachment);
             statement.execute();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -126,7 +128,7 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
             statement.setInt(2, lessonId);
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }

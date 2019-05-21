@@ -94,16 +94,20 @@
             }
         },
         mounted() {
-            let self = this;
-            axios.get(this.$store.state.apiServer + '/api/admin')
-                .then(function (response) {
-                    self.allUsers = response.data;
-                    self.loading = false;
-                    console.log(self.allUsers)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            if(this.$store.getters.isAdmin){
+                let self = this;
+                axios.get(this.$store.state.apiServer + '/api/admin')
+                    .then(function (response) {
+                        self.allUsers = response.data;
+                        self.loading = false;
+                        console.log(self.allUsers)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }else {
+                this.$router.push('/403');
+            }
         },
         components: {
             ProgressCircularComponent

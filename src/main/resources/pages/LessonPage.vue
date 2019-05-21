@@ -196,10 +196,13 @@
             isLessonTrainer() {
                 return this.$store.state.user.id == this.trainer.id;
             },
+            downloadFile(id) {
+                window.open(this.$store.state.apiServer + '/api/attachments/download/' + id);
+            },
             unlink(idFile){
 
                 let self = this;
-                axios.delete('/api/attachments/unlink',{data:{lessonId: this.$route.params.id ,
+                axios.delete(this.$store.state.apiServer +'/api/attachments/unlink',{data:{lessonId: this.$route.params.id ,
                  attachmentId: idFile}})
                     .then(function (response) {
                         self.attachments = self.attachments.filter(function (e) {

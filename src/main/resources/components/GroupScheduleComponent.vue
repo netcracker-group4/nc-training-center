@@ -147,7 +147,8 @@
                                           @delete-event="deleteLesson"
                                           @cancel-event="cancel"
                                           :attachments="allAttachments" :currentLesson="currentEditingLesson"
-                                          :trainers="allTrainers"></lesson-editing-component>
+                                          :trainers="allTrainers"
+                                          :courseTrainerId="courseTrainerId"></lesson-editing-component>
             </v-container>
         </v-expansion-panel-content>
     </v-expansion-panel>
@@ -174,10 +175,7 @@
         props: ['isStudentOfGroup', 'courseTrainerId'],
         mounted() {
             let self = this;
-            console.log(self.$route.params.id)
-            console.log(this.$route.params.id)
             let id = this.$route.params.id;
-            console.log(id)
             axios.get(this.$store.state.apiServer + '/api/schedule/' + self.$route.params.id)
                 .then(function (response) {
                     self.lessons = response.data;
@@ -220,7 +218,7 @@
                 let self = this;
                 let filteredLessons = [];
                 if (this.$store.state.userRoles.includes('ADMIN') ||
-                    parseInt(this.$store.state.user.id) === parseInt(this.group.userId) ||
+                    parseInt(this.$store.state.user.id) === parseInt(this.courseTrainerId) ||
                     this.isStudentOfGroup) {
                     filteredLessons = this.lessons
                 } else {
@@ -264,8 +262,6 @@
         methods: {
             loadAdditional(id) {
                 let self = this;
-                console.log(id);
-                // console.log(self.$route.params.id);
                 axios.get(this.$store.state.apiServer + '/api/schedule/' + id)
                     .then(function (response) {
                         self.lessons = response.data;
@@ -367,22 +363,37 @@
             },
             save(newLesson) {
                 let self = this;
-                axios.post(this.$store.state.apiServer + '/api/schedule', newLesson)
-                    .then(function (response) {
-                        self.lessons = self.lessons.filter(el => el.id !== newLesson.id);
-                        newLesson.id = response.data;
-                        newLesson.open = false;
-                        self.lessons.push(newLesson);
-                        self.cancel();
-                        if (newLesson.isNew) {
+                if (newLesson.isNew) {
+                    axios.post(this.$store.state.apiServer + '/api/schedule/new', newLesson)
+                        .then(function (response) {
+                            self.lessons = self.lessons.filter(el => el.id !== newLesson.id);
+                            newLesson.id = response.data;
+                            newLesson.open = false;
+                            self.lessons.push(newLesson);
+                            self.cancel();
                             self.successAutoClosable('New lesson has been added');
                             newLesson.isNew = false;
-                        } else self.successAutoClosable('Lesson has been updated');
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        self.errorAutoClosable(error.response.data);
-                    });
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            self.errorAutoClosable(error.response.data);
+                        });
+                } else {
+                    axios.post(this.$store.state.apiServer + '/api/schedule', newLesson)
+                        .then(function (response) {
+                            self.lessons = self.lessons.filter(el => el.id !== newLesson.id);
+                            newLesson.id = response.data;
+                            newLesson.open = false;
+                            self.lessons.push(newLesson);
+                            self.cancel();
+                            self.successAutoClosable('Lesson has been updated');
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            self.errorAutoClosable(error.response.data);
+                        });
+                }
+
             },
             cancel() {
                 this.currentEditingLesson = null;

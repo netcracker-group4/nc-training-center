@@ -12,7 +12,7 @@
                     </v-list-tile-avatar>
                     <v-list-tile-content class="cursor-pointer" v-on:click="goToMyPage()">
                         <v-list-tile-title v-if="this.$store.getters.isAuthorized">
-                            {{this.$store.state.user.firstName + ' ' + this.$store.state.user.lastName}}
+                            {{$store.state.user.firstName + ' ' + $store.state.user.lastName}}
                         </v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
@@ -38,9 +38,9 @@
                 <v-list-group
                         prepend-icon="chat"
                         no-action
-                        v-if="self.$store.state.chats != null &
-                              self.$store.state.chats != undefined &
-                                self.$store.state.chats.length > 0"
+                        v-if="$store.state.chats != null &
+                              $store.state.chats != undefined &
+                               $store.state.chats.length > 0"
                 >
                     <template v-slot:activator>
                         <v-list-tile>
@@ -66,14 +66,14 @@
             <v-toolbar-items v-if="this.$store.getters.isAuthorized">
                 <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
             </v-toolbar-items>
-            <v-toolbar-items class="hidden-sm-and-down" v-if="  this.$store.getters.isAuthorized &&
-                                                            this.$store.getters.isAdmin">
+            <v-toolbar-items class="hidden-sm-and-down" v-if="$store.getters.isAuthorized &&
+                                                            $store.getters.isAdmin">
             </v-toolbar-items>
             <v-spacer></v-spacer>
-            <v-toolbar-items class="hidden-sm-and-down" v-if="!this.$store.getters.isAuthorized">
+            <v-toolbar-items class="hidden-sm-and-down" v-if="!$store.getters.isAuthorized">
                 <v-btn @click="forwardToLoginPage" flat>login</v-btn>
             </v-toolbar-items>
-            <form action="/logout" method="get" v-if="this.$store.getters.isAuthorized">
+            <form action="/logout" method="get" v-if="$store.getters.isAuthorized">
                 <v-btn type="submit" flat>Exit</v-btn>
             </form>
         </v-toolbar>
@@ -96,8 +96,8 @@
                         }
                     },
                     {
-                        title: 'Users', icon: 'person', link: '/users', canBeShown: function () {
-                            return true
+                        title: 'Users', icon: 'person', link: '/users', canBeShown: function (self) {
+                            return self.$store.getters.isAdmin
                         }
                     },
                     {

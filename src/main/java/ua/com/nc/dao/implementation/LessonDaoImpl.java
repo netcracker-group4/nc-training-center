@@ -19,7 +19,6 @@ import java.util.List;
 @PropertySource("classpath:sql_queries.properties")
 public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao {
 
-
     @Value("${lesson.select-all}")
     private String lessonSelectAll;
     @Value("${lesson.select-by-id}")
@@ -34,8 +33,6 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     private String selectByGroupId;
     @Value("${lesson.select-by-group-id-and-user-id}")
     private String getSelectByGroupIdAndUserId;
-    @Value("${lesson.archive}")
-    private String archiveLessonQuery;
     @Value("${lesson.select-by-employee-id}")
     private String selectByEmployeeId;
     @Value("${lesson.select-by-trainer-id}")
@@ -45,7 +42,6 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     public LessonDaoImpl(DataSource dataSource) throws PersistException {
         super(dataSource);
     }
-
 
     @Override
     protected String getSelectByIdQuery() {
@@ -82,16 +78,17 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
         statement.setString(2, entity.getTopic());
         statement.setInt(3, entity.getTrainerId());
         statement.setTimestamp(4, entity.getTime());
-        String[] intervalElems = entity.getDuration().split(":");
-        statement.setString(5, intervalElems[0] + "h " + intervalElems[1] + "m");
+        statement.setString(5, entity.getIntervalString());
         statement.setBoolean(6, entity.isCanceled());
-        statement.setBoolean(7, entity.isPerformed());
+        statement.setBoolean(7, entity.isArchived());
+        statement.setBoolean(8, entity.isPerformed());
     }
+
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, Lesson entity) throws SQLException {
         setAllFields(statement, entity);
-        statement.setInt(8, entity.getId());
+        statement.setInt(9, entity.getId());
     }
 
     @Override
@@ -106,11 +103,14 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
             Timestamp time = rs.getTimestamp("time_date");
             boolean isCanceled = rs.getBoolean("is_canceled");
             boolean isPerformed = rs.getBoolean("performed");
+            boolean isArchived = rs.getBoolean("is_archived");
             String duration = rs.getString("duration");
             Lesson lesson = new Lesson(id, groupId, topic, trainerId,
-                    timeDate, time, duration, isCanceled, isPerformed);
+                    timeDate, time, duration, isCanceled,
+                    isPerformed, isArchived);
             lessons.add(lesson);
         }
+        log.info("Retrieved lessons from database " + lessons);
         return lessons;
     }
 
@@ -119,7 +119,18 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     public List<Lesson> getByGroupIdAndUserId(Integer groupId, Integer userId) {
         String sql = getSelectByGroupIdAndUserId;
         log.info("getByGroupIdAndUserId groupId " + groupId + " userId " + userId + "   " + sql);
-        return getFromSqlByTwoId(sql, groupId, userId);
+        List<Lesson> lessons;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, groupId);
+            statement.setInt(2, userId);
+            ResultSet rs = statement.executeQuery();
+            lessons = parseResultSetForAttendance(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        return lessons;
     }
 
     @Override
@@ -127,23 +138,6 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
         String sql = selectByGroupId;
         log.info("getByGroupId groupId " + groupId + "  " + sql);
         return getFromSqlById(sql, groupId);
-    }
-
-    @Override
-    public void archiveLesson(Integer lessonId) {
-        String sql = archiveLessonQuery;
-        log.info(sql + "  archiveLesson " + lessonId);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            setId(statement, lessonId);
-            int count = statement.executeUpdate();
-            if (count > 1) {
-                throw new PersistException("On update modify more then 1 record: " + count);
-            }
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e);
-        }
     }
 
     @Override

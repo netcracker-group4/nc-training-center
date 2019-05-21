@@ -73,7 +73,7 @@
         },
         mounted() {
             let self = this;
-            axios.get('/api/dashboard/training-and-quantity')
+            axios.get(this.$store.state.apiServer + '/api/getcourses')
                 .then(function (response) {
                     self.coursesAndQuantities = response.data;
                     self.loading = false;

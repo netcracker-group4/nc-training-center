@@ -5,7 +5,7 @@
                 <v-container>
                     <v-layout row wrap>
                         <v-flex xs12 sm12>
-                            Type a short description of your problem: {{this.userId}}
+                            Type a short description of your problem: {{userId}}
                             <v-text-field
                                     clearable
                                     v-model="description"

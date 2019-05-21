@@ -16,17 +16,15 @@ public interface UserDao extends GenericDao<User> {
 
     List<User> getLandingPageTrainers();
 
-    User getManagerById(Integer id);
+    User getManagerByEmployeeId(Integer id);
 
-    List<User> getAllTrainersById(Integer id);
+    List<User> getEmployeeTrainersByEmployeeId(Integer id);
 
     List<User> getByGroupId(Integer id);
 
     List<User> getUngroupedByCourse(Integer id);
 
     void updateTrainerLandingPage(int id, boolean isOnLandingPage);
-
-    List<User> getAllForCourse(int courseId);
 
     void updateUserByAdmin(User user);
 
@@ -43,7 +41,6 @@ public interface UserDao extends GenericDao<User> {
     User getAdmin();
 
     User getLessonTrainer(int lessonId);
-
 
     User getTrainerByGroupId(Integer groupId);
 

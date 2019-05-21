@@ -8,10 +8,13 @@ import ua.com.nc.dao.interfaces.AttachmentDao;
 import ua.com.nc.dao.interfaces.LessonAttachmentDao;
 import ua.com.nc.domain.Attachment;
 import ua.com.nc.domain.LessonAttachment;
+import ua.com.nc.dto.DtoAttachment;
+import ua.com.nc.exceptions.LogicException;
 import ua.com.nc.service.AttachmentService;
 
 import java.io.*;
 
+@SuppressWarnings("Duplicates")
 @Log4j2
 @Service
 public class AttachmentServiceImpl implements AttachmentService {
@@ -42,10 +45,9 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public void delete(Integer id) {
         File file = new File(attachmentDao.getEntityById(id).getUrl());
-        if (file.delete()){
+        if (file.delete()) {
             log.info("File removed from directory");
-        }
-        else{
+        } else {
             log.trace("File not found");
         }
         lessonAttachmentDao.deleteByAttachmentId(id);
@@ -53,15 +55,59 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
+    public Attachment uploadFile(Integer trainerId, DtoAttachment dtoAttachment) {
+        if (!dtoAttachment.getFile().isEmpty()) {
+            try {
+                MultipartFile multipartFile = dtoAttachment.getFile();
+                String name = multipartFile.getOriginalFilename();
+                String filePath = getFilePath(trainerId, name);
+                saveToDisk(multipartFile, filePath);
+                return saveToDatabase(trainerId, dtoAttachment, name, filePath);
+            } catch (Exception e) {
+                log.trace(e);
+                throw new LogicException("Error while uploading file");
+            }
+        }
+        throw new LogicException("The file is empty!");
+    }
+
+    private Attachment saveToDatabase(Integer trainerId, DtoAttachment dtoAttachment, String name, String filePath) {
+        Attachment newAttachment = new Attachment(filePath, name,
+                trainerId, dtoAttachment.getDescription());
+        attachmentDao.insert(newAttachment);
+        return newAttachment;
+    }
+
+    private String getFilePath(Integer trainerId, String name) {
+        String rootPath = "src/main/resources";
+        File dir = new File(rootPath + File.separator + "attachments" + File.separator + trainerId.toString());
+        if (!dir.exists()) {
+            if(!dir.mkdirs()){
+                throw new LogicException("Error, could not upload file" );
+            }
+        }
+        return dir.getAbsolutePath() + File.separator + name;
+    }
+
+    private void saveToDisk(MultipartFile multipartFile, String filePath) throws IOException {
+        byte[] bytes = multipartFile.getBytes();
+        if (attachmentDao.getByName(filePath) == null) {
+            log.info("File is not in base");
+            File uploadedFile = new File(filePath);
+            try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile))) {
+                stream.write(bytes);
+            }
+        }
+    }
+
+    @Override
     public Attachment uploadFile(Integer lessonId, Integer trainerId, String description, MultipartFile file) {
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
-
                 String name = file.getOriginalFilename();
-
                 String rootPath = "src/main/resources";
-                File dir = new File(rootPath + File.separator + "attachments"+ File.separator + trainerId.toString());
+                File dir = new File(rootPath + File.separator + "attachments" + File.separator + trainerId.toString());
 
                 if (!dir.exists()) {
                     dir.mkdirs();
@@ -77,6 +123,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                         stream.write(bytes);
                     }
                 }
+                add(lessonId, filePath, name, trainerId, description);
 
                 FileInputStream stream = new FileInputStream(filePath);
                 String path = "/attachments";
@@ -99,7 +146,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         try {
             return new FileInputStream(path);
         } catch (FileNotFoundException e) {
-            log.trace(e);
+            log.error(e);
         }
         */
         return fileService.downloadFileFromServer(path);
@@ -113,7 +160,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public void unlink(Integer lessonId, Integer attachmentId) {
-        lessonAttachmentDao.unlink(lessonId,attachmentId);
+        lessonAttachmentDao.unlink(lessonId, attachmentId);
     }
 
 }

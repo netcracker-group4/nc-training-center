@@ -26,6 +26,7 @@
                     item-value="id"
                     :item-text="getName"
                     required
+                    :disabled="isJustTrainer()"
             ></v-select>
             <v-layout row wrap>
                 <v-flex>
@@ -140,15 +141,16 @@
             </v-layout>
             <v-layout>
                 <div class="text-xs-left" style="margin-bottom: 20px;">
-                    <v-chip close @input="remove(attachment)" v-for="attachment in selectedAttachments"
-                            :key="attachment.id">{{attachment.url.slice(0, 10)}}
+                    <v-chip close @input="remove(attachment)"
+                            v-for="attachment in selectedAttachments"
+                            :key="attachment.id">{{attachment.name}}
                     </v-chip>
                 </div>
             </v-layout>
             <v-data-table
                     v-model="selectedAttachments"
                     :headers="headers"
-                    :items="attachments"
+                    :items="allAttachments"
                     :pagination.sync="pagination"
                     select-all
                     item-key="id"
@@ -185,12 +187,24 @@
                                     hide-details
                             ></v-checkbox>
                         </td>
-                        <td>{{ props.item.description }}</td>
+                        <td>{{ props.item.name }}</td>
                         <td class="text-xs-right">{{ props.item.url }}</td>
                     </tr>
                 </template>
             </v-data-table>
             <v-layout style="margin-top: 20px">
+                <!--                <input-->
+                <!--                        type="file"-->
+                <!--                        style="display: none"-->
+                <!--                        ref="file"-->
+                <!--                        @change="handleFileUpload()"-->
+                <!--                >-->
+                <v-btn color="success" @click="$refs.inputUpload.click()">Upload file</v-btn>
+                <input v-show="false" ref="inputUpload" type="file" @change="handleFileUpload">
+                <!--                <label>File-->
+                <!--                    <input type="file" id="file" ref="file" v-on:change=""/>-->
+                <!--                </label>-->
+                <!--                <v-btn v-on:click="submitFile()">Submit</v-btn>-->
                 <v-spacer></v-spacer>
                 <v-btn color="error" @click="deleteLesson">delete</v-btn>
                 <v-btn color="success" @click="save">save</v-btn>
@@ -203,10 +217,11 @@
 
 <script>
     import groupSchedule from './GroupDesiredScheduleComponent.vue';
+    import axios from "axios";
 
     export default {
         name: "LessonEditingComponent",
-        props: ['currentLesson', 'trainers', 'attachments'],
+        props: ['currentLesson', 'trainers', 'attachments', 'courseTrainerId'],
         data: function () {
             return {
                 lesson: this.currentLesson,
@@ -214,6 +229,7 @@
                 time: this.currentLesson.timeDate.substr(11, 5),
                 appendix: this.currentLesson.timeDate.substr(16, 6),
                 selectedAttachments: this.currentLesson.attachments,
+                file: '',
                 headers: [
                     {
                         text: 'Attachments',
@@ -235,6 +251,9 @@
             }
         },
         methods: {
+            isJustTrainer() {
+                return this.$store.state.user.id != this.courseTrainerId && !this.$store.getters.isAdmin;
+            },
             errorAutoClosable(title) {
                 this.$snotify.error(title, {
                     timeout: 2000,
@@ -242,6 +261,45 @@
                     closeOnClick: false,
                     pauseOnHover: true
                 });
+            },
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            handleFileUpload() {
+                this.file = this.$refs.inputUpload.files[0];
+                this.submitFile();
+            },
+            submitFile() {
+                let self = this;
+                if (this.file != '' && this.file != undefined) {
+                    let formData = new FormData();
+                    formData.append('file', this.file);
+                    formData.append('lessonId', this.lesson.id);
+                    formData.append('description', "");
+                    axios.post(this.$store.state.apiServer + '/api/attachments/lesson/upload-file',
+                        formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
+                    )
+                        .then(function (response) {
+                            console.log(response.data);
+                            self.selectedAttachments.push(response.data);
+                            self.successAutoClosable(response.data.name + ' has been uplosded');
+                            self.file = '';
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            self.errorAutoClosable("Error while loading file")
+                        });
+                }
+
             },
             save() {
                 let self = this;
@@ -256,7 +314,7 @@
                         self.$emit('saving-event', self.lesson);
                         return;
                     }
-                    if(!result){
+                    if (!result) {
                         self.errorAutoClosable("Valid lesson topic required")
                     }
                 });
@@ -317,6 +375,21 @@
             }
         },
         computed: {
+            allAttachments() {
+                let a = [];
+                this.attachments.forEach(function (value) {
+                    a.push(value);
+                });
+                this.selectedAttachments.forEach(function (value) {
+                    let h = a.filter(function (e) {
+                        return e.id == value.id
+                    });
+                    if (h.length == 0) {
+                        a.push(value);
+                    }
+                });
+                return a;
+            },
             computedTime: function () {
                 return this.ampmTime(this.time);
             },

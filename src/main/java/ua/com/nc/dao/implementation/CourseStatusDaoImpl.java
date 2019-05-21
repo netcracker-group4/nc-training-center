@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 @Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
-public class CourseStatusDaoDaoImpl implements CourseStatusDao {
+public class CourseStatusDaoImpl implements CourseStatusDao {
 
     @Value("${status.select-id-by-name}")
     private String getStatusByName;
@@ -26,7 +26,7 @@ public class CourseStatusDaoDaoImpl implements CourseStatusDao {
     private final DataSource dataSource;
 
     @Autowired
-    CourseStatusDaoDaoImpl(DataSource dataSource) throws PersistException {
+    CourseStatusDaoImpl(DataSource dataSource) throws PersistException {
         this.dataSource = dataSource;
     }
 
@@ -41,7 +41,7 @@ public class CourseStatusDaoDaoImpl implements CourseStatusDao {
             rs.next();
             name = rs.getString("NAME");
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
         return ua.com.nc.domain.CourseStatus.valueOf(name.toUpperCase());
@@ -58,7 +58,7 @@ public class CourseStatusDaoDaoImpl implements CourseStatusDao {
             rs.next();
             id = rs.getInt("ID");
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
         return id;
