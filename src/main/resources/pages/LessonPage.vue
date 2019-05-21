@@ -119,6 +119,9 @@
                 }
                 window.scrollTo(0, 0);
             },
+            downloadFile(fileId){
+                window.open(this.$store.state.apiServer + '/api/attachments/download/'+fileId);
+            },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
                     timeout: 2000,
@@ -192,6 +195,9 @@
             },
             isLessonTrainer() {
                 return this.$store.state.user.id == this.trainer.id;
+            },
+            downloadFile(id) {
+                window.open(this.$store.state.apiServer + '/api/attachments/download/' + id);
             },
             unlink(idFile){
 
