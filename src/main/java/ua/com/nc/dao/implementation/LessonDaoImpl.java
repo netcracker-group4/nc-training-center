@@ -109,8 +109,8 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
                     timeDate, time, duration, isCanceled,
                     isPerformed, isArchived);
             lessons.add(lesson);
-            log.info("Retrieved lessons from database " + lessons);
         }
+        log.info("Retrieved lessons from database " + lessons);
         return lessons;
     }
 
@@ -119,7 +119,18 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     public List<Lesson> getByGroupIdAndUserId(Integer groupId, Integer userId) {
         String sql = getSelectByGroupIdAndUserId;
         log.info("getByGroupIdAndUserId groupId " + groupId + " userId " + userId + "   " + sql);
-        return getFromSqlByTwoId(sql, groupId, userId);
+        List<Lesson> lessons;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, groupId);
+            statement.setInt(2, userId);
+            ResultSet rs = statement.executeQuery();
+            lessons = parseResultSetForAttendance(rs);
+        } catch (Exception e) {
+            log.trace(e);
+            throw new PersistException(e);
+        }
+        return lessons;
     }
 
     @Override
@@ -128,23 +139,6 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
         log.info("getByGroupId groupId " + groupId + "  " + sql);
         return getFromSqlById(sql, groupId);
     }
-
-//    @Override
-//    public void archiveLesson(Integer lessonId) {
-//        String sql = archiveLessonQuery;
-//        log.info(sql + "  archiveLesson " + lessonId);
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(sql)) {
-//            setId(statement, lessonId);
-//            int count = statement.executeUpdate();
-//            if (count > 1) {
-//                throw new PersistException("On update modify more then 1 record: " + count);
-//            }
-//        } catch (Exception e) {
-//            log.error(e);
-//            throw new PersistException(e);
-//        }
-//    }
 
     @Override
     public List<Lesson> getByEmployee(int employeeId) {

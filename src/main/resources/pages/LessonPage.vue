@@ -193,6 +193,9 @@
             isLessonTrainer() {
                 return this.$store.state.user.id == this.trainer.id;
             },
+            downloadFile(id) {
+                window.open(this.$store.state.apiServer + '/api/attachments/download/' + id);
+            },
             unlink(idFile){
 
                 let self = this;
