@@ -37,50 +37,50 @@
 
     export default {
         name: "AttachmentsPage",
-        data:function(){
-            return{
+        data: function () {
+            return {
                 lessonId: null,
                 fileId: null,
-                attachments:[],
+                attachments: [],
                 headers: [
-                  {
-                      text: 'Name',
-                      align: 'left',
-                      value: 'title'
-                  }
+                    {
+                        text: 'Name',
+                        align: 'left',
+                        value: 'title'
+                    }
                 ]
             }
         },
-        components:{
+        components: {
             AttachmentUpload
         },
         mounted() {
             let self = this;
             axios.get(this.$store.state.apiServer + '/api/attachments/all')
-            .then(function (response) {
-                self.attachments= response.data;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                .then(function (response) {
+                    self.attachments = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
-        methods:{
-            uploadFile(){
+        methods: {
+            uploadFile() {
                 let form = new FormData(document.getElementById('uploadForm'));
                 let imagefile = document.querySelector('#file');
 
                 let request = new XMLHttpRequest();
                 request.open('POST', this.$store.state.apiServer + '/api/attachments/upload-file');
                 form.append('file', imagefile.files[0]);
-                form.append('lessonId',this.lessonId);
+                form.append('lessonId', this.lessonId);
                 request.send(form);
 
             },
-            downloadFile(Id){
-                window.open(this.$store.state.apiServer + '/api/attachments/download/'+Id);
+            downloadFile(id) {
+                window.open(this.$store.state.apiServer + '/api/attachments/download/' + id);
             },
 
-            deleteFile(fileId){
+            deleteFile(fileId) {
                 axios.delete(this.$store.state.apiServer + '/api/attachments/' + fileId)
                     .catch(function (error) {
                         console.log(error);
