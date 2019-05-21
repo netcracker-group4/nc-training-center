@@ -173,7 +173,7 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     @Override
     public List<Lesson> getByTrainer(Integer userId) {
         String sql = selectByTrainerId;
-        log.info("getByUserId employeeId " + userId + "  " + sql);
+        log.info("getByUserId  " + userId + "  " + sql);
         return getFromSqlById(sql, userId);
     }
 }

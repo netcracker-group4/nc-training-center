@@ -61,7 +61,7 @@
         methods: {
             loadInfo() {
                 let self = this;
-                axios.get('/api/requests/statuses')
+                axios.get(this.$store.state.apiServer + '/api/requests/statuses')
                     .then(function (response) {
                         response.data.forEach(function (e) {
                             self.statuses.push(e);

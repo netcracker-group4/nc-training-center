@@ -149,7 +149,7 @@
                 let request = new XMLHttpRequest();
                 self.checkFields();
                 try {
-                    request.open('PUT', 'http://localhost:8080/api/getcourses/'+self.id+'/edit');
+                    request.open('PUT', this.$store.state.apiServer + '/api/getcourses/'+self.id+'/edit');
                     form.append('id',self.id);
                     form.append('name', self.name);
                     form.append('level', self.level);
@@ -190,14 +190,14 @@
         },
         mounted(){
             let self = this;
-            axios.get('api/getInfo/getStatuses')
+            axios.get(this.$store.state.apiServer + '/api/getInfo/getStatuses')
                 .then(function (response) {
                     self.statuses = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-            axios.get('api/getInfo/getLevels')
+            axios.get(this.$store.state.apiServer + '/api/getInfo/getLevels')
                 .then(function (response) {
                     self.levels = response.data;
                 })

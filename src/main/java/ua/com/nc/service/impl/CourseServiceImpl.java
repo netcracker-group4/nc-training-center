@@ -5,11 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.*;
-import ua.com.nc.dao.interfaces.CourseStatusDao;
-import ua.com.nc.domain.*;
 import ua.com.nc.domain.Course;
+import ua.com.nc.domain.CourseStatus;
 import ua.com.nc.dto.DtoCourse;
-import ua.com.nc.dto.schedule.*;
 import ua.com.nc.service.CourseService;
 
 import java.io.BufferedOutputStream;
@@ -42,12 +40,6 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private UserGroupDao userGroupDao;
 
-    private int startOfDay = 8;
-    private int endOfDay = 21;
-
-
-    private CourseStatusDao statusDao;
-
     @Override
     public void add(Course course) {
         courseDao.insert(course);
@@ -73,7 +65,9 @@ public class CourseServiceImpl implements CourseService {
         int lvl = levelDao.getIdByName(level.trim());
         int statusId = status.ordinal();
         boolean isLanding = Boolean.parseBoolean(isOnLandingPage);
-        courseDao.edit(id,name,lvl, statusId, isLanding,new java.sql.Date(starts.getTime()),new java.sql.Date(ends.getTime()),desc);
+        courseDao.edit(id, name, lvl, statusId, isLanding,
+                new java.sql.Date(starts.getTime()),
+                new java.sql.Date(ends.getTime()), desc);
     }
 
     @Override
@@ -100,8 +94,6 @@ public class CourseServiceImpl implements CourseService {
                 new java.sql.Date(startingDay.getTime()), new java.sql.Date(endingDay.getTime()),
                 isLanding, desc);
     }
-
-
 
 
     /**

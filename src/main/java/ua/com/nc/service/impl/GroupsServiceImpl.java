@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.dto.DtoGroup;
+import ua.com.nc.exceptions.LogicException;
 import ua.com.nc.service.GroupsService;
 
 import java.util.ArrayList;
@@ -35,43 +36,46 @@ public class GroupsServiceImpl implements GroupsService {
     @Override
     public DtoGroup getGroupById(int groupId) {
         List<Level> levels = levelDao.getAll();
-        List<Group> groups = new ArrayList<>();
-        groups.add(groupDao.getGroupById(groupId));
-        return getDtoGroups(levels, groups).get(0);
+        Group group = groupDao.getEntityById(groupId);
+        if (group == null) {
+            throw new LogicException("There is no such group");
+        }
+        return getDtoGroup(levels, group);
     }
 
     @Override
-    public List<DtoGroup> getAll() {
+    public List<DtoGroup> getAllGroups() {
         List<Group> groups = groupDao.getAll();
         List<DtoGroup> dtoGroups = new ArrayList<>();
-        for (Group group : groups) {
-            dtoGroups.add(new DtoGroup(group.getId(), group.getTitle()));
-        }
+        groups.forEach(g -> dtoGroups.add(new DtoGroup(g.getId(), g.getTitle())));
         return dtoGroups;
     }
 
     @Override
-    public List<DtoGroup> getAllByEmployeeId(Integer employeeId) {
+    public List<DtoGroup> getGroupsOfEmployee(Integer employeeId) {
         List<DtoGroup> dtoGroups = new ArrayList<>();
         List<Level> levels = levelDao.getAll();
         List<UserGroup> userGroups = userGroupDao.getByUser(employeeId);
-        for (UserGroup userGroup : userGroups) {
-            int courseId = userGroup.getCourseId();
-            Course course = courseDao.getEntityById(courseId);
-            String courseName = course.getName();
-            if (userGroup.getGroupId() == null || userGroup.getGroupId() == 0) {
-                dtoGroups.add(new DtoGroup(null, "", courseId,
-                        courseName, course.getUserId(),
-                        getLevelName(levels, course.getLevel())));
-            } else {
-                Group group = groupDao.getEntityById(userGroup.getGroupId());
-                dtoGroups.add(new DtoGroup(userGroup.getGroupId(), group.getTitle(), courseId,
-                        courseName, course.getUserId(),
-                        getLevelName(levels, course.getLevel())));
-            }
-
-        }
+        userGroups.forEach(g -> dtoGroups.add(getExtendedGtoGroup(levels, g)));
         return dtoGroups;
+    }
+
+    private DtoGroup getExtendedGtoGroup(List<Level> levels, UserGroup userGroup) {
+        int courseId = userGroup.getCourseId();
+        Course course = courseDao.getEntityById(courseId);
+        String levelName = getLevelName(levels, course.getLevel());
+        Integer groupId;
+        String title;
+        if (userGroup.getGroupId() == null || userGroup.getGroupId() == 0) {
+            title = "";
+            groupId = null;
+        } else {
+            Group group = groupDao.getEntityById(userGroup.getGroupId());
+            title = group.getTitle();
+            groupId = userGroup.getGroupId();
+        }
+        return new DtoGroup(groupId, title, courseId,
+                course.getName(), course.getUserId(), levelName);
     }
 
     private String getLevelName(List<Level> levels, int levelId) {
@@ -87,13 +91,12 @@ public class GroupsServiceImpl implements GroupsService {
     @Override
     public List<DtoGroup> getGroupsAndQuantity() {
         List<Group> groups = groupDao.getAll();
-        List<DtoGroup> dtos = new ArrayList<>();
+        List<DtoGroup> dtoGroups = new ArrayList<>();
         groups.forEach(g -> {
             int n = groupDao.getNumberOfEmployeesInGroup(g.getId());
-            dtos.add(new DtoGroup(g.getId(), g.getTitle(), n));
+            dtoGroups.add(new DtoGroup(g.getId(), g.getTitle(), n));
         });
-
-        return dtos;
+        return dtoGroups;
     }
 
     @Override
@@ -104,24 +107,23 @@ public class GroupsServiceImpl implements GroupsService {
 
     @Override
     public List<DtoGroup> getAllByTrainerId(Integer trainerId) {
-        List<Level> levels = levelDao.getAll();
         List<Group> groups = groupDao.getGroupByTrainerId(trainerId);
-        return getDtoGroups(levels, groups);
-    }
-
-    private List<DtoGroup> getDtoGroups(List<Level> levels, List<Group> groups) {
+        List<Level> levels = levelDao.getAll();
         List<DtoGroup> dtoGroups = new ArrayList<>();
-        if (groups != null && groups.size() != 0) {
-            for (Group group : groups) {
-                int courseId = group.getCourseId();
-                Course course = courseDao.getEntityById(courseId);
-                String courseName = course.getName();
-                dtoGroups.add(new DtoGroup(group.getId(), group.getTitle(), courseId,
-                        courseName, course.getUserId(),
-                        getLevelName(levels, course.getLevel())));
-            }
+        for (Group group : groups) {
+            DtoGroup dtoGroup = getDtoGroup(levels, group);
+            dtoGroups.add(dtoGroup);
         }
         return dtoGroups;
+    }
+
+    private DtoGroup getDtoGroup(List<Level> levels, Group group) {
+        int courseId = group.getCourseId();
+        Course course = courseDao.getEntityById(courseId);
+        String courseName = course.getName();
+        return new DtoGroup(group.getId(), group.getTitle(), courseId,
+                courseName, course.getUserId(),
+                getLevelName(levels, course.getLevel()));
     }
 
     @Override
@@ -141,5 +143,19 @@ public class GroupsServiceImpl implements GroupsService {
         Map<String, Double> result = new HashMap<>();
         attendance.forEach((key, value) -> result.put(key, (value * percentage)));
         return result;
+    }
+
+
+    @Override
+    public List<Group> getAllGroupsOfCourse(Integer courseId) {
+        return groupDao.getAllGroupsOfCourse(courseId);
+    }
+
+
+    @Override
+    public void removeStudentFromGroup(Integer userId, Integer groupId) {
+        UserGroup userGroup = userGroupDao.getByUserAndGroup(userId, groupId);
+        userGroup.setGroupId(null);
+        userGroupDao.update(userGroup);
     }
 }

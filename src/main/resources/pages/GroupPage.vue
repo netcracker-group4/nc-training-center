@@ -1,11 +1,8 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container>
+        <progress-circular-component v-if="loading"></progress-circular-component>
 
-        <!--        тренер урока должен видеть только свои уроки-->
-        <!--        Ученики могут видеть все уроки но не видят панели редактирования-->
-        <!--        Админ и супертренер видят все-->
-
-        <v-layout row wrap>
+        <v-layout v-if="!loading" row wrap>
             <v-flex xs12 sm12 style="margin-bottom: 50px">
                 <v-layout>
                     <span class="grey--text" style="font-size: 22px; margin-top: 15px">Group :  </span>
@@ -56,6 +53,37 @@
                 <group-attendance-graph :absenceReasons="reasons"/>
             </v-flex>
         </v-layout>
+        <v-layout v-if="!loading" row wrap style="margin-bottom: 40px">
+            <v-spacer></v-spacer>
+            <div class="text-xs-center">
+                <v-dialog v-model="sendMessageWindowShow" width="500">
+                    <template v-slot:activator="{ on }">
+                        <v-btn color="success" large @click="sendMessageWindowShow = ! sendMessageWindowShow">Message
+                        </v-btn>
+                    </template>
+
+                    <v-card>
+                        <v-card-title class="headline grey lighten-2" primary-title>Send message to</v-card-title>
+                        <v-divider></v-divider>
+                        <v-layout row wrap>
+                            <v-flex xs10 offset-xs1 class="message-textarea">
+                                <v-textarea
+                                        v-model="message"
+                                        solo
+                                        name="input-7-4"
+                                        label="Type message"
+                                ></v-textarea>
+                            </v-flex>
+                        </v-layout>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="primary" flat @click="sendMessageWindowShow = false">Cancel</v-btn>
+                            <v-btn color="primary" flat @click="sendMessage">Send</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </div>
+        </v-layout>
     </v-container>
 </template>
 
@@ -64,19 +92,24 @@
     import store from '../store/store.js';
     import GroupAttendanceGraph from "../components/GroupAttendanceGraph.vue";
     import GroupScheduleComponent from "../components/GroupScheduleComponent.vue";
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         props: ['id'],
         name: "GroupPage",
-        components: {GroupAttendanceGraph, GroupScheduleComponent},
+        components: {GroupAttendanceGraph, GroupScheduleComponent, ProgressCircularComponent},
         data: function () {
             return {
+                message: '',
+                self: this,
+                sendMessageWindowShow: false,
                 group: {},
                 students: [],
                 teacher: [],
                 course: [],
                 lessons: [],
                 reasons: [],
+                loading: true,
                 headers2: [
                     {
                         text: 'Lesson topic',
@@ -95,6 +128,18 @@
             }
         },
         methods: {
+            sendMessage() {
+                let form = new FormData();
+                let request = new XMLHttpRequest();
+                request.open('POST', this.$store.state.apiServer + '/api/messages');
+                form.append('text', this.message);
+                form.append('senderId', this.$store.state.user.id);
+                form.append('groupId', this.group.id);
+                request.send(form);
+                this.message = ''
+                this.sendMessageWindowShow = false
+
+            },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
                     timeout: 2000,
@@ -113,8 +158,9 @@
             },
             deleteStudent(id) {
                 let self = this;
-                if (confirm("Are you sure you want to delete " + this.findUserById(id).firstName + ' ' + this.findUserById(id).lastName)) {
-                    axios.delete('/api/groups/' + this.group.id + '/user/' + id)
+                if (confirm("Are you sure you want to delete " +
+                    this.findUserById(id).firstName + ' ' + this.findUserById(id).lastName)) {
+                    axios.delete(this.$store.state.apiServer + '/api/groups/' + this.group.id + '/user/' + id)
                         .then(function (response) {
                             self.successAutoClosable('Employee has been removed from group');
                             self.students = self.students.filter(function (e) {
@@ -139,43 +185,46 @@
                 let self = this;
                 return this.students.filter(e => e.id === self.$store.state.user.id).length > 0;
             },
-            downloadGroupAttendanceReport(){
-                window.open("/download-report/attendance-report/" + this.id, "_blank");
+            downloadGroupAttendanceReport() {
+                window.open(this.$store.state.apiServer + "/download-report/attendance-report/" + this.id, "_blank");
             },
 
         },
         mounted() {
             let self = this;
-            axios.get('/api/groups/' + self.id)
+            axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id)
                 .then(function (response) {
                     self.group = response.data;
+                    self.loading = false;
                 }).catch(function (error) {
                 console.log(error);
             });
-            axios.get('/api/groups/' + self.id + '/course')
+            axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/course')
                 .then(function (response) {
                     self.course = response.data;
-                }).catch(function (error) {
-                console.log(error);
-            });
-            axios.get('/api/groups/' + self.id + '/trainer')
-                .then(function (response) {
-                    self.teacher = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
                 });
-            axios.get('/api/groups/' + self.id + '/users')
+
+            axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/users')
                 .then(function (response) {
                     self.students = response.data;
-                    if (self.$store.state.userRoles.includes('ADMIN') ||
-                        parseInt(self.$store.state.user.id) === parseInt(self.course.teacher.id) ||
-                        self.isStudentOfGroup()) {
-                    } else {
-                        self.$router.push('/403');
-                    }
-
-                }).catch(function (error) {
-                console.log(error);
-            });
-            axios.get('/api/groups/'+ self.id + '/getAttendanceGraph')
+                    axios.get(self.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/trainer')
+                        .then(function (response) {
+                            self.teacher = response.data;
+                            if (self.$store.state.userRoles.includes('ADMIN') ||
+                                self.$store.state.userRoles.includes('TRAINER') ||
+                                self.isStudentOfGroup()) {
+                            } else {
+                                self.$router.push('/403');
+                            }
+                        });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/getAttendanceGraph')
                 .then(function (response) {
                     self.reasons = response.data;
                     console.log(response.data);

@@ -1,10 +1,12 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container>
-        <v-layout row wrap>
+        <progress-circular-component v-if="loading"></progress-circular-component>
+
+        <v-layout v-if="!loading" row wrap>
             <v-flex xs12 sm6>
             </v-flex>
         </v-layout>
-        <v-layout row wrap style="margin-bottom: 50px">
+        <v-layout v-if="!loading" row wrap style="margin-bottom: 50px">
             <v-flex xs12>
                 <template>
                     <v-data-table
@@ -27,7 +29,7 @@
                 </template>
             </v-flex>
         </v-layout>
-        <v-layout>
+        <v-layout v-if="!loading">
             <v-text-field v-model="title"
                           label="New reason title"
                           :data-vv-name="'reason title'"
@@ -45,11 +47,16 @@
 <script>
 
     import axios from 'axios'
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         name: "AbsenceReasons",
+        components: {
+            ProgressCircularComponent
+        },
         data: function () {
             return {
+                loading :true,
                 title: '',
                 headers: [
                     {
@@ -93,7 +100,7 @@
             },
             deleteReason(idReason) {
                 let self = this;
-                axios.delete('/api/absence-reason/' + idReason)
+                axios.delete(this.$store.state.apiServer + '/api/absence-reason/' + idReason)
                     .then(function (response) {
                         self.reasons = self.reasons.filter(function (e) {
                             return e.id !== idReason;
@@ -107,9 +114,10 @@
             },
             loadInfo() {
                 let self = this;
-                axios.get('/api/absence-reason')
+                axios.get(this.$store.state.apiServer + '/api/absence-reason')
                     .then(function (response) {
                         self.reasons = response.data;
+                        self.loading = false;
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -120,7 +128,7 @@
                 let self = this;
                 this.$validator.validateAll().then((result) => {
                     if (result) {
-                        axios.post('/api/absence-reason', {title: this.title})
+                        axios.post(this.$store.state.apiServer + '/api/absence-reason', {title: this.title})
                             .then(function (response) {
                                 self.reasons.push({
                                     id: response.data,

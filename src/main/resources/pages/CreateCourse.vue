@@ -112,21 +112,21 @@
         mounted() {
             try {
                 let self = this;
-                axios.get('/api/getInfo/getLevels')
+                axios.get(this.$store.state.apiServer + '/api/getInfo/getLevels')
                     .then(function (response) {
                         self.levels = response.data;
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
-                axios.get('/api/users/get-all-trainers')
+                axios.get(this.$store.state.apiServer + '/api/users/get-all-trainers')
                     .then(function (response) {
                         self.trainers = response.data;
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
-                axios.get('/api/getInfo/getStatuses')
+                axios.get(this.$store.state.apiServer + '/api/getInfo/getStatuses')
                     .then(function (response) {
                         self.statuses = response.data;
                     })
@@ -161,9 +161,9 @@
                 let request = new XMLHttpRequest();
                 try {
                     if(this.id===undefined){
-                        request.open('POST', 'http://localhost:8080/api/getcourses/create');
+                        request.open('POST', this.$store.state.apiServer + '/api/getcourses/create');
                     } else{
-                        request.open('PUT', 'http://localhost:8080/api/getcourses/create');
+                        request.open('PUT', this.$store.state.apiServer + '/api/getcourses/create');
                     }
                     form.append('name', this.name);
                     form.append('level', this.level);

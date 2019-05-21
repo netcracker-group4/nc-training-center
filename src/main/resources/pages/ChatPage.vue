@@ -56,7 +56,7 @@
         created() {
 
            let id = this.$route.params.id;
-            axios.get('http://localhost:8080/messages?chatId=' + id)
+            axios.get(this.$store.state.apiServer + '/api/messages?chatId=' + id)
                 .then(response => {
                     this.messages = response.data
                 })
@@ -92,7 +92,7 @@
         watch:{
             '$route.params.id'(to, from){
                 let id = this.$route.params.id;
-                axios.get('http://localhost:8080/messages?chatId=' + id)
+                axios.get(this.$store.state.apiServer + '/api/messages?chatId=' + id)
                     .then(response => {
                         this.messages = response.data
                     })

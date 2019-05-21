@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dto.DtoUserSave;
@@ -22,9 +21,6 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private GroupDao groupDao;
-
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> save(@RequestBody DtoUserSave dtoUserSave) {

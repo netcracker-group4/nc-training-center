@@ -75,13 +75,14 @@ public class UserServiceImpl implements UserService {
         if (!users.isEmpty()) {
             for (User user : users) {
                 List<Role> roles = roleDao.findAllByUserId(user.getId());
-                dtoUsers.add(new DtoUser(
+                DtoUser dtoUser = new DtoUser(
                         user.getId(),
                         user.getFirstName(),
                         user.getLastName(),
                         roles,
                         user.isActive(),
-                        user.getImageUrl()));
+                        user.getImageUrl());
+                dtoUsers.add(dtoUser);
             }
         }
         return dtoUsers;
@@ -135,14 +136,8 @@ public class UserServiceImpl implements UserService {
         List<DtoTeacherAndManager> dtoManagers = new ArrayList<>();
         List<User> managers = userDao.getAllManagers();
         for (User manager : managers) {
-            dtoManagers.add(new DtoTeacherAndManager(
-                    manager.getId(),
-                    manager.getFirstName(),
-                    manager.getLastName(),
-                    manager.getImageUrl(),
-                    manager.isActive(),
-                    manager.getEmail()
-            ));
+            DtoTeacherAndManager dtoTeacherAndManager = new DtoTeacherAndManager(manager);
+            dtoManagers.add(dtoTeacherAndManager);
         }
         return dtoManagers;
     }
@@ -152,14 +147,7 @@ public class UserServiceImpl implements UserService {
         List<DtoTeacherAndManager> dtoTrainers = new ArrayList<>();
         List<User> trainers = userDao.getAllTrainers();
         for (User trainer : trainers) {
-            dtoTrainers.add(new DtoTeacherAndManager(
-                    trainer.getId(),
-                    trainer.getFirstName(),
-                    trainer.getLastName(),
-                    trainer.getImageUrl(),
-                    trainer.isActive(),
-                    trainer.getEmail()
-            ));
+            dtoTrainers.add(new DtoTeacherAndManager(trainer));
         }
         return dtoTrainers;
     }
@@ -187,18 +175,20 @@ public class UserServiceImpl implements UserService {
         List<DtoTeacherAndManager> dtoSubordinates = new ArrayList<>();
         List<User> subordinatesOfManager = userDao.getSubordinatesOfManager(managerId);
         for (User subordinate : subordinatesOfManager) {
-            dtoSubordinates.add(new DtoTeacherAndManager(subordinate));
+            DtoTeacherAndManager dtoSubordinate = new DtoTeacherAndManager(subordinate);
+            dtoSubordinates.add(dtoSubordinate);
         }
         return dtoSubordinates;
     }
 
     @Override
     public List<DtoTeacherAndManager> getTrainersOfEmployee(Integer id) {
-        List<User> teachers = userDao.getAllTrainersById(id);
+        List<User> trainers = userDao.getAllTrainersById(id);
         List<DtoTeacherAndManager> dtoTeachers = new ArrayList<>();
-        if (teachers != null && teachers.size() != 0) {
-            for (User teacher : teachers) {
-                dtoTeachers.add(new DtoTeacherAndManager(teacher));
+        if (trainers != null && trainers.size() != 0) {
+            for (User trainer : trainers) {
+                DtoTeacherAndManager dtoTrainer = new DtoTeacherAndManager(trainer);
+                dtoTeachers.add(dtoTrainer);
             }
         }
         return dtoTeachers;

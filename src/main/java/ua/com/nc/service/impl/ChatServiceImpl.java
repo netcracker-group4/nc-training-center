@@ -4,11 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ChatDao;
+import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.dao.interfaces.MessageDao;
+import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.Chat;
+import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Message;
+import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.service.ChatService;
+import ua.com.nc.service.GroupsService;
 import ua.com.nc.service.UserService;
 
 import java.util.List;
@@ -23,37 +28,67 @@ public class ChatServiceImpl implements ChatService {
     private MessageDao messageDao;
 
     @Autowired
-    private UserService userService;
+    private GroupsService groupsService;
+
+    @Autowired
+    private UserDao userDao;
 
     @Override
-    public Integer addMessage(Message message, Integer receiverId) {
-        Integer messageId;
-        Chat chat = null;
-        if(receiverId != null){
-            chat = chatDao.getChatBySenderIdAndReceiverId(message.getSenderId(), receiverId);
-        }
-        if(message.getChatId() != null){
-            //message.setChatId(chat.getId());
-            messageDao.insert(message);
-            messageId = message.getId();
-        }
-        else{
-            if(receiverId != null) {
-                DtoUserProfiles receiver = userService.getById(receiverId);
-                DtoUserProfiles sender = userService.getById(message.getSenderId());
-                String chatName = sender.getLastName() + " " + receiver.getLastName();
-                Integer chatId = chatDao.addChatReturningId(new Chat(chatName, message.getDateTime(), null));
-                chatDao.addUserToChat(chatId, receiver.getId());
-                chatDao.addUserToChat(chatId, sender.getId());
-                message.setChatId(chatId);
-                messageDao.insert(message);
-                messageId = message.getId();
+    public Integer addMessageToGroupChat(Message message, Integer groupId) {
+        Chat chat = chatDao.getByGroupId(groupId);
+        if(chat != null){
+            message.setChatId(chat.getId());
+            return addMessageToExistingChat(message);
+        }else {
+            String groupName = groupsService.getGroupById(groupId).getTitle();
+            String chatName = groupName + " chat";
+            List<User> studentsOfGroup = userDao.getByGroupId(groupId);
+            Chat newChat = new Chat(chatName, message.getDateTime(), groupId);
+            User trainer = userDao.getTrainerByGroupId(groupId);
 
-            }else{
-                throw new PersistException("Receiver id should be not null");
+            Integer newChatId = chatDao.addChatReturningId(newChat);
+
+            for(User student : studentsOfGroup){
+                chatDao.addUserToChat(newChatId, student.getId());
             }
+
+            chatDao.addUserToChat(newChatId, trainer.getId());
+
+            message.setChatId(newChatId);
+
+            return messageDao.insertMessageReturningId(message);
         }
-        return messageId;
+
+    }
+
+    @Override
+    public Integer addMessageToChat(Message message, Integer receiverId) {
+        Chat chat = chatDao.getChatBySenderIdAndReceiverId(message.getSenderId(), receiverId);
+        if(chat != null){
+            message.setChatId(chat.getId());
+            return addMessageToExistingChat(message);
+        }else{
+            String senderName = userDao.getEntityById(message.getSenderId()).getLastName();
+            String receiverName = userDao.getEntityById(receiverId).getLastName();
+            String chatName = senderName + " " + receiverName;
+
+            Chat newChat = new Chat(chatName, message.getDateTime(), null);
+
+            Integer newChatId = chatDao.addChatReturningId(newChat);
+
+            chatDao.addUserToChat(newChatId, message.getSenderId());
+            chatDao.addUserToChat(newChatId, receiverId);
+
+            message.setChatId(newChatId);
+
+            return messageDao.insertMessageReturningId(message);
+
+        }
+    }
+
+    @Override
+    public Integer addMessageToExistingChat(Message message) {
+        return messageDao.insertMessageReturningId(message);
     }
 
     @Override

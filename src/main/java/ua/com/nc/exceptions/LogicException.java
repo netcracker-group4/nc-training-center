@@ -17,7 +17,7 @@ package ua.com.nc.exceptions;
  * myMessage - will be sent to front-end inside of 'error.response.data' (you can then get it inside of catch clause)
  * realException will be logged by Log$j log.trace(realException.getMessage(), realException);
  */
-public class LogicException extends Exception {
+public class LogicException extends RuntimeException {
 
     /**
      * in case if there isn't any cause exception

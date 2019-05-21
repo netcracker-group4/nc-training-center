@@ -141,7 +141,7 @@
             <v-layout>
                 <div class="text-xs-left" style="margin-bottom: 20px;">
                     <v-chip close @input="remove(attachment)" v-for="attachment in selectedAttachments"
-                            :key="attachment.id">{{attachment.description}}
+                            :key="attachment.id">{{attachment.url.slice(0, 10)}}
                     </v-chip>
                 </div>
             </v-layout>

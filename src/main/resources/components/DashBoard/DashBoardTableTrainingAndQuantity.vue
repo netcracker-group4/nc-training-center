@@ -118,13 +118,13 @@
                 this.$router.push('/courses/' + courseId);
             },
             downloadDashboardReport(){
-                window.open("http://localhost:8080/api/download-report/dashboard-report", "_blank");
+                window.open(this.$store.state.apiServer + "/api/download-report/dashboard-report", "_blank");
             }
         },
         mounted() {
             if(store.getters.isAdmin) {
                 let self = this;
-                axios.get('/api/dashboard/training-and-quantity')
+                axios.get(this.$store.state.apiServer + '/api/dashboard/training-and-quantity')
                     .then(function (response) {
                         self.coursesAndQuantities = response.data;
                         console.log(response.data);
@@ -133,6 +133,7 @@
                             s.groups.forEach(function (ee) {
                                 self.allGroups.push(ee.group);
                             });
+                            self.$emit('loaded');
                             self.groupsForCourses[s.course.id] = s.groups;
                         });
                     })

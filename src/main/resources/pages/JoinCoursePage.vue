@@ -1,7 +1,9 @@
 <!--suppress ALL -->
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div class="row">
-        <v-container fluid grid-list-md>
+        <progress-circular-component v-if="loading"></progress-circular-component>
+
+        <v-container v-if="!loading" fluid grid-list-md>
             <v-layout row wrap>
                 <v-flex d-flex style="margin-bottom: 50px">
                     <div>
@@ -58,9 +60,13 @@
 
 <script>
     import axios from 'axios';
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         name: "JoinCoursePage",
+        components: {
+            ProgressCircularComponent
+        },
         display: "Table",
         data() {
             return {
@@ -84,7 +90,8 @@
                     value: 'dayOfWeek'
                 }],
                 suitabilities: [],
-                activeSuitability: null
+                activeSuitability: null,
+                loading : true
             }
         },
         methods: {
@@ -117,7 +124,7 @@
                     courseId: this.$route.params.id,
                     array: this.desiredSchedule2
                 });
-                axios.post('/api/desired-schedule/join/', {
+                axios.post(this.$store.state.apiServer + '/api/desired-schedule/join/', {
                     courseId: this.$route.params.id,
                     forDays: this.desiredSchedule2
                 }).then(function (response) {
@@ -143,7 +150,7 @@
             },
             loadInfo() {
                 let self = this;
-                axios.get('/api/desired-schedule/day-intervals')
+                axios.get(this.$store.state.apiServer + '/api/desired-schedule/day-intervals')
                     .then(function (response) {
                         self.dayIntervals = response.data;
                         for (const index of Array(self.days.length).keys()) {
@@ -161,12 +168,13 @@
                         }));
                         console.log(self.dayIntervals);
                         console.log(self.desiredSchedule);
+                        self.loading = false;
                     })
                     .catch(function (error) {
                         // self.errorAutoClosable(error.response.data);
                         console.log(error);
                     });
-                axios.get('/api/getcourses/' + this.$route.params.id)
+                axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id)
                     .then(function (response) {
                         self.course = response.data;
                         console.log(self.course);
@@ -176,7 +184,7 @@
                         console.log(error);
                     });
 
-                axios.get('/api/desired-schedule/suitabilities')
+                axios.get(this.$store.state.apiServer + '/api/desired-schedule/suitabilities')
                     .then(function (response) {
                         self.suitabilities = response.data;
                         if (self.suitabilities.length > 0) {
@@ -192,7 +200,7 @@
         },
         mounted() {
             let self = this;
-            axios.get('/api/getcourses/' + this.$route.params.id + '/course-group')
+            axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id + '/course-group')
                 .then(function (response) {
                     console.log(response.data);
                     if (response.data == true) {

@@ -194,7 +194,7 @@
             sendMessage(){
                 let form = new FormData();
                 let request = new XMLHttpRequest();
-                request.open('POST', 'http://localhost:8080/api/messages');
+                request.open('POST', this.$store.state.apiServer + '/api/messages');
                     form.append('text', this.message);
                     form.append('senderId', this.$store.state.user.id);
                     form.append('receiverId', this.user.id);
@@ -237,7 +237,7 @@
                 this.editUser = Object.assign({}, this.user);
                 this.dialog = true;
                 let self = this;
-                axios.get('/api/users/get-all-managers')
+                axios.get(this.$store.state.apiServer + '/api/users/get-all-managers')
                     .then(function (response) {
                         self.managers = response.data;
                         console.log(self.managers)
@@ -266,7 +266,7 @@
 
             isActive() {
                 let self = this;
-                axios.put('/api/users/update-active', {
+                axios.put(this.$store.state.apiServer + '/api/users/update-active', {
                     active: this.user.active,
                     id: this.user.id
                 }).then(function (response) {
@@ -282,7 +282,7 @@
             save() {
                 let self = this;
                 if (this.editUser.firstName != null && this.editUser.lastName != null) {
-                    axios.put('/api/users/update', {
+                    axios.put(this.$store.state.apiServer + '/api/users/update', {
                         id: this.user.id,
                         firstName: this.editUser.firstName,
                         lastName: this.editUser.lastName,

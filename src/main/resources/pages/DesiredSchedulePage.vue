@@ -1,5 +1,7 @@
 <template>
-    <student-line-in-table></student-line-in-table>
+    <v-container>
+        <student-line-in-table></student-line-in-table>
+    </v-container>
 </template>
 
 <script>
@@ -8,8 +10,12 @@
     export default {
         name: "DesiredSchedulePage",
         components: {
-            'student-line-in-table' :StudentLineInTable
-        }
+            'student-line-in-table': StudentLineInTable
+        },
+         data: function () {
+             return{
+             }
+         }
     }
 </script>
 

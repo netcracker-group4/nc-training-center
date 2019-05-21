@@ -1,5 +1,7 @@
 <template>
     <div class="row">
+        <progress-circular-component v-if="loading"></progress-circular-component>
+
         <v-tabs fixed-tabs v-model="currentDay" centered>
             <v-tab
                     v-for="n in days"
@@ -12,11 +14,11 @@
         <br/>
         <br/>
         <br/>
-        <v-container fluid grid-list-md>
+        <v-container v-if="!loading" fluid grid-list-md>
             <v-layout row wrap>
                 <v-flex d-flex style="margin-bottom: 50px">
                     <div>
-                        <h2>All ungrouped students for a course " {{this.course.name}} "</h2>
+                        <h2>All ungrouped students for a course " {{course.name}} "</h2>
                         <table class="zui-table ">
                             <thead class="thead-dark">
                             <tr>
@@ -112,14 +114,16 @@
     import draggable from "vuedraggable";
     import axios from 'axios';
     import store from "../store/store.js";
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         name: "StudentLineInTable",
         display: "Table",
         order: 8,
-        components: {draggable},
+        components: {draggable, ProgressCircularComponent},
         data() {
             return {
+                loading : false,
                 list2: [],
                 errorMessages: '',
                 formHasErrors: false,
@@ -160,7 +164,7 @@
             },
             invertAttending(id, userName) {
                 let self = this;
-                axios.get('/api/desired-schedule/invert-attending/' + id)
+                axios.get(this.$store.state.apiServer + '/api/desired-schedule/invert-attending/' + id)
                     .then(function (response) {
                         self.successAutoClosable('Employee  ' + userName + ' now updated')
                     })
@@ -170,7 +174,7 @@
                     });
             },
             getColor(forInterval) {
-                return forInterval.colorsForDays[this.currentDay];
+                return forInterval.colorsForWeekDays[this.currentDay];
             },
             addGroup() {
                 this.groups.push({
@@ -184,7 +188,7 @@
                 let self = this;
                 this.$validator.validate('group_' + index, self.groups[index].name).then((result) => {
                     if (result) {
-                        axios.post('/api/desired-schedule', self.groups[index])
+                        axios.post(this.$store.state.apiServer + '/api/desired-schedule', self.groups[index])
                             .then(function (response) {
                                 self.groups[index].id = response.data;
                                 self.successAutoClosable('Group  ' + self.groups[index].name + ' has been saved')
@@ -203,7 +207,7 @@
             },
             deleteGroup(index) {
                 let self = this;
-                axios.delete('/api/desired-schedule/' + self.groups[index].id)
+                axios.delete(this.$store.state.apiServer + '/api/desired-schedule/' + self.groups[index].id)
                     .then(function (response) {
                         self.allSchedules = self.allSchedules.concat(self.groups[index].groupScheduleList);
                         self.successAutoClosable('Group ' + self.groups[index].name + ' has been deleted');
@@ -220,7 +224,7 @@
                 this.$validator.validateAll().then((result) => {
                     if (result) {
                         for (let i = 0; i < this.groups.length; i++) {
-                            axios.post('/api/desired-schedule', self.groups[i])
+                            axios.post(this.$store.state.apiServer + '/api/desired-schedule', self.groups[i])
                                 .then(function (response) {
                                     console.log(response);
                                     self.groups[i].id = response.data;
@@ -243,9 +247,10 @@
             this.$validator.localize('en', this.dictionary);
             if (store.getters.isAdmin) {
                 let self = this;
-                axios.get('/api/desired-schedule/' + self.$route.params.id + '/ungrouped')
+                axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + self.$route.params.id + '/ungrouped')
                     .then(function (response) {
                         self.allSchedules = response.data;
+                        self.loading = false;
                     })
                     .catch(function (error) {
                         self.errorAutoClosable(error.response.data);
@@ -253,7 +258,7 @@
                     });
 
 
-                axios.get('/api/desired-schedule/' + self.$route.params.id + '/grouped')
+                axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + self.$route.params.id + '/grouped')
                     .then(function (response) {
                         self.groups = response.data;
                     })
@@ -261,7 +266,7 @@
                         self.errorAutoClosable(error.response.data);
                         console.log(error);
                     });
-                axios.get('/api/desired-schedule/day-intervals')
+                axios.get(this.$store.state.apiServer + '/api/desired-schedule/day-intervals')
                     .then(function (response) {
                         self.dayIntervals = response.data;
                     })
@@ -269,7 +274,7 @@
                         self.errorAutoClosable(error.response.data);
                         console.log(error);
                     });
-                axios.get('/api/desired-schedule/' + self.$route.params.id)
+                axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + self.$route.params.id)
                     .then(function (response) {
                         self.course = response.data;
                     })

@@ -2,7 +2,6 @@ package ua.com.nc.dao.interfaces;
 
 import ua.com.nc.domain.Course;
 
-
 import java.sql.Date;
 import java.util.List;
 

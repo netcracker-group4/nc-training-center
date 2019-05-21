@@ -12,7 +12,7 @@ public interface AttachmentService {
 
     void delete(Integer id);
 
-    void uploadFile(Integer lessonId, Integer trainerId, String description, MultipartFile file);
+    Attachment uploadFile(Integer lessonId, Integer trainerId, String description, MultipartFile file);
 
     FileInputStream downloadFile(Integer id);
 

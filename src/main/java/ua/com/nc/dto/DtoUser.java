@@ -1,11 +1,11 @@
 package ua.com.nc.dto;
 
-import lombok.Getter;
+import lombok.Data;
 import ua.com.nc.domain.Role;
 
 import java.util.List;
 
-@Getter
+@Data
 public class DtoUser {
     private Integer id;
     private String firstName;

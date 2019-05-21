@@ -63,7 +63,7 @@
                                             fab
                                             small
                                             dark
-                                            color="#e6e4ee"
+                                            color="#F66F6F"
                                     >
                                         <v-icon>clear</v-icon>
                                     </v-btn>
@@ -142,7 +142,7 @@
                     if (result) {
                         let self = this;
                         console.log(this.user);
-                        axios.post('/api/users', {
+                        axios.post(this.$store.state.apiServer + '/api/users', {
                             firstName: this.user.firstName,
                             lastName: this.user.lastName,
                             email: this.user.email,

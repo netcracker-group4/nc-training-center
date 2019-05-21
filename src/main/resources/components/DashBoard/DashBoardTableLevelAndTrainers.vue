@@ -118,14 +118,14 @@
                 this.$router.push('/courses/' + trainerId);
             },
             downloadDashboardReport(){
-                window.open("http://localhost:8080/api/download-report/dashboard-report", "_blank");
+                window.open(this.$store.state.apiServer + "/api/download-report/dashboard-report", "_blank");
             },
             trainerName: item => item.trainer.firstName + ' ' + item.trainer.lastName
         },
         mounted() {
             if(store.getters.isAdmin) {
                 let self = this;
-                axios.get('/api/dashboard/level-and-trainers')
+                axios.get(this.$store.state.apiServer + '/api/dashboard/level-and-trainers')
                     .then(function (response) {
                         self.trainersAndLevels = response.data;
                         self.trainersAndLevels.forEach(function (value) {

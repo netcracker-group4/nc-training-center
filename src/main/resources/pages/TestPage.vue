@@ -121,7 +121,7 @@
                 }
                 let form = new FormData();
                 let request = new XMLHttpRequest();
-                request.open('PUT', 'http://localhost:8080/api/attendances')
+                request.open('PUT', this.$store.state.apiServer + '/api/attendances')
                 form.append('attendanceId', attendanceId)
                 form.append('statusId', statusId)
                 form.append('absenceId', reasonId)
@@ -130,7 +130,7 @@
                     if(request.status == 200){
                         let userId = 13;
                         let groupId = 1;
-                        axios.get('/api/attendances?userId='+ userId + '&groupId=' + groupId)
+                        axios.get(this.$store.state.apiServer + '/api/attendances?userId='+ userId + '&groupId=' + groupId)
                             .then(response => self.attendances = response.data)
                             .catch(error => console.log(error))
                     }
@@ -146,15 +146,15 @@
         mounted() {
             let userId = 13;
             let groupId = 1;
-            axios.get('/api/attendances?userId='+ userId + '&groupId=' + groupId)
+            axios.get(this.$store.state.apiServer + '/api/attendances?userId='+ userId + '&groupId=' + groupId)
                 .then(response => this.attendances = response.data)
                 .catch(error => console.log(error))
 
-            axios.get('/api/attendance-status')
+            axios.get(this.$store.state.apiServer + '/api/attendance-status')
                 .then(response => this.statuses = response.data)
                 .catch(error => console.log(error))
 
-            axios.get('/api/absence-reason')
+            axios.get(this.$store.state.apiServer + '/api/absence-reason')
                 .then(response => this.reasons = response.data)
                 .catch(error => console.log(error))
 

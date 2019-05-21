@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.CourseDao;
-import ua.com.nc.dao.interfaces.SuitabilityDao;
 import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Course;

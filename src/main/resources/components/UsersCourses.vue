@@ -78,7 +78,7 @@
             loadInfo() {
                 let self = this;
                 let id = this.$route.params.id;
-                axios.get('/api/getcourses/trainer/' + id)
+                axios.get(this.$store.state.apiServer + '/api/getcourses/trainer/' + id)
                     .then(function (response) {
                         self.courses = response.data;
                         console.log(self.courses)
