@@ -246,7 +246,12 @@
                     fr.addEventListener('load', () => {
                         this.imageUrl = fr.result;
                         this.img = files[0]
-                    })
+                    });
+                    let form = new FormData();
+                    let request = new XMLHttpRequest();
+                    request.open('PUT', this.$store.state.apiServer + '/getcourses/'+this.$route.params.id+'/upload-img');
+                    form.append('img', files[0]);
+                    request.send(form);
                 } else {
                     this.img = '';
                     this.imageUrl = '';

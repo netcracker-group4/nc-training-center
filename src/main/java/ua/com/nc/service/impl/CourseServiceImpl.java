@@ -10,9 +10,7 @@ import ua.com.nc.domain.CourseStatus;
 import ua.com.nc.dto.DtoCourse;
 import ua.com.nc.service.CourseService;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,15 +28,7 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private LevelDao levelDao;
     @Autowired
-    private DesiredScheduleDao desiredScheduleDao;
-    @Autowired
-    private SuitabilityDao suitabilityDao;
-    @Autowired
-    private UserDao userDao;
-    @Autowired
-    private GroupDao groupDao;
-    @Autowired
-    private UserGroupDao userGroupDao;
+    private FiletransferServiceImpl fileService;
 
     @Override
     public void add(Course course) {
@@ -101,35 +91,47 @@ public class CourseServiceImpl implements CourseService {
      */
     @Override
     public String uploadImage(MultipartFile image) {
-        StringBuilder name;
-        if (!image.isEmpty() && image.getOriginalFilename() != null) {
+        if (!image.isEmpty()) {
             try {
                 byte[] bytes = image.getBytes();
+                String name = image.getOriginalFilename();
+                String rootPath = "src/main/resources/img/";
+                File dir = new File(rootPath);
 
-                name = new StringBuilder(image.getOriginalFilename());
-                int dot = name.lastIndexOf(".");
-                String imgFormat = name.substring(dot - 1);
-                name = new StringBuilder(name.subSequence(0, dot));
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                String filePath = dir.getAbsolutePath() + File.separator + name;
+                int i =1;
+                while (fileService.downloadFileFromServer(filePath)!=null){
+                    filePath = dir.getAbsolutePath() + File.separator + name+" ("+i+")";
+                }
+                File uploadedFile = new File(filePath);
+                try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));
+                    ) {
+                        stream.write(bytes);
+                    }
+                try(FileInputStream stream = new FileInputStream(filePath)) {
+                    String path = "/img";
+                    filePath = path + "/" + name;
+                    fileService.uploadFileToServer(path, name, stream);
 
-                String rootPath = "src/main/resources/img";
-                Path path = Paths.get(rootPath + File.separator + name + imgFormat);
-                int i = 1;
-                while (Files.exists(path)) {
-                    name.append(i);
-                    path = Paths.get(rootPath + File.separator + name + imgFormat);
-                    i++;
+                    return filePath;
                 }
-                File uploadedFile = Files.createFile(path).toFile();
-                try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile))) {
-                    stream.write(bytes);
-                    stream.flush();
-                }
-                return name.toString();
             } catch (Exception e) {
                 log.trace(e);
             }
         }
-        return "";
+        return null;
+    }
+
+    @Override
+    public String uploadImage(MultipartFile image, int courseId) {
+        String filePath = uploadImage(image);
+        Course course = courseDao.getEntityById(courseId);
+        course.setImageUrl(filePath);
+        courseDao.update(course);
+        return filePath;
     }
 
     @Override
