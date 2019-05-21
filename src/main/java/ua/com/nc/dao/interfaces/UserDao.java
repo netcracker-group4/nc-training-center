@@ -46,4 +46,6 @@ public interface UserDao extends GenericDao<User> {
 
     List<User> getSubordinatesOfManager(Integer managerId);
 
+    List<User> getStudentsByLessonId(Integer lessonId);
+
 }

@@ -76,6 +76,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     private String getSelectTrainerByGroupId;
     @Value("${usr.select-by-token}")
     private String usrSelectByToken;
+    @Value("${usr.select-students-by-lesson-id}")
+    private String getSelectStudentsByLessonId;
 
     @Autowired
     public UserDaoImpl(DataSource dataSource) throws PersistException {
@@ -306,6 +308,13 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         String sql = getSelectSubordinatesByManager;
         log.info("find subordinates by managerId = " + managerId + "  " + sql);
         return getFromSqlById(sql, managerId);
+    }
+
+    @Override
+    public List<User> getStudentsByLessonId(Integer lessonId) {
+        String sql = getSelectStudentsByLessonId;
+        log.info("find students by lessonId = " + lessonId + "  " + sql);
+        return getFromSqlById(sql, lessonId);
     }
 
 

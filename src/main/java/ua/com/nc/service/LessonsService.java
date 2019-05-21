@@ -2,6 +2,7 @@ package ua.com.nc.service;
 
 import ua.com.nc.domain.Lesson;
 import ua.com.nc.dto.DtoLesson;
+import ua.com.nc.dto.DtoUser;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface LessonsService {
     List<DtoLesson> getAllForTrainer(Integer userId);
 
     Lesson getLessonById(int lessonId);
+
+    List<DtoUser> getStudentsIdsByLessonId(Integer lessonId);
 }

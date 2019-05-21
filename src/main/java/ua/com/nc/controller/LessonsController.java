@@ -94,5 +94,9 @@ public class LessonsController {
         return gson.toJson(lessonsService.getLessonById(Integer.parseInt(lessonId)));
     }
 
-
+    @ResponseBody
+    @RequestMapping(value = "/{lessonId}/students", method = RequestMethod.GET)
+    public String getStudentsIds(@PathVariable String lessonId) {
+        return gson.toJson(lessonsService.getStudentsIdsByLessonId(Integer.parseInt(lessonId)));
+    }
 }

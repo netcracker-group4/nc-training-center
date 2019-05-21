@@ -70,7 +70,7 @@ CREATE TABLE PROBLEM
 (
     ID                INTEGER DEFAULT NEXTVAL('problem_seq') PRIMARY KEY,
     USER_ID           INTEGER REFERENCES USR (ID),
-    TITLE             VARCHAR(50) NOT NULL,
+    TITLE             VARCHAR(50)                  NOT NULL,
     PROBLEM_STATUS_ID INTEGER REFERENCES PROBLEM_STATUS (ID),
     DESCRIPTION       TEXT,
     CHAT_ID           INTEGER REFERENCES CHAT (ID) NOT NULL,
@@ -157,14 +157,15 @@ CREATE TABLE ATTACHMENT
 CREATE SEQUENCE lesson_seq;
 CREATE TABLE LESSON
 (
-    ID        INTEGER DEFAULT NEXTVAL('lesson_seq') PRIMARY KEY,
-    GROUP_ID  INTEGER REFERENCES GRUP (ID),
-    TOPIC     VARCHAR(150) NOT NULL,
-    USER_ID   INTEGER REFERENCES USR (ID),
-    TIME_DATE TIMESTAMP WITH TIME ZONE,
-    is_canceled boolean,
-    is_archived boolean,
-    duration interval
+    ID          INTEGER DEFAULT NEXTVAL('lesson_seq') PRIMARY KEY,
+    GROUP_ID    INTEGER REFERENCES GRUP (ID),
+    TOPIC       VARCHAR(150) NOT NULL,
+    USER_ID     INTEGER REFERENCES USR (ID),
+    TIME_DATE   TIMESTAMP WITH TIME ZONE,
+    IS_ARCHIVED BOOLEAN,
+    IS_CANCELED BOOLEAN,
+    DURATION    INTERVAL,
+    PERFORMED   BOOLEAN
 );
 
 CREATE TABLE LESSON_ATTACHMENT
@@ -262,7 +263,7 @@ alter table lesson
     add column is_archived boolean;
 
 alter table lesson
-    add column duration interval;
+    add column PERFORMED BOOLEAN;
 
 
 COMMIT;
