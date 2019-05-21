@@ -54,12 +54,12 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
         List<Attendance> attendances = new ArrayList<>();
         while (rs.next()) {
             Integer id = rs.getInt("id");
-            Integer lessonId = rs.getInt("lesson_id");
             Integer userId = rs.getInt("student_id");
             String firstName = rs.getString("first_name");
             String lastName = rs.getString("last_name");
             Integer courseId = rs.getInt("course_id");
             String courseName = rs.getString("course_name");
+            Integer lessonId = rs.getInt("lesson_id");
             Date timeDate = rs.getDate("time_date");
             String topic = rs.getString("topic");
             String status = rs.getString("status");
@@ -78,7 +78,7 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
 
     @Override
     public List<Attendance> getAttendanceByStudentIdAndGroupId(Integer studentId, Integer groupId) {
-        return getFromSqlByTwoId(selectAttendanceByStudentIdAndCourseId, studentId, groupId);
+        return getFromSqlByTwoId(selectAttendanceByStudentIdAndGroupId, studentId, groupId);
     }
 
     @Override
