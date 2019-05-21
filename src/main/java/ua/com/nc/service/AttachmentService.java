@@ -14,8 +14,6 @@ public interface AttachmentService {
 
     void delete(Integer id);
 
-    Attachment uploadFile(Integer lessonId, Integer trainerId, String description, MultipartFile file);
-
     Attachment uploadFile(Integer trainerId, DtoAttachment dtoAttachment);
 
 

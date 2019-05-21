@@ -80,16 +80,6 @@ public class AttachmentController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/upload-file")
-    public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("lessonId") String lessonId, @RequestParam("descr") String description,
-                           @AuthenticationPrincipal User user) {
-        if (user != null && roleService.findAllByUserId(user.getId()).contains(Role.TRAINER)){
-            return gson.toJson(service.uploadFile(Integer.parseInt(lessonId),user.getId(), description, file));
-        }
-        return null;
-    }
-
-    @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/lesson/upload-file",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String uploadFile(@ModelAttribute  DtoAttachment dtoAttachment,
