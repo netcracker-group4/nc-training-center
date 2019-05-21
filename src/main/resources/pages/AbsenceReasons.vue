@@ -56,7 +56,7 @@
         },
         data: function () {
             return {
-                loading :true,
+                loading: true,
                 title: '',
                 headers: [
                     {
@@ -113,16 +113,20 @@
                     });
             },
             loadInfo() {
-                let self = this;
-                axios.get(this.$store.state.apiServer + '/api/absence-reason')
-                    .then(function (response) {
-                        self.reasons = response.data;
-                        self.loading = false;
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        self.errorAutoClosable('Error occurred');
-                    });
+                if (this.$store.getters.isAdmin) {
+                    let self = this;
+                    axios.get(this.$store.state.apiServer + '/api/absence-reason')
+                        .then(function (response) {
+                            self.reasons = response.data;
+                            self.loading = false;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            self.errorAutoClosable('Error occurred');
+                        });
+                } else {
+                    this.$router.push('/403');
+                }
             },
             add() {
                 let self = this;

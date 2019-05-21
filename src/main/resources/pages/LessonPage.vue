@@ -196,7 +196,7 @@
             unlink(idFile){
 
                 let self = this;
-                axios.delete('/api/attachments/unlink',{data:{lessonId: this.$route.params.id ,
+                axios.delete(this.$store.state.apiServer +'/api/attachments/unlink',{data:{lessonId: this.$route.params.id ,
                  attachmentId: idFile}})
                     .then(function (response) {
                         self.attachments = self.attachments.filter(function (e) {

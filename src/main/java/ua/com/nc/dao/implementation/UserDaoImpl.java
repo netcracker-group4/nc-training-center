@@ -147,52 +147,49 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
                     lastName, token, created, managerId, imageUrl, isActive);
             list.add(user);
         }
+        log.info("Retrieved Users from database " + list);
         return list;
     }
 
     @Override
     public User getByEmail(String email) {
         String sql = usrSelectByEmail;
-        log.info(sql + " find by email " + email);
+        log.info("find user by email " + email + " " + sql);
         return getUniqueFromSqlByString(sql, email);
     }
 
     @Override
     public User getByToken(String token) {
         String sql = usrSelectByToken;
-        log.info(sql + " find by token " + token);
+        log.info("find user by token " + token + " " + sql);
         return getUniqueFromSqlByString(sql, token);
     }
 
     @Override
-    public List<User> getTrainersOnCourse(int id) {
+    public List<User> getTrainersOnCourse(int courseId) {
         String sql = getSelectTrainerByCourseId;
-        log.info(sql + "find by course");
-        List<User> trainers = getFromSqlById(sql, id);
-        if (trainers == null || trainers.size() == 0) {
-            return null;
-        }
-        return trainers;
+        log.info("find trainers by courseId " + courseId + " " + sql);
+        return getFromSqlById(sql, courseId);
     }
 
     @Override
-    public User getTrainerByFeedback(Integer id) {
+    public User getTrainerByFeedback(Integer feedbackId) {
         String sql = usrSelectTrainerByFeedback;
-        log.info(sql + " find trainer by feedback " + id);
-        return getUniqueFromSqlById(sql, id);
+        log.info("find trainer by feedbackId " + feedbackId + " " + sql);
+        return getUniqueFromSqlById(sql, feedbackId);
     }
 
     @Override
     public void addUserRole(Integer userId, String roleName) {
         String sql = usrInsertUserRole;
-        log.info(sql + " insert user " + userId + " role " + roleName);
+        log.info(" insert user " + userId + " role " + roleName + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             statement.setString(2, roleName);
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -200,7 +197,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public List<User> getAllTrainers() {
         String sql = usrSelectAllTrainers;
-        log.info(sql + "select all trainers");
+        log.info("select all trainers " + sql);
         return getListFromSql(sql);
     }
 
@@ -208,28 +205,22 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public List<User> getAllManagers() {
         String sql = usrSelectAllManagers;
-        log.info(sql + "select all managers");
+        log.info("select all managers " + sql);
         return getListFromSql(sql);
     }
 
 
     @Override
-    public List<User> getByGroupId(Integer id) {
+    public List<User> getByGroupId(Integer groupId) {
         String sql = usrSelectByGroupId;
-        return getFromSqlById(sql, id);
+        log.info("select employees by groupId " + sql);
+        return getFromSqlById(sql, groupId);
     }
 
     @Override
     public List<User> getUngroupedByCourse(Integer courseId) {
         String sql = usrSelectUngroupedByCourseId;
-        log.info(sql + " select Ungrouped users for a course " + courseId);
-        return getFromSqlById(sql, courseId);
-    }
-
-    @Override
-    public List<User> getAllForCourse(int courseId) {
-        String sql = usrSelectAllByCourse;
-        log.info(sql + " select all users for a course " + courseId);
+        log.info("select ungrouped employees for a course " + courseId + " " + sql);
         return getFromSqlById(sql, courseId);
     }
 
@@ -245,7 +236,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
             statement.setInt(4, user.getId());
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -253,14 +244,14 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public void updateActive(User user) {
         String sql = usrUpdateChangeActive;
-        log.info(sql + "change active by admin user= " + user.toString());
+        log.info("change active by admin user" + user.toString() + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, user.isActive());
             statement.setInt(2, user.getId());
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -269,35 +260,35 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public List<User> getLandingPageTrainers() {
         String sql = usrLandingPage;
-        log.info(sql + "select trainers on landing page");
+        log.info("select trainers on landing page " + sql);
         return getListFromSql(sql);
     }
 
     @Override
-    public User getManagerById(Integer id) {
+    public User getManagerByEmployeeId(Integer employeeId) {
         String sql = usrSelectManagerById;
-        log.info(sql + " find manager by user id = " + id);
-        return getUniqueFromSqlById(sql, id);
+        log.info("find manager by employeeId " + employeeId + " " + sql);
+        return getUniqueFromSqlById(sql, employeeId);
     }
 
     @Override
-    public List<User> getAllTrainersById(Integer id) {
+    public List<User> getEmployeeTrainersByEmployeeId(Integer employeeId) {
         String sql = usrSelectAllTrainersById;
-        log.info(sql + " find all trainers by id = " + id);
-        return getFromSqlById(sql, id);
+        log.info("find all trainers by employeeId " + employeeId + " " + sql);
+        return getFromSqlById(sql, employeeId);
     }
 
     @Override
     public void updateTrainerLandingPage(int id, boolean isOnLandingPage) {
         String sql = usrUpdateLandingPage;
-        log.info(sql + " update trainer on landing page id = " + id + " isOnLandingPage = " + isOnLandingPage);
+        log.info(" update trainer on landing page id " + id + " isOnLandingPage " + isOnLandingPage + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, isOnLandingPage);
             statement.setInt(2, id);
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -305,7 +296,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public User getTrainerByGroupId(Integer groupId) {
         String sql = getSelectTrainerByCourseId;
-        log.info(sql + "trainer by group id = " + groupId);
+        log.info("find trainer by groupId " + groupId + " " + sql);
         return getUniqueFromSqlById(sql, groupId);
     }
 
@@ -313,7 +304,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public List<User> getSubordinatesOfManager(Integer managerId) {
         String sql = getSelectSubordinatesByManager;
-        log.info(" subordinates by manager id = " + managerId + "   " + sql);
+        log.info("find subordinates by managerId = " + managerId + "  " + sql);
         return getFromSqlById(sql, managerId);
     }
 
@@ -328,11 +319,11 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
             ResultSet rs = statement.executeQuery();
             students = parseResultSet(rs);
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
         }
         HashMap<User, User> absentUsersAndTheirManagers = new HashMap<>();
         for (User student : students) {
-            User manager = getManagerById(student.getManagerId());
+            User manager = getManagerByEmployeeId(student.getManagerId());
             absentUsersAndTheirManagers.put(student, manager);
         }
         return absentUsersAndTheirManagers;
@@ -340,7 +331,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     public User getAdmin() {
         String sql = getAdmin;
-        log.info(sql + " getAdmin");
+        log.info("find admin " + sql);
         List<User> admin = getListFromSql(sql);
         if (admin == null || admin.size() == 0) {
             return null;
@@ -352,8 +343,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
     public User getLessonTrainer(int lessonId) {
-        String sql = this.getLessonTrainer;
-        log.info("get Trainer of lesson " + lessonId);
+        String sql = getLessonTrainer;
+        log.info("find trainer of lesson by lessonId" + lessonId + " " + sql);
         return getUniqueFromSqlById(sql, lessonId);
     }
 

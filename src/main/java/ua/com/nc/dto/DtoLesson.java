@@ -22,6 +22,7 @@ public class DtoLesson {
     private String duration;
     private boolean isCanceled;
     private boolean isPerformed;
+    private boolean isArchived;
     private List<Attachment> attachments;
 
     public DtoLesson(Lesson lesson, String trainerName, List<Attachment> attachments) {
@@ -35,6 +36,7 @@ public class DtoLesson {
         this.duration = lesson.getDuration();
         this.attachments = attachments;
         this.isPerformed = lesson.isPerformed();
+        this.isArchived = lesson.isArchived();
     }
 
 
@@ -42,7 +44,8 @@ public class DtoLesson {
         String dateString = timeDate.toString().substring(0, 10);
         Date sqlDate = Date.valueOf(dateString);
         return new Lesson(id, groupId, topic, trainerId,
-                sqlDate, timeDate, duration, isCanceled, isPerformed);
+                sqlDate, timeDate, duration, isCanceled,
+                isPerformed, isArchived);
     }
 
 

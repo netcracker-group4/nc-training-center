@@ -124,7 +124,7 @@
     import axios from 'axios'
 
     export default {
-        props: {trainers: Array, endingDay: '', startingDay: '', descr: '',nm: '',id: 0},
+        props: {endingDay: '', startingDay: '', descr: '',nm: '',id: 0},
         name: "EditCourseComponent",
         data(){
             return{
@@ -138,6 +138,10 @@
                 isOnLandingPage: false,
                 levels: [],
                 statuses: [],
+                trainers: [],
+                rules: {
+                    required: value => !!value || 'Required.',
+                }
             }
 
         },
@@ -200,6 +204,13 @@
             axios.get(this.$store.state.apiServer + '/api/getInfo/getLevels')
                 .then(function (response) {
                     self.levels = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            axios.get(this.$store.state.apiServer + '/api/users/get-all-trainers')
+                .then(function (response) {
+                    self.trainers = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);

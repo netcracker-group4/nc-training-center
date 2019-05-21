@@ -20,6 +20,7 @@ import java.util.List;
 @Log4j2
 @Component
 @PropertySource("classpath:sql_queries.properties")
+//TODO delete it?????
 public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> implements LessonAttachmentDao {
     @Value("${lesson_attachment.insert}")
     private String lessonAttachmentInsert;
@@ -76,7 +77,7 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
             statement.setInt(1, attachmentId);
             int count = statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -97,7 +98,7 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
             statement.setInt(1, lessonId);
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -111,7 +112,7 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
             prepareStatementForInsert(statement, lessonAttachment);
             statement.execute();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -126,7 +127,7 @@ public class LessonAttachmentDaoImpl extends AbstractDaoImpl<LessonAttachment> i
             statement.setInt(2, lessonId);
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }

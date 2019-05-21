@@ -32,13 +32,13 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     public List<E> getAll() throws PersistException {
         List<E> list;
         String sql = getSelectQuery();
-        log.info(sql + "   find all");
+        log.info("find all   " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            log.trace("Error while getting all", e);
+            log.error("Error while getting all", e);
             throw new PersistException(e);
         }
         return list;
@@ -48,21 +48,21 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     public E getEntityById(Integer id) throws PersistException {
         List<E> list;
         String sql = getSelectByIdQuery();
-        log.info(sql + " select by id with id " + id.toString());
+        log.info(" select by id with id " + id.toString() + "  " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, id);
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            log.trace("Error while getting by id", e);
+            log.error("Error while getting by id", e);
             throw new PersistException(e);
         }
         if (list == null || list.size() == 0) {
             return null;
         }
         if (list.size() > 1) {
-            log.trace("Received more than one record.");
+            log.error("Received more than one record.");
             throw new PersistException("Received more than one record.");
         }
         return list.iterator().next();
@@ -71,16 +71,16 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     @Override
     public void update(E entity) throws PersistException {
         String sql = getUpdateQuery();
-        log.info(sql + "  update with arguments " + entity.toString());
+        log.info("update with arguments  " + entity.toString()+ "  " + sql );
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            prepareStatementForUpdate(statement, entity); // заполнение аргументов запроса оставим на совесть потомков
+            prepareStatementForUpdate(statement, entity);
             int count = statement.executeUpdate();
             if (count > 1) {
                 throw new PersistException("On update modify more then 1 record: " + count);
             }
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -88,16 +88,16 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     @Override
     public void delete(Integer id) throws PersistException {
         String sql = getDeleteQuery();
-        log.info(sql + " delete with id " + id.toString());
+        log.info("delete with id " + id.toString() + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            setId(statement, id); // заполнение аргументов запроса оставим на совесть потомков
+            setId(statement, id);
             int count = statement.executeUpdate();
             if (count > 1) {
                 throw new PersistException("On delete modify more then 1 record: " + count);
             }
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -105,17 +105,18 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     @Override
     public void insert(E entity) throws PersistException {
         if (entity.getId() != null) {
+            log.error("trying to insert object that already persist", entity);
             throw new PersistException("Object is already persist.");
         }
         String sql = getInsertQuery();
-        log.info(sql + " insert with parameters" + entity.toString());
+        log.info("insert with parameters" + entity.toString() + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForInsert(statement, entity);
             ResultSet rs = statement.executeQuery();
             entity.setId(parseId(rs));
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
@@ -169,7 +170,7 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
         return list;
@@ -184,7 +185,7 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
         return list;
@@ -197,11 +198,8 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
-        }
-        if (list == null || list.size() == 0) {
-            return null;
         }
         return list;
     }
@@ -225,7 +223,7 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
         if (list == null || list.size() == 0) {

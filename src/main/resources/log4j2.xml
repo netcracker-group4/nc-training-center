@@ -2,7 +2,7 @@
 <Configuration status="DEBUG">
     <Appenders>
         <Console name="LogToConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level  - %msg%n"/>
         </Console>
         <RollingFile name="LogToFile" fileName="logs/app.log"
                      filePattern="logs/app-%d{yyyy-MM-dd HH:mm:ss}-%i.log">
@@ -10,26 +10,15 @@
                 <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
             </PatternLayout>
             <Policies>
-                <SizeBasedTriggeringPolicy size="10MB" />
+                <SizeBasedTriggeringPolicy size="2MB"/>
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="com.mkyong" level="debug" additivity="false">
-            <AppenderRef ref="LogToFile"/>
-            <AppenderRef ref="LogToConsole"/>
-        </Logger>
-        <Logger name="org.springframework.boot" level="error" additivity="false">
-            <AppenderRef ref="LogToConsole"/>
-        </Logger>
-        <Root level="debug">
-            <AppenderRef ref="LogToFile"/>
+        <Root level="trace">
+            <AppenderRef ref="LogToFile" level="info"/>
             <AppenderRef ref="LogToConsole"/>
         </Root>
-
-<!--        <Root level="info">-->
-<!--            <AppenderRef ref="ConsoleAppender" />-->
-<!--        </Root>-->
     </Loggers>
 </Configuration>

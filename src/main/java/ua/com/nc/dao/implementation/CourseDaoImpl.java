@@ -118,37 +118,29 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
             Course newCourse = new Course(id, name, level, courseStatusId, userId, imageUrl, startDate, endDate, isOnLandingPage, description);
             list.add(newCourse);
         }
+        log.info("Retrieved Courses from database " + list);
         return list;
     }
 
     @Override
     public List<Course> getAllByLevel(int levelId) {
         String sql = courseSelectByLevel;
-        log.info(sql + "find all by level " + levelId);
+        log.info("find all courses by level " + levelId + " " + sql);
         return getFromSqlById(sql, levelId);
     }
 
     @Override
     public List<Course> getAllByTrainer(int trainerId) {
         String sql = courseSelectByTrainer;
-        log.info(sql + " find all by trainer " + trainerId);
+        log.info(sql + " find all courses by trainer " + trainerId);
         return getFromSqlById(sql, trainerId);
     }
 
     @Override
     public List<Course> getLandingPageCourses() {
-        List<Course> landingPageCourses;
         String sql = courseLandingPage;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            landingPageCourses = parseResultSet(rs);
-        } catch (Exception e) {
-            log.trace(e);
-            throw new PersistException(e.getMessage());
-        }
-        log.info(sql + " find all on landing page");
-        return landingPageCourses;
+        log.info("find all courses on landing page " + sql);
+        return getListFromSql(sql);
     }
 
     @Override
@@ -160,44 +152,37 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
             statement.setInt(2, id);
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e.getMessage());
         }
     }
 
     @Override
-    public Course getCourseByGroup(int id) {
+    public Course getCourseByGroup(int groupId) {
         String sql = selectCourseByGroupId;
-        return getUniqueFromSqlById(sql, id);
+        log.info("find all courses by groupId " + sql);
+        return getUniqueFromSqlById(sql, groupId);
     }
 
     @Override
     public Course getCourseByFeedback(Integer feedbackId) {
         String sql = selectCourseByFeedbackId;
-        return getUniqueFromSqlById(selectCourseByFeedbackId, feedbackId);
+        log.info("find a course by feedbackId " + feedbackId + " " + sql);
+        return getUniqueFromSqlById(sql, feedbackId);
     }
 
     @Override
-    public List<Course> getAllCourseByTrainerAndByEmployee(Integer trainerId, Integer employeeId) {
+    public List<Course> getAllCoursesByTrainerAndByEmployee(Integer trainerId, Integer employeeId) {
         String sql = courseSelectAllByTrainerAndEmployee;
+        log.info("find all courses by trainerId " + trainerId + " and employeeId " + employeeId + " " + sql);
         return getFromSqlByTwoId(sql, trainerId, employeeId);
     }
 
     @Override
     public void edit(int id, String name, int lvl, int statusId, boolean isLanding, java.sql.Date starts, java.sql.Date ends, String desc) {
-        String sql = editCourse;
-        try(PreparedStatement statement = dataSource.getConnection().prepareStatement(sql)){
-            statement.setString(1,name);
-            statement.setInt(2,lvl);
-            statement.setInt(3,statusId);
-            statement.setDate(4,starts);
-            statement.setDate(5,ends);
-            statement.setBoolean(6,isLanding);
-            statement.setString(7,desc);
-            statement.setInt(8,id);
-            statement.executeQuery();
-        } catch (SQLException e) {
-            log.trace(e);
-        }
+        Course course = getEntityById(id);
+        String imageUrl = course.getImageUrl();
+        Course c = new Course(id,name,lvl,statusId,course.getUserId(),imageUrl,starts,ends,isLanding,desc);
+        update(c);
     }
 }
