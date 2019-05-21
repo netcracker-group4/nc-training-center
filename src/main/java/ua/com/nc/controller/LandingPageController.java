@@ -23,6 +23,7 @@ public class LandingPageController {
     @RequestMapping(value = {"/courses-on-landing-page"}, method = RequestMethod.GET)
     @ResponseBody
     public String getLandingPageCourses() {
+        log.info("getting courses on landing page");
         return gson.toJson(landingPageService.getLandingPageCourses());
     }
 

@@ -202,28 +202,31 @@
             axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/course')
                 .then(function (response) {
                     self.course = response.data;
+                    axios.get(self.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/users')
+                        .then(function (response) {
+                            self.students = response.data;
+                            axios.get(self.$store.state.apiServer + '/api/groups/' + self.course.userId + '/trainer')
+                                .then(function (response) {
+                                    self.teacher = response.data;
+                                    console.log(self.teacher);
+                                    if (self.$store.state.userRoles.includes('ADMIN') ||
+                                        self.$store.state.userRoles.includes('TRAINER') ||
+                                        self.isStudentOfGroup()) {
+                                    } else {
+                                        self.$router.push('/403');
+                                    }
+                                });
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
 
-            axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/users')
-                .then(function (response) {
-                    self.students = response.data;
-                    axios.get(self.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/trainer')
-                        .then(function (response) {
-                            self.teacher = response.data;
-                            if (self.$store.state.userRoles.includes('ADMIN') ||
-                                self.$store.state.userRoles.includes('TRAINER') ||
-                                self.isStudentOfGroup()) {
-                            } else {
-                                self.$router.push('/403');
-                            }
-                        });
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+
             axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/getAttendanceGraph')
                 .then(function (response) {
                     self.reasons = response.data;

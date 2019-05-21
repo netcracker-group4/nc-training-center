@@ -32,7 +32,7 @@
     import DashBoardTableLevelAndQuantity from "../components/DashBoard/DashBoardTableLevelAndQuantity.vue";
     import DashBoardTableLevelAndTrainers from "../components/DashBoard/DashBoardTableLevelAndTrainers.vue";
     import DashBoardTableTrainingAndQuantity from "../components/DashBoard/DashBoardTableTrainingAndQuantity.vue";
-    import store from "../store/store.js";
+    // import store from "../store/store.js";
     import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
@@ -50,8 +50,8 @@
             ProgressCircularComponent
         },
         mounted() {
-            if (!store.getters.isAdmin) {
-                this.$router.push('/404');
+            if (!this.$store.getters.isAdmin) {
+                this.$router.push('/403');
             }
         }
     }

@@ -8,8 +8,6 @@ public interface UserGroupDao extends GenericDao<UserGroup> {
 
     void deleteAllForGroup(Integer groupId);
 
-    void deleteAllForUser(Integer userId);
-
     UserGroup getByUserAndCourse(Integer userId, Integer courseId);
 
     List<UserGroup> getByUser(Integer userId);

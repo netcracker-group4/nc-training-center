@@ -134,7 +134,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<DtoCourse> getAllByTrainerAndEmployee(Integer trainerId, Integer employeeId) {
-        List<Course> courses = courseDao.getAllCourseByTrainerAndByEmployee(trainerId, employeeId);
+        List<Course> courses = courseDao.getAllCoursesByTrainerAndByEmployee(trainerId, employeeId);
         List<DtoCourse> dtoCourses = new ArrayList<>();
         if (courses != null && !courses.isEmpty()) {
             for (Course course : courses) {

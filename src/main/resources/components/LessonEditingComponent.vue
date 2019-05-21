@@ -26,6 +26,7 @@
                     item-value="id"
                     :item-text="getName"
                     required
+                    :disabled="isJustTrainer()"
             ></v-select>
             <v-layout row wrap>
                 <v-flex>
@@ -140,7 +141,8 @@
             </v-layout>
             <v-layout>
                 <div class="text-xs-left" style="margin-bottom: 20px;">
-                    <v-chip close @input="remove(attachment)" v-for="attachment in selectedAttachments"
+                    <v-chip close @input="remove(attachment)"
+                            v-for="attachment in selectedAttachments"
                             :key="attachment.id">{{attachment.url.slice(0, 10)}}
                     </v-chip>
                 </div>
@@ -148,7 +150,7 @@
             <v-data-table
                     v-model="selectedAttachments"
                     :headers="headers"
-                    :items="attachments"
+                    :items="allAttachments"
                     :pagination.sync="pagination"
                     select-all
                     item-key="id"
@@ -206,7 +208,7 @@
 
     export default {
         name: "LessonEditingComponent",
-        props: ['currentLesson', 'trainers', 'attachments'],
+        props: ['currentLesson', 'trainers', 'attachments',  'courseTrainerId'],
         data: function () {
             return {
                 lesson: this.currentLesson,
@@ -235,6 +237,9 @@
             }
         },
         methods: {
+            isJustTrainer(){
+                return this.$store.state.user.id != this.courseTrainerId && !this.$store.getters.isAdmin;
+            },
             errorAutoClosable(title) {
                 this.$snotify.error(title, {
                     timeout: 2000,
@@ -317,6 +322,16 @@
             }
         },
         computed: {
+            allAttachments(){
+                let a = [];
+                this.selectedAttachments.forEach(function (value) {
+                    a.push(value);
+                });
+                this.attachments.forEach(function (value) {
+                    a.push(value);
+                });
+                return a;
+            },
             computedTime: function () {
                 return this.ampmTime(this.time);
             },

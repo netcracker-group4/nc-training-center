@@ -283,7 +283,7 @@
                         console.log(error);
                     });
             } else {
-                this.$router.push('/404')
+                this.$router.push('/403')
             }
         }
     }

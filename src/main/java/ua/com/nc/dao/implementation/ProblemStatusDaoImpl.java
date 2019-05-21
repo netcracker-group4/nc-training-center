@@ -43,6 +43,7 @@ public class ProblemStatusDaoImpl extends AbstractDaoImpl<ProblemStatus> impleme
             ProblemStatus problemStatus = new ProblemStatus(id, title, description);
             list.add(problemStatus);
         }
+        log.info("Retrieved ProblemStatuses from database " + list);
         return list;
     }
 }

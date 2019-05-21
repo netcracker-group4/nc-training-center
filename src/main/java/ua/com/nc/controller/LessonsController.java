@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dto.DateDeserializer;
 import ua.com.nc.dto.DtoLesson;
+import ua.com.nc.exceptions.LogicException;
 import ua.com.nc.service.LessonsService;
 
 import java.sql.Timestamp;
@@ -51,7 +52,7 @@ public class LessonsController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/new")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToAddLesson(authentication, #toAdd)")
     public String addLesson(@RequestBody String toAdd) {
         Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class,
@@ -59,7 +60,16 @@ public class LessonsController {
         DtoLesson toAdd1 = gson.fromJson(toAdd, DtoLesson.class);
         if (toAdd1.getId() == null || toAdd1.getId() == 0) {
             return lessonsService.addLesson(toAdd1);
-        }
+        }else throw new LogicException("Lesson is already created");
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToUpdateLesson(authentication, #toAdd)")
+    public String editLesson(@RequestBody String toAdd) {
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class,
+                new DateDeserializer()).create();
+        DtoLesson toAdd1 = gson.fromJson(toAdd, DtoLesson.class);
         return lessonsService.updateLesson(toAdd1);
     }
 

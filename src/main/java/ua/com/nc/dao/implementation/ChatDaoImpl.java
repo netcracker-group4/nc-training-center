@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ChatDao;
 import ua.com.nc.domain.Chat;
-import ua.com.nc.domain.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -47,7 +46,7 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
     @Override
     protected List<Chat> parseResultSet(ResultSet rs) throws SQLException {
         List<Chat> list = new ArrayList<>();
-        while (rs.next()){
+        while (rs.next()) {
             Integer id = rs.getInt("id");
             String name = rs.getString("name");
             Timestamp timeDate = rs.getTimestamp("time_date");
@@ -55,6 +54,7 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
             Chat chat = new Chat(id, name, timeDate, groupId);
             list.add(chat);
         }
+        log.info("Retrieved Chats from database " + list);
         return list;
     }
 
@@ -64,9 +64,9 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
         String sql = selectChatBySenderIdAndReceiverId;
         log.info(sql + " select chat by sender and receiver");
         list = getFromSqlByTwoId(selectChatBySenderIdAndReceiverId, senderId, receiverId);
-        if(list.size() != 1){
+        if (list.size() != 1) {
             return null;
-        }else{
+        } else {
             return list.iterator().next();
         }
     }
@@ -80,16 +80,16 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
              PreparedStatement statement = connection.prepareStatement(insertChat)) {
             statement.setString(1, chat.getName());
             statement.setTimestamp(2, chat.getTimeDate());
-            if(chat.getGroupId() != null){
+            if (chat.getGroupId() != null) {
                 statement.setInt(3, chat.getGroupId());
-            }else{
+            } else {
                 statement.setNull(3, Types.INTEGER);
             }
             ResultSet rs = statement.executeQuery();
             rs.next();
             id = rs.getInt(1);
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
         return id;
@@ -105,57 +105,35 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
             statement.setInt(2, userId);
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
 
     @Override
     public List<Chat> getChatsByUserId(Integer userId) {
-        List<Chat> chats = null;
         String sql = chatSelectByUserId;
         log.info(sql + "get chat by user id");
-        try(Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(chatSelectByUserId)) {
-            statement.setInt(1, userId);
-            ResultSet resultSet = statement.executeQuery();
-            chats = parseResultSet(resultSet);
-        } catch (SQLException e) {
-            log.trace(e);
-        }
-        return chats;
+        return getFromSqlById(sql, userId);
     }
 
     @Override
     public Chat getByUserIdAndChatId(Integer userId, Integer chatId) {
-        List<Chat> chats;
         String sql = chatSelectByUserIdAndChatId;
         log.info(sql + "get chat by user id and chat id");
-        chats = getFromSqlByTwoId(sql, userId, chatId);
-        if(chats != null && chats.size() > 0){
+        List<Chat> chats = getFromSqlByTwoId(sql, userId, chatId);
+        if (chats != null && chats.size() > 0) {
             return chats.get(0);
-        }else{
+        } else {
             return null;
         }
     }
 
     @Override
     public Chat getByGroupId(Integer groupId) {
-        List<Chat> chats = null;
         String sql = chatSelectByGroupId;
         log.info(sql + " get chat by group id");
-        try(   Connection connection = dataSource.getConnection();
-               PreparedStatement statement = connection.prepareStatement(chatSelectByGroupId)) {
-            statement.setInt(1, groupId);
-            ResultSet resultSet = statement.executeQuery();
-            chats = parseResultSet(resultSet);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }if(chats != null && chats.size() > 0){
-            return chats.get(0);
-        }else{
-            return null;
-        }
+        return getUniqueFromSqlById(sql, groupId);
     }
 
 }

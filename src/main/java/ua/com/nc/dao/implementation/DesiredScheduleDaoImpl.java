@@ -55,7 +55,6 @@ public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> imp
         statement.setInt(2, entity.getCourseId());
         statement.setString(3, entity.getCronInterval());
         statement.setInt(4, entity.getSuitability());
-
     }
 
     @Override
@@ -67,37 +66,19 @@ public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> imp
             int courseId = rs.getInt("course_id");
             String cronInterval = rs.getString("cron_interval");
             int suitability = rs.getInt("suitability");
-            list.add(new DesiredSchedule(id, userId, courseId, cronInterval, suitability));
+            DesiredSchedule desiredSchedule = new DesiredSchedule(id, userId,
+                    courseId, cronInterval, suitability);
+            list.add(desiredSchedule);
         }
+        log.info("Retrieved DesiredSchedules from database " + list);
         return list;
     }
 
-    @Override
-    public List<DesiredSchedule> getAllForCourse(int courseId) {
-        String sql = desirableScheduleSelectByCourseId;
-        log.info(sql + "" + "find all by courseId " + courseId);
-        return getFromSqlById(sql, courseId);
-    }
 
     @Override
-    public List<DesiredSchedule> getAllForGroup(int groupId) {
-        String sql = desirableScheduleSelectByGroupId;
-        log.info(sql + "" + "find all by groupId " + groupId);
-        return getFromSqlById(sql, groupId);
-    }
-
-    @Override
-    public List<DesiredSchedule> getUngroupedForCourse(int courseId) {
-        String sql = desirableScheduleSelectUngroupedByCourseId;
-        log.info(sql + "" + "find all by groupId " + courseId);
-        return getFromSqlById(sql, courseId);
-    }
-
-
-    @Override
-    public List<DesiredSchedule> getByUsrGroupId(Integer id) {
+    public List<DesiredSchedule> getByUsrGroupId(Integer usrGroupId) {
         String sql = desirableScheduleSelectByUsrGroupId;
-        log.info(sql + "" + "find all by groupId " + id);
-        return getFromSqlById(sql, id);
+        log.info("find  all DesiredSchedule by UsrGroupId " + usrGroupId + "  " + sql);
+        return getFromSqlById(sql, usrGroupId);
     }
 }

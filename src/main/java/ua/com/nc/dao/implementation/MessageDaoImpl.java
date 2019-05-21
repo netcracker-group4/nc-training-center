@@ -80,7 +80,7 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
             resultSet.next();
             messageId = resultSet.getInt("id");
         } catch (SQLException e) {
-            log.trace(e);
+            log.error(e);
         }
         return messageId;
     }

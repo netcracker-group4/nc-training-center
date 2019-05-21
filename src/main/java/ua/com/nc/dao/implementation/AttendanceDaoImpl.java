@@ -68,33 +68,43 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
                     lastName, courseId, courseName, timeDate, topic));
 
         }
+        log.info("Retrieved attendances from database   " + attendances);
         return attendances;
     }
 
     @Override
     public List<Attendance> getAttendanceByStudentIdAndCourseId(Integer studentId, Integer courseId) {
-        return getFromSqlByTwoId(selectAttendanceByStudentIdAndCourseId, studentId, courseId);
+        String sql = this.selectAttendanceByStudentIdAndCourseId;
+        log.info("Select attendance by student " + studentId + " and course " + courseId + " " + sql);
+        return getFromSqlByTwoId(sql, studentId, courseId);
     }
 
     @Override
     public List<Attendance> getAttendanceByStudentIdAndGroupId(Integer studentId, Integer groupId) {
-        return getFromSqlByTwoId(selectAttendanceByStudentIdAndCourseId, studentId, groupId);
+        String sql = this.selectAttendanceByStudentIdAndCourseId;
+        log.info("Select attendance by student " + studentId + " and group " + groupId + " " + sql);
+        return getFromSqlByTwoId(sql, studentId, groupId);
     }
 
     @Override
     public List<Attendance> getAttendanceByLessonId(Integer lessonId) {
-        return getFromSqlById(selectAttendanceByLessonId, lessonId);
+        String sql = this.selectAttendanceByLessonId;
+        log.info(" Select attendance for lesson by lesson id  " + lessonId + " " + sql);
+        return getFromSqlById(sql, lessonId);
     }
 
     @Override
     public List<Attendance> getAttendanceByGroupId(Integer groupId){
-        return getFromSqlById(selectByGroupId, groupId);
+        String sql = this.selectByGroupId;
+        log.info(" Select attendance for group by groupId  " + groupId + " " + sql);
+        return getFromSqlById(sql, groupId);
     }
 
     @Override
     public void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId) {
         String sql = attendanceUpdate;
-        log.info(sql + " attendance update");
+        log.info(" attendance update with parameters attendanceId " + attendanceId +
+                ",  statusId " + statusId + ",  reasonId " + reasonId + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             if (statusId == null) {
@@ -111,7 +121,7 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
 
             statement.executeUpdate();
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
     }
