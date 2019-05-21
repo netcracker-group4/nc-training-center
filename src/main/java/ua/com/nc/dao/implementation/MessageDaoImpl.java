@@ -19,11 +19,16 @@ import java.util.List;
 @PropertySource("classpath:sql_queries.properties")
 public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageDao {
 
+    private final Integer PAGE_SIZE = 3;
+
     @Value("${message.insert}")
     private String messageInsert;
 
     @Value("${message.select-by-chat-id}")
     private String selectByChatId;
+
+    @Value("${message.select-by-chat-id-pageable}")
+    private String selectByChatIdPageable;
 
     @Autowired
     public MessageDaoImpl(DataSource dataSource) throws PersistException {
@@ -58,6 +63,27 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
         return messageInsert;
     }
 
+
+    @Override
+    public List<Message> getPageOfMessagesByChatId(Integer chatId, Integer page) {
+        List<Message> messages = null;
+        String sql = selectByChatIdPageable;
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, chatId);
+            preparedStatement.setInt(2, PAGE_SIZE);
+            preparedStatement.setInt(3, PAGE_SIZE * page);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            messages = parseResultSet(resultSet);
+        } catch (SQLException e) {
+            log.error(e);
+        }
+        if(messages != null & messages.size() > 0){
+            return messages;
+        }else{
+            return null;
+        }
+    }
 
     @Override
     public List<Message> getMessagesByChatId(Integer chatId) {

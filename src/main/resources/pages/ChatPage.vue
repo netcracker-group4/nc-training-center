@@ -1,4 +1,6 @@
-<template><v-container fluid id="chat" ref="chat">
+<template>
+    <v-container fluid id="chat" ref="chat">
+        <v-btn v-if="isBtnShow()" @click="loadPage()">Load more</v-btn>
         <div>
             <div v-for="message in messages">
                 <v-layout v-if="message.senderId == self.$store.state.user.id" class="message-line">
@@ -50,27 +52,23 @@
             return {
                 self: this,
                 message: '',
-                messages: []
+                messages: [],
+                messageListPage: 0,
             }
         },
         created() {
-
-           let id = this.$route.params.id;
-            axios.get(this.$store.state.apiServer + '/api/messages?chatId=' + id)
-                .then(response => {
-                    this.messages = response.data
-                })
-
+            //let id = this.$route.params.id;
+            this.loadPage()
             addHandler(data => this.messages.push(data))
-
-
         },
         updated(){
-            this.scroll()
+            //if(this.messageListPage == 0){
+                this.scroll()
+            //}
+
         },
         methods:{
             send(){
-
                 if(this.message != '' & this.message != null & this.message != undefined){
                     let id = this.$route.params.id;
                     let msg = new Object()
@@ -81,21 +79,48 @@
                     this.message = ''
                 }
             },
+            loadPage(){
+                let id = this.$route.params.id;
+                    if(this.messageListPage != -1){
+                        axios.get(this.$store.state.apiServer + '/api/messages?chatId=' + id + '&page=' + this.messageListPage)
+                            .then(response => {
+                                if(response.data.messages != undefined){
+                                    console.log(response.data.messages)
+                                    this.addMessagesToEnd(response.data.messages)
+                                }
+                                this.messageListPage = response.data.page
+                            })
+                    }
+
+            },
             scroll(){
                 let height = document.getElementById("chat").scrollHeight
                 window.scrollTo(0, height)
             },
             messageDate(date){
                 return date.substr(0, 10) + ' at ' + date.substr(11, 2) + ':' + date.substr(14, 2)
+            },
+            addMessagesToEnd(...messages){
+                if(messages != null){
+                    let chatId = this.$route.params.id
+                    for(let i = 0; i < messages[0].length; i++){
+                        this.messages.unshift(messages[0][i])
+                    }
+                }
+            },
+            isBtnShow(){
+                if(this.messageListPage == -1 | this.messages.length < 3){
+                    return false
+                }else{
+                    return true
+                }
             }
         },
         watch:{
-            '$route.params.id'(to, from){
-                let id = this.$route.params.id;
-                axios.get(this.$store.state.apiServer + '/api/messages?chatId=' + id)
-                    .then(response => {
-                        this.messages = response.data
-                    })
+            '$route'(to, from){
+                this.messages = []
+                this.messageListPage = 0
+                this.loadPage()
             }
         }
     }

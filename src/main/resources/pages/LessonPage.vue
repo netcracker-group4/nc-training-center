@@ -30,20 +30,7 @@
             <v-flex xs12>
                 <v-toolbar flat color="white">
                     <span>Lesson attachments</span>
-                    <v-dialog v-if="isLessonTrainer()" v-model="dialog" max-width="500px">
-                        <template v-slot:activator="{ on }">
-                            <v-icon @click="uploadForm" style="margin-left: 75%">
-                                present_to_all
-                            </v-icon>
-                        </template>
-                        <v-card>
-                            <form id="uploadForm" name="uploadForm" enctype="multipart/form-data">
 
-                                <input type="file" id="file" name="file"><br>
-                            </form>
-                            <v-btn color="green" @click="uploadFile">Upload</v-btn>
-                        </v-card>
-                    </v-dialog>
                 </v-toolbar>
                 <v-data-table
                         :headers="headers"
@@ -61,7 +48,7 @@
                                 <v-btn color="green" @click="downloadFile(props.item.id)">Download</v-btn>
                             </td>
                             <td>
-                                <v-btn color="error" @click="unlink(props.item.id)">Delete</v-btn>
+                                <v-btn v-if="isLessonTrainer()" color="error" @click="unlink(props.item.id)">Delete</v-btn>
                             </td>
                         </tr>
                     </template>
@@ -86,7 +73,6 @@
         components: {LessonAttendanceTable, ProgressCircularComponent},
         data: function () {
             return {
-                dialog: false,
                 topic: null,
                 trainer: [],
                 firstName: null,
@@ -127,6 +113,9 @@
                 }
                 window.scrollTo(0, 0);
             },
+            downloadFile(fileId){
+                window.open(this.$store.state.apiServer + '/api/attachments/download/'+fileId);
+            },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
                     timeout: 2000,
@@ -142,10 +131,6 @@
                     closeOnClick: false,
                     pauseOnHover: true
                 });
-            },
-            uploadForm(){
-                this.dialog = true;
-
             },
             loadInfo() {
                 let self = this;
@@ -182,21 +167,6 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-            },
-            uploadFile() {
-                let self = this;
-                let form = new FormData(document.getElementById('uploadForm'));
-                let imagefile = document.querySelector('#file');
-
-                console.log(this.$store.state.apiServer);
-                let request = new XMLHttpRequest();
-                request.open('POST', this.$store.state.apiServer + '/api/attachments/upload-file');
-                form.append('file', imagefile.files[0]);
-                form.append('lessonId', this.$route.params.id);
-                form.append('descr', '');
-
-                request.send(form);
-                this.dialog = false;
             },
             isLessonTrainer() {
                 return this.$store.state.user.id == this.trainer.id;

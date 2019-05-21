@@ -18,4 +18,13 @@ public class MessageServiceImpl implements MessageService {
     public List<Message> getMessagesByChatId(Integer chatId) {
         return messageDao.getMessagesByChatId(chatId);
     }
+
+    @Override
+    public List<Message> getPageOfMessagesByChatId(Integer chatId, Integer page) {
+        if(page != null && page >= 0){
+            return messageDao.getPageOfMessagesByChatId(chatId, page);
+        }else{
+            return getMessagesByChatId(chatId);
+        }
+    }
 }

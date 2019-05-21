@@ -5,6 +5,7 @@ import ua.com.nc.domain.Attachment;
 import ua.com.nc.dto.DtoAttachment;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 
 public interface AttachmentService {
     void add(Integer lessonId, Attachment attachment);
@@ -13,11 +14,10 @@ public interface AttachmentService {
 
     void delete(Integer id);
 
-    Attachment uploadFile(Integer lessonId, Integer trainerId, String description, MultipartFile file);
-
     Attachment uploadFile(Integer trainerId, DtoAttachment dtoAttachment);
 
-    FileInputStream downloadFile(Integer id);
+
+    InputStream downloadFile(Integer id);
 
     void link(Integer lessonId, Integer attachmentId);
 

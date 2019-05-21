@@ -23,6 +23,7 @@ import ua.com.nc.service.AttachmentService;
 import ua.com.nc.service.RoleService;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,16 +80,6 @@ public class AttachmentController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/upload-file")
-    public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("lessonId") String lessonId, @RequestParam("descr") String description,
-                           @AuthenticationPrincipal User user) {
-        if (user != null && roleService.findAllByUserId(user.getId()).contains(Role.TRAINER)){
-            return gson.toJson(service.uploadFile(Integer.parseInt(lessonId),user.getId(), description, file));
-        }
-        return null;
-    }
-
-    @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/lesson/upload-file",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String uploadFile(@ModelAttribute  DtoAttachment dtoAttachment,
@@ -124,7 +115,7 @@ public class AttachmentController {
     @RequestMapping(value = "/download/{fileId}", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileId) {
         Integer attachmentId = Integer.parseInt(fileId);
-        FileInputStream in = service.downloadFile(attachmentId);
+        InputStream in = service.downloadFile(attachmentId);
 
         HttpHeaders headers = new HttpHeaders();
         Attachment attachment = attachmentDao.getEntityById(attachmentId);

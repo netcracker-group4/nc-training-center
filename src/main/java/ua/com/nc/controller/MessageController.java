@@ -2,6 +2,8 @@ package ua.com.nc.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,14 +58,30 @@ public class MessageController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/api/messages")
     public ResponseEntity<?> getAll(@AuthenticationPrincipal User user,
-                                    @RequestParam(name="chatId") Integer chatId){
+                                    @RequestParam(name = "chatId") Integer chatId,
+                                    @RequestParam(name = "page") Integer page){
+
         Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd.HH.mm.ss").serializeNulls().create();
         Chat chat = chatService.getByUserIdAndChatId(user.getId(), chatId);
+
         if(chat != null){
-            List<Message> messages = messageService.getMessagesByChatId(chatId);
-            return ResponseEntity.ok().body(gson.toJson(messages));
+            List<Message> messages = messageService.getPageOfMessagesByChatId(chatId, page);
+            JsonObject jsonResponseBody = new JsonObject();
+            if(messages != null){
+                page++;
+                JsonElement jsonMessages = gson.toJsonTree(messages);
+                JsonElement jsonPage = gson.toJsonTree(page);
+                jsonResponseBody.add("messages", jsonMessages);
+                jsonResponseBody.add("page", jsonPage);
+
+                return ResponseEntity.ok().body(gson.toJson(jsonResponseBody));
+            }else{
+                JsonElement jsonPage = gson.toJsonTree(-1);
+                jsonResponseBody.add("page", jsonPage);
+                return ResponseEntity.ok().body(gson.toJson(jsonResponseBody));
+            }
         }else{
-            return ResponseEntity.badRequest().body("Access denied");
+            return ResponseEntity.status(403).body("Access denied");
         }
 
     }
@@ -84,14 +102,13 @@ public class MessageController {
             }
             if(groupId != null && receiverId == null){
                 if(customSecurityService.canWriteToGroupChat(senderId, groupId)){
-                    log.debug(text + " sender id " + senderId + " receiver id " + receiverId + " group id " + groupId);
                     chatService.addMessageToGroupChat(message, groupId);
                     return ResponseEntity.ok().body("Message added");
                 }else{
                     return ResponseEntity.status(403).body("Access denied");
                 }
             }
-            if(receiverId == null && groupId == null){
+            if(receiverId == null & senderId == null){
                 return ResponseEntity.badRequest().body("Incorrect data");
             }else{
                 return ResponseEntity.badRequest().body("Bad request");

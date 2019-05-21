@@ -128,7 +128,15 @@
             }
         },
         methods: {
+            chatsReload(){
+                let self = this
+                axios.get(this.$store.state.apiServer + '/api/chats')
+                    .then(response => {
+                        self.$store.state.chats = response.data
+                    })
+            },
             sendMessage() {
+                let self = this
                 let form = new FormData();
                 let request = new XMLHttpRequest();
                 request.open('POST', this.$store.state.apiServer + '/api/messages');
@@ -137,6 +145,9 @@
                 form.append('groupId', this.group.id);
                 request.send(form);
                 this.message = ''
+                request.onloadend = function () {
+                    self.chatsReload()
+                }
                 this.sendMessageWindowShow = false
 
             },
