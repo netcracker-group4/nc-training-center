@@ -16,6 +16,7 @@ import ua.com.nc.dao.interfaces.CourseDao;
 import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Course;
+import ua.com.nc.domain.Role;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.CourseAndGroups;
 import ua.com.nc.service.CourseService;
@@ -74,7 +75,18 @@ public class CourseController {
         courseService.add(courseService.stringToObjCourse(name, "1", level, courseStatus,
                 imageUrl, isOnLandingPage, desc, startDay, endDay));
     }
-
+    @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(method = RequestMethod.POST, value = "/upload-img")
+    public String uploadFile(@RequestParam("file") MultipartFile img) {
+        return courseService.uploadImage(img);
+    }
+    @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/upload-img")
+    public String uploadFile(@RequestParam("img") MultipartFile img,@PathVariable String id) {
+        return courseService.uploadImage(img, Integer.parseInt(id));
+    }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/create")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -104,6 +116,8 @@ public class CourseController {
                 isOnLandingPage, desc, startDay, endDay);
     }
 
+
+
     @RequestMapping(value = "/{id}/trainer", method = RequestMethod.GET)
     @ResponseBody
     public List<User> getTrainer(@PathVariable Integer id) {
@@ -119,7 +133,6 @@ public class CourseController {
     @RequestMapping(value = "/trainer/{id}", method = RequestMethod.GET)
     @ResponseBody
     public String getTrainersCourses(@PathVariable Integer id) {
-        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         return gson.toJson(courseDao.getAllByTrainer(id));
     }
 
