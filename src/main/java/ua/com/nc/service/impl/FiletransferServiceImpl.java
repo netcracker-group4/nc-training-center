@@ -2,6 +2,7 @@ package ua.com.nc.service.impl;
 
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -40,6 +41,7 @@ public class FiletransferServiceImpl implements FileTransferService {
     public void uploadFileToServer(String path, String name, InputStream stream) {
         FTPClient ftpClient = new FTPClient();
         try {
+
             ftpClient.connect(server, port);
             showServerReply(ftpClient);
             int replyCode = ftpClient.getReplyCode();
@@ -65,6 +67,10 @@ public class FiletransferServiceImpl implements FileTransferService {
                 }
             }
             //Creates file
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+
+            ftpClient.setFileTransferMode(FTP.BINARY_FILE_TYPE);
+
             success = ftpClient.storeFile(path+"/"+ name, stream);
             showServerReply(ftpClient);
             if (success) {
