@@ -130,6 +130,7 @@
                     form.append('password', this.password);
                     request.send(form);
                     request.onloadend = function () {
+                        location.replace(location.origin)
                         if(request.status == 200){
                             location.replace(location.origin)
                         }
@@ -138,9 +139,11 @@
                             self.dialog = true
                         }
                         if(request.status == 404){
-                            request.send(form)
+                            //request.send(form)
                         }
+                        console.log(request)
                     }
+
                 }else{
                     this.modalMessage = "Entered data is incorrect"
                     this.dialog = true

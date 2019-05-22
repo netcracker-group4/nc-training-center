@@ -9,8 +9,11 @@ import router from '../router/router'
 import store from '../store/store'
 import Snotify, {SnotifyPosition} from 'vue-snotify'
 import {connect} from '../websocket/ws'
+import VueCarousel from 'vue-carousel';
 
-connect();
+
+
+//connect();
 
 const options = {
     toast: {
@@ -18,6 +21,7 @@ const options = {
     }
 };
 
+Vue.use(VueCarousel);
 Vue.use(VeeValidate);
 Vue.use(VueResource);
 Vue.use(Vuetify);

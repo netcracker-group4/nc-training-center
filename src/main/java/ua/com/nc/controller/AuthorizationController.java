@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthorizationController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/login")
-    public String login(@RequestParam(required = false, name = "error") String error) {
+    public String loginPage(@RequestParam(required = false, name = "error") String error) {
         if (error != null) {
             log.warn("Error while logging in");
             throw new NoSuchUserException("There is no user with such email and password");
@@ -39,4 +40,5 @@ public class AuthorizationController {
         log.info("redirecting to login page after logout");
         return "redirect:/login";
     }
+
 }

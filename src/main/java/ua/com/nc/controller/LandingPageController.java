@@ -1,6 +1,7 @@
 package ua.com.nc.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import ua.com.nc.domain.User;
 import ua.com.nc.service.LandingPageService;
+
+import java.util.List;
 
 
 @Log4j2
@@ -18,7 +22,7 @@ public class LandingPageController {
 
     @Autowired
     private LandingPageService landingPageService;
-    private Gson gson = new Gson();
+    private Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd.HH.mm.ss").serializeNulls().create();
 
     @RequestMapping(value = {"/courses-on-landing-page"}, method = RequestMethod.GET)
     @ResponseBody

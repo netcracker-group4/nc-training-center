@@ -31,7 +31,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/download-report").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/users", "/api/users/recover-password").permitAll()
-                .antMatchers("/css/**", "/js/**", "/registration", "/logout", "/api/users/activate/{token}").permitAll()
+                .antMatchers("/css/**", "/js/**", "/registration", "/logout", "/api/users/activate/{token}", "/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
