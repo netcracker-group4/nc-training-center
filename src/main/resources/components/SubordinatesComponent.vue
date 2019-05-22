@@ -59,7 +59,7 @@
             },
             goToUserPage(userId) {
                 this.$router.push('/users/' + userId);
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
             },
             loadInfo() {
                 let self = this;
@@ -71,7 +71,7 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        self.errorAutoClosable(error.response.data);
+                        // self.errorAutoClosable(error.response.data);
                     });
             }
         },

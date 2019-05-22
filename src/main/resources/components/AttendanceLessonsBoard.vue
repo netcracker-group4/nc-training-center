@@ -18,8 +18,8 @@
     export default {
         name: "AttendanceLessonsBoard",
         props: ['data'],
-        data(){
-            return{
+        data() {
+            return {
                 item: null,
                 headers: [
                     {

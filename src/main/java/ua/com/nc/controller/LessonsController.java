@@ -33,8 +33,8 @@ public class LessonsController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/{groupId}")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveLessons(authentication, #groupId)")
-    public String getAllForGroup(@PathVariable String groupId) {
-        return gson.toJson(lessonsService.getAllForGroup(Integer.parseInt(groupId)));
+    public String getAllForGroup(@PathVariable Integer groupId) {
+        return gson.toJson(lessonsService.getAllForGroup(groupId));
     }
 
     @ResponseBody

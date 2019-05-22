@@ -2,8 +2,8 @@
     <v-container>
         <progress-circular-component v-if="loading"></progress-circular-component>
 
-        <v-layout  v-if="!loading" row wrap>
-            <v-flex xs12 sm12 >
+        <v-layout v-if="!loading" row wrap>
+            <v-flex xs12 sm12>
                 <v-toolbar flat color="white">
                     <v-toolbar-title>Groups</v-toolbar-title>
                 </v-toolbar>
@@ -46,8 +46,8 @@
         },
         data: function () {
             return {
-                nums : [10,25,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}],
-                loading : true,
+                nums: [10, 25, {"text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1}],
+                loading: true,
                 headers: [
                     {
                         text: 'Group id',
@@ -80,6 +80,8 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                     if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
                 });
         }
     }

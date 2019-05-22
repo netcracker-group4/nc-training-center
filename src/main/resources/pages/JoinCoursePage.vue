@@ -91,7 +91,7 @@
                 }],
                 suitabilities: [],
                 activeSuitability: null,
-                loading : true
+                loading: true
             }
         },
         methods: {
@@ -173,6 +173,8 @@
                     .catch(function (error) {
                         // self.errorAutoClosable(error.response.data);
                         console.log(error);
+                         if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                     });
                 axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id)
                     .then(function (response) {
@@ -182,6 +184,8 @@
                     .catch(function (error) {
                         // self.errorAutoClosable(error.response.data);
                         console.log(error);
+                         if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                     });
 
                 axios.get(this.$store.state.apiServer + '/api/desired-schedule/suitabilities')
@@ -193,8 +197,10 @@
                         console.log(self.suitabilities)
                     })
                     .catch(function (error) {
-                        self.errorAutoClosable(error.response.data);
+                        // self.errorAutoClosable(error.response.data);
                         console.log(error);
+                         if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                     });
             }
         },
@@ -209,8 +215,10 @@
                     self.loadInfo();
                 }).catch(function (error) {
                 console.log(error);
-                console.log(error.response.data);
-                self.errorAutoClosable(error.response.data);
+                // console.log(error.response.data);
+                // self.errorAutoClosable(error.response.data);
+                 if (error.response != null && error.response.status == 400)
+                    self.$router.push('/404');
             });
         }
     }

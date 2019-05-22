@@ -48,7 +48,8 @@
                                 <v-btn color="green" @click="downloadFile(props.item.id)">Download</v-btn>
                             </td>
                             <td>
-                                <v-btn v-if="isLessonTrainer()" color="error" @click="unlink(props.item.id)">Delete</v-btn>
+                                <v-btn v-if="isLessonTrainer()" color="error" @click="unlink(props.item.id)">Delete
+                                </v-btn>
                             </td>
                         </tr>
                     </template>
@@ -107,8 +108,8 @@
                 }
                 window.scrollTo(0, 0);
             },
-            downloadFile(fileId){
-                window.open(this.$store.state.apiServer + '/api/attachments/download/'+fileId);
+            downloadFile(fileId) {
+                window.open(this.$store.state.apiServer + '/api/attachments/download/' + fileId);
             },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
@@ -143,6 +144,8 @@
                                 self.lastName = self.trainer.lastName;
                             })
                             .catch(function (error) {
+                                 if (error.response != null && error.response.status == 400)
+                                    self.$router.push('/404');
                                 console.log(error);
                             });
                         self.date = dat.time;
@@ -154,6 +157,8 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                         if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                     });
                 axios.get(this.$store.state.apiServer + '/api/attachments/lesson/' + this.$route.params.id)
                     .then(function (response) {
@@ -161,6 +166,8 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                         if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                     });
             },
             isLessonTrainer() {
@@ -169,11 +176,15 @@
             downloadFile(id) {
                 window.open(this.$store.state.apiServer + '/api/attachments/download/' + id);
             },
-            unlink(idFile){
+            unlink(idFile) {
 
                 let self = this;
-                axios.delete(this.$store.state.apiServer +'/api/attachments/unlink',{data:{lessonId: this.$route.params.id ,
-                 attachmentId: idFile}})
+                axios.delete(this.$store.state.apiServer + '/api/attachments/unlink', {
+                    data: {
+                        lessonId: this.$route.params.id,
+                        attachmentId: idFile
+                    }
+                })
                     .then(function (response) {
                         self.attachments = self.attachments.filter(function (e) {
                             return e.id !== idFile;

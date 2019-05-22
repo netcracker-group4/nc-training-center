@@ -29,7 +29,7 @@
         props: [
             'user',
         ],
-        data () {
+        data() {
             return {
                 avatar: null,
                 saving: false,
@@ -39,9 +39,9 @@
         components: {
             ImageInputComponent
         },
-        watch:{
+        watch: {
             avatar: {
-                handler: function() {
+                handler: function () {
                     this.saved = false
                 },
                 deep: true
@@ -62,17 +62,17 @@
                                 'Content-Type': 'multipart/form-data; boundary=${form._boundary}'
                             }
                         }
-                    // axios.put(this.$store.state.apiServer + '/api/users/upload-image', {
-                    //         id: this.user.id,
-                    //         image: this.avatar
-                        ).then(response => {
-                            this.saving = true;
-                            setTimeout(() => this.savedAvatar(), 1000);
-                        }).catch(function (error) {
-                            console.log(error);
-                        });
+                        // axios.put(this.$store.state.apiServer + '/api/users/upload-image', {
+                        //         id: this.user.id,
+                        //         image: this.avatar
+                    ).then(response => {
                         this.saving = true;
                         setTimeout(() => this.savedAvatar(), 1000);
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                    this.saving = true;
+                    setTimeout(() => this.savedAvatar(), 1000);
                 }
                 // let self = this;
                 // axios.put(this.$store.state.apiServer + '/api/users/upload-image', {

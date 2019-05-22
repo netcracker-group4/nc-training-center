@@ -17,8 +17,8 @@
     export default {
         name: "AttendanceStudentsBoard",
         props: ['data'],
-        data(){
-            return{
+        data() {
+            return {
                 item: null,
                 headers: [
                     {
@@ -34,7 +34,7 @@
             }
         },
         methods: {
-            forwardTo(item){
+            forwardTo(item) {
                 this.$emit('forward', item);
             }
         }

@@ -27,7 +27,7 @@
 <script>
     export default {
         name: 'image-input-component',
-        data: ()=> ({
+        data: () => ({
             errorDialog: null,
             errorText: '',
             uploadFieldName: 'file',
@@ -38,21 +38,21 @@
             value: Object,
         },
         methods: {
-            launchFilePicker(){
+            launchFilePicker() {
                 this.$refs.file.click();
             },
             onFileChange(fieldName, file) {
-                const { maxSize } = this
+                const {maxSize} = this
                 let imageFile = file[0]
 
                 //check if user actually selected a file
-                if (file.length>0) {
+                if (file.length > 0) {
                     let size = imageFile.size / maxSize / maxSize
                     if (!imageFile.type.match('image.*')) {
                         // check whether the upload is an image
                         this.errorDialog = true
                         this.errorText = 'Please choose an image file'
-                    } else if (size>1) {
+                    } else if (size > 1) {
                         // check whether the size is greater than the size limit
                         this.errorDialog = true
                         this.errorText = 'Your file is too big! Please select an image under 1MB'
@@ -62,7 +62,7 @@
                         let imageURL = URL.createObjectURL(imageFile)
                         formData.append(fieldName, imageFile)
                         // Emit FormData & image URL to the parent component
-                        this.$emit('input', { formData, imageURL })
+                        this.$emit('input', {formData, imageURL})
                     }
                 }
             }

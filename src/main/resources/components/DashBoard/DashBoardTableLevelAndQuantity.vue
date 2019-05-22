@@ -24,7 +24,9 @@
             <v-toolbar flat color="white">
                 <v-toolbar-title>Levels and quantity of groups</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel report</v-btn>
+                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel
+                    report
+                </v-btn>
             </v-toolbar>
             <v-data-table
                     :headers="headers"
@@ -71,7 +73,6 @@
 
 <script>
     import axios from 'axios/index'
-    import store from "../../store/store.js";
 
     export default {
 
@@ -100,7 +101,7 @@
                     {text: 'Course name', value: 'course.name'},
                 ],
                 levelsAndGroupQuantities: [],
-                selectedLevels : []
+                selectedLevels: []
             }
         },
         methods: {
@@ -118,12 +119,12 @@
             goToCoursePage(levelId) {
                 this.$router.push('/courses/' + levelId);
             },
-            downloadDashboardReport(){
+            downloadDashboardReport() {
                 window.open(this.$store.state.apiServer + "/dashboard-report", "_blank");
             }
         },
         mounted() {
-            if(store.getters.isAdmin) {
+            if (this.$store.getters.isAdmin) {
                 let self = this;
                 axios.get(this.$store.state.apiServer + '/api/dashboard/level-and-quantity')
                     .then(function (response) {
@@ -134,12 +135,14 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        self.errorAutoClosable(error.response.data);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
+                        // self.errorAutoClosable(error.response.data);
                     });
             }
         },
-        computed : {
-            filteredLevels () {
+        computed: {
+            filteredLevels() {
                 return this.levelsAndGroupQuantities.filter((i) => {
                     return this.selectedLevels.includes(i.level.id);
                 })

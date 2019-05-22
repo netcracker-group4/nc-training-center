@@ -94,7 +94,7 @@
             }
         },
         mounted() {
-            if(this.$store.getters.isAdmin){
+            if (this.$store.getters.isAdmin) {
                 let self = this;
                 axios.get(this.$store.state.apiServer + '/api/admin')
                     .then(function (response) {
@@ -103,9 +103,11 @@
                         console.log(self.allUsers)
                     })
                     .catch(function (error) {
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                         console.log(error);
                     });
-            }else {
+            } else {
                 this.$router.push('/403');
             }
         },

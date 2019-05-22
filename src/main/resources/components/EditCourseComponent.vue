@@ -53,8 +53,9 @@
                         </v-flex>
                         <v-flex>
                             <p style="margin-top: 3%">
-                                    <v-checkbox v-model="isOnLandingPage" :label="`Is on landing page? `">
-                                </v-checkbox></p>
+                                <v-checkbox v-model="isOnLandingPage" :label="`Is on landing page? `">
+                                </v-checkbox>
+                            </p>
                         </v-flex>
                         <v-layout row wrap>
                             <v-flex xs4>
@@ -77,10 +78,10 @@
                                                 v-on="on"
                                         ></v-text-field>
                                     </template>
-                                    <v-date-picker v-model="startDay" ></v-date-picker>
+                                    <v-date-picker v-model="startDay"></v-date-picker>
                                 </v-menu>
                             </v-flex>
-                            <v-flex xs4 >
+                            <v-flex xs4>
                                 <v-menu
                                         :v-model="false"
                                         :close-on-content-click="false"
@@ -100,13 +101,13 @@
                                                 v-on="on"
                                         ></v-text-field>
                                     </template>
-                                    <v-date-picker v-model="endDay" ></v-date-picker>
+                                    <v-date-picker v-model="endDay"></v-date-picker>
                                 </v-menu>
                             </v-flex>
                         </v-layout>
                         <v-flex xs6>
                             <v-textarea v-model="description"
-                                         label="description"></v-textarea>
+                                        label="description"></v-textarea>
                         </v-flex>
                     </v-layout>
                 </v-container>
@@ -114,7 +115,7 @@
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" flat @click="save" >Save</v-btn>
+                <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
             </v-card-actions>
         </v-card>
     </div>
@@ -124,13 +125,13 @@
     import axios from 'axios'
 
     export default {
-        props: {endingDay: '', startingDay: '', descr: '',nm: '',id: 0},
+        props: {endingDay: '', startingDay: '', descr: '', nm: '', id: 0},
         name: "EditCourseComponent",
-        data(){
-            return{
+        data() {
+            return {
                 name: '',
                 status: '',
-                level:{title: ''},
+                level: {title: ''},
                 description: '',
                 startDay: '',
                 endDay: '',
@@ -145,16 +146,16 @@
             }
 
         },
-        methods:{
-            trainerName: item => item.firstName +" "+ item.lastName,
-            save(){
+        methods: {
+            trainerName: item => item.firstName + " " + item.lastName,
+            save() {
                 let self = this;
                 let form = new FormData();
                 let request = new XMLHttpRequest();
                 self.checkFields();
                 try {
-                    request.open('PUT', this.$store.state.apiServer + '/api/getcourses/'+self.id+'/edit');
-                    form.append('id',self.id);
+                    request.open('PUT', this.$store.state.apiServer + '/api/getcourses/' + self.id + '/edit');
+                    form.append('id', self.id);
                     form.append('name', self.name);
                     form.append('level', self.level);
                     form.append('courseStatus', self.status);
@@ -170,8 +171,8 @@
                         closeOnClick: false,
                         pauseOnHover: true
                     });
-                    this.$router.push("/courses/"+self.id);
-                }catch (e) {
+                    this.$router.push("/courses/" + self.id);
+                } catch (e) {
                     this.$snotify.error("Error occured, course wasn`t updated.", {
                         timeout: 2000,
                         showProgressBar: false,
@@ -180,19 +181,19 @@
                     });
                 }
             },
-            checkFields(){
-                if(!this.description){
-                    this.description= this.descr;
+            checkFields() {
+                if (!this.description) {
+                    this.description = this.descr;
                 }
-                if(!this.name)
-                    this.name= this.nm;
-                if(!this.startDay)
-                    this.startDay=this.startingDay;
-                if(!this.endDay)
-                    this.endDay=this.endingDay;
+                if (!this.name)
+                    this.name = this.nm;
+                if (!this.startDay)
+                    this.startDay = this.startingDay;
+                if (!this.endDay)
+                    this.endDay = this.endingDay;
             }
         },
-        mounted(){
+        mounted() {
             let self = this;
             axios.get(this.$store.state.apiServer + '/api/getInfo/getStatuses')
                 .then(function (response) {
@@ -200,12 +201,16 @@
                 })
                 .catch(function (error) {
                     console.log(error);
+                    if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
                 });
             axios.get(this.$store.state.apiServer + '/api/getInfo/getLevels')
                 .then(function (response) {
                     self.levels = response.data;
                 })
                 .catch(function (error) {
+                    if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
                     console.log(error);
                 });
             axios.get(this.$store.state.apiServer + '/api/users/get-all-trainers')
@@ -213,6 +218,8 @@
                     self.trainers = response.data;
                 })
                 .catch(function (error) {
+                    if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
                     console.log(error);
                 });
         }

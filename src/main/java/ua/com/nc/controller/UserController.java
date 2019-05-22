@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoChangePassword;
-import ua.com.nc.dto.DtoUser;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dto.DtoUserSave;
 import ua.com.nc.service.UserService;
@@ -50,7 +49,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToUpdateBasicInfo(authentication, #dtoUserProfiles)")
     public ResponseEntity<?> update(@RequestBody DtoUserProfiles dtoUserProfiles) {
         userService.updateUserByAdmin(dtoUserProfiles);
         return ResponseEntity.ok().body("User updated");

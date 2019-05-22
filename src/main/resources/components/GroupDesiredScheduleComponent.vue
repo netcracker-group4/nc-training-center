@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-tabs v-model="currentDay" centered >
+        <v-tabs v-model="currentDay" centered>
             <v-tab
                     v-for="n in days"
                     :key="n"
@@ -14,7 +14,7 @@
                     <div>
                         <table class="zui-table ">
                             <thead class="thead-dark">
-                            <tr >
+                            <tr>
                                 <th scope="col">Id</th>
                                 <th scope="col" v-bind:style="{width: '30%'}">Name</th>
                                 <th v-for="dayName in dayIntervals" scope="col">{{dayName}}</th>
@@ -23,8 +23,9 @@
                             <draggable v-model="allSchedules" tag="tbody" group="people">
                                 <tr v-for="item in allSchedules" :key="item.userId" style="cursor: pointer">
                                     <td>{{ item.userId }}</td>
-                                    <td  class="student-name" v-bind:class="{'notAttending': !item.isAttending}"
-                                         v-bind:style="{width: '30%'}">{{ item.userName }}</td>
+                                    <td class="student-name" v-bind:class="{'notAttending': !item.isAttending}"
+                                        v-bind:style="{width: '30%'}">{{ item.userName }}
+                                    </td>
                                     <td v-for="forInterval in item.scheduleForIntervals"
                                         v-bind:style="{backgroundColor: getColor(forInterval)}">
                                     </td>
@@ -47,7 +48,7 @@
     export default {
         name: "groupSchedule",
         order: 8,
-        props : ['groupId'],
+        props: ['groupId'],
         components: {draggable},
         data() {
             return {
@@ -82,7 +83,7 @@
             },
         },
         mounted() {
-            if(store.getters.isAdmin || store.getters.isTrainer) {
+            if (store.getters.isAdmin || store.getters.isTrainer) {
                 let self = this;
                 axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + this.newGroupId)
                     .then(function (response) {
@@ -91,7 +92,9 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        self.errorAutoClosable(error.response.data);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
+                        // self.errorAutoClosable(error.response.data);
                     });
                 axios.get(this.$store.state.apiServer + '/api/desired-schedule/day-intervals')
                     .then(function (response) {
@@ -99,12 +102,14 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        self.errorAutoClosable(error.response.data);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
+                        // self.errorAutoClosable(error.response.data);
                     });
             }
         },
-        computed:{
-            newGroupId(){
+        computed: {
+            newGroupId() {
                 return this.groupId;
             }
         }

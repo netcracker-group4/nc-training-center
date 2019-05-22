@@ -49,15 +49,15 @@ public class CourseController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
-    public Course getCourse(@PathVariable String id) {
-        return courseDao.getEntityById(Integer.parseInt(id));
+    public Course getCourse(@PathVariable Integer id) {
+        return courseDao.getEntityById(id);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseBody
-    public void deleteCourse(@PathVariable String id) {
-        courseDao.delete(Integer.parseInt(id));
+    public void deleteCourse(@PathVariable Integer id) {
+        courseDao.delete(id);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")

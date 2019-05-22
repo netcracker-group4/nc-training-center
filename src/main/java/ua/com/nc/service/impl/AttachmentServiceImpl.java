@@ -64,7 +64,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                 saveToDisk(multipartFile, filePath);
                 return saveToDatabase(trainerId, dtoAttachment, name, filePath);
             } catch (Exception e) {
-                log.trace(e);
+                log.error(e);
                 throw new LogicException("Error while uploading file");
             }
         }

@@ -42,8 +42,8 @@ public class AttachmentController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/lesson/{id}")
     @ResponseBody
-    public String getLessonAttachments(@PathVariable String id) {
-        return gson.toJson(attachmentDao.getByLessonId(Integer.parseInt(id)));
+    public String getLessonAttachments(@PathVariable Integer id) {
+        return gson.toJson(attachmentDao.getByLessonId(id));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/all")
@@ -80,8 +80,8 @@ public class AttachmentController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
-    public String getAttachment(@PathVariable String id) {
-        return gson.toJson(attachmentDao.getEntityById(Integer.parseInt(id)));
+    public String getAttachment(@PathVariable Integer id) {
+        return gson.toJson(attachmentDao.getEntityById(id));
     }
 
     /**
@@ -110,8 +110,8 @@ public class AttachmentController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    public void deleteAttachment(@PathVariable String id) {
-        service.delete(Integer.parseInt(id));
+    public void deleteAttachment(@PathVariable Integer id) {
+        service.delete(id);
     }
 
 
@@ -124,14 +124,13 @@ public class AttachmentController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/link")
-    public void linkFile(@RequestParam("lessonId") String lessonId, @RequestParam("attachmentId") String attachmentId) {
-        service.link(Integer.parseInt(lessonId), Integer.parseInt(attachmentId));
+    public void linkFile(@RequestParam("lessonId") Integer lessonId, @RequestParam("attachmentId") Integer attachmentId) {
+        service.link(lessonId, attachmentId);
     }
 
     @ResponseBody
     @RequestMapping(value = "/download/{fileId}", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileId) {
-        Integer attachmentId = Integer.parseInt(fileId);
+    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable Integer attachmentId) {
         InputStream in = service.downloadFile(attachmentId);
 
         HttpHeaders headers = new HttpHeaders();

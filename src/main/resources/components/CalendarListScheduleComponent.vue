@@ -81,7 +81,8 @@
                                                             <h3>{{computedTime(lesson.timeDate.substr(11, 5))}}</h3>
                                                             <v-spacer></v-spacer>
                                                             <h3>{{computedInterval(lesson.duration)}}</h3>
-                                                            <v-btn icon flat v-on:click="$router.push('/lessons/' + lesson.id)">
+                                                            <v-btn icon flat
+                                                                   v-on:click="$router.push('/lessons/' + lesson.id)">
                                                                 <v-icon>arrow_forward</v-icon>
                                                             </v-btn>
                                                         </v-toolbar>
@@ -208,7 +209,7 @@
                 let year = date.getFullYear();
                 return monthNames[monthIndex] + ' ' + year;
             },
-            selectedG(){
+            selectedG() {
                 let selectedCourses = [];
                 this.groupsList.forEach(function (value) {
                     selectedCourses.push(value.id)

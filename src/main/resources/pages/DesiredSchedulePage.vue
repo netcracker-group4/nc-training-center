@@ -12,10 +12,9 @@
         components: {
             'student-line-in-table': StudentLineInTable
         },
-         data: function () {
-             return{
-             }
-         }
+        data: function () {
+            return {}
+        }
     }
 </script>
 
