@@ -10,10 +10,7 @@ import ua.com.nc.dao.interfaces.ProblemDao;
 import ua.com.nc.domain.Problem;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,30 +19,57 @@ import java.util.List;
 @PropertySource("classpath:sql_queries.properties")
 public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemDao {
 
-    @Value("${problem.create-request}")
-    private String createRequest;
+    @Value("${problem.select-all-by-user}")
+    private String selectAllByUser;
 
-    @Value("${problem.select-requests-of-type}")
-    private String selectRequestsOfType;
+    @Value("${problem.select-all-requests}")
+    private String selectAllQuery;
 
-    @Value("${problem.update-type-of-request}")
-    private String updateTypeOfRequest;
+    @Value ("${problem.insert}")
+    private String insertQuery;
+
+    @Value ("${problem.update-request")
+    private String updateQuery;
 
     @Autowired
-    public ProblemDaoImpl(DataSource dataSource) throws PersistException {
-        super(dataSource);
+    public ProblemDaoImpl (DataSource dataSource) throws PersistException {
+        super (dataSource);
     }
 
+    public String getSelectQuery () { return selectAllQuery; }
+
+    public String getInsertQuery () {return insertQuery; }
+
+    public String getUpdateQuery () { return updateQuery; }
+
+    private void setAllFields (PreparedStatement statement, Problem entity) throws SQLException {
+        statement.setInt(1, entity.getStudentId());
+        statement.setString(2, entity.getDescription());
+        statement.setInt (3, entity.getStatus());
+        statement.setString(4, entity.getMessage());
+    }
+
+    protected void prepareStatementForInsert (PreparedStatement statement, Problem entity) throws SQLException {
+        setAllFields (statement, entity);
+    }
+
+    protected void prepareStatementForUpdate (PreparedStatement statement, Problem entity) throws SQLException {
+        setAllFields (statement, entity);
+        statement.setInt(5, entity.getId());
+    }
+
+
     @Override
-    protected List<Problem> parseResultSet(ResultSet rs) throws SQLException {
+    protected List <Problem> parseResultSet(ResultSet rs) throws SQLException {
         List<Problem> list = new ArrayList<>();
         while (rs.next()) {
             Integer id = rs.getInt("id");
             Integer studentId = rs.getInt("USER_ID");
             String description = rs.getString("TITLE");
-            String status = rs.getString("PROBLEM_STATUS_ID");
+            Integer status = rs.getInt("PROBLEM_STATUS_ID");
             String message = rs.getString("DESCRIPTION");
-            Problem problem = new Problem(id, studentId, description, status, message);
+            Integer chatId = rs.getInt("CHAT_ID");
+            Problem problem = new Problem (studentId, description, message, status, chatId);
             list.add(problem);
         }
         log.info("Retrieved Problems from database " + list);
@@ -53,52 +77,8 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     }
 
     @Override
-    public int createRequest(int studentId, String description, String message) {
-        String sql = createRequest;
-        log.info(sql + " create a request " + description);
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, studentId);
-            statement.setString(2, description);
-            statement.setString(3, message);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            } throw new PersistException("No result set");
-        } catch (Exception e) {
-            log.error(e);
-            throw new PersistException(e);
-        }
-    }
-
-    @Override
-    public List<Problem> getAllRequestsOfType(String requestType) {
-        List<Problem> requests;
-        String sql = selectRequestsOfType;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, requestType);
-            ResultSet rs = statement.executeQuery();
-            requests = parseResultSet(rs);
-        } catch (Exception e) {
-            log.error(e);
-            throw new PersistException(e.getMessage());
-        }
-        log.info(sql + " get all requests of type " + requestType);
-        return requests;
-    }
-
-    @Override
-    public void updateRequestType(int requestId, String requestType) {
-        String sql = updateTypeOfRequest;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, requestType);
-            statement.setInt(2, requestId);
-            statement.executeUpdate();
-        } catch (Exception e) {
-            log.error(e);
-            throw new PersistException(e.getMessage());
-        }
+    public List<Problem> getRequestsByUserId (int userId) {
+        String sql = selectAllByUser;
+        return getFromSqlById(sql, userId);
     }
 }

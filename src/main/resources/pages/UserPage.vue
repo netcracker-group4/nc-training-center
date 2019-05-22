@@ -91,6 +91,9 @@
                 if (this.user.roles !== undefined)
                     return this.user.roles.includes('EMPLOYEE');
             },
+
+
+
             isTrainer() {
                 if (this.user.roles !== undefined)
                     return this.user.roles.includes('TRAINER');

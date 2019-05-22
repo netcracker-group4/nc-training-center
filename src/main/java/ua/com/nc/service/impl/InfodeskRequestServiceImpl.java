@@ -21,18 +21,27 @@ public class InfodeskRequestServiceImpl implements InfodeskRequestService {
     private ProblemStatusDao problemStatusDao;
 
     @Override
-    public int createRequest (int id, String description, String message) {
-        return problemDao.createRequest(id, description, message);
+    public void createRequest (int userId, String description, String message) {
+        Problem problem = new Problem (userId, description, message, 2);
+        problemDao.insert (problem);
     }
 
     @Override
-    public List<Problem> getAllRequestsOfType (String requestType) {
-        return problemDao.getAllRequestsOfType (requestType);
+    public List<Problem> getAllRequests () {
+        return problemDao.getAll ();
     }
 
     @Override
     public void updateRequestType (int requestId, String requestType) {
-        problemDao.updateRequestType (requestId, requestType);
+        Problem problem = problemDao.getEntityById(requestId);
+        List<ProblemStatus> ps = problemStatusDao.getAll();
+        for (ProblemStatus status : ps) {
+            if (status.getTitle().equals(requestType)) {
+                problem.setStatus (status.getId());
+                problemDao.update (problem);
+            }
+        }
+
     }
 
     @Override
@@ -40,5 +49,9 @@ public class InfodeskRequestServiceImpl implements InfodeskRequestService {
         return problemStatusDao.getAll();
     }
 
+    @Override
+    public List <Problem> getRequestsByUserId (int userId) {
+        return problemDao.getRequestsByUserId (userId);
+    }
 
 }

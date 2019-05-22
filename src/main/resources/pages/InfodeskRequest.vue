@@ -5,7 +5,7 @@
                 <v-container>
                     <v-layout row wrap>
                         <v-flex xs12 sm12>
-                            Type a short description of your problem: {{userId}}
+                            Type a short description of your problem:
                             <v-text-field
                                     clearable
                                     v-model="description"
@@ -52,18 +52,6 @@
         },
         methods: {
             send() {
-                // if (this.description != null && this.message != null) {
-                //         console.log(this.description + " " + this.message);
-                //         axios.post('http://localhost:8080/api/requests/create-request', {
-                //             userId: this.userId.toString(),
-                //             description: this.description,
-                //             message: this.message
-                //         })
-                //             .then(response => alert("Your request added"))
-                //     } else {
-                //         alert("Sorry, you can't leave a field empty")
-                //     }
-
                 let form = new FormData();
 
                 let request = new XMLHttpRequest();

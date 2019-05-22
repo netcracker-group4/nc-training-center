@@ -1,15 +1,14 @@
 package ua.com.nc.dao.interfaces;
 
+import ua.com.nc.domain.Level;
 import ua.com.nc.domain.Problem;
-import ua.com.nc.domain.ProblemStatus;
 
 import java.util.List;
 
-public interface ProblemDao {
+public interface ProblemDao extends GenericDao<Problem> {
 
-    int createRequest (int studentId, String description, String message);
+    List<Problem> getAll ();
 
-    List<Problem> getAllRequestsOfType (String requestType);
+    List <Problem> getRequestsByUserId (int userId);
 
-    void updateRequestType (int requestId, String requestType);
 }
