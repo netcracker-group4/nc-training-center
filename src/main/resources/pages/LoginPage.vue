@@ -32,7 +32,7 @@
                                             @click="recoverPassword"
                                             style="margin: 10px 0 0 0"
                                     >
-                                        forget password
+                                        forgot password?
                                     </v-btn>
                                 </v-flex>
                             </template>
@@ -130,9 +130,9 @@
                     form.append('password', this.password);
                     request.send(form);
                     request.onloadend = function () {
-                        location.replace(location.origin)
                         if(request.status == 200){
                             location.replace(location.origin)
+
                         }
                         if(request.status == 401){
                             self.modalMessage = "There is no user with such email and password"
@@ -141,7 +141,6 @@
                         if(request.status == 404){
                             //request.send(form)
                         }
-                        console.log(request)
                     }
 
                 }else{
