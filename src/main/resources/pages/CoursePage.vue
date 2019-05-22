@@ -5,7 +5,7 @@
             <v-btn @click="edit()">
                 <v-icon>edit</v-icon>
             </v-btn>
-            <v-btn v-if="this.$store.getters.userRoles.includes('EMPLOYEE')" @click="sign()">Sign course</v-btn>
+            <v-btn v-if="checkStud" @click="sign()">Sign course</v-btn>
         </div>
         <v-dialog  v-if="isAdmin" v-model="dialog" max-width="500px">
             <EditCourseComponent :starting-day="startDay" :ending-day="endDay"
@@ -21,17 +21,19 @@
                             <div class="subheading pt-3"> <b>{{courseStatus}}</b>
                              <p>Level: {{level.title}}</p>
                             </div>
-                                <v-img v-if="imageUrl" :src="'../'+'img/'+imageUrl+'.jpg'" aspect-ratio="2"></v-img>
+                                <v-img v-if="imageUrl" :src="this.$store.state.apiServer+imageUrl" aspect-ratio="2"></v-img>
                             <v-progress-linear v-if="!imageUrl" :indeterminate="true"></v-progress-linear>
                             <div v-if="isAdmin">
                                 <v-text-field label="Select Image" @click='pickFile' v-model='imageUrl' prepend-icon='attach_file'></v-text-field>
+                                <form id="uploadForm" name="uploadForm" enctype="multipart/form-data">
                                 <input
                                         type="file"
                                         style="display: none"
                                         ref="image"
                                         accept="image/*"
                                         @change="onFilePicked"
-                                >
+                                        id="img"
+                                ></form>
                             </div>
                         </v-layout>
                     </v-flex>
@@ -248,10 +250,18 @@
                         this.img = files[0]
                     });
                     let form = new FormData();
-                    let request = new XMLHttpRequest();
-                    request.open('PUT', this.$store.state.apiServer + '/getcourses/'+this.$route.params.id+'/upload-img');
                     form.append('img', files[0]);
-                    request.send(form);
+                    axios.put(this.$store.state.apiServer + '/api/getcourses/'+this.$route.params.id+'/upload-img',form, {
+                        headers:{
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                 } else {
                     this.img = '';
                     this.imageUrl = '';
@@ -262,6 +272,14 @@
             },
             manageSchedule(id){
                 this.$router.push('/groups/'+id+'/schedule');
+            },
+            checkStud(){
+                let self = this;
+                axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$store.state.user.id + '/course-group')
+                    .then(function (response) {
+                        return response.data != true;
+                    }).catch(function (error) {
+                });
             }
         },
         created() {

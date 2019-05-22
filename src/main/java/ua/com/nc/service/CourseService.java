@@ -21,5 +21,4 @@ public interface CourseService {
     List<DtoCourse> getAllByTrainerAndEmployee(Integer trainerId, Integer employeeId);
 
     void edit(int id, String name, String level, String courseStatus, String isOnLandingPage, String desc, String startDay, String endDay);
-
 }

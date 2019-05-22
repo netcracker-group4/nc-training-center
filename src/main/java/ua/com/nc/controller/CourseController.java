@@ -80,6 +80,12 @@ public class CourseController {
     public String uploadFile(@RequestParam("file") MultipartFile img) {
         return courseService.uploadImage(img);
     }
+    @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/upload-img")
+    public String uploadFile(@RequestParam("img") MultipartFile img,@PathVariable String id) {
+        return courseService.uploadImage(img, Integer.parseInt(id));
+    }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/create")
     @PreAuthorize("hasAuthority('ADMIN')")

@@ -87,7 +87,7 @@ public class CourseServiceImpl implements CourseService {
 
 
     /**
-     * @return local image link;
+     * @return path to the image + it`s name.
      */
     @Override
     public String uploadImage(MultipartFile image) {
