@@ -24,4 +24,6 @@ public interface LessonsService {
     Lesson getLessonById(int lessonId);
 
     List<DtoUser> getStudentsIdsByLessonId(Integer lessonId);
+
+    String invertIsPerformedForLesson(Integer lessonId);
 }

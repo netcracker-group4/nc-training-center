@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import ua.com.nc.dao.implementation.MessageDaoImpl;
 import ua.com.nc.domain.Chat;
 import ua.com.nc.domain.Message;
 import ua.com.nc.domain.User;
@@ -48,8 +49,8 @@ public class MessageController {
         if(chat != null){
             message.setDateTime(new Timestamp(System.currentTimeMillis()));
             Integer messageId = chatService.addMessageToExistingChat(message);
-            message.setId(messageId);
-            return gson.toJson(message);
+            Message messageFromDb = messageService.getById(messageId);
+            return gson.toJson(messageFromDb);
         }else{
             throw new AccessDeniedException("Access denied");
         }
@@ -70,8 +71,12 @@ public class MessageController {
             if(messages != null){
                 page++;
                 JsonElement jsonMessages = gson.toJsonTree(messages);
+                if(messages.size() < MessageDaoImpl.PAGE_SIZE){
+                    page = -1;
+                }
                 JsonElement jsonPage = gson.toJsonTree(page);
                 jsonResponseBody.add("messages", jsonMessages);
+
                 jsonResponseBody.add("page", jsonPage);
 
                 return ResponseEntity.ok().body(gson.toJson(jsonResponseBody));

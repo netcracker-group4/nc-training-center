@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.MessageDao;
 import ua.com.nc.domain.Message;
+import ua.com.nc.dto.MessageDto;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -19,7 +20,7 @@ import java.util.List;
 @PropertySource("classpath:sql_queries.properties")
 public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageDao {
 
-    private final Integer PAGE_SIZE = 3;
+    public static final Integer PAGE_SIZE = 3;
 
     @Value("${message.insert}")
     private String messageInsert;
@@ -30,6 +31,9 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
     @Value("${message.select-by-chat-id-pageable}")
     private String selectByChatIdPageable;
 
+    @Value("${message.select-by-id}")
+    private String selectById;
+
     @Autowired
     public MessageDaoImpl(DataSource dataSource) throws PersistException {
         super(dataSource);
@@ -38,17 +42,31 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
     @Override
     protected List<Message> parseResultSet(ResultSet rs) throws SQLException {
         List<Message> messages = new ArrayList<>();
+        String senderFirstName = null;
+        String senderLastName = null;
         while (rs.next()) {
             Integer id = rs.getInt("id");
             Integer chat_id = rs.getInt("chat_id");
             Integer senderId = rs.getInt("user_id");
             Timestamp dateTime = rs.getTimestamp("time_date");
             String text = rs.getString("text");
-            Message message = new Message(id, chat_id, senderId, dateTime, text);
+            try{
+                senderFirstName = rs.getString("first_name");
+            }catch (SQLException e){
+                log.error(e + "No such field in result set");
+            }
+            try{
+                senderLastName = rs.getString("last_name");
+            }catch (SQLException e){
+                log.error(e + "No such field in result set");
+            }
+            MessageDto message = new MessageDto(id, chat_id, senderId, dateTime, text,
+                    senderFirstName, senderLastName);
             messages.add(message);
         }
         return messages;
     }
+
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, Message entity) throws SQLException {
@@ -63,6 +81,10 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
         return messageInsert;
     }
 
+    @Override
+    protected String getSelectByIdQuery() {
+        return selectById;
+    }
 
     @Override
     public List<Message> getPageOfMessagesByChatId(Integer chatId, Integer page) {
@@ -110,4 +132,5 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
         }
         return messageId;
     }
+
 }

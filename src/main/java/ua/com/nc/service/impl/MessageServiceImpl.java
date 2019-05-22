@@ -27,4 +27,9 @@ public class MessageServiceImpl implements MessageService {
             return getMessagesByChatId(chatId);
         }
     }
+
+    @Override
+    public Message getById(Integer id) {
+        return messageDao.getEntityById(id);
+    }
 }

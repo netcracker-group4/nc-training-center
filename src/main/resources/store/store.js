@@ -12,7 +12,6 @@ export default new Vuex.Store({
         userRoles: userRoles,
         imgFolder: '/img/',
         chats: [],
-        messages: {}
     },
     getters: {
         userRoles: state => {
@@ -43,7 +42,7 @@ export default new Vuex.Store({
                 state.isAuthorized !== false;
         },
         getChatById: state => id =>{
-            return state.chats.find(chat => chat.id = id)
+            return state.chats.find(chat => chat.id == id)
         }
     },
 

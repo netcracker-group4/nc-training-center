@@ -53,18 +53,6 @@ public class AttendanceController {
         return ResponseEntity.ok().body("OK");
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> setAttendance(@RequestParam Attendance attendance) {
-        if (attendance != null
-                && attendance.getUserId() != null
-                && attendance.getLessonId() != null){
-            attendanceService.attendanceInsert(attendance.getLessonId(),
-                                                attendance.getUserId());
-            return ResponseEntity.ok().body("OK");
-        } else {
-            return ResponseEntity.badRequest().body("Incorrectly entered fields");
-        }
-    }
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> updateAttendance(@RequestParam String attendanceId,

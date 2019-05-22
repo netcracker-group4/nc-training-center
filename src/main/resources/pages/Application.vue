@@ -20,6 +20,7 @@
             axios.get(this.$store.state.apiServer + '/api/chats')
                 .then(response => this.$store.state.chats = response.data)
 
+            document.title = 'Training center'
         }
     }
 </script>
