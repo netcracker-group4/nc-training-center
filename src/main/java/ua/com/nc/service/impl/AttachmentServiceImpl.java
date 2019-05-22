@@ -47,20 +47,19 @@ public class AttachmentServiceImpl implements AttachmentService {
         if (file.delete()) {
             log.info("File removed from directory");
         } else {
-            log.trace("File not found");
+            log.error("File not found");
         }
         lessonAttachmentDao.deleteByAttachmentId(id);
         attachmentDao.delete(id);
     }
-    private String rootDir = "/attachments";
     @Override
     public Attachment uploadFile(Integer trainerId, DtoAttachment dtoAttachment) {
+        String rootDir = "/attachments";
         if (!dtoAttachment.getFile().isEmpty()) {
             try {
                 MultipartFile multipartFile = dtoAttachment.getFile();
                 String name = multipartFile.getOriginalFilename();
                 String filePath = rootDir + "/" + trainerId.toString();
-                //getFilePath(trainerId, name);
                 saveToDisk(multipartFile, filePath);
                 return saveToDatabase(trainerId, dtoAttachment, name, filePath);
             } catch (Exception e) {
@@ -106,8 +105,8 @@ public class AttachmentServiceImpl implements AttachmentService {
                 fileService.uploadFileToServer(filePath,fileName,stream);
             }
             catch (FileNotFoundException e){
-                log.trace(e);
-                log.info("Error while sending file to server");
+                log.error("Error while sending file to server");
+                log.error(e);
             }
             File file = new File(tmpFilePath);
             file.delete();

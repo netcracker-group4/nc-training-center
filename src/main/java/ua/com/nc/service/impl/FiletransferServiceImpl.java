@@ -5,7 +5,10 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import ua.com.nc.exceptions.LogicException;
 import ua.com.nc.service.FileTransferService;
 
 import java.io.IOException;
@@ -13,12 +16,17 @@ import java.io.InputStream;
 import java.net.SocketException;
 @Log4j2
 @Service
+@PropertySource("classpath:sql_queries.properties")
 public class FiletransferServiceImpl implements FileTransferService {
 
-    private String server = "45.66.10.81";
-    private int port = 21;
-    private String user = "Administrator";
-    private String pass = "2Y36N72Db3K7";
+    @Value("${spring.ftp.host}")
+    private String server;
+    @Value("${spring.ftp.port}")
+    private int port;
+    @Value("${spring.ftp.login}")
+    private String user;
+    @Value("${spring.ftp.password}")
+    private String pass;
 
     private static void showServerReply(FTPClient ftpClient) {
         String[] replies = ftpClient.getReplyStrings();
@@ -29,21 +37,21 @@ public class FiletransferServiceImpl implements FileTransferService {
         }
     }
     @Override
-    public int uploadFileToServer(String path, String name, InputStream stream) {
+    public void uploadFileToServer(String path, String name, InputStream stream) {
         FTPClient ftpClient = new FTPClient();
         try {
             ftpClient.connect(server, port);
             showServerReply(ftpClient);
             int replyCode = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
-                log.info("Operation failed. Server reply code: " + replyCode);
-                return 1;
+                log.error("Operation failed. Server reply code: " + replyCode);
+                throw new LogicException("Error while connecting to server");
             }
             boolean success = ftpClient.login(user, pass);
             showServerReply(ftpClient);
             if (!success) {
-                log.info("Could not login to the server");
-                return 1;
+                log.error("Could not login to the server");
+                throw new LogicException("Error while login to server");
             }
             // Creates a directory if needed
             FTPFile[] remoteFiles = ftpClient.listFiles(path);
@@ -53,7 +61,7 @@ public class FiletransferServiceImpl implements FileTransferService {
                 if (success) {
                     log.info("Successfully created directory: " + path);
                 } else {
-                    log.info("Failed to create directory. See server reply.");
+                    log.error("Failed to create directory.");
                 }
             }
             //Creates file
@@ -62,17 +70,15 @@ public class FiletransferServiceImpl implements FileTransferService {
             if (success) {
                 log.info("Successfully created file: " + path);
             } else {
-                log.info("Failed to create file. See server reply.");
+                log.error("Failed to create file.");
             }
 
             // logs out
             ftpClient.logout();
             ftpClient.disconnect();
         } catch (IOException ex) {
-            log.info("Oops! Something wrong happened");
-            log.info(ex);
+            log.error(ex);
         }
-        return 0;
     }
 
     @Override
@@ -82,18 +88,17 @@ public class FiletransferServiceImpl implements FileTransferService {
             ftpClient.connect(server, port);
             int replyCode = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
-                log.info("Operation failed. Server reply code: " + replyCode);
+                log.error("Operation failed. Server reply code: " + replyCode);
             }
             boolean success = ftpClient.login(user, pass);
             showServerReply(ftpClient);
             if (!success) {
-                log.info("Could not login to the server");
+                log.error("Could not login to the server");
             }
             return ftpClient.retrieveFileStream(path);
         }
         catch (IOException ex){
-            log.info("Oops! Something wrong happened");
-            log.info(ex);
+            log.error(ex);
 
         }
         return null;

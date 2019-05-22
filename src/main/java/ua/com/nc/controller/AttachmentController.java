@@ -129,12 +129,12 @@ public class AttachmentController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/download/{fileId}", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable Integer attachmentId) {
-        InputStream in = service.downloadFile(attachmentId);
+    @RequestMapping(value = "/download/{id}", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable Integer id) {
+        InputStream in = service.downloadFile(id);
 
         HttpHeaders headers = new HttpHeaders();
-        Attachment attachment = attachmentDao.getEntityById(attachmentId);
+        Attachment attachment = attachmentDao.getEntityById(id);
         String headerValue = "attachment; filename = " + attachment.getName();
         headers.add("Content-Disposition",
                 headerValue);
