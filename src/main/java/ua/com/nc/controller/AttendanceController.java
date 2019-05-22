@@ -6,10 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ua.com.nc.domain.Attendance;
 import ua.com.nc.dto.AttendanceDto;
 import ua.com.nc.service.AttendanceService;
@@ -47,6 +44,25 @@ public class AttendanceController {
         } else {
             AttendanceDto attendanceDto = attendanceService.getAttendance();
             return ResponseEntity.ok().body(new Gson().toJson(attendanceDto));
+        }
+    }
+
+    @RequestMapping(value = "/{lessonId}", method = RequestMethod.POST)
+    public ResponseEntity<?> setAttendance(@PathVariable Integer lessonId) {
+        attendanceService.attendanceInsert(lessonId);
+        return ResponseEntity.ok().body("OK");
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<?> setAttendance(@RequestParam Attendance attendance) {
+        if (attendance != null
+                && attendance.getUserId() != null
+                && attendance.getLessonId() != null){
+            attendanceService.attendanceInsert(attendance.getLessonId(),
+                                                attendance.getUserId());
+            return ResponseEntity.ok().body("OK");
+        } else {
+            return ResponseEntity.badRequest().body("Incorrectly entered fields");
         }
     }
 

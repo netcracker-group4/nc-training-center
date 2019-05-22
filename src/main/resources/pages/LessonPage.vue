@@ -25,6 +25,7 @@
                 </template>
             </v-flex>
         </v-layout>
+        <v-btn color="success" @click="checked()">Check attendance</v-btn>
         <v-layout v-if="!loading" row wrap>
             <v-flex xs12>
                 <v-toolbar flat color="white">
@@ -87,6 +88,13 @@
                         value: 'title'
                     },
                 ],
+                attendance: {
+                    id: null,
+                    lessonId: null,
+                    userId: null,
+                    reason: '',
+                    status: ''
+                },
                 loading: true
             }
         },
@@ -183,7 +191,26 @@
                     });
 
 
-            }
+            },
+            getStudents() {
+                axios.get(this.$store.state.apiServer + '/api/schedule/' + this.$route.params.id + '/students')
+                    .then(function (response) {
+                        let dat = response.data;
+                        console.log(dat);
+                        this.studentIds = dat;
+                        this.studentIds.forEach(function(id) {
+                            this.checkAttendance(id);
+                        })
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            checked() {
+                axios.post(this.$store.state.apiServer + '/api/attendances/' + this.$route.params.id)
+            },
+
 
         }
     }

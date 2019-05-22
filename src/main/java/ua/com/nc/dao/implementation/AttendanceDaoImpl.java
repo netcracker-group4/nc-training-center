@@ -32,6 +32,9 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
     @Value("${attendance.select-by-group-id}")
     private String selectByGroupId;
 
+    @Value("${attendance.insert}")
+    private String attendanceInsert;
+
     @Value("${attendance.update}")
     private String attendanceUpdate;
 
@@ -81,7 +84,7 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
 
     @Override
     public List<Attendance> getAttendanceByStudentIdAndGroupId(Integer studentId, Integer groupId) {
-        String sql = this.selectAttendanceByStudentIdAndCourseId;
+        String sql = this.selectAttendanceByStudentIdAndGroupId;
         log.info("Select attendance by student " + studentId + " and group " + groupId + " " + sql);
         return getFromSqlByTwoId(sql, studentId, groupId);
     }
@@ -98,6 +101,22 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
         String sql = this.selectByGroupId;
         log.info(" Select attendance for group by groupId  " + groupId + " " + sql);
         return getFromSqlById(sql, groupId);
+    }
+
+    @Override
+    public void attendanceInsert(Integer lessonId, Integer userId) {
+        String sql = attendanceInsert;
+        log.info(" attendance insert with parameters lessonId " + lessonId +
+                ",  userId " + userId + " " + sql);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, lessonId);
+            statement.setInt(2, userId);
+            statement.executeQuery();
+        } catch (Exception e) {
+            log.error(e);
+            throw new PersistException(e);
+        }
     }
 
     @Override

@@ -46,7 +46,7 @@
             <v-data-table
                     :headers="headers"
                     :items="attendances"
-                    :rows-per-page-items="[10, 20, 50]"
+                    :rows-per-page-items="rows"
                     no-data-text = "No attendance to show">
 
                 <template v-slot:items="props">
@@ -93,6 +93,7 @@
                 status: null,
                 reason: null
             },
+            rows: [10, {"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}]
         }),
 
         watch: {

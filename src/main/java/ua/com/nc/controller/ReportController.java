@@ -20,7 +20,7 @@ import java.io.IOException;
 
 @Log4j2
 @Controller
-public class ReportController {     //    /download-report/dashboard-report
+public class ReportController {     //   /dashboard-report
 
     @Autowired
     private ReportService reportService;
