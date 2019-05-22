@@ -203,7 +203,6 @@
                             self.errorAutoClosable('This user is not registered on the system')
                         })
                     }
-                    this.close();
                 })
             }
         },
