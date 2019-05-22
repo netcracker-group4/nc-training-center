@@ -111,6 +111,11 @@ public class UserServiceImpl implements UserService {
         return dtoUserProfiles;
     }
 
+    @Override
+    public User getEntityById(Integer id) {
+        return userDao.getEntityById(id);
+    }
+
 
     @Override
     public User getByEmail(String email) {
@@ -230,5 +235,18 @@ public class UserServiceImpl implements UserService {
         Map<String, Double> result = new HashMap<>();
         att.forEach((key, value) -> result.put(key, (value * 100.0) / a));
         return result;
+    }
+
+    @Override
+    public void uploadImage(DtoUserSave dtoUserSave) {
+
+    }
+
+    @Override
+    public void updatePassword(DtoChangePassword changePassword) {
+        User user = new User();
+        user.setId(changePassword.getUserId());
+        user.setPassword(changePassword.getNewPassword());
+        userDao.updatePassword(user);
     }
 }

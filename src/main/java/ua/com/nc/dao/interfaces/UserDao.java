@@ -46,4 +46,8 @@ public interface UserDao extends GenericDao<User> {
 
     List<User> getSubordinatesOfManager(Integer managerId);
 
+    void updateImage(User user);
+
+    void updatePassword(User user);
+
 }
