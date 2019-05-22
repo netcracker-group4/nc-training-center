@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.AttendanceDao;
 import ua.com.nc.domain.Attendance;
+import ua.com.nc.domain.User;
 import ua.com.nc.dto.UserAttendanceDto;
 
 import javax.sql.DataSource;
@@ -104,15 +105,18 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
     }
 
     @Override
-    public void attendanceInsert(Integer lessonId, Integer userId) {
+    public void attendanceInsert(Integer lessonId, List<User> employees) {
         String sql = attendanceInsert;
         log.info(" attendance insert with parameters lessonId " + lessonId +
-                ",  userId " + userId + " " + sql);
+                ",  employees " + employees.toString() + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, lessonId);
-            statement.setInt(2, userId);
-            statement.executeQuery();
+            for(User employee: employees){
+                statement.setInt(1, lessonId);
+                statement.setInt(2, employee.getId());
+                statement.addBatch();
+            }
+            statement.executeBatch();
         } catch (Exception e) {
             log.error(e);
             throw new PersistException(e);

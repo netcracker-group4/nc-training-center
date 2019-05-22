@@ -25,8 +25,8 @@
                 </template>
             </v-flex>
         </v-layout>
-        <v-btn color="success" @click="checked()">Check attendance</v-btn>
         <v-layout v-if="!loading" row wrap>
+            <v-btn color="success" @click="checked()">Check attendance</v-btn>
             <v-flex xs12>
                 <v-toolbar flat color="white">
                     <span>Lesson attachments</span>
