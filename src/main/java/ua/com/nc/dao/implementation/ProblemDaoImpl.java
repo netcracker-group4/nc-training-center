@@ -28,16 +28,16 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     @Value("${problem.select-requests-of-type}")
     private String selectRequestsOfType;
 
-    @Value ("${problem.update-type-of-request}")
+    @Value("${problem.update-type-of-request}")
     private String updateTypeOfRequest;
 
     @Autowired
-    public ProblemDaoImpl (DataSource dataSource) throws PersistException {
-        super (dataSource);
+    public ProblemDaoImpl(DataSource dataSource) throws PersistException {
+        super(dataSource);
     }
 
     @Override
-    protected List <Problem> parseResultSet(ResultSet rs) throws SQLException {
+    protected List<Problem> parseResultSet(ResultSet rs) throws SQLException {
         List<Problem> list = new ArrayList<>();
         while (rs.next()) {
             Integer id = rs.getInt("id");
@@ -45,7 +45,7 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
             String description = rs.getString("TITLE");
             String status = rs.getString("PROBLEM_STATUS_ID");
             String message = rs.getString("DESCRIPTION");
-            Problem problem = new Problem (id, studentId, description, status, message);
+            Problem problem = new Problem(id, studentId, description, status, message);
             list.add(problem);
         }
         log.info("Retrieved Problems from database " + list);
@@ -53,26 +53,26 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     }
 
     @Override
-    public int createRequest (int studentId, String description, String message) {
+    public int createRequest(int studentId, String description, String message) {
         String sql = createRequest;
-        int lastInsert;
-        log.info (sql + " create a request " + description);
+        log.info(sql + " create a request " + description);
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement (sql)) {
-            statement.setInt (1, studentId);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, studentId);
             statement.setString(2, description);
-            statement.setString (3, message);
+            statement.setString(3, message);
             ResultSet rs = statement.executeQuery();
-            lastInsert = rs.getInt(1);
+            if (rs.next()) {
+                return rs.getInt(1);
+            } throw new PersistException("No result set");
         } catch (Exception e) {
-            log.error (e);
-            throw new PersistException (e);
+            log.error(e);
+            throw new PersistException(e);
         }
-        return lastInsert;
     }
 
     @Override
-    public List<Problem> getAllRequestsOfType (String requestType) {
+    public List<Problem> getAllRequestsOfType(String requestType) {
         List<Problem> requests;
         String sql = selectRequestsOfType;
         try (Connection connection = dataSource.getConnection();
@@ -84,12 +84,12 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
             log.error(e);
             throw new PersistException(e.getMessage());
         }
-        log.info (sql + " get all requests of type " + requestType);
+        log.info(sql + " get all requests of type " + requestType);
         return requests;
     }
 
     @Override
-    public void updateRequestType (int requestId, String requestType) {
+    public void updateRequestType(int requestId, String requestType) {
         String sql = updateTypeOfRequest;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -97,8 +97,8 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
             statement.setInt(2, requestId);
             statement.executeUpdate();
         } catch (Exception e) {
-            log.error (e);
-            throw new PersistException (e.getMessage ());
+            log.error(e);
+            throw new PersistException(e.getMessage());
         }
     }
 }

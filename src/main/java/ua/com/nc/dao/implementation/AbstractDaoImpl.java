@@ -250,9 +250,20 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         throw new PersistException("prepareStatementForUpdate method is not defined");
     }
 
+    /**
+     * parses result set
+     * @param rs result set returned by statement.executeQuery()
+     * @return list of parsed objects
+     * @throws SQLException in case of error
+     */
     protected abstract List<E> parseResultSet(ResultSet rs) throws SQLException;
 
-
+    /**
+     * returns list of objects from query with one placeholder of type integer
+     * @param sql query with single  placeholder
+     * @param id value for placeholder
+     * @return list with retrieved objects
+     */
     List<E> getFromSqlById(String sql, Integer id) {
         List<E> list;
         try (Connection connection = dataSource.getConnection();
@@ -267,6 +278,13 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         return list;
     }
 
+    /**
+     * returns list of objects from query with two placeholders of type integer
+     * @param sql query with two  placeholders
+     * @param id1 value for first placeholder
+     * @param id2 value for second placeholder
+     * @return list with retrieved objects
+     */
     List<E> getFromSqlByTwoId(String sql, Integer id1, Integer id2) {
         List<E> list;
         try (Connection connection = dataSource.getConnection();
@@ -282,6 +300,11 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         return list;
     }
 
+    /**
+     * returns list of entities from query with no placeholders
+     * @param sql sql-query
+     * @return list with retrieved objects
+     */
     List<E> getListFromSql(String sql) {
         List<E> list;
         try (Connection connection = dataSource.getConnection();
@@ -295,6 +318,12 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         return list;
     }
 
+    /**
+     * returns single object from query with one placeholder for unique key - with type integer
+     * @param sql query with placeholder
+     * @param id value of unique key
+     * @return null if there is no object, object if everything is ok, error if more then one retrieved
+     */
     E getUniqueFromSqlById(String sql, Integer id) {
         List<E> list = getFromSqlById(sql, id);
         if (list == null || list.size() == 0) {
@@ -306,6 +335,12 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         return list.iterator().next();
     }
 
+    /**
+     * returns single object from query with one placeholder for unique key - with type string
+     * @param sql sql query with placeholder
+     * @param string value of unique key
+     * @return null if there is no object, object if everything is ok, error if more then one retrieved
+     */
     E getUniqueFromSqlByString(String sql, String string) {
         List<E> list;
         try (Connection connection = dataSource.getConnection();
