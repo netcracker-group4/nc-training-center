@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container class="form" id="email">
         <v-layout row wrap>
-            <v-flex xs12 sm12>
+            <v-flex xs12 sm12 >
                 <v-container>
                     <v-layout row wrap>
                         <v-flex xs12 sm12>
@@ -20,9 +20,7 @@
                         </v-flex>
                         <v-flex xs12 sm12>
                             <v-btn @click="login" class="green lighten-3 login-button">login</v-btn>
-                            <v-btn @click="forwardToRegistrationPage" class="light-blue lighten-3 registration-button">
-                                registration page
-                            </v-btn>
+                            <v-btn @click="forwardToRegistrationPage" class="light-blue lighten-3 registration-button">registration page</v-btn>
                         </v-flex>
                         <v-dialog v-model="recoverDialog" max-width="500px">
                             <template v-slot:activator="{ on }">
@@ -75,7 +73,7 @@
             <v-dialog v-model="dialog" width="500" height="300">
                 <v-card>
                     <v-card-title class="headline grey lighten-4" primary-title>
-                        {{this.modalMessage}}
+                       {{this.modalMessage}}
                     </v-card-title>
                     <v-card-actions class="grey lighten-4">
                         <v-spacer></v-spacer>
@@ -99,8 +97,8 @@
         },
         name: "LoginPage",
         components: {ModalPage},
-        data() {
-            return {
+        data(){
+            return{
                 pass_show: false,
                 email: null,
                 password: null,
@@ -121,10 +119,10 @@
                 }
             }
         },
-        methods: {
-            login() {
+        methods:{
+            login(){
                 let self = this
-                if (this.emailValidation(this.email) && this.passwordValidation(this.password)) {
+                if(this.emailValidation(this.email) && this.passwordValidation(this.password)){
                     let form = new FormData();
                     let request = new XMLHttpRequest();
                     request.open('POST', this.$store.state.apiServer + '/login');
@@ -132,35 +130,38 @@
                     form.append('password', this.password);
                     request.send(form);
                     request.onloadend = function () {
-                        if (request.status == 200) {
+                        location.replace(location.origin)
+                        if(request.status == 200){
                             location.replace(location.origin)
                         }
-                        if (request.status == 401) {
+                        if(request.status == 401){
                             self.modalMessage = "There is no user with such email and password"
                             self.dialog = true
                         }
-                        if (request.status == 404) {
-                            request.send(form)
+                        if(request.status == 404){
+                            //request.send(form)
                         }
+                        console.log(request)
                     }
-                } else {
+
+                }else{
                     this.modalMessage = "Entered data is incorrect"
                     this.dialog = true
                 }
             },
-            forwardToRegistrationPage() {
+            forwardToRegistrationPage(){
                 this.$router.push('/registration')
             },
-            emailValidation(email) {
+            emailValidation(email){
                 var regularExpression = /^([a-zA-Z0-9\.-_]+)@([a-zA-Z0-9-]+).([a-z]{2,20})/
                 return regularExpression.test(email)
             },
-            passwordValidation(password) {
-                if (password != null &&
+            passwordValidation(password){
+                if( password != null &&
                     password != undefined &&
-                    password.replace(/\s/g, '') != '') {
+                    password.replace(/\s/g, '') != ''){
                     return true
-                } else return false
+                }else return false
             },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
@@ -203,6 +204,7 @@
                             self.errorAutoClosable('This user is not registered on the system')
                         })
                     }
+                    this.close();
                 })
             }
         },
@@ -220,19 +222,16 @@
         background: #f5f5f5;
         box-shadow: rgba(24, 24, 24, 0.4) 4px 4px 5px 0px
     }
-
-    .login-button {
+    .login-button{
         margin: 0px;
         margin-top: 40px;
     }
-
-    .registration-button {
+    .registration-button{
         margin: 0px;
         margin-top: 40px;
         float: right;
     }
-
-    .error-button {
+    .error-button{
         margin-bottom: 10px;
         margin-right: 10px;
     }
