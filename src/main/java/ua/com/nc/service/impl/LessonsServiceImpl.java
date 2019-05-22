@@ -86,6 +86,7 @@ public class LessonsServiceImpl implements LessonsService {
         return "Lesson deleted";
     }
 
+    @Override
     public String invertIsCanceledForLesson(int lessonId) {
         Lesson lesson = lessonDao.getEntityById(lessonId);
         boolean newCanceled = !lesson.isCanceled();
@@ -125,5 +126,14 @@ public class LessonsServiceImpl implements LessonsService {
             }
         }
         return dtoUsers;
+    }
+
+    @Override
+    public String invertIsPerformedForLesson(Integer lessonId) {
+        Lesson lesson = lessonDao.getEntityById(lessonId);
+        boolean newPerformed = !lesson.isCanceled();
+        lesson.setPerformed(newPerformed);
+        lessonDao.update(lesson);
+        return Boolean.toString(newPerformed);
     }
 }

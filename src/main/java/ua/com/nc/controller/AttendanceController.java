@@ -52,7 +52,7 @@ public class AttendanceController {
         attendanceService.attendanceInsert(lessonId);
         return ResponseEntity.ok().body("OK");
     }
-    
+
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> updateAttendance(@RequestParam String attendanceId,
