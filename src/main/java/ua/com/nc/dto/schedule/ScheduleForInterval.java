@@ -25,7 +25,6 @@ public class ScheduleForInterval {
     }
 
 
-
     private ParsedSchedule getForDay(List<ParsedSchedule> forThisInterval, int day){
         for (ParsedSchedule parsedSchedule : forThisInterval) {
             if(parsedSchedule.getDayOfWeek().getValue()-1 == day){

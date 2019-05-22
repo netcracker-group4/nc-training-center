@@ -1,13 +1,13 @@
 package ua.com.nc.dto.schedule;
 
-import lombok.Getter;
+import lombok.Data;
 import ua.com.nc.domain.DesiredSchedule;
 import ua.com.nc.domain.Suitability;
 
 import java.time.DayOfWeek;
 import java.util.List;
 
-@Getter
+@Data
 public class ParsedSchedule {
     private int userId;
     private DayOfWeek dayOfWeek;
@@ -36,14 +36,4 @@ public class ParsedSchedule {
         throw new Exception("No such suitability");
     }
 
-    @Override
-    public String toString() {
-        return "ParsedSchedule{" +
-                "userId=" + userId +
-                ", dayOfWeek=" + dayOfWeek +
-                ", start=" + start +
-                ", end=" + end +
-                ", color='" + color + '\'' +
-                '}';
-    }
 }

@@ -179,6 +179,8 @@
             axios.get(this.$store.state.apiServer + '/api/schedule/' + self.$route.params.id)
                 .then(function (response) {
                     self.lessons = response.data;
+                    console.log("lessons from back");
+                    console.log(self.lessons);
                     self.lessons.forEach(function (one) {
                         one.open = false;
                     })

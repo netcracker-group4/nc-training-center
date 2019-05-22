@@ -95,7 +95,7 @@ public class DashBoardServiceImpl implements DashBoardService {
     }
 
     private CourseAndGroups getCourseAndGroups(Course course) {
-        int numberOfEmployeesInCourse = 0;
+        int numberOfEmployeesInCourse = userDao.getUngroupedByCourse(course.getId()).size();
         List<Group> groups = groupDao.getAllGroupsOfCourse(course.getId());
         List<DtoGroup> groupAndQuantities = new ArrayList<>();
         for (Group group : groups) {
