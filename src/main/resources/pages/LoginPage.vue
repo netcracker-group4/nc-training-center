@@ -32,7 +32,7 @@
                                             @click="recoverPassword"
                                             style="margin: 10px 0 0 0"
                                     >
-                                        forget password
+                                        forgot password?
                                     </v-btn>
                                 </v-flex>
                             </template>
