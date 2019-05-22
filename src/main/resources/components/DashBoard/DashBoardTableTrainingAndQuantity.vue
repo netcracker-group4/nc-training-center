@@ -35,6 +35,7 @@
                     :expand="true"
                     class="elevation-1"
                     item-key="course.id"
+                    :rows-per-page-items="nums"
             >
                 <template v-slot:items="props">
                     <tr>
@@ -75,6 +76,7 @@
         name: "DashBoardTableLevelAndTrainers",
         data: function () {
             return {
+                nums: [10, 25, {"text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1}],
                 headers: [
                     {text: '  Fold/Unfold', sortable: false, width: "15", align: 'center'},
                     {

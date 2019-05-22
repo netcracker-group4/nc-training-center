@@ -8,6 +8,7 @@
                     item-text="level.title"
                     label="Select Levels"
                     multiple
+
             >
                 <template v-slot:selection="{ item, index }">
                     <v-chip v-if="index === 0">
@@ -34,6 +35,7 @@
                     :expand="true"
                     class="elevation-1"
                     item-key="level.id"
+                    :rows-per-page-items="nums"
             >
                 <template v-slot:items="props">
                     <tr>
@@ -79,6 +81,7 @@
         name: "DashBoardTableLevelAndQuantity",
         data: function () {
             return {
+                nums: [10, 25, {"text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1}],
                 headers: [
                     {text: '  Fold/Unfold', sortable: false, width: "15", align: 'center'},
                     {
