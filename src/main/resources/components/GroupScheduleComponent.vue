@@ -185,7 +185,9 @@
                 })
                 .catch(function (error) {
                     console.log(error);
-                    self.errorAutoClosable(error.response.data);
+                    if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
+                    // self.errorAutoClosable(error.response.data);
                 });
             axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + self.$route.params.id)
                 .then(function (response) {
@@ -194,7 +196,9 @@
                 })
                 .catch(function (error) {
                     console.log(error);
-                    self.errorAutoClosable(error.response.data);
+                    if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
+                    // self.errorAutoClosable(error.response.data);
                 });
             axios.get(this.$store.state.apiServer + '/api/users/get-all-trainers')
                 .then(function (response) {
@@ -202,7 +206,9 @@
                 })
                 .catch(function (error) {
                     console.log(error);
-                    self.errorAutoClosable(error.response.data);
+                    if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
+                    // self.errorAutoClosable(error.response.data);
                 });
             axios.get(this.$store.state.apiServer + '/api/attachments/all')
                 .then(function (response) {
@@ -210,7 +216,9 @@
                 })
                 .catch(function (error) {
                     console.log(error);
-                    self.errorAutoClosable(error.response.data);
+                    if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
+                    // self.errorAutoClosable(error.response.data);
                 });
         },
         computed: {
@@ -271,7 +279,9 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        self.errorAutoClosable(error.response.data);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
+                        // self.errorAutoClosable(error.response.data);
                     });
                 axios.get(this.$store.state.apiServer + '/api/users/get-all-trainers')
                     .then(function (response) {
@@ -279,7 +289,9 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        self.errorAutoClosable(error.response.data);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
+                        // self.errorAutoClosable(error.response.data);
                     });
                 axios.get(this.$store.state.apiServer + '/api/attachments/all/' + id)
                     .then(function (response) {
@@ -287,7 +299,9 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        self.errorAutoClosable(error.response.data);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
+                        // self.errorAutoClosable(error.response.data);
                     });
             },
             goToGroupPage() {
@@ -344,7 +358,6 @@
                         console.log(error);
                         self.errorAutoClosable(error.response.data);
                         console.log(error.response.data);
-
                     });
             },
             deleteLesson(lesson) {

@@ -11,6 +11,7 @@ import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
 import ua.com.nc.dto.DateDeserializer;
 import ua.com.nc.dto.DtoLesson;
+import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dto.schedule.DesiredToSave;
 import ua.com.nc.exceptions.LogicException;
 
@@ -118,6 +119,12 @@ public class CustomSecurityService {
             return false;
         }
     }
+
+    public boolean hasPermissionToUpdateBasicInfo(Authentication authentication, DtoUserProfiles dtoUserProfiles) {
+        User user = (User) authentication.getPrincipal();
+        return user.getRoles().contains(Role.ADMIN) || dtoUserProfiles.getId().equals(user.getId());
+    }
+
 
 
 }

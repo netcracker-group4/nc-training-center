@@ -85,7 +85,9 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        self.errorAutoClosable(error.response.data);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
+                        // self.errorAutoClosable(error.response.data);
                     });
             }
         },

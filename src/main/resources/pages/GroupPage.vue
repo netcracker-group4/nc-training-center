@@ -2,21 +2,25 @@
     <v-container>
         <progress-circular-component v-if="loading"></progress-circular-component>
 
-        <v-layout v-if="!loading" row wrap>
-            <v-flex xs12 sm12 style="margin-bottom: 50px">
-                <v-layout>
-                    <span class="grey--text" style="font-size: 22px; margin-top: 15px">Group :  </span>
-                    <span style="font-size: 22px; margin-top: 15px" class="font-weight-medium">{{ group.title}}</span>
-                    <v-spacer></v-spacer>
-                    <v-btn large flat v-on:click="downloadGroupAttendanceReport()" v-if="hasRights()">
-                        <b>Download group attendance</b></v-btn>
-                    <v-btn large flat v-on:click="$router.push('/courses/' + course.id)">
-                        <b>Course: {{course.name}}</b></v-btn>
-                    <v-btn large flat v-on:click="forwardToUserPage(teacher.id)">
-                        <b>Trainer: {{teacher.firstName + ' ' + teacher.lastName}}</b></v-btn>
-
-                </v-layout>
+        <v-layout v-if="!loading" row wrap style="margin-bottom: 50px">
+            <v-flex md6 lg4 sx12>
+                <span class="grey--text" style="font-size: 22px; margin-top: 15px">Group :  </span>
+                <span style="font-size: 22px; margin-top: 15px"
+                      class="font-weight-medium">{{ group.title}}</span>
             </v-flex>
+            <v-flex md6 lg3 sx12>
+                <v-btn large flat v-on:click="downloadGroupAttendanceReport()" v-if="hasRights()">
+                    <b>Download group attendance</b></v-btn>
+            </v-flex>
+            <v-flex md6 lg3 sx12>
+                <v-btn large flat v-on:click="$router.push('/courses/' + course.id)">
+                    <b>Course: {{course.name}}</b></v-btn>
+            </v-flex>
+            <v-flex md6 lg2 sx12>
+                <v-btn large flat v-on:click="forwardToUserPage(teacher.id)">
+                    <b>Trainer: {{teacher.firstName + ' ' + teacher.lastName}}</b></v-btn>
+            </v-flex>
+
             <v-flex xs12 sm12 style="margin-bottom: 50px">
                 <v-data-table
                         :headers="headers"
@@ -59,7 +63,7 @@
                 <v-dialog v-model="sendMessageWindowShow" width="500">
                     <template v-slot:activator="{ on }">
                         <v-btn v-if="self.group.trainerId == self.$store.state.user.id"
-                                color="success" large @click="sendMessageWindowShow = ! sendMessageWindowShow">Message
+                               color="success" large @click="sendMessageWindowShow = ! sendMessageWindowShow">Message
                         </v-btn>
                     </template>
 
@@ -129,11 +133,11 @@
             }
         },
         methods: {
-            isBtnShow(){
+            isBtnShow() {
                 let id = this.$route.params.id
                 alert(this.$store.state.trainerGroups)
             },
-            chatsReload(){
+            chatsReload() {
                 let self = this
                 axios.get(this.$store.state.apiServer + '/api/chats')
                     .then(response => {
@@ -212,16 +216,19 @@
                 .then(function (response) {
                     self.group = response.data;
                     self.loading = false;
-                }).catch(function (error) {
-                console.log(error);
-            });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
+                });
             axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/course')
                 .then(function (response) {
                     self.course = response.data;
                     axios.get(self.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/users')
                         .then(function (response) {
                             self.students = response.data;
-                            axios.get(self.$store.state.apiServer + '/api/groups/' + self.course.userId + '/trainer')
+                            axios.get(self.$store.state.apiServer + '/api/users/' + self.course.userId)
                                 .then(function (response) {
                                     self.teacher = response.data;
                                     console.log(self.teacher);
@@ -231,15 +238,23 @@
                                     } else {
                                         self.$router.push('/403');
                                     }
+                                })
+                                .catch(function (error) {
+                                    if (error.response != null && error.response.status == 400)
+                                        self.$router.push('/404');
                                 });
                         })
                         .catch(function (error) {
                             console.log(error);
+                            if (error.response != null && error.response.status == 400)
+                                self.$router.push('/404');
                         });
 
                 })
                 .catch(function (error) {
                     console.log(error);
+                    if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
                 });
 
 
@@ -247,9 +262,12 @@
                 .then(function (response) {
                     self.reasons = response.data;
                     console.log(response.data);
-                }).catch(function (error) {
-                console.log(error);
-            });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
+                });
         },
         computed: {
             headers() {

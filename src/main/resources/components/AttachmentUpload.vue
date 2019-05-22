@@ -8,7 +8,7 @@
 
                 <form id="uploadForm" name="uploadForm" enctype="multipart/form-data">
 
-                    <input type="file" id="file" name="file" ><br>
+                    <input type="file" id="file" name="file"><br>
                 </form>
             </v-flex>
 
@@ -24,23 +24,23 @@
 
     export default {
         name: "AttachmentUpload",
-        data(){
-            return{
+        data() {
+            return {
                 lessonId: null
             }
         },
 
         mounted() {
         },
-        methods:{
-            uploadFile(){
+        methods: {
+            uploadFile() {
                 let form = new FormData(document.getElementById('uploadForm'));
                 let imagefile = document.querySelector('#file');
 
                 let request = new XMLHttpRequest();
                 request.open('POST', this.$store.state.apiServer + '/api/attachments/upload-file');
                 form.append('file', imagefile.files[0]);
-                form.append('lessonId',this.lessonId);
+                form.append('lessonId', this.lessonId);
                 request.send(form);
 
             }

@@ -52,7 +52,7 @@ const routes = [
     // {path: '/courses/:id', component: CoursePage, props: true},
     {path: '/courses/:id', component: CoursePage, props: true},
     // {path: '/coursecreate/:id', component: CreateCourse,props: true},
-    {path: '/courses/:id/edit', component: CreateCourse,props: true},
+    {path: '/courses/:id/edit', component: CreateCourse, props: true},
     // {path: '/courses/:id/join', component: JoinCoursePage, props: true},
     {path: '/courses/:id/join', component: JoinCoursePage, props: true},
     // {path: '/desired-schedule/:id', component: DesiredSchedulePage},
@@ -82,8 +82,8 @@ const routes = [
     // {path: '/requests', component: InfodeskRequest},
     {path: '/requests/new', component: InfodeskRequest},
 
-    {path: '/404', component: NotFound },
-    {path: '/403', component: AccessDenied },
+    {path: '/404', component: NotFound},
+    {path: '/403', component: AccessDenied},
     {path: '*', redirect: '/404'}
 ];
 

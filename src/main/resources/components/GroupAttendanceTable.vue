@@ -20,7 +20,8 @@
                                 </v-select>
                             </v-flex>
                             <v-flex xs12 sm12 md10>
-                                <v-select v-model="editedItem.reason" :items="reasons" label="Change reason" :disabled="editedItem.status == null || editedItem.status.id != 2">
+                                <v-select v-model="editedItem.reason" :items="reasons" label="Change reason"
+                                          :disabled="editedItem.status == null || editedItem.status.id != 2">
                                     <template slot="selection" slot-scope="status">
                                         {{ status.item.title}}
                                     </template>
@@ -76,10 +77,10 @@
                     sortable: false,
                     value: 'name'
                 },
-                { text: 'Date', value: 'date', sortable: false,},
-                { text: 'Attendance', value: 'attendance', sortable: false, },
-                { text: 'Reason', value: 'reason', sortable: false, },
-                { text: 'Actions', value: 'name', sortable: false }
+                {text: 'Date', value: 'date', sortable: false,},
+                {text: 'Attendance', value: 'attendance', sortable: false,},
+                {text: 'Reason', value: 'reason', sortable: false,},
+                {text: 'Actions', value: 'name', sortable: false}
             ],
             statuses: [],
             reasons: [],
@@ -93,30 +94,30 @@
         }),
 
         watch: {
-            dialog (val) {
+            dialog(val) {
                 val || this.close()
             }
         },
 
         methods: {
-            editItem (item) {
+            editItem(item) {
                 this.editedItem.attendanceId = item.attendanceId;
                 //this.editedItem.status = this.statuses.find(status => status.title == item.status)
                 // this.editedItem.reason = this.reasons.find(reason => reason.title == item.reason)
                 this.dialog = true;
             },
-            close () {
+            close() {
                 this.editedItem = [];
                 this.dialog = false;
             },
-            save () {
+            save() {
                 let self = this;
                 let attendanceId = self.editedItem.attendanceId;
                 let statusId = self.editedItem.status.id;
                 let reasonId = null;
-                if(self.editedItem.reason == null || self.editedItem.reason == undefined){
+                if (self.editedItem.reason == null || self.editedItem.reason == undefined) {
                     reasonId = null
-                }else{
+                } else {
                     reasonId = self.editedItem.reason.id
                 }
                 let form = new FormData();
@@ -127,12 +128,12 @@
                 form.append('absenceId', reasonId);
                 request.send(form);
                 request.onloadend = function () {
-                    if(request.status === 200){
-                        axios.get(this.$store.state.apiServer + '/api/attendances?groupId='+ self.groupId + '&lessonId=' + self.lessonId)
+                    if (request.status === 200) {
+                        axios.get(this.$store.state.apiServer + '/api/attendances?groupId=' + self.groupId + '&lessonId=' + self.lessonId)
                             .then(response => self.attendances = response.data)
                             .catch(error => console.log(error))
                     }
-                    if(request.status === 404){
+                    if (request.status === 404) {
                         //self.modalMessage = "There is no user with such email and password"
                         //self.dialog = true
                     }
@@ -140,12 +141,12 @@
                 console.log(this.editedItem);
                 this.close();
             },
-            forwardToUserPage(id){
+            forwardToUserPage(id) {
                 this.$router.push('/users/' + id)
             },
         },
         mounted() {
-            axios.get(this.$store.state.apiServer + '/api/attendances?groupId='+ this.groupId + '&lessonId=' + this.lessonId)
+            axios.get(this.$store.state.apiServer + '/api/attendances?groupId=' + this.groupId + '&lessonId=' + this.lessonId)
                 .then(response => this.attendances = response.data)
                 .catch(error => console.log(error));
 

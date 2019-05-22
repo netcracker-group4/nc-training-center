@@ -12,21 +12,19 @@ import ua.com.nc.dao.PersistException;
 import java.nio.file.AccessDeniedException;
 
 /**
- * Class with methods that automatically catch defined exceptions classes (so you don't need to use try-catch)
+ * Class with methods that automatically catch defined exceptions classes
  * exceptions also are logged here
- * Don't forget to pass cause into your custom exception constructor so the info is logged properly
- *
  * message is stored in 'error.response.data' field
- *      * how to display message to user
- *      * Example
- *      *  axios.delete('/groups/' + self.groups[index].id)
- *      *      .then(function (response) {
- *      *         .... code in case of success
- *      *      })
- *      *      .catch(function (error) {
- *      *          console.log(error.response.data);
- *      *          ... it outputs message error to console
- *      *      });
+ * * how to display message to user
+ * * Example
+ * *  axios.delete('/groups/' + self.groups[index].id)
+ * *      .then(function (response) {
+ * *         .... code in case of success
+ * *      })
+ * *      .catch(function (error) {
+ * *          console.log(error.response.data);
+ * *          ... it outputs message error to console
+ * *      });
  */
 
 @Log4j2
@@ -49,24 +47,24 @@ public class CustomExceptionHandler {
 
     /**
      * For "what LogicException is ?" question answer
-     * @see ua.com.nc.exceptions.LogicException
+     *
      * @param exception LogicException
      * @return error message that can then be displayed to user with some notification
+     * @see ua.com.nc.exceptions.LogicException
      */
     @ExceptionHandler(LogicException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public String  handleLogicException(LogicException exception) {
+    public String handleLogicException(LogicException exception) {
         log.error(exception.getMessage(), exception);
         return exception.getMessage();
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public String handleAccessDeniedException(AccessDeniedException exception) {
         log.error(exception.getMessage(), exception);
         return "Access denied";
     }
-
 }

@@ -122,7 +122,8 @@
                         })
                         .catch(function (error) {
                             console.log(error);
-                            self.errorAutoClosable('Error occurred');
+                             if (error.response != null && error.response.status == 400)
+                                self.$router.push('/404');
                         });
                 } else {
                     this.$router.push('/403');

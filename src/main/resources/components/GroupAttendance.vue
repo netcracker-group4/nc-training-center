@@ -6,9 +6,9 @@
                 <template v-slot:header>
                     <div>Group's attendance</div>
                 </template>
-                    <v-card flat>
-                        <group-attendance-graph :absenceReasons="reasons"/>
-                    </v-card>
+                <v-card flat>
+                    <group-attendance-graph :absenceReasons="reasons"/>
+                </v-card>
             </v-expansion-panel-content>
         </v-expansion-panel>
     </div>

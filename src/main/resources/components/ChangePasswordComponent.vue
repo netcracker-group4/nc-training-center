@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <v-dialog  v-if="isUserThisProfile()" v-model="dialog" max-width="500px">
+        <v-dialog v-if="isUserThisProfile()" v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
                 <v-icon @click="editItem" style="margin-left: 30px">
                     border_color

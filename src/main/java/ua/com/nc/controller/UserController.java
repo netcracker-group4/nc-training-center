@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoChangePassword;
-import ua.com.nc.dto.DtoUser;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dto.DtoUserSave;
 import ua.com.nc.service.UserService;
@@ -50,7 +49,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToUpdateBasicInfo(authentication, #dtoUserProfiles)")
     public ResponseEntity<?> update(@RequestBody DtoUserProfiles dtoUserProfiles) {
         userService.updateUserByAdmin(dtoUserProfiles);
         return ResponseEntity.ok().body("User updated");
@@ -83,9 +82,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/recover-password", method = RequestMethod.POST)
-    public ResponseEntity<?> recoverPassword(@RequestParam String email) {
-        if (userService.getByEmail(email) != null) {
-            userService.recoverPassword(email);
+    public ResponseEntity<?> recoverPassword(@RequestBody User user) {
+        if (userService.getByEmail(user.getEmail()) != null) {
+            userService.recoverPassword(user.getEmail());
             return ResponseEntity.ok().body("Password is recover");
         } else {
             return ResponseEntity.badRequest().body("Invalid email");

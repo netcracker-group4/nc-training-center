@@ -42,12 +42,12 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-flex sx12 >
+        <v-flex sx12>
             <v-data-table
                     :headers="headers"
                     :items="attendances"
                     :rows-per-page-items="rows"
-                    no-data-text = "No attendance to show">
+                    no-data-text="No attendance to show">
 
                 <template v-slot:items="props">
                     <td class="clickable" @click="forwardToUserPage(props.item.userId)">
@@ -79,9 +79,9 @@
                     sortable: false,
                     value: 'name'
                 },
-                { text: 'Attendance', value: 'attendance', sortable: false, },
-                { text: '', value: 'reason', sortable: false, },
-                { text: '', value: 'name', sortable: false }
+                {text: 'Attendance', value: 'attendance', sortable: false,},
+                {text: '', value: 'reason', sortable: false,},
+                {text: '', value: 'name', sortable: false}
 
             ],
             statuses: [],
@@ -93,34 +93,34 @@
                 status: null,
                 reason: null
             },
-            rows: [10, {"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}]
+            rows: [10, {"text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1}]
         }),
 
         watch: {
-            dialog (val) {
+            dialog(val) {
                 val || this.close()
             }
         },
 
         methods: {
-            editItem (item) {
+            editItem(item) {
                 this.editedItem.attendanceId = item.attendanceId;
                 //this.editedItem.status = this.statuses.find(status => status.title == item.status)
                 // this.editedItem.reason = this.reasons.find(reason => reason.title == item.reason)
                 this.dialog = true;
             },
-            close () {
+            close() {
                 this.editedItem = [];
                 this.dialog = false;
             },
-            save () {
+            save() {
                 let self = this;
                 let attendanceId = self.editedItem.attendanceId;
                 let statusId = self.editedItem.status.id;
                 let reasonId = null;
-                if(self.editedItem.reason == null || self.editedItem.reason === "undefined"){
+                if (self.editedItem.reason == null || self.editedItem.reason === "undefined") {
                     reasonId = null
-                }else{
+                } else {
                     reasonId = self.editedItem.reason.id
                 }
                 let form = new FormData();
@@ -131,12 +131,12 @@
                 form.append('absenceId', reasonId);
                 request.send(form);
                 request.onloadend = function () {
-                    if(request.status === 200){
+                    if (request.status === 200) {
                         axios.get(this.$store.state.apiServer + '/api/attendances?lessonId=' + self.lessonId)
                             .then(response => self.attendances = response.data)
                             .catch(error => console.log(error))
                     }
-                    if(request.status === 404){
+                    if (request.status === 404) {
                         //self.modalMessage = "There is no user with such email and password"
                         //self.dialog = true
                     }
@@ -144,14 +144,18 @@
                 console.log(this.editedItem);
                 this.close();
             },
-            forwardToUserPage(id){
+            forwardToUserPage(id) {
                 this.$router.push('/users/' + id)
             },
         },
         mounted() {
             axios.get(this.$store.state.apiServer + '/api/attendances?lessonId=' + this.lessonId)
                 .then(response => this.attendances = response.data)
-                .catch(error => console.log(error));
+                .catch(error =>{
+                    if (error.response != null && error.response.status == 400)
+                        self.$router.push('/404');
+                    console.log(error)
+                } );
 
             axios.get(this.$store.state.apiServer + '/api/attendance-status')
                 .then(response => this.statuses = response.data)

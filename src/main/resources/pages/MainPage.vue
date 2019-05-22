@@ -69,7 +69,7 @@
             return {
                 courses: [],
                 trainers: [],
-                loading :true
+                loading: true
             }
         },
         mounted() {

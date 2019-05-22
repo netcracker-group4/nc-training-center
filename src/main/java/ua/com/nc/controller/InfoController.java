@@ -34,15 +34,15 @@ public class InfoController {
 
     @RequestMapping(value = "/getLevel/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Level getLevel(@PathVariable String id) {
-        return levelDao.getEntityById(Integer.parseInt(id));
+    public Level getLevel(@PathVariable Integer id) {
+        return levelDao.getEntityById(id);
     }
 
 
     @RequestMapping(value = "/getStatus/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public String getStatus(@PathVariable String id) {
-        return gson.toJson(status.getCourseStatusById(Integer.parseInt(id)));
+    public String getStatus(@PathVariable Integer id) {
+        return gson.toJson(status.getCourseStatusById(id));
     }
 
     @RequestMapping(value = "/getStatuses", method = RequestMethod.GET)

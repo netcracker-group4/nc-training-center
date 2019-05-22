@@ -21,23 +21,12 @@ public class InfodeskRequestController {
 
     private Gson gson = new Gson ();
 
-//    @RequestMapping (value={"/create-request"}, method = RequestMethod.POST)
-//    @ResponseBody
-//    public ResponseEntity<?> createRequest (@RequestParam (name = "userId") String userId,
-//                                            @RequestParam (name = "description") String description,
-//                                            @RequestParam (name = "message") String message) {
-//        int id = Integer.parseInt (userId);
-//        infodeskRequestService.createRequest(id, description, message);
-//        return ResponseEntity.ok().body("Your request is created");
-//    }
-
     @RequestMapping (value={"/create-request"}, method = RequestMethod.POST)
     @ResponseBody
-    public String createRequest (@RequestParam (name = "userId") String userId,
+    public String createRequest (@RequestParam (name = "userId") Integer userId,
                                  @RequestParam (name = "description") String description,
                                  @RequestParam (name = "message") String message) {
-        int id = Integer.parseInt (userId);
-        return gson.toJson(infodeskRequestService.createRequest(id, description, message));
+        return gson.toJson(infodeskRequestService.createRequest(userId, description, message));
     }
 
     @RequestMapping (value={"/get-requests"}, method = RequestMethod.GET)
@@ -56,10 +45,9 @@ public class InfodeskRequestController {
 
     @RequestMapping (value={"/change-request-type"}, method = RequestMethod.PATCH)
     @ResponseBody
-    public ResponseEntity<?> updateRequestType (@RequestParam (name = "requestId") String requestId,
+    public ResponseEntity<?> updateRequestType (@RequestParam (name = "requestId") Integer requestId,
                                                 @RequestParam (name = "requestType") String requestType) {
-        int id = Integer.parseInt(requestId);
-        infodeskRequestService.updateRequestType(id, requestType);
+        infodeskRequestService.updateRequestType(requestId, requestType);
         return ResponseEntity.ok().body("Request is updated");
     }
 }

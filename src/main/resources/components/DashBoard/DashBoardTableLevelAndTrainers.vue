@@ -28,7 +28,9 @@
             <v-toolbar flat color="white">
                 <v-toolbar-title>Training level and trainers</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel report</v-btn>
+                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel
+                    report
+                </v-btn>
             </v-toolbar>
             <v-data-table
                     :headers="headers"
@@ -71,7 +73,6 @@
 
 <script>
     import axios from 'axios/index'
-    import store from "../../store/store.js";
 
     export default {
         name: "DashBoardTableTrainingAndQuantity",
@@ -117,13 +118,13 @@
             goToCoursePage(trainerId) {
                 this.$router.push('/courses/' + trainerId);
             },
-            downloadDashboardReport(){
+            downloadDashboardReport() {
                 window.open(this.$store.state.apiServer + "/dashboard-report", "_blank");
             },
             trainerName: item => item.trainer.firstName + ' ' + item.trainer.lastName
         },
         mounted() {
-            if(store.getters.isAdmin) {
+            if (this.$store.getters.isAdmin) {
                 let self = this;
                 axios.get(this.$store.state.apiServer + '/api/dashboard/level-and-trainers')
                     .then(function (response) {
@@ -134,8 +135,10 @@
                         })
                     })
                     .catch(function (error) {
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                         console.log(error);
-                        self.errorAutoClosable(error.response.data);
+                        // self.errorAutoClosable(error.response.data);
                     });
             }
         },

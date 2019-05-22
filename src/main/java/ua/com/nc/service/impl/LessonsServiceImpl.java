@@ -81,8 +81,8 @@ public class LessonsServiceImpl implements LessonsService {
     public String deleteLesson(int toArchive) {
         Lesson lessonToArchive = lessonDao.getEntityById(toArchive);
         lessonToArchive.setArchived(true);
+        lessonDao.update(lessonToArchive);
         lessonAttachmentDao.deleteByLessonId(toArchive);
-//        lessonDao.archiveLesson(toArchive);
         return "Lesson deleted";
     }
 
@@ -131,7 +131,7 @@ public class LessonsServiceImpl implements LessonsService {
     @Override
     public String invertIsPerformedForLesson(Integer lessonId) {
         Lesson lesson = lessonDao.getEntityById(lessonId);
-        boolean newPerformed = !lesson.isCanceled();
+        boolean newPerformed = !lesson.isPerformed();
         lesson.setPerformed(newPerformed);
         lessonDao.update(lesson);
         return Boolean.toString(newPerformed);

@@ -2,7 +2,7 @@
     <v-layout row wrap>
         <v-container xs12>
             <div v-if="user !== null && user !== undefined " style="padding: 20px;">
-                <v-toolbar  flat color="white">
+                <v-toolbar flat color="white">
                     <span>{{elemName}}</span>
                     <v-spacer></v-spacer>
                     <span v-if="viewerIsAdmin()" class="text-xs-center align-center ">
@@ -11,7 +11,7 @@
                                   @change="isActive"
                                   label="Active"></v-switch>
                     </span>
-                    <v-dialog  v-if="viewerIsAdmin() || isUserThisProfile()" v-model="dialog" max-width="500px">
+                    <v-dialog v-if="viewerIsAdmin() || isUserThisProfile()" v-model="dialog" max-width="500px">
                         <template v-slot:activator="{ on }">
                             <v-icon @click="editItem" style="margin-left: 30px">
                                 edit
@@ -64,11 +64,11 @@
 
                 <v-layout row wrap>
                     <v-flex xs12 md5 aling-center class="text-xs-center" style="display: flex;">
-<!--                        <v-avatar style="margin: auto" size="75%" class="avatar">-->
-<!--                            <img src="https://png.pngtree.com/svg/20161212/f93e57629c.svg" alt="avatar">-->
-<!--                        </v-avatar>-->
-<!--                        <input type="file" style="display: none" @change="onFileSelected()" ref="fileInput"/>-->
-<!--                        <v-btn @click="$refs.fileInput.click()">Pick photo</v-btn>-->
+                        <!--                        <v-avatar style="margin: auto" size="75%" class="avatar">-->
+                        <!--                            <img src="https://png.pngtree.com/svg/20161212/f93e57629c.svg" alt="avatar">-->
+                        <!--                        </v-avatar>-->
+                        <!--                        <input type="file" style="display: none" @change="onFileSelected()" ref="fileInput"/>-->
+                        <!--                        <v-btn @click="$refs.fileInput.click()">Pick photo</v-btn>-->
                         <image-upload-component style="margin:auto;" :user="user"></image-upload-component>
                     </v-flex>
                     <v-flex xs12 md7 class="text-xs-right" style="padding: 20px 0">
@@ -103,7 +103,7 @@
                             <v-list-tile v-if="canShowManager()">
                                 <v-list-tile-content>
                                     <v-list-tile-title><span class="grey--text">Teachers :</span>
-                                        <span v-if="trainers.length < 1" >No teachers yet</span>
+                                        <span v-if="trainers.length < 1">No teachers yet</span>
                                         <span v-else v-on:click="goToUserPage(teacher) "
                                               v-for="teacher in trainers" class="font-weight-medium cursor">
                                         {{getManagersName(teacher)}}</span>
@@ -115,7 +115,7 @@
                             <v-list-tile v-if="canShowManager()">
                                 <v-list-tile-content>
                                     <v-list-tile-title><span class="grey--text">Groups :</span>
-                                        <span v-if="groups.length < 1" >No groups yet</span>
+                                        <span v-if="groups.length < 1">No groups yet</span>
                                         <span v-else v-for="group in groups" v-on:click="goToGroupPage(group.id)"
                                               class="font-weight-medium cursor">{{group.title}}</span>
                                     </v-list-tile-title>
@@ -129,11 +129,15 @@
                     <div class="text-xs-center">
                         <v-dialog v-model="sendMessageWindowShow" width="500">
                             <template v-slot:activator="{ on }">
-                                <v-btn v-if="self.$store.state.user.id != self.$route.params.id" color="success" large @click="sendMessageWindowShow = ! sendMessageWindowShow">Message</v-btn>
+                                <v-btn v-if="self.$store.state.user.id != self.$route.params.id" color="success" large
+                                       @click="sendMessageWindowShow = ! sendMessageWindowShow">Message
+                                </v-btn>
                             </template>
 
                             <v-card>
-                                <v-card-title class="headline grey lighten-2" primary-title>Send message to {{user.firstName + ' ' + user.lastName}}</v-card-title>
+                                <v-card-title class="headline grey lighten-2" primary-title>Send message to
+                                    {{user.firstName + ' ' + user.lastName}}
+                                </v-card-title>
                                 <v-divider></v-divider>
                                 <v-layout row wrap>
                                     <v-flex xs10 offset-xs1 class="message-textarea">
@@ -171,7 +175,7 @@
             ImageUploadComponent,
             ChangePasswordComponent
         },
-        props: {elemName: String, user: {}, ifNullMessage: String, trainers : Array, groups : Array},
+        props: {elemName: String, user: {}, ifNullMessage: String, trainers: Array, groups: Array},
         data: function () {
             return {
                 self: this,
@@ -196,28 +200,28 @@
         },
 
         methods: {
-            chatsReload(){
+            chatsReload() {
                 let self = this
                 axios.get(this.$store.state.apiServer + '/api/chats')
                     .then(response => {
                         self.$store.state.chats = response.data
                     })
             },
-            goToGroupPage(groupId){
+            goToGroupPage(groupId) {
                 this.$router.push('/groups/' + groupId)
             },
-            sendMessage(){
+            sendMessage() {
                 let self = this
                 let form = new FormData();
                 let request = new XMLHttpRequest();
                 request.open('POST', this.$store.state.apiServer + '/api/messages');
-                    form.append('text', this.message);
-                    form.append('senderId', this.$store.state.user.id);
-                    form.append('receiverId', this.user.id);
-                    request.send(form);
-                    request.onloadend = function () {
-                        self.chatsReload()
-                    }
+                form.append('text', this.message);
+                form.append('senderId', this.$store.state.user.id);
+                form.append('receiverId', this.user.id);
+                request.send(form);
+                request.onloadend = function () {
+                    self.chatsReload()
+                }
                 this.message = ''
                 this.sendMessageWindowShow = false
             },
@@ -266,14 +270,16 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        self.errorAutoClosable(error.response.data);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
+                        // self.errorAutoClosable(error.response.data);
                     });
             },
             goToUserPage(dtoManager) {
                 if (dtoManager !== null) {
                     this.$router.push('/users/' + dtoManager.id);
                 }
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
             },
             close() {
                 this.dialog = false;
@@ -311,7 +317,7 @@
                         dtoManager: this.editUser.dtoManager
                     }).then(function () {
                             Object.assign(self.user, self.editUser);
-                        self.successAutoClosable('User is updated')
+                            self.successAutoClosable('User is updated')
                         }
                     ).catch(function (error) {
                         console.log(error);
@@ -359,7 +365,8 @@
         cursor: pointer;
         margin-right: 10px;
     }
-    .message-textarea{
+
+    .message-textarea {
         margin-top: 20px;
     }
 </style>

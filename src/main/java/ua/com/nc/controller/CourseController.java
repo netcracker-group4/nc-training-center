@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.CourseDao;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @Log4j2
 @Controller
+@Validated
 @RequestMapping("/api/getcourses")
 public class CourseController {
     @Autowired
@@ -31,8 +33,6 @@ public class CourseController {
     private CourseService courseService;
     @Autowired
     private UserDao userDao;
-    /*@Autowired
-    private SuitabilityDao suitabilityDao;*/
 
     private final Gson gson = new Gson();
     @Autowired
@@ -49,15 +49,15 @@ public class CourseController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
-    public Course getCourse(@PathVariable String id) {
-        return courseDao.getEntityById(Integer.parseInt(id));
+    public Course getCourse(@PathVariable Integer id) {
+        return courseDao.getEntityById(id);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseBody
-    public void deleteCourse(@PathVariable String id) {
-        courseDao.delete(Integer.parseInt(id));
+    public void deleteCourse(@PathVariable Integer id) {
+        courseDao.delete(id);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
@@ -102,15 +102,6 @@ public class CourseController {
         courseService.edit(id,name, level, courseStatus,
                 isOnLandingPage, desc, startDay, endDay);
     }
-
-    /*@RequestMapping(value = {"/{id}/desired/ungrouped"}, method = RequestMethod.GET)
-    @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public String getDesiredScheduleForUngroupedStudentsForCourse(@PathVariable("id") Integer id) throws Exception {
-        return gson.toJson(courseService.getDesiredScheduleForUngroupedStudentsOfCourse(id));
-    }
-*/
-
 
     @RequestMapping(value = "/{id}/trainer", method = RequestMethod.GET)
     @ResponseBody

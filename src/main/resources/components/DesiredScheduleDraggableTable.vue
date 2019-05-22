@@ -66,14 +66,16 @@
                                     </tr>
                                     </thead>
                                     <draggable v-model="group.groupScheduleList" tag="tbody" group="people">
-                                        <tr v-for="item in group.groupScheduleList" :key="item.userId" style="cursor: pointer">
+                                        <tr v-for="item in group.groupScheduleList" :key="item.userId"
+                                            style="cursor: pointer">
                                             <td>{{ item.userId }}</td>
                                             <td>
                                                 <v-switch v-model="item.isAttending"
                                                           @change="invertAttending(item.id, item.userName)"></v-switch>
                                             </td>
                                             <td class="student-name" v-bind:class="{'notAttending': !item.isAttending}">
-                                                {{ item.userName }}</td>
+                                                {{ item.userName }}
+                                            </td>
                                             <td v-for="forInterval in item.scheduleForIntervals"
                                                 v-bind:style="{backgroundColor: getColor(forInterval)}">
                                             </td>
@@ -123,7 +125,7 @@
         components: {draggable, ProgressCircularComponent},
         data() {
             return {
-                loading : false,
+                loading: false,
                 list2: [],
                 errorMessages: '',
                 formHasErrors: false,
@@ -199,7 +201,7 @@
                             });
                         return;
                     }
-                    if(!result){
+                    if (!result) {
                         self.errorAutoClosable("Valid group name required")
                     }
                 });
@@ -237,7 +239,7 @@
                         }
                         return;
                     }
-                    if(!result){
+                    if (!result) {
                         self.errorAutoClosable("Valid group name required")
                     }
                 });
@@ -253,8 +255,10 @@
                         self.loading = false;
                     })
                     .catch(function (error) {
-                        self.errorAutoClosable(error.response.data);
+                        // self.errorAutoClosable(error.response.data);
                         console.log(error);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                     });
 
 
@@ -263,24 +267,30 @@
                         self.groups = response.data;
                     })
                     .catch(function (error) {
-                        self.errorAutoClosable(error.response.data);
+                        // self.errorAutoClosable(error.response.data);
                         console.log(error);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                     });
                 axios.get(this.$store.state.apiServer + '/api/desired-schedule/day-intervals')
                     .then(function (response) {
                         self.dayIntervals = response.data;
                     })
                     .catch(function (error) {
-                        self.errorAutoClosable(error.response.data);
+                        // self.errorAutoClosable(error.response.data);
                         console.log(error);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                     });
                 axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + self.$route.params.id)
                     .then(function (response) {
                         self.course = response.data;
                     })
                     .catch(function (error) {
-                        self.errorAutoClosable(error.response.data);
+                        // self.errorAutoClosable(error.response.data);
                         console.log(error);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                     });
             } else {
                 this.$router.push('/403')

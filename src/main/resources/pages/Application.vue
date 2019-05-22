@@ -2,7 +2,7 @@
     <v-app>
         <navigation-bar/>
         <v-content>
-                <router-view></router-view>
+            <router-view></router-view>
         </v-content>
         <vue-snotify></vue-snotify>
     </v-app>

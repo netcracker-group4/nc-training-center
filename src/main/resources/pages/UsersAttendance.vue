@@ -28,7 +28,7 @@
     export default {
         name: 'users-attendance',
         components: {AttendanceTable},
-        props: {user: {}, groups : Array}
+        props: {user: {}, groups: Array}
     }
 </script>
 <style scoped>

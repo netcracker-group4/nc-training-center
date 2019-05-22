@@ -28,14 +28,14 @@ public class AbsenceReasonController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
-    public String getReason(@PathVariable String id) {
-        return gson.toJson(absenceReasonDao.getEntityById(Integer.parseInt(id)));
+    public String getReason(@PathVariable Integer id) {
+        return gson.toJson(absenceReasonDao.getEntityById(id));
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     @ResponseBody
-    public void deleteReason(@PathVariable String id) {
-        absenceReasonDao.delete(Integer.parseInt(id));
+    public void deleteReason(@PathVariable Integer id) {
+        absenceReasonDao.delete(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)

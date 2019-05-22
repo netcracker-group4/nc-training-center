@@ -65,10 +65,10 @@
         }),
 
         computed: {
-            StartingDate () {
+            StartingDate() {
                 return this.date1 ? moment(this.date1).format('dddd, MMMM Do YYYY') : ''
             },
-            EndingDate () {
+            EndingDate() {
                 return this.date2 ? format(this.date2, 'dddd, MMMM Do YYYY') : ''
             }
         }

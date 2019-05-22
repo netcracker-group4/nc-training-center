@@ -137,7 +137,7 @@
             toLoginPage() {
                 this.$router.push('/login');
             },
-            submitUser () {
+            submitUser() {
                 this.$validator.validateAll().then((result) => {
                     if (result) {
                         let self = this;
@@ -155,7 +155,7 @@
                     }
                 })
             },
-            clearUser () {
+            clearUser() {
                 this.user.firstName = '';
                 this.user.lastName = '';
                 this.user.email = '';
@@ -165,7 +165,7 @@
             },
         },
 
-        mounted () {
+        mounted() {
             this.$validator.localize('en', this.dictionary)
             if (!this.isAdminOrRegisteredUser()) {
                 this.$router.push('/404');
@@ -181,16 +181,20 @@
         margin: 0 auto 0;
         width: 100%;
     }
+
     .div_wrapper {
         margin: 0 auto;
         width: 40%;
     }
+
     .user_block_label {
         font-size: 20px;
     }
+
     .buttons {
         position: relative;
     }
+
     .buttons .login {
         position: absolute;
         right: 0;

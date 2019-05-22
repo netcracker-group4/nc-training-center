@@ -43,15 +43,15 @@
 
     export default {
         name: "InfodeskRequests",
-        data () {
-            return{
+        data() {
+            return {
                 description: null,
                 message: null,
                 userId: this.$store.state.user.id
             }
         },
-        methods:{
-            send (){
+        methods: {
+            send() {
                 // if (this.description != null && this.message != null) {
                 //         console.log(this.description + " " + this.message);
                 //         axios.post('http://localhost:8080/api/requests/create-request', {
@@ -73,7 +73,7 @@
                 form.append('message', this.message);
                 request.send(form);
             },
-            isUserAdmin(){
+            isUserAdmin() {
                 return store.getters.isAdmin;
             }
         },

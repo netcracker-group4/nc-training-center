@@ -30,7 +30,8 @@
                                             data-vv-name="feedback"
                                             required
                                     ></v-textarea>
-                                    <v-container class="v-container_button" style="display:flex; justify-content: flex-end; margin-top: 10px;">
+                                    <v-container class="v-container_button"
+                                                 style="display:flex; justify-content: flex-end; margin-top: 10px;">
                                         <v-flex xs12 sm6 d-flex>
                                             <v-select
                                                     v-model="selectCourse.id"
@@ -113,7 +114,7 @@
             'user',
             'courses'
         ],
-        data:() => ({
+        data: () => ({
             feedbackText: '',
             userFeedback: [],
             defaultFeedback: '',
@@ -124,7 +125,7 @@
                 id: ''
             },
             coursesName: [],
-            rows: [3,5,10,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}],
+            rows: [3, 5, 10, {"text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1}],
             show: false,
             dictionary: {
                 custom: {
@@ -186,6 +187,8 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                     });
             },
             deleteFeedback(item) {
@@ -210,6 +213,8 @@
                         console.log(self.userFeedback)
                     })
                     .catch(function (error) {
+                        if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                         console.log(error);
                     });
             },
@@ -237,23 +242,28 @@
     .div_table_item {
         padding: 20px 7%;
     }
+
     .table_item {
         padding: 20px 0 20px 0;
     }
+
     .div_teacherName {
         color: darkred;
         font-size: 15px;
         font-weight: bold;
     }
+
     .span_courseName {
         margin: 0 0 0 5px;
         color: crimson;
         font-size: 13px;
     }
+
     .div_feedbackText {
         font-size: 14px;
         color: #656266;
     }
+
     .feedback_buttons {
         position: absolute;
         width: 20px;
@@ -263,17 +273,21 @@
         /*display: none;*/
         opacity: 0;
     }
+
     .feedback_buttons .delete {
         cursor: pointer;
     }
+
     .show_buttons {
         /*display: block;*/
         opacity: 1;
         transition-duration: 0.5s;
     }
+
     .div_feedbackTimeDate {
         color: #999999;
     }
+
     .v-container_button {
         padding-top: 0;
         padding-bottom: 0;

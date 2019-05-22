@@ -26,14 +26,14 @@ export default new Vuex.Store({
             } else return false
         },
         isTrainer: state => {
-            if(state.userRoles !== undefined && state.userRoles != null){
+            if (state.userRoles !== undefined && state.userRoles != null) {
                 return state.userRoles.includes('TRAINER')
-            }else return false
+            } else return false
         },
         isManager: state => {
-            if(state.userRoles !== undefined && state.userRoles != null){
+            if (state.userRoles !== undefined && state.userRoles != null) {
                 return state.userRoles.includes('MANAGER')
-            }else return false
+            } else return false
         },
 
         isAuthorized: state => {
@@ -41,7 +41,7 @@ export default new Vuex.Store({
                 state.isAuthorized !== null &&
                 state.isAuthorized !== false;
         },
-        getChatById: state => id =>{
+        getChatById: state => id => {
             return state.chats.find(chat => chat.id == id)
         }
     },

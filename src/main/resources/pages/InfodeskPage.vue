@@ -70,6 +70,8 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                         if (error.response != null && error.response.status == 400)
+                            self.$router.push('/404');
                     });
                 let all = [
                     {
