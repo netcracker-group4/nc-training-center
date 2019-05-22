@@ -8,4 +8,6 @@ public interface MessageService {
     List<Message> getMessagesByChatId(Integer chatId);
 
     List<Message> getPageOfMessagesByChatId(Integer chatId, Integer page);
+
+    Message getById(Integer id);
 }

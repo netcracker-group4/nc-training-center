@@ -142,11 +142,6 @@
                 this.$router.push('/login')
             },
         },
-        watch: {
-            'this.$store.state.chats'(to, from){
-               alert("sss")
-            }
-        }
     }
 </script>
 

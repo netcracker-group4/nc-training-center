@@ -58,7 +58,8 @@
             <div class="text-xs-center">
                 <v-dialog v-model="sendMessageWindowShow" width="500">
                     <template v-slot:activator="{ on }">
-                        <v-btn color="success" large @click="sendMessageWindowShow = ! sendMessageWindowShow">Message
+                        <v-btn v-if="self.group.trainerId == self.$store.state.user.id"
+                                color="success" large @click="sendMessageWindowShow = ! sendMessageWindowShow">Message
                         </v-btn>
                     </template>
 
@@ -128,6 +129,10 @@
             }
         },
         methods: {
+            isBtnShow(){
+                let id = this.$route.params.id
+                alert(this.$store.state.trainerGroups)
+            },
             chatsReload(){
                 let self = this
                 axios.get(this.$store.state.apiServer + '/api/chats')

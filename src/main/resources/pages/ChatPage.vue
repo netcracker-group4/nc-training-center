@@ -1,12 +1,19 @@
 <template>
     <v-container fluid id="chat" ref="chat">
-        <v-btn v-if="isBtnShow()" @click="loadPage()">Load more</v-btn>
+        <!--<v-btn v-if="this.isBtnShow()" @click="loadPage()">Load more</v-btn>-->
+        <v-layout row wrap>
+            <v-flex xs1 offset-xs6>
+                <v-icon v-if="this.isBtnShow()" @click="loadPage()" class="load-more">replay</v-icon>
+            </v-flex>
+        </v-layout>
+
         <div>
             <div v-for="message in messages">
                 <v-layout v-if="message.senderId == self.$store.state.user.id" class="message-line">
                     <v-flex xs3 offset-xs9 >
-                        <v-card>
+                        <v-card color="light-blue lighten-5">
                             <v-card-text>
+                                <div class="message-right sender-name">{{message.senderFirstName + ' ' + message.senderLastName}}</div>
                                 <div class="message-right">{{message.text}}</div>
                                 <div class="message-right date">{{messageDate(message.dateTime)}}</div>
                             </v-card-text>
@@ -15,8 +22,9 @@
                 </v-layout>
                 <v-layout v-if="message.senderId != self.$store.state.user.id" class="message-line">
                     <v-flex xs3>
-                        <v-card>
+                        <v-card color="blue-grey lighten-5">
                             <v-card-text>
+                                <div class="sender-name">{{message.senderFirstName + ' ' + message.senderLastName}}</div>
                                 {{message.text}}
                                 <div class="date">{{messageDate(message.dateTime)}}</div>
                             </v-card-text>
@@ -62,10 +70,9 @@
             addHandler(data => this.messages.push(data))
         },
         updated(){
-            //if(this.messageListPage == 0){
+            if(this.messageListPage == 1){
                 this.scroll()
-            //}
-
+            }
         },
         methods:{
             send(){
@@ -85,7 +92,6 @@
                         axios.get(this.$store.state.apiServer + '/api/messages?chatId=' + id + '&page=' + this.messageListPage)
                             .then(response => {
                                 if(response.data.messages != undefined){
-                                    console.log(response.data.messages)
                                     this.addMessagesToEnd(response.data.messages)
                                 }
                                 this.messageListPage = response.data.page
@@ -101,6 +107,10 @@
                 return date.substr(0, 10) + ' at ' + date.substr(11, 2) + ':' + date.substr(14, 2)
             },
             addMessagesToEnd(...messages){
+                if(messages.length[0] < 3){
+                    alert(messages[0].length)
+                    this.isLessThenPage = true
+                }
                 if(messages != null){
                     let chatId = this.$route.params.id
                     for(let i = 0; i < messages[0].length; i++){
@@ -121,6 +131,7 @@
                 this.messages = []
                 this.messageListPage = 0
                 this.loadPage()
+
             }
         }
     }
@@ -149,8 +160,14 @@
         margin-bottom: 200px;
         overflow-y: auto;
     }
-    .test{
-        height: 100px;
-        overflow: scroll;
+    .sender-name{
+        color: #9a9a9a;
+        margin-bottom: 10px;
+        font-size: 10px;
+    }
+    .load-more{
+        font-size: 30px;
+        color: #9a9a9a;
+        margin-bottom: 10px;
     }
 </style>
