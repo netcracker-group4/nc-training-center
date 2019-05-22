@@ -28,6 +28,12 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         this.dataSource = dataSource;
     }
 
+    /**
+     * default implementation of getAll() method on GenericDao interface
+     *
+     * @return list of all entities in the table
+     * @throws PersistException in case of the exception
+     */
     @Override
     public List<E> getAll() throws PersistException {
         List<E> list;
@@ -44,6 +50,13 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         return list;
     }
 
+    /**
+     * default implementation
+     *
+     * @param id value if the primary key of type Integer in the relation
+     * @return single entity in case of success and null in case if entity not found
+     * @throws PersistException in case of the exception or if received more then one entity
+     */
     @Override
     public E getEntityById(Integer id) throws PersistException {
         List<E> list;
@@ -68,10 +81,16 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         return list.iterator().next();
     }
 
+    /**
+     * default implementation
+     *
+     * @param entity entity whose state will be stored into the record int the database with such id
+     * @throws PersistException in case of the exception or if updated more then one record
+     */
     @Override
     public void update(E entity) throws PersistException {
         String sql = getUpdateQuery();
-        log.info("update with arguments  " + entity.toString()+ "  " + sql );
+        log.info("update with arguments  " + entity.toString() + "  " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForUpdate(statement, entity);
@@ -85,6 +104,12 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         }
     }
 
+    /**
+     * default implementation
+     *
+     * @param id the value of the primary key of the tuple to be deleted
+     * @throws PersistException in case of the exception or if deleted more then one record
+     */
     @Override
     public void delete(Integer id) throws PersistException {
         String sql = getDeleteQuery();
@@ -102,10 +127,16 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         }
     }
 
+    /**
+     * default implementation
+     *
+     * @param entity object of the entity to be inserted must have mo id set
+     * @throws PersistException in case of the exception
+     */
     @Override
     public void insert(E entity) throws PersistException {
         if (entity.getId() != null) {
-            log.error("trying to insert object that already persist", entity);
+            log.error("trying to insert object that already persist" + entity);
             throw new PersistException("Object is already persist.");
         }
         String sql = getInsertQuery();
@@ -121,40 +152,100 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
         }
     }
 
+    /**
+     * parses returned generated id of new inserted entity
+     *
+     * @param rs result set returned by the insert query
+     * @return parsed id
+     * @throws SQLException if there is no value returned
+     */
     private Integer parseId(ResultSet rs) throws SQLException {
         if (rs.next()) {
             return rs.getInt("ID");
         } else throw new PersistException("No value returned!");
     }
 
+    /**
+     * default implementation of  getSelectByIdQuery  throws PersistException
+     * if not overridden by extending class
+     *
+     * @return string
+     */
     protected String getSelectByIdQuery() {
         throw new PersistException("SelectByIdQuery is not defined");
     }
 
+    /**
+     * default implementation of  getSelectQuery  throws PersistException
+     * if not overridden by extending class
+     *
+     * @return string
+     */
     protected String getSelectQuery() {
         throw new PersistException("SelectAllQuery is not defined");
     }
 
+    /**
+     * default implementation of  getInsertQuery  throws PersistException
+     * if not overridden by extending class
+     *
+     * @return string
+     */
     protected String getInsertQuery() {
         throw new PersistException("InsertQuery is not defined");
     }
 
+    /**
+     * default implementation of  getDeleteQuery  throws PersistException
+     * if not overridden by extending class
+     *
+     * @return string
+     */
     protected String getDeleteQuery() {
         throw new PersistException("DeleteQuery is not defined");
     }
 
+    /**
+     * default implementation of  getUpdateQuery  throws PersistException
+     * if not overridden by extending class
+     *
+     * @return string
+     */
     protected String getUpdateQuery() {
         throw new PersistException("UpdateQuery is not defined");
     }
 
+    /**
+     * sets id to the statement if it is the first argument
+     *
+     * @param statement prepared statement
+     * @param id        id to be set
+     * @throws SQLException in case of error
+     */
     void setId(PreparedStatement statement, Integer id) throws SQLException {
         statement.setInt(1, id);
     }
 
+    /**
+     * default implementation of  prepareStatementForInsert  throws PersistException
+     * if not overridden by extending class
+     *
+     * @param statement statement with placeholders without the id
+     * @param entity    entity, whose fields to be set to the statement
+     * @throws SQLException in case of error
+     */
     protected void prepareStatementForInsert(PreparedStatement statement, E entity) throws SQLException {
         throw new PersistException("prepareStatementForInsert method is not defined");
     }
 
+    /**
+     * default implementation of  prepareStatementForUpdate  throws PersistException
+     * if not overridden by extending class
+     *
+     * @param statement statement with placeholders with the id as the last parameter
+     * @param entity    entity, whose fields to be set to the statement
+     * @throws SQLException in case of error
+     */
     protected void prepareStatementForUpdate(PreparedStatement statement, E entity) throws SQLException {
         throw new PersistException("prepareStatementForUpdate method is not defined");
     }
