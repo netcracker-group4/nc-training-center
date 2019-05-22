@@ -126,6 +126,18 @@
             coursesName: [],
             rows: [3,5,10,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}],
             show: false,
+            dictionary: {
+                custom: {
+                    feedback: {
+                        required: () => 'Feedback can not be empty',
+                        max: 'The name field may not be greater than 10 characters'
+                        // custom messages
+                    },
+                    select: {
+                        required: 'Select field is required'
+                    }
+                }
+            }
         }),
         methods: {
             getAuthorizationUser() {
@@ -218,18 +230,6 @@
                 this.getFeedback();
             }
         },
-        dictionary: {
-            custom: {
-                feedback: {
-                    required: () => 'Feedback can not be empty',
-                    max: 'The name field may not be greater than 10 characters'
-                    // custom messages
-                },
-                select: {
-                    required: 'Select field is required'
-                }
-            }
-        }
     }
 </script>
 <style scoped>

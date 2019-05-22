@@ -48,4 +48,8 @@ public interface UserDao extends GenericDao<User> {
 
     List<User> getStudentsByLessonId(Integer lessonId);
 
+    void updateImage(User user);
+
+    void updatePassword(User user);
+
 }

@@ -15,6 +15,7 @@ import ua.com.nc.service.AttendanceService;
 import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
 
+import java.security.SecureRandom;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -109,6 +110,11 @@ public class UserServiceImpl implements UserService {
             );
         }
         return dtoUserProfiles;
+    }
+
+    @Override
+    public User getEntityById(Integer id) {
+        return userDao.getEntityById(id);
     }
 
 
@@ -230,5 +236,45 @@ public class UserServiceImpl implements UserService {
         Map<String, Double> result = new HashMap<>();
         att.forEach((key, value) -> result.put(key, (value * 100.0) / a));
         return result;
+    }
+
+    @Override
+    public void uploadImage(DtoUserSave dtoUserSave) {
+
+    }
+
+    @Override
+    public void updatePassword(DtoChangePassword changePassword) {
+        User user = new User();
+        user.setId(changePassword.getUserId());
+        user.setPassword(changePassword.getNewPassword());
+        userDao.updatePassword(user);
+    }
+
+    @Override
+    public void recoverPassword(String email) {
+        User user = userDao.getByEmail(email);
+        String password = generateRandomPassword();
+        user.setPassword(password);
+        userDao.updatePassword(user);
+
+        DtoMailSender dtoMailSender = new DtoMailSender();
+        dtoMailSender.setTo(email);
+        dtoMailSender.setSubject("Recover password");
+        dtoMailSender.setText("Your new password " + password);
+        emailService.sendSimpleMessage(dtoMailSender);
+
+    }
+
+    private String generateRandomPassword() {
+        final Random RANDOM = new SecureRandom();
+        final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        int passwordLength = 10;
+        StringBuilder returnValue = new StringBuilder(passwordLength);
+
+        for (int i = 0; i < passwordLength; i++) {
+            returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
+        }
+        return new String(returnValue);
     }
 }
