@@ -183,7 +183,7 @@
     }
     .div_wrapper {
         margin: 0 auto;
-        width: 30%;
+        width: 40%;
     }
     .user_block_label {
         font-size: 20px;

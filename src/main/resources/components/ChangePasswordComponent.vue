@@ -100,16 +100,6 @@
                 this.newPassword = '';
                 this.$validator.reset();
                 this.dialog = true;
-                // let self = this;
-                // axios.get(this.$store.state.apiServer + '/api/users/get-all-managers')
-                //     .then(function (response) {
-                //         self.managers = response.data;
-                //         console.log(self.managers)
-                //     })
-                //     .catch(function (error) {
-                //         console.log(error);
-                //         self.errorAutoClosable(error.response.data);
-                //     });
             },
             close() {
                 this.oldPassword = '';
@@ -128,7 +118,7 @@
                             oldPassword: this.oldPassword,
                             newPassword: this.newPassword,
                         }).then(function () {
-                            this.close();
+                            self.close();
                             self.successAutoClosable('Password is updated');
                         }).catch(function (error) {
                             self.errorAutoClosable('Password is incorrect')

@@ -38,5 +38,7 @@ public interface UserService extends UserDetailsService {
 
     void updatePassword(DtoChangePassword changePassword);
 
+    void recoverPassword(String email);
+
     //List<User> getAllTrainers();
 }

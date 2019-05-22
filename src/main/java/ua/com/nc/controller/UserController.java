@@ -82,6 +82,16 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = "/recover-password", method = RequestMethod.POST)
+    public ResponseEntity<?> recoverPassword(@RequestParam String email) {
+        if (userService.getByEmail(email) != null) {
+            userService.recoverPassword(email);
+            return ResponseEntity.ok().body("Password is recover");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid email");
+        }
+    }
+
     @RequestMapping(value = "/get-all-managers", method = RequestMethod.GET)
     public ResponseEntity<?> getAllManagers() {
         return new ResponseEntity<>(userService.getAllManagers(), HttpStatus.OK);
