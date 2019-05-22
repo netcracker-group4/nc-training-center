@@ -9,6 +9,7 @@ import ua.com.nc.domain.Lesson;
 import ua.com.nc.domain.LessonAttachment;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoLesson;
+import ua.com.nc.dto.DtoUser;
 import ua.com.nc.exceptions.LogicException;
 import ua.com.nc.service.LessonsService;
 
@@ -85,6 +86,7 @@ public class LessonsServiceImpl implements LessonsService {
         return "Lesson deleted";
     }
 
+    @Override
     public String invertIsCanceledForLesson(int lessonId) {
         Lesson lesson = lessonDao.getEntityById(lessonId);
         boolean newCanceled = !lesson.isCanceled();
@@ -112,5 +114,26 @@ public class LessonsServiceImpl implements LessonsService {
             throw new LogicException("There is no such lesson");
         }
         return lesson;
+    }
+
+    @Override
+    public List<DtoUser> getStudentsIdsByLessonId(Integer lessonId) {
+        List<DtoUser> dtoUsers = new ArrayList<>();
+        List<User> users = userDao.getStudentsByLessonId(lessonId);
+        if (!users.isEmpty()) {
+            for (User user : users) {
+                dtoUsers.add(new DtoUser(user.getId()));
+            }
+        }
+        return dtoUsers;
+    }
+
+    @Override
+    public String invertIsPerformedForLesson(Integer lessonId) {
+        Lesson lesson = lessonDao.getEntityById(lessonId);
+        boolean newPerformed = !lesson.isCanceled();
+        lesson.setPerformed(newPerformed);
+        lessonDao.update(lesson);
+        return Boolean.toString(newPerformed);
     }
 }

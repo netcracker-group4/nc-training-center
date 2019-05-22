@@ -26,6 +26,7 @@
             </v-flex>
         </v-layout>
         <v-layout v-if="!loading" row wrap>
+            <v-btn color="success" :disabled="performed" @click="checked()">Check attendance</v-btn>
             <v-flex xs12>
                 <v-toolbar flat color="white">
                     <span>Lesson attachments</span>
@@ -87,6 +88,7 @@
                         value: 'title'
                     },
                 ],
+                performed: true,
                 loading: true
             }
         },
@@ -132,6 +134,7 @@
                         console.log(dat);
                         self.topic = dat.topic;
                         self.trainer = dat.trainerId;
+                        self.performed = dat.isPerformed;
                         self.loading = false;
                         axios.get(self.$store.state.apiServer + '/api/users/' + self.trainer)
                             .then(function (response) {
@@ -183,7 +186,19 @@
                     });
 
 
-            }
+            },
+            checked() {
+                axios.post(this.$store.state.apiServer + '/api/attendances/' + this.$route.params.id);
+                axios.post(this.$store.state.apiServer + '/api/schedule/' + this.$route.params.id + '/performed')
+                    .then(function (response) {
+                        this.performed = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                this.$router.go(0);
+            },
+
 
         }
     }

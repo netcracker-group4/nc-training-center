@@ -14,5 +14,7 @@ public interface AttendanceService {
 
     List<Attendance> getAttendanceByLessonId(Integer lessonId);
 
+    void attendanceInsert(Integer lessonId);
+
     void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId);
 }

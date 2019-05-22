@@ -1,5 +1,6 @@
 package ua.com.nc.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import ua.com.nc.domain.Role;
 
@@ -25,6 +26,10 @@ public class DtoUser {
         this.roles = roles;
         this.isActive = isActive;
         this.photoUrl = photoUrl;
+    }
+
+    public DtoUser(Integer id) {
+        this.id = id;
     }
 
 

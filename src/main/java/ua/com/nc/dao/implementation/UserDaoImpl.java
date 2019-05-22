@@ -76,6 +76,12 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     private String getSelectTrainerByGroupId;
     @Value("${usr.select-by-token}")
     private String usrSelectByToken;
+    @Value("${usr.update-image}")
+    private String usrUpdateImage;
+    @Value("${usr.update-password}")
+    private String usrUpdatePassword;
+    @Value("${usr.select-students-by-lesson-id}")
+    private String getSelectStudentsByLessonId;
 
     @Autowired
     public UserDaoImpl(DataSource dataSource) throws PersistException {
@@ -306,6 +312,43 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         String sql = getSelectSubordinatesByManager;
         log.info("find subordinates by managerId = " + managerId + "  " + sql);
         return getFromSqlById(sql, managerId);
+    }
+
+    @Override
+    public List<User> getStudentsByLessonId(Integer lessonId) {
+        String sql = getSelectStudentsByLessonId;
+        log.info("find students by lessonId = " + lessonId + "  " + sql);
+        return getFromSqlById(sql, lessonId);
+    }
+
+    @Override
+    public void updateImage(User user) {
+        String sql = usrUpdateImage;
+        log.info("upload image" + user.toString() + " " + sql);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.getImageUrl());
+            statement.setInt(2, user.getId());
+            statement.executeUpdate();
+        } catch (Exception e) {
+            log.error(e);
+            throw new PersistException(e);
+        }
+    }
+
+    @Override
+    public void updatePassword(User user) {
+        String sql = usrUpdatePassword;
+        log.info("update password" + user.toString() + " " + sql);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.getPassword());
+            statement.setInt(2, user.getId());
+            statement.executeUpdate();
+        } catch (Exception e) {
+            log.error(e);
+            throw new PersistException(e);
+        }
     }
 
 

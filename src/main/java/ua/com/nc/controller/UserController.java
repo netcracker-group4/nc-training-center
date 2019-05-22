@@ -3,12 +3,15 @@ package ua.com.nc.controller;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import ua.com.nc.domain.User;
+import ua.com.nc.dto.DtoChangePassword;
+import ua.com.nc.dto.DtoUser;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dto.DtoUserSave;
 import ua.com.nc.service.UserService;
@@ -53,11 +56,40 @@ public class UserController {
         return ResponseEntity.ok().body("User updated");
     }
 
+
     @RequestMapping(value = "/update-active", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateActive(@RequestBody User user) {
         userService.updateActive(user);
         return ResponseEntity.ok().body("Update user active");
+    }
+
+    @RequestMapping(value = "/upload-image", method = RequestMethod.PUT,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> uploadImage(@RequestBody DtoUserSave dtoUserSave) {
+        userService.uploadImage(dtoUserSave);
+        return ResponseEntity.ok().body("Image upload");
+    }
+
+    @RequestMapping(value = "/update-password", method = RequestMethod.PUT)
+    public ResponseEntity<?> updatePassword(@RequestBody DtoChangePassword dtoChangePassword) {
+        User user = userService.getEntityById(dtoChangePassword.getUserId());
+        if (user.getPassword().equals(dtoChangePassword.getOldPassword())) {
+            userService.updatePassword(dtoChangePassword);
+            return ResponseEntity.ok().body("Update password");
+        } else {
+            return ResponseEntity.badRequest().body("Incorrect password");
+        }
+    }
+
+    @RequestMapping(value = "/recover-password", method = RequestMethod.POST)
+    public ResponseEntity<?> recoverPassword(@RequestParam String email) {
+        if (userService.getByEmail(email) != null) {
+            userService.recoverPassword(email);
+            return ResponseEntity.ok().body("Password is recover");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid email");
+        }
     }
 
     @RequestMapping(value = "/get-all-managers", method = RequestMethod.GET)

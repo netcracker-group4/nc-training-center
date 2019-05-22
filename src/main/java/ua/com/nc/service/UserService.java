@@ -14,6 +14,8 @@ public interface UserService extends UserDetailsService {
 
     DtoUserProfiles getById(Integer id);
 
+    User getEntityById(Integer id);
+
     User getByEmail(String email);
 
     void updateUserByAdmin(DtoUserProfiles dtoUserProfiles);
@@ -31,6 +33,12 @@ public interface UserService extends UserDetailsService {
     List<DtoTeacherAndManager> getTrainersOfEmployee(Integer id);
 
     Map<String, Double> getAttandanceGraph(int userId);
+
+    void uploadImage(DtoUserSave dtoUserSave);
+
+    void updatePassword(DtoChangePassword changePassword);
+
+    void recoverPassword(String email);
 
     //List<User> getAllTrainers();
 }

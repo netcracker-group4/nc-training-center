@@ -118,7 +118,7 @@
                 this.$router.push('/courses/' + trainerId);
             },
             downloadDashboardReport(){
-                window.open(this.$store.state.apiServer + "/api/download-report/dashboard-report", "_blank");
+                window.open(this.$store.state.apiServer + "/dashboard-report", "_blank");
             },
             trainerName: item => item.trainer.firstName + ' ' + item.trainer.lastName
         },

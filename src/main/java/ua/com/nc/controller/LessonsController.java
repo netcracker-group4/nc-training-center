@@ -89,10 +89,21 @@ public class LessonsController {
     }
 
     @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/{lessonId}/performed")
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToCancelLesson(authentication, #lessonId)")
+    public String performLesson(@PathVariable Integer lessonId) {
+        return lessonsService.invertIsPerformedForLesson(lessonId);
+    }
+
+    @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/lesson/{lessonId}")
     public String getLesson(@PathVariable String lessonId) {
         return gson.toJson(lessonsService.getLessonById(Integer.parseInt(lessonId)));
     }
 
-
+    @ResponseBody
+    @RequestMapping(value = "/{lessonId}/students", method = RequestMethod.GET)
+    public String getStudentsIds(@PathVariable String lessonId) {
+        return gson.toJson(lessonsService.getStudentsIdsByLessonId(Integer.parseInt(lessonId)));
+    }
 }

@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container class="form" id="email">
         <v-layout row wrap>
             <v-flex xs12 sm12 >
@@ -22,6 +22,49 @@
                             <v-btn @click="login" class="green lighten-3 login-button">login</v-btn>
                             <v-btn @click="forwardToRegistrationPage" class="light-blue lighten-3 registration-button">registration page</v-btn>
                         </v-flex>
+                        <v-dialog v-model="recoverDialog" max-width="500px">
+                            <template v-slot:activator="{ on }">
+                                <v-flex xs12 sm12>
+                                    <v-btn
+                                            flat
+                                            color="primary"
+                                            class="mb-2"
+                                            @click="recoverPassword"
+                                            style="margin: 10px 0 0 0"
+                                    >
+                                        forget password
+                                    </v-btn>
+                                </v-flex>
+                            </template>
+                            <v-card>
+                                <v-card-title>
+                                    <span class="headline">Recover password</span>
+                                </v-card-title>
+
+                                <v-card-text>
+                                    <v-container grid-list-md>
+                                        <v-layout wrap>
+                                            <v-flex xs10>
+                                                <v-text-field v-model="emailSend"
+                                                              label="Enter your email"
+                                                              v-validate="'required|email'"
+                                                              :error-messages="errors.collect('email')"
+                                                              data-vv-name="email"
+                                                              required
+                                                ></v-text-field>
+                                            </v-flex>
+
+                                        </v-layout>
+                                    </v-container>
+                                </v-card-text>
+
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
+                                    <v-btn color="blue darken-1" flat @click="sendPassword">Send password</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                     </v-layout>
                 </v-container>
             </v-flex>
@@ -45,9 +88,13 @@
 </template>
 
 <script>
+    import axios from 'axios/index';
     import ModalPage from './ModalPage.vue'
 
     export default {
+        $_veeValidate: {
+            validator: 'new'
+        },
         name: "LoginPage",
         components: {ModalPage},
         data(){
@@ -57,7 +104,19 @@
                 password: null,
                 isModalVisible: false,
                 modalMessage: null,
-                dialog: false
+                dialog: false,
+                recoverDialog: false,
+                emailSend: '',
+                dictionary: {
+                    custom: {
+                        oldPassword: {
+                            required: () => 'Password can not be empty',
+                        },
+                        newPassword: {
+                            required: () => 'Password can not be empty',
+                        },
+                    }
+                }
             }
         },
         methods:{
@@ -100,7 +159,54 @@
                     password.replace(/\s/g, '') != ''){
                     return true
                 }else return false
+            },
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            recoverPassword() {
+                this.emailSend = null;
+                this.$validator.reset();
+                this.recoverDialog = true;
+            },
+            close() {
+                this.emailSend = null;
+                this.$validator.reset();
+                this.recoverDialog = false;
+                setTimeout(() => {
+                }, 300)
+            },
+            sendPassword() {
+                let self = this;
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+                        axios.post(this.$store.state.apiServer + '/api/users/recover-password', {
+                            email: this.emailSend
+                        }).then(function () {
+                            self.close();
+                            self.successAutoClosable('New password sent to mail');
+                        }).catch(function (error) {
+                            self.errorAutoClosable('This user is not registered on the system')
+                        })
+                    }
+                    this.close();
+                })
             }
+        },
+        mounted() {
+            this.$validator.localize('en', this.dictionary);
         },
     }
 </script>

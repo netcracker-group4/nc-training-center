@@ -11,7 +11,7 @@
                                   @change="isActive"
                                   label="Active"></v-switch>
                     </span>
-                    <v-dialog  v-if="viewerIsAdmin()" v-model="dialog" max-width="500px">
+                    <v-dialog  v-if="viewerIsAdmin() || isUserThisProfile()" v-model="dialog" max-width="500px">
                         <template v-slot:activator="{ on }">
                             <v-icon @click="editItem" style="margin-left: 30px">
                                 edit
@@ -33,7 +33,7 @@
                                             <v-text-field v-model="editUser.lastName"
                                                           label="Surname"></v-text-field>
                                         </v-flex>
-                                        <v-flex xs10>
+                                        <v-flex xs10 v-if="viewerIsAdmin()">
                                             <v-select
                                                     v-model="editUser.dtoManager"
                                                     :items="managers"
@@ -47,6 +47,7 @@
                                                 </template>
                                             </v-select>
                                         </v-flex>
+
                                     </v-layout>
                                 </v-container>
                             </v-card-text>
@@ -58,18 +59,20 @@
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
+                    <change-password-component :user="user"></change-password-component>
                 </v-toolbar>
 
-                <v-layout row wrap align-center>
-                    <v-flex xs12 md5 class="text-xs-center">
-                        <v-avatar style="margin: auto" size="75%" class="avatar">
-                            <img src="https://png.pngtree.com/svg/20161212/f93e57629c.svg" alt="avatar">
-                        </v-avatar>
-                        <input type="file" style="display: none" @change="onFileSelected()" ref="fileInput"/>
-                        <v-btn @click="$refs.fileInput.click()">Pick photo</v-btn>
+                <v-layout row wrap>
+                    <v-flex xs12 md5 aling-center class="text-xs-center" style="display: flex;">
+<!--                        <v-avatar style="margin: auto" size="75%" class="avatar">-->
+<!--                            <img src="https://png.pngtree.com/svg/20161212/f93e57629c.svg" alt="avatar">-->
+<!--                        </v-avatar>-->
+<!--                        <input type="file" style="display: none" @change="onFileSelected()" ref="fileInput"/>-->
+<!--                        <v-btn @click="$refs.fileInput.click()">Pick photo</v-btn>-->
+                        <image-upload-component style="margin:auto;" :user="user"></image-upload-component>
                     </v-flex>
                     <v-flex xs12 md7 class="text-xs-right" style="padding: 20px 0">
-                        <v-list two-line>
+                        <v-list>
                             <v-list-tile>
                                 <v-list-tile-content>
                                     <v-list-tile-title><span class="grey--text">Name :</span> <span
@@ -159,10 +162,15 @@
 <script>
     import axios from 'axios/index';
     import store from '../store/store.js';
+    import ImageUploadComponent from './image/ImageUploadComponent.vue';
+    import ChangePasswordComponent from './ChangePasswordComponent.vue';
 
     export default {
         name: 'basic-user-info-component',
-        components: {},
+        components: {
+            ImageUploadComponent,
+            ChangePasswordComponent
+        },
         props: {elemName: String, user: {}, ifNullMessage: String, trainers : Array, groups : Array},
         data: function () {
             return {
@@ -234,6 +242,9 @@
             },
             viewerIsAdmin() {
                 return store.getters.isAdmin;
+            },
+            isUserThisProfile() {
+                return store.state.user.id === this.user.id;
             },
             getManagersName(dtoManager) {
                 if (dtoManager !== null) {

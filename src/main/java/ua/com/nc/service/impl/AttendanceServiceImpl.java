@@ -141,6 +141,12 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    public void attendanceInsert(Integer lessonId) {
+        attendanceDao.attendanceInsert(lessonId, userDao.getStudentsByLessonId(lessonId));
+
+    }
+
+    @Override
     public void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId) {
         attendanceDao.attendanceUpdate(attendanceId, statusId, reasonId);
     }
