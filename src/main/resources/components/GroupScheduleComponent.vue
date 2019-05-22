@@ -344,7 +344,6 @@
                         console.log(error);
                         self.errorAutoClosable(error.response.data);
                         console.log(error.response.data);
-
                     });
             },
             deleteLesson(lesson) {

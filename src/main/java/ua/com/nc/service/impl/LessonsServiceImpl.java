@@ -81,8 +81,8 @@ public class LessonsServiceImpl implements LessonsService {
     public String deleteLesson(int toArchive) {
         Lesson lessonToArchive = lessonDao.getEntityById(toArchive);
         lessonToArchive.setArchived(true);
+        lessonDao.update(lessonToArchive);
         lessonAttachmentDao.deleteByLessonId(toArchive);
-//        lessonDao.archiveLesson(toArchive);
         return "Lesson deleted";
     }
 

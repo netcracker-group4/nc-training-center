@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.AttachmentDao;
 import ua.com.nc.domain.Attachment;
 import ua.com.nc.domain.LessonAttachment;
@@ -22,7 +21,6 @@ import ua.com.nc.exceptions.LogicException;
 import ua.com.nc.service.AttachmentService;
 import ua.com.nc.service.RoleService;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +58,13 @@ public class AttachmentController {
         return null;
     }
 
+    /**
+     * returns all attachments that are now attached to lesson plus all attachments
+     * that are owned by the trainer that is editing the lesson at the moment
+     * @param user logged in user
+     * @param lessonId lesson that is edited
+     * @return list of available attachments
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/all/{lessonId}")
     @ResponseBody
     public String getAllAttachmentsForLessonAndTrainer(@AuthenticationPrincipal User user, @PathVariable Integer lessonId) {
@@ -79,16 +84,28 @@ public class AttachmentController {
         return gson.toJson(attachmentDao.getEntityById(Integer.parseInt(id)));
     }
 
+    /**
+     * uploads the file sent from the front-end
+     * @param dtoAttachment object with file MultipartFile, lessonId and description
+     * @param user authenticated user to whom profile upload the file
+     * @return saved into database object that represents the file
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/lesson/upload-file",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String uploadFile(@ModelAttribute  DtoAttachment dtoAttachment,
                              @AuthenticationPrincipal User user) {
         log.debug(dtoAttachment);
-        if (user != null && roleService.findAllByUserId(user.getId()).contains(Role.TRAINER)) {
-            return gson.toJson(service.uploadFile(user.getId(), dtoAttachment));
+        if(user != null ){
+            List<Role> roles = roleService.findAllByUserId(user.getId());
+            if (roles.contains(Role.TRAINER) || roles.contains(Role.ADMIN)) {
+                return gson.toJson(service.uploadFile(user.getId(), dtoAttachment));
+            }
+            else
+                throw new LogicException("Could not upload file");
         }
-        else throw new LogicException("Could not upload file");
+        else
+            throw new LogicException("Could not upload file");
     }
 
     @ResponseBody
