@@ -28,6 +28,47 @@ public class ReportController {     //   /dashboard-report
     @Autowired
     private GroupsService groupService;
 
+
+    //get attendance of groups by their trainer id, authenticated trainer
+    //else get full attendance report by admin
+    @RequestMapping(value = "/attendance-report", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) " +
+            "|| hasAuthority(T(ua.com.nc.domain.Role).TRAINER.name())")
+    public ResponseEntity<InputStreamResource> excelAttendanceReport(
+            @AuthenticationPrincipal User user) throws IOException {
+        return getAttendanceReport(user);
+    }
+
+
+    //get group attendance report by group id
+    @RequestMapping(value = "/attendance-report/{groupId}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) " +
+            "|| hasAuthority(T(ua.com.nc.domain.Role).TRAINER.name())")
+    public ResponseEntity<InputStreamResource> excelGroupAttendanceReport(
+            @PathVariable Integer groupId) throws IOException {
+        return ResponseEntity.ok()
+                .headers(
+                        getHttpHeaders(
+                                groupService.getGroupById(groupId)
+                                        .getTitle() + " attendance report"))
+                .body(
+                        new InputStreamResource(
+                                reportService.getAttendanceExcel(groupId)));
+    }
+
+    @RequestMapping(value = "/dashboard-report", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) ")
+    public ResponseEntity<InputStreamResource> excelDashboardReport()
+            throws IOException {
+        return ResponseEntity.ok()
+                .headers(getHttpHeaders(
+                        "NCTraining center dashboard report"))
+                .body(
+                        new InputStreamResource(
+                                reportService.getDashboardExcel()));
+
+    }
+
     private HttpHeaders getHttpHeaders(String fileName) {
         String fileType = ".xlsx";
         String headerName = "Content-Disposition";
@@ -57,44 +98,5 @@ public class ReportController {     //   /dashboard-report
                             new InputStreamResource(
                                     reportService.getAttendanceExcel(user)));
         }
-    }
-
-    //get attendance of groups by their trainer id, authenticated trainer
-    //else get full attendance report by admin
-    @RequestMapping(value = "/attendance-report", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('ADMIN') || hasAuthority('TRAINER')")
-    public ResponseEntity<InputStreamResource> excelAttendanceReport(
-            @AuthenticationPrincipal User user) throws IOException {
-        return getAttendanceReport(user);
-    }
-
-
-    //get group attendance report by group id
-    @RequestMapping(value = "/attendance-report/{groupId}", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('ADMIN') || hasAuthority('TRAINER')")
-    public ResponseEntity<InputStreamResource> excelGroupAttendanceReport(
-            @PathVariable Integer groupId) throws IOException {
-        return ResponseEntity.ok()
-                .headers(
-                    getHttpHeaders(
-                            groupService.getGroupById(groupId)
-                                    .getTitle() + " attendance report"))
-                .body(
-                    new InputStreamResource(
-                            reportService.getAttendanceExcel(groupId)));
-
-    }
-
-    @RequestMapping(value = "/dashboard-report", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<InputStreamResource> excelDashboardReport()
-            throws IOException {
-        return ResponseEntity.ok()
-                .headers(getHttpHeaders(
-                    "NCTraining center dashboard report"))
-                .body(
-                        new InputStreamResource(
-                                reportService.getDashboardExcel()));
-
     }
 }

@@ -113,11 +113,7 @@ public class CustomSecurityService {
     public boolean canWriteToGroupChat(Integer userId, Integer groupId){
         Group group = groupDao.getByUserIdAndGroupId(userId, groupId);
         User trainer = userDao.getTrainerByGroupId(groupId);
-        if(group != null || trainer.getId() == userId){
-            return true;
-        }else{
-            return false;
-        }
+        return group != null || trainer.getId().equals(userId);
     }
 
     public boolean hasPermissionToUpdateBasicInfo(Authentication authentication, DtoUserProfiles dtoUserProfiles) {
