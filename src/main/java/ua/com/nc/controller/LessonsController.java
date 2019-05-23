@@ -25,6 +25,7 @@ public class LessonsController {
     @Autowired
     private LessonsService lessonsService;
 
+//    Gson gson = new Gson();
     // default converter doesn't have custom adapter specified
     private Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, (JsonSerializer<Timestamp>)
             (timestamp, type, jsonSerializationContext) -> new JsonPrimitive(timestamp.toString())).create();

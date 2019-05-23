@@ -10,12 +10,13 @@ import java.util.List;
 
 public interface InfodeskRequestService {
 
-    int createRequest (int id, String description, String message);
+    void createRequest (int userId, String description, String message);
 
     List<ProblemStatus> getStatuses();
 
-//    void updateRequest (int id, ProblemStatus status);
-    List<Problem> getAllRequestsOfType (String requestType);
+    List<Problem> getAllRequests ();
 
     void updateRequestType (int requestId, String requestType);
+
+    List <Problem> getRequestsByUserId (int userId);
 }

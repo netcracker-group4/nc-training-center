@@ -32,6 +32,7 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
     private int endOfDay = 21;
 
 
+
     @Override
     public int update(GroupSchedule groupSchedule) {
         Group groupToUpdate = groupDao.getEntityById(groupSchedule.getId());
@@ -42,12 +43,14 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
         return groupToUpdate.getId();
     }
 
+
     @Override
     public boolean delete(int groupId) {
         userGroupDao.deleteAllForGroup(groupId);
         groupDao.delete(groupId);
         return true;
     }
+
 
     @Override
     public int add(GroupSchedule groupSchedule) {
@@ -56,6 +59,7 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
         updateStudentsForGroup(groupSchedule, groupToInsert);
         return groupToInsert.getId();
     }
+
 
     @Override
     public void invertAttending(Integer userGroupId) {
@@ -74,6 +78,7 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
             userGroupDao.update(oldUserGroupForThisCourse);
         }
     }
+
 
 
     @Override

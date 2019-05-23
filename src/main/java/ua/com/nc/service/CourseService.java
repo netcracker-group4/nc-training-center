@@ -16,9 +16,9 @@ public interface CourseService {
 
 
     String uploadImage(MultipartFile image);
+    String uploadImage(MultipartFile image,int courseId);
 
     List<DtoCourse> getAllByTrainerAndEmployee(Integer trainerId, Integer employeeId);
 
     void edit(int id, String name, String level, String courseStatus, String isOnLandingPage, String desc, String startDay, String endDay);
-
 }

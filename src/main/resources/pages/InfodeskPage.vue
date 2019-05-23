@@ -14,29 +14,34 @@
                     >
                         {{ n.title }}
                     </v-tab>
+                        <v-tab-item
+                            v-for="n in statuses"
+                            :key="n.id"
+                        >
+                            <v-data-table
+                                    :headers="headers"
+                                    :items="dataToShowOnTab(n)"
+                                    class="elevation-1"
+                                    style="margin-bottom: 50px"
+                            >
+                                <template v-slot:items="problems">
+                                    <td v-if="isAdmin()" v-on:click="$router.push('/users/' + problems.item.studentId)">
+                                        {{ problemsMap.get(problems.item) }}</td>
+                                    <td class="text-xs-right">{{problems.item.description}}</td>
+                                    <td class="text-xs-right">
+                                        <v-btn color="success">Open Chat</v-btn>
+                                    </td>
+                                    <td class="text-xs-right" v-if="isStudent()">
+                                        <v-btn @click="markAsAnswered(problems.item.id)" color="warning" :disabled="canMakeAnswered(problems.item.status)">
+                                            Answered
+                                        </v-btn>
+                                    </td>
+                                </template>
+                            </v-data-table>
+
+                        </v-tab-item>
+
                 </v-tabs>
-            </v-flex>
-            <v-flex xs12 sm12>
-                <v-data-table
-                        :headers="headers"
-                        :items="problemsWithStatus"
-                        class="elevation-1"
-                        style="margin-bottom: 50px"
-                >
-                    <template v-slot:items="props">
-                        <td v-on:click="$router.push('/users/' + props.item.studentId)">{{ props.item.studentId }}
-                        </td>
-                        <td class="text-xs-right">{{ props.item.description }}</td>
-                        <td class="text-xs-right">
-                            <v-btn color="success">Open Chat</v-btn>
-                        </td>
-                        <td class="text-xs-right" v-if="isStudent()">
-                            <v-btn color="warning" :disabled="canMakeAnswered(props.item.status)">
-                                Answered
-                            </v-btn>
-                        </td>
-                    </template>
-                </v-data-table>
             </v-flex>
         </v-layout>
     </v-container>
@@ -49,23 +54,25 @@
         name: "InfodeskPage",
         data: function () {
             return {
-                statuses: [{
-                    id: 0,
-                    title: 'All',
-                    description: 'all requests'
-                }],
+                statuses: [],
+                problemsMap: new Map(),
                 problems: [],
                 currentStatus: 0
             }
         },
         methods: {
-            loadInfo() {
+            loadInfo: function () {
                 let self = this;
                 axios.get(this.$store.state.apiServer + '/api/requests/statuses')
                     .then(function (response) {
                         response.data.forEach(function (e) {
                             self.statuses.push(e);
                         });
+                        for (var i = 0; i < self.statuses.length; i++) {
+                            if (self.statuses[i].title === 'draft') {
+                                self.statuses.splice(i, 1);
+                            }
+                        }
                         console.log(response.data);
                     })
                     .catch(function (error) {
@@ -73,53 +80,48 @@
                          if (error.response != null && error.response.status == 400)
                             self.$router.push('/404');
                     });
-                let all = [
-                    {
-                        id: 1,
-                        studentId: 22,
-                        description: 'desc1',
-                        message: 'message',
-                        status: 2
-                    }, {
-                        id: 2,
-                        studentId: 20,
-                        description: 'desc2',
-                        message: 'message2',
-                        status: 1
-                    }, {
-                        id: 3,
-                        studentId: 16,
-                        description: 'desc3',
-                        message: 'message3',
-                        status: 3
-                    }, {
-                        id: 4,
-                        studentId: 20,
-                        description: 'desc4',
-                        message: 'message4',
-                        status: 2
-                    }, {
-                        id: 5,
-                        studentId: 16,
-                        description: 'desc5',
-                        message: 'message5',
-                        status: 1
-                    }];
-                console.log(this.$store.state.user.roles.includes('ADMIN'));
                 if (this.$store.state.user.roles.includes('ADMIN')) {
-                    ///get all for admin
-                    this.problems = all;
+                    axios.get(self.$store.state.apiServer + '/api/requests/get-all-requests')
+                        .then(function (response) {
+                            response.data.forEach(function (p) {
+                                let id = p.studentId;
+                                self.problems.push(p);
+                                axios.get(self.$store.state.apiServer + '/api/users/' + id)
+                                    .then(function (response) {
+                                        let name = response.data.firstName.toString() + " "
+                                            + response.data.lastName.toString();
+                                        self.problemsMap.set(p, name);
+                                        console.log(self.problems);
+                                        self.problems.push (p);
+                                    }).catch(function (error) {
+                                        console.log(error);
+                                        self.errorAutoClosable(error.response.data);
+                                    })
+                            });
+                            console.log (self.problems);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                 } else {
-                    // get just for this employeee
-                    // this.$store.state.user.id
-                    let self = this;
-                    this.problems = all.filter(function (e) {
-                        return parseInt(e.studentId) === parseInt(self.$store.state.user.id)
-                    });
+                    axios.get('/api/requests/get-requests-by-user', {
+                        params: {
+                            userId: parseInt(self.$store.state.user.id)
+                        }
+                    })
+                        .then(function (response) {
+                            self.problems = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        })
                 }
             },
             isStudent() {
                 return this.$store.state.user.roles.includes('EMPLOYEE')
+            },
+            isAdmin () {
+                return this.$store.state.user.roles.includes('ADMIN');
             },
             canMakeAnswered(status) {
                 let status2 = this.statuses.filter(function (e) {
@@ -129,10 +131,26 @@
                     return !(this.$store.state.user.roles.includes('EMPLOYEE') &&
                         (status2.title === 'open' || status2.title === 'reopened'))
                 } else return true;
+            },
+            dataToShowOnTab (status) {
+                let list = [];
+                let pr = this.problems;
+                pr.forEach(function (e){
+                    if (e.status === status.id) list.push(e);
+                });
+                return list;
+            },
+            markAsAnswered (requestId) {
+                let form = new FormData();
+
+                let request = new XMLHttpRequest();
+                request.open('PUT', this.$store.state.apiServer + '/api/requests/change-request-type');
+                form.append('requestId', requestId);
+                form.append('requestType', 'answered');
+                request.send(form);
             }
         },
         mounted() {
-            // /requests/statuses
             if (this.$store.state.user.roles.includes('ADMIN') || this.isStudent()) {
                 this.loadInfo();
             } else this.$router.push('/404');
@@ -149,11 +167,12 @@
                 }
             },
             headers() {
-                let h = [
-                    {text: 'StudentName', align: 'left', value: 'name'},
-                    {text: 'Description', align: 'right', value: 'description'},
-                    {text: 'Open chat', align: 'right', sortable: false, value: 'button'}
-                ];
+                let h = [];
+                if (this.isAdmin()) {
+                    h.push({text: 'StudentName', align: 'left', value: 'name'})
+                }
+                h.push({text: 'Description', align: 'right', value: 'description'});
+                h.push({text: 'Open chat', align: 'right', sortable: false, value: 'button'});
                 if (this.isStudent()) {
                     h.push({text: 'Answered', align: 'right', sortable: false, value: 'button'});
                 }

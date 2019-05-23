@@ -4,7 +4,7 @@
         <v-layout v-if="!loading" wrap row>
             <v-container fluid class="trainer-container">
                 <v-layout row>
-                    <v-flex xs4 v-for="trainer in trainers" class="trainer-element" @click="forwardToUserPage(trainer.id)">
+                    <v-flex xs4 v-for="trainer in trainers" :key="trainer.id" class="trainer-element" @click="forwardToUserPage(trainer.id)">
                         <v-card dark tile flat color="red lighten-1">
                             <v-card flat color="grey lighten-4">
                                 <v-img  v-if="trainer.imageUrl != null"
@@ -29,7 +29,7 @@
 
             <v-flex xs12 sm12 md12 >
                 <carousel :per-page="1" :mouse-drag="true">
-                    <slide v-for="course in courses">
+                    <slide v-for="course in courses" :key="course.id">
                         <v-card flat color="grey lighten-4">
                             <v-img
                                     :src="'/img/' + course.imageUrl + '.jpg'"

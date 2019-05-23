@@ -20,6 +20,7 @@
                 >
                     <template v-slot:items="props">
                         <tr>
+                            <td class="text-xs-left">{{ props.item.course.id }}</td>
                             <td class="my-link clickable">
                                 <div @click="goToCoursePage(props.item.course.id)">{{ props.item.course.name }}</div>
                             </td>
@@ -50,22 +51,24 @@
                 loading: true,
                 headers: [
                     {
+                        text: 'Course id',
+                        align: 'left',
+                        value: 'course.id'
+                    },
+                    {
                         text: 'Name of the course',
                         align: 'left',
-                        value: 'courseName'
+                        value: 'course.name'
                     },
                     {
-                        text: 'Number of employees', value: 'quantityOfEmployees',
+                        text: 'Number of employees', value: 'numberOfEmployees',
                         width: "20", align: 'right'
                     },
                     {
                         text: '', value: 'quantityOfEmployees',
+                        sortable: false,
                         width: "20", align: 'right'
-                    },
-                    {
-                        text: '', value: 'quantityOfEmployees',
-                        width: "20", align: 'right'
-                    },
+                    }
                 ],
                 coursesAndQuantities: [],
                 isAdmin: this.$store.getters.isAdmin
@@ -80,7 +83,7 @@
                 })
                 .catch(function (error) {
                     console.log(error);
-                     if (error.response != null && error.response.status == 400)
+                    if (error.response != null && error.response.status == 400)
                         self.$router.push('/404');
                 });
         },
