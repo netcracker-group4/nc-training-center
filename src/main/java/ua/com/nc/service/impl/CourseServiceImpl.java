@@ -2,6 +2,7 @@ package ua.com.nc.service.impl;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.*;
@@ -88,7 +89,10 @@ public class CourseServiceImpl implements CourseService {
 
     /**
      * @return path to the image + it`s name.
+     * Produces null if - image parameter is null;
+     *                  - local dirs to the temp file can`t be made.
      */
+    @Nullable
     @Override
     public String uploadImage(MultipartFile image) {
         if (!image.isEmpty()) {
@@ -99,7 +103,9 @@ public class CourseServiceImpl implements CourseService {
                 File dir = new File(rootPath);
 
                 if (!dir.exists()) {
-                    dir.mkdirs();
+                    if(!dir.mkdirs()){
+                        return null;
+                    }
                 }
                 String filePath = dir.getAbsolutePath() + File.separator + name;
                 int i =1;
@@ -107,7 +113,7 @@ public class CourseServiceImpl implements CourseService {
                     filePath = dir.getAbsolutePath() + File.separator + name+" ("+i+")";
                 }
                 File uploadedFile = new File(filePath);
-                try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile));
+                try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile))
                     ) {
                         stream.write(bytes);
                     }
@@ -115,11 +121,13 @@ public class CourseServiceImpl implements CourseService {
                     String path = "/img";
                     filePath = path + "/" + name;
                     fileService.uploadFileToServer(path, name, stream);
-
+                    if(!uploadedFile.delete()){
+                        log.error("Temp file "+uploadedFile.getName()+" wasn`t deleted!");
+                    }
                     return filePath;
                 }
             } catch (Exception e) {
-                log.trace(e);
+                log.error(e);
             }
         }
         return null;

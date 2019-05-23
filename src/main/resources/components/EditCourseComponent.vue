@@ -72,7 +72,7 @@
                                     <template v-slot:activator="{ on }">
                                         <v-text-field
                                                 v-model="startDay"
-                                                label="Ends on"
+                                                label="Starts on"
                                                 persistent-hint
                                                 prepend-icon="event"
                                                 v-on="on"
