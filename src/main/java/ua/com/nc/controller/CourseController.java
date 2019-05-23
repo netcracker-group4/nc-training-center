@@ -65,15 +65,18 @@ public class CourseController {
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     @ResponseBody
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void add(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
-                    @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
+    public ResponseEntity add(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
+                    @RequestParam(name = "courseStatus") String courseStatus,
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
                     @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
                     @RequestParam(name = "image") MultipartFile image) {
-        imageUrl = courseService.uploadImage(image);
-        System.err.println(imageUrl);
+        String imageUrl = courseService.uploadImage(image);
+        if(imageUrl == null){
+            return ResponseEntity.status(500).body("Error while creating temp file.");
+        }
         courseService.add(courseService.stringToObjCourse(name, "1", level, courseStatus,
                 imageUrl, isOnLandingPage, desc, startDay, endDay));
+        return ResponseEntity.ok().body("Course saved");
     }
     @ResponseBody
     @PreAuthorize("hasAuthority('ADMIN')")

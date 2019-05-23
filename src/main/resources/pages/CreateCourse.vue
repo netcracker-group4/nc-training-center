@@ -154,18 +154,41 @@
                 this.endDay = ChooserDate.data().date2;
             },
             check() {
-                return this.level !== false;
+                if(!this.name){
+                    return 'Name';
+                }
+                if(!this.level){
+                    return 'Level';
+                }
+                if(!this.courseStatus){
+                    return 'Status';
+                }
+                if(!this.imageUrl){
+                    return 'Image';
+                }
+                if(!this.trainer){
+                    return 'Trainer';
+                }
+                if(!this.description){
+                    return 'Description';
+                }
+                if(!this.startDay || !this.endDay){
+                    return 'Date';
+                }
+                return null;
+
             },
             submit() {
-                if (this.check()) {
-                    this.$snotify.error('Level is required!', {
+                this.setData();
+                let nullField =this.check();
+                if (nullField) {
+                    this.$snotify.error(nullField+' is required!', {
                         timeout: 2000,
                         showProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true
                     });
                 } else {
-                    this.setData();
                     let form = new FormData();
                     let request = new XMLHttpRequest();
                     try {
