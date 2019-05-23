@@ -32,7 +32,7 @@ public class LessonsServiceImpl implements LessonsService {
     private UserDao userDao;
 
     @Override
-    public List<DtoLesson> getAllForGroup(int groupId) {
+    public List<DtoLesson> getAllForGroup(Integer groupId) {
         List<Lesson> lessons = lessonDao.getByGroupId(groupId);
         return createDtoForLessons(lessons);
     }
@@ -78,7 +78,7 @@ public class LessonsServiceImpl implements LessonsService {
 
 
     @Override
-    public String deleteLesson(int toArchive) {
+    public String deleteLesson(Integer toArchive) {
         Lesson lessonToArchive = lessonDao.getEntityById(toArchive);
         lessonToArchive.setArchived(true);
         lessonDao.update(lessonToArchive);
@@ -87,7 +87,7 @@ public class LessonsServiceImpl implements LessonsService {
     }
 
     @Override
-    public String invertIsCanceledForLesson(int lessonId) {
+    public String invertIsCanceledForLesson(Integer lessonId) {
         Lesson lesson = lessonDao.getEntityById(lessonId);
         boolean newCanceled = !lesson.isCanceled();
         lesson.setCanceled(newCanceled);
@@ -96,7 +96,7 @@ public class LessonsServiceImpl implements LessonsService {
     }
 
     @Override
-    public List<DtoLesson> getAllForEmployee(int userId) {
+    public List<DtoLesson> getAllForEmployee(Integer userId) {
         List<Lesson> lessons = lessonDao.getByEmployee(userId);
         return createDtoForLessons(lessons);
     }
@@ -108,7 +108,7 @@ public class LessonsServiceImpl implements LessonsService {
     }
 
     @Override
-    public Lesson getLessonById(int lessonId) {
+    public Lesson getLessonById(Integer lessonId) {
         Lesson lesson = lessonDao.getEntityById(lessonId);
         if(lesson == null){
             throw new LogicException("There is no such lesson");

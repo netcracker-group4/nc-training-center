@@ -11,7 +11,7 @@ public interface LessonDao extends GenericDao<Lesson> {
 
 //    void archiveLesson(Integer lessonId);
 
-    List<Lesson> getByEmployee(int userId);
+    List<Lesson> getByEmployee(Integer userId);
 
     List<Lesson> getByTrainer(Integer userId);
 }

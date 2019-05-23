@@ -107,14 +107,14 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     }
 
     @Override
-    public List<Group> getAllGroupsOfCourse(int courseId) {
+    public List<Group> getAllGroupsOfCourse(Integer courseId) {
         String sql = groupSelectByCourse;
         log.info("find all groups by courseId " + courseId + "  " + sql);
         return getFromSqlById(sql, courseId);
     }
 
     @Override
-    public int getNumberOfEmployeesInGroup(int groupId) {
+    public int getNumberOfEmployeesInGroup(Integer groupId) {
         String sql = groupSelectNumberOfEmployees;
         log.info("select number of employees for a groupId " + groupId + " " + sql);
         try (Connection connection = dataSource.getConnection();
@@ -131,7 +131,7 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     }
 
     @Override
-    public List<Group> getAllGroupsByStudent(int studentId) {
+    public List<Group> getAllGroupsByStudent(Integer studentId) {
         String sql = groupSelectByEmployee;
         log.info("select all groups by studentId " + studentId + " " + sql);
         return getFromSqlById(sql, studentId);

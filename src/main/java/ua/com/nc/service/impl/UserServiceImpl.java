@@ -214,7 +214,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Double> getAttandanceGraph(int userId) {
+    public Map<String, Double> getAttandanceGraph(Integer userId) {
         List<Group> groups = groupDao.getAllGroupsByStudent(userId);
         Map<String, Integer> att = new HashMap<>();
         statusDao.getAll().forEach(r -> {

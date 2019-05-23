@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface GroupDao extends GenericDao<Group> {
 
-    List<Group> getAllGroupsOfCourse(int courseId);
+    List<Group> getAllGroupsOfCourse(Integer courseId);
 
-    int getNumberOfEmployeesInGroup(int groupId);
+    int getNumberOfEmployeesInGroup(Integer groupId);
 
-    List<Group> getAllGroupsByStudent(int studentId);
+    List<Group> getAllGroupsByStudent(Integer studentId);
 
     List<Group> getGroupByTrainerId(Integer id);
 

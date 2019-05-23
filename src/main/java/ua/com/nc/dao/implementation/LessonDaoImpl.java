@@ -127,7 +127,7 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
             ResultSet rs = statement.executeQuery();
             lessons = parseResultSetForAttendance(rs);
         } catch (Exception e) {
-            log.trace(e);
+            log.error(e);
             throw new PersistException(e);
         }
         return lessons;
@@ -141,7 +141,7 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     }
 
     @Override
-    public List<Lesson> getByEmployee(int employeeId) {
+    public List<Lesson> getByEmployee(Integer employeeId) {
         String sql = selectByEmployeeId;
         log.info("getByUserId employeeId " + employeeId + "  " + sql);
         return getFromSqlById(sql, employeeId);

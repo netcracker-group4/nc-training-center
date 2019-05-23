@@ -7,21 +7,21 @@ import ua.com.nc.dto.DtoUser;
 import java.util.List;
 
 public interface LessonsService {
-    List<DtoLesson> getAllForGroup(int groupId);
+    List<DtoLesson> getAllForGroup(Integer groupId);
 
     String updateLesson(DtoLesson toUpdate);
 
     String addLesson(DtoLesson toAdd);
 
-    String deleteLesson(int toDelete);
+    String deleteLesson(Integer toDelete);
 
-    String invertIsCanceledForLesson(int lessonId);
+    String invertIsCanceledForLesson(Integer lessonId);
 
-    List<DtoLesson> getAllForEmployee(int userId);
+    List<DtoLesson> getAllForEmployee(Integer userId);
 
     List<DtoLesson> getAllForTrainer(Integer userId);
 
-    Lesson getLessonById(int lessonId);
+    Lesson getLessonById(Integer lessonId);
 
     List<DtoUser> getStudentsIdsByLessonId(Integer lessonId);
 

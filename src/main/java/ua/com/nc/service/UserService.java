@@ -32,7 +32,7 @@ public interface UserService extends UserDetailsService {
 
     List<DtoTeacherAndManager> getTrainersOfEmployee(Integer id);
 
-    Map<String, Double> getAttandanceGraph(int userId);
+    Map<String, Double> getAttandanceGraph(Integer userId);
 
     void uploadImage(DtoUserSave dtoUserSave);
 
