@@ -30,14 +30,14 @@ public class DesiredScheduleController {
     private SuitabilityDao suitabilityDao;
 
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(value = {"/{id}/ungrouped"}, method = RequestMethod.GET)
     public String getDesiredScheduleForUngroupedStudentsForCourse(@PathVariable("id") Integer id) throws Exception {
         return gson.toJson(desiredScheduleService.getDesiredScheduleForUngroupedStudentsOfCourse(id));
     }
 
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(value = {"/{id}/grouped"}, method = RequestMethod.GET)
     public String getDesiredScheduleForFormedGroupsForCourse(@PathVariable("id") Integer id) throws Exception {
         return gson.toJson(desiredScheduleService.getDesiredScheduleForFormedGroupsForCourse(id));
@@ -45,7 +45,7 @@ public class DesiredScheduleController {
 
 
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String addGroup(@RequestBody GroupSchedule groupSchedule) {
         int newId;
@@ -58,21 +58,22 @@ public class DesiredScheduleController {
     }
 
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(path = "/invert-attending/{userGroupId}", method = RequestMethod.GET)
     public void invertUser(@PathVariable Integer userGroupId) {
         desiredScheduleService.invertAttending(userGroupId);
     }
 
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public void deleteGroup(@PathVariable Integer id) {
         desiredScheduleService.delete(id);
     }
 
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) " +
+            "|| hasAuthority(T(ua.com.nc.domain.Role).TRAINER.name())")
     @RequestMapping(value = {"/{groupId}"}, method = RequestMethod.GET)
     public String getDesiredScheduleForGroup(@PathVariable("groupId") Integer groupId) throws Exception {
         return gson.toJson(desiredScheduleService.getDesiredScheduleForGroup(groupId));

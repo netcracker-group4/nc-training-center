@@ -21,7 +21,7 @@ public class DashBoardController {
 
     @RequestMapping(value = {"/level-and-quantity"}, method = RequestMethod.GET)
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     public String getLevelAndQuantity() {
         return gson.toJson(dashBoardService.getLevelAndQuantity());
     }
@@ -29,7 +29,7 @@ public class DashBoardController {
 
     @RequestMapping(value = {"/level-and-trainers"}, method = RequestMethod.GET)
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     public String getLevelAndTrainers() {
         return gson.toJson(dashBoardService.getLevelAndTrainers());
     }

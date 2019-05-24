@@ -3,7 +3,6 @@ package ua.com.nc.service.impl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
@@ -15,7 +14,6 @@ import java.util.List;
 
 @Log4j2
 @Service
-@Configuration
 public class DesiredScheduleServiceImpl implements DesiredScheduleService {
     @Autowired
     private DesiredScheduleDao desiredScheduleDao;
@@ -30,10 +28,10 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
     @Autowired
     private UserDao userDao;
 
-    @Value("start.of.day")
-    private int startOfDay;
-    @Value("end.of.day")
-    private int endOfDay;
+    @Value("${start.of.day}")
+    private Integer startOfDay;
+    @Value("${end.of.day}")
+    private Integer endOfDay;
 
 
     @Override

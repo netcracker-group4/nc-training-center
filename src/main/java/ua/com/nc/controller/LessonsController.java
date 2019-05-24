@@ -25,7 +25,6 @@ public class LessonsController {
     @Autowired
     private LessonsService lessonsService;
 
-//    Gson gson = new Gson();
     // default converter doesn't have custom adapter specified
     private Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, (JsonSerializer<Timestamp>)
             (timestamp, type, jsonSerializationContext) -> new JsonPrimitive(timestamp.toString())).create();
@@ -78,8 +77,8 @@ public class LessonsController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.DELETE, value = "/{lessonId}")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToDeleteLesson(authentication, #lessonId)")
-    public String deleteLesson(@PathVariable Integer lessonId) {
-        return lessonsService.deleteLesson(lessonId);
+    public void deleteLesson(@PathVariable Integer lessonId) {
+        lessonsService.deleteLesson(lessonId);
     }
 
     @ResponseBody

@@ -57,7 +57,7 @@ public class UserController {
 
 
     @RequestMapping(value = "/update-active", method = RequestMethod.PUT)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     public ResponseEntity<?> updateActive(@RequestBody User user) {
         userService.updateActive(user);
         return ResponseEntity.ok().body("Update user active");
