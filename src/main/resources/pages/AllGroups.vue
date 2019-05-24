@@ -16,13 +16,13 @@
                         item-key="id"
                         :rows-per-page-items="nums"
                 >
-                    <template v-slot:items="props">
-                        <tr>
+                    <template v-slot:items="props" >
+                        <tr @click="goToGroupPage(props.item.id)">
                             <td class="my-link">
                                 <div @click="">{{ props.item.id }}</div>
                             </td>
-                            <td class="my-link clickable">
-                                <div @click="goToGroupPage(props.item.id)">{{ props.item.title }}</div>
+                            <td class="my-link clickable" >
+                                <div >{{ props.item.title }}</div>
                             </td>
                             <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
 
