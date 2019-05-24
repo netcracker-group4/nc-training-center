@@ -69,15 +69,6 @@ public class ReportController {     //   /dashboard-report
 
     }
 
-    private HttpHeaders getHttpHeaders(String fileName) {
-        String fileType = ".xlsx";
-        String headerName = "Content-Disposition";
-        String headerValue = "attachment; filename =";
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(headerName, headerValue + fileName + fileType);
-        return headers;
-    }
-
     private ResponseEntity<InputStreamResource> getAttendanceReport(
             @AuthenticationPrincipal User user) throws IOException {
         if (user.getRoles().contains(Role.ADMIN)) {
@@ -98,5 +89,14 @@ public class ReportController {     //   /dashboard-report
                             new InputStreamResource(
                                     reportService.getAttendanceExcel(user)));
         }
+    }
+
+    private HttpHeaders getHttpHeaders(String fileName) {
+        String fileType = ".xlsx";
+        String headerName = "Content-Disposition";
+        String headerValue = "attachment; filename =";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(headerName, headerValue + fileName + fileType);
+        return headers;
     }
 }
