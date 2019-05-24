@@ -41,8 +41,7 @@ public class CustomExceptionHandler {
     @ResponseBody
     public String handlePersistException(PersistException exception) {
         log.error(exception.getMessage(), exception);
-        return "Oops \nServer error happened\n" +
-                "Please go watch some YouTube video while we fix it ";
+        return "Server error happened";
     }
 
     /**
