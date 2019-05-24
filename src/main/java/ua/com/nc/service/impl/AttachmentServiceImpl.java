@@ -52,6 +52,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         lessonAttachmentDao.deleteByAttachmentId(id);
         attachmentDao.delete(id);
     }
+
     @Override
     public Attachment uploadFile(Integer trainerId, DtoAttachment dtoAttachment) {
         String rootDir = "/attachments";
