@@ -122,13 +122,13 @@
                 let form = new FormData();
                 let request = new XMLHttpRequest();
                 request.open('PUT', this.$store.state.apiServer + '/api/attendances')
-                form.append('attendanceId', attendanceId)
-                form.append('statusId', statusId)
-                form.append('absenceId', reasonId)
+                form.append('attendanceId', attendanceId);
+                form.append('statusId', statusId);
+                form.append('absenceId', reasonId);
                 request.send(form);
                 request.onloadend = function () {
                     if (request.status == 200) {
-                        axios.get(this.$store.state.apiServer + '/api/attendances?userId=' + self.userId + '&groupId=' + self.groupId)
+                        axios.get(self.$store.state.apiServer + '/api/attendances?userId=' + self.userId + '&groupId=' + self.groupId)
                             .then(response => self.attendances = response.data)
                             .catch(error => console.log(error))
                     }
@@ -136,7 +136,7 @@
                         //self.modalMessage = "There is no user with such email and password"
                         //self.dialog = true
                     }
-                }
+                };
                 console.log(this.editedItem)
                 this.close()
             },
