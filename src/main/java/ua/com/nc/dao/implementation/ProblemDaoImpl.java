@@ -4,18 +4,20 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ProblemDao;
 import ua.com.nc.domain.Problem;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
-@Component
+@Repository
 @PropertySource("classpath:sql_queries.properties")
 public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemDao {
 

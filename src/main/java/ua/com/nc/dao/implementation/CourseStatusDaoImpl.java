@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.CourseStatusDao;
 
@@ -14,7 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 @Log4j2
-@Component
+@Repository
 @PropertySource("classpath:sql_queries.properties")
 public class CourseStatusDaoImpl implements CourseStatusDao {
 

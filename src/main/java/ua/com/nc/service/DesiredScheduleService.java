@@ -77,7 +77,6 @@ public interface DesiredScheduleService {
      * saves to the database the desired schedule that the employee filled on the "join course" page
      * @param userId the id of the employee that wants to join the course
      * @param desiredToSave information about his schedule
-     * @return
      */
-    String saveDesired(Integer userId, DesiredToSave desiredToSave);
+    void saveDesired(Integer userId, DesiredToSave desiredToSave);
 }

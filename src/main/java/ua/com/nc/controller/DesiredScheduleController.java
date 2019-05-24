@@ -60,17 +60,15 @@ public class DesiredScheduleController {
     @ResponseBody
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(path = "/invert-attending/{userGroupId}", method = RequestMethod.GET)
-    public String invertUser(@PathVariable Integer userGroupId) {
+    public void invertUser(@PathVariable Integer userGroupId) {
         desiredScheduleService.invertAttending(userGroupId);
-        return "User updated";
     }
 
     @ResponseBody
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    public String deleteGroup(@PathVariable Integer id) {
+    public void deleteGroup(@PathVariable Integer id) {
         desiredScheduleService.delete(id);
-        return "Group deleted";
     }
 
     @ResponseBody
@@ -90,9 +88,9 @@ public class DesiredScheduleController {
     @ResponseBody
     @PreAuthorize("@customSecuritySecurity.canJoinCourse(authentication, #desiredToSave)")
     @RequestMapping(value = "/join", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String addGroup(@AuthenticationPrincipal User user, @RequestBody DesiredToSave desiredToSave) {
+    public void addGroup(@AuthenticationPrincipal User user, @RequestBody DesiredToSave desiredToSave) {
         log.info(desiredToSave);
-        return desiredScheduleService.saveDesired(user.getId(), desiredToSave);
+        desiredScheduleService.saveDesired(user.getId(), desiredToSave);
     }
 
 

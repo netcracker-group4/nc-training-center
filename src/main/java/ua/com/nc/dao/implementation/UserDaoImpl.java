@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.User;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Log4j2
-@Component
+@Repository
 @PropertySource("classpath:sql_queries.properties")
 public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 

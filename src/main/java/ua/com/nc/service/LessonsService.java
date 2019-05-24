@@ -13,7 +13,7 @@ public interface LessonsService {
 
     String addLesson(DtoLesson toAdd);
 
-    String deleteLesson(int toDelete);
+    void deleteLesson(int toDelete);
 
     String invertIsCanceledForLesson(int lessonId);
 

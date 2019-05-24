@@ -2,6 +2,8 @@ package ua.com.nc.service.impl;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Log4j2
 @Service
+@Configuration
 public class DesiredScheduleServiceImpl implements DesiredScheduleService {
     @Autowired
     private DesiredScheduleDao desiredScheduleDao;
@@ -27,10 +30,10 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
     @Autowired
     private UserDao userDao;
 
-
-    private int startOfDay = 8;
-    private int endOfDay = 21;
-
+    @Value("start.of.day")
+    private int startOfDay;
+    @Value("end.of.day")
+    private int endOfDay;
 
 
     @Override
@@ -78,7 +81,6 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
             userGroupDao.update(oldUserGroupForThisCourse);
         }
     }
-
 
 
     @Override
@@ -167,13 +169,12 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
     }
 
     @Override
-    public String saveDesired(Integer userId, DesiredToSave desiredToSave) {
+    public void saveDesired(Integer userId, DesiredToSave desiredToSave) {
         Integer courseId = desiredToSave.getCourseId();
         saveUsrGroup(userId, courseId);
         for (ScheduleForDay scheduleForDay : desiredToSave.getForDays()) {
             saveDesiredScheduleForDay(userId, courseId, scheduleForDay);
         }
-        return "saved";
     }
 
     private void saveUsrGroup(Integer userId, Integer courseId) {
