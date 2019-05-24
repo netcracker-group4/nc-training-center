@@ -63,11 +63,10 @@ public class UserController {
         return ResponseEntity.ok().body("Update user active");
     }
 
-    @RequestMapping(value = "/upload-image", method = RequestMethod.PUT,
+    @RequestMapping(value = "/upload-image", method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> uploadImage(@RequestBody DtoUserSave dtoUserSave) {
-        userService.uploadImage(dtoUserSave);
-        return ResponseEntity.ok().body("Image upload");
+    public ResponseEntity<?> uploadImage(@ModelAttribute DtoUserSave dtoUserSave) {
+        return new ResponseEntity<>(userService.uploadImage(dtoUserSave), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update-password", method = RequestMethod.PUT)

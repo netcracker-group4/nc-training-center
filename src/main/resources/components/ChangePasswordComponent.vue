@@ -2,9 +2,15 @@
     <div>
         <v-dialog v-if="isUserThisProfile()" v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-                <v-icon @click="editItem" style="margin-left: 30px">
-                    border_color
-                </v-icon>
+                <v-btn
+                        flat
+                        color="black"
+                        class="mb-2"
+                        @click="editItem"
+                        style="margin-left: 30px"
+                >
+                    Edit password
+                </v-btn>
             </template>
             <v-card>
                 <v-card-title>

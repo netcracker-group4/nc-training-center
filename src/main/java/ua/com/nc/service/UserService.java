@@ -34,7 +34,7 @@ public interface UserService extends UserDetailsService {
 
     Map<String, Double> getAttandanceGraph(int userId);
 
-    void uploadImage(DtoUserSave dtoUserSave);
+    User uploadImage(DtoUserSave dtoUserSave);
 
     void updatePassword(DtoChangePassword changePassword);
 

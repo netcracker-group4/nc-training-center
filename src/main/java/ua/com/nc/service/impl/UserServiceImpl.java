@@ -5,16 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.Attendance;
 import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Role;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.*;
+import ua.com.nc.exceptions.LogicException;
 import ua.com.nc.service.AttendanceService;
 import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
 
+import java.io.*;
 import java.security.SecureRandom;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
@@ -41,6 +44,8 @@ public class UserServiceImpl implements UserService {
     private AttendanceStatusDao statusDao;
     @Autowired
     private AttendanceService attendanceService;
+    @Autowired
+    private FiletransferServiceImpl fileService;
 
     @Override
     public void add(DtoUserSave dtoUserSave) {
@@ -238,9 +243,106 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-    @Override
-    public void uploadImage(DtoUserSave dtoUserSave) {
+//    public String uploadImage(MultipartFile image) {
+//        if (!image.isEmpty()) {
+//            try {
+//                byte[] bytes = image.getBytes();
+//                String name = image.getOriginalFilename();
+//                String rootPath = "src/main/resources/avatar/";
+//                File dir = new File(rootPath);
+//
+//                if (!dir.exists()) {
+//                    if(!dir.mkdirs()){
+//                        return null;
+//                    }
+//                }
+//                String filePath = dir.getAbsolutePath() + File.separator + name;
+//                File uploadedFile = new File(filePath);
+//                try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile))) {
+//                    stream.write(bytes);
+//                }
+//                try(FileInputStream stream = new FileInputStream(filePath)) {
+//                    String path = "/avatar/";
+//                    filePath = path + name;
+//                    fileService.uploadFileToServer(path, name, stream);
+//                    if(!uploadedFile.delete()){
+//                        log.error("Temp file " + uploadedFile.getName() + " wasn't deleted!");
+//                    }
+//                    return filePath;
+//                }
+//            } catch (Exception e) {
+//                log.error(e);
+//            }
+//        }
+//        return null;
+//    }
+//
+//    @Override
+//    public void uploadImage(DtoUserSave dtoUserSave) {
+//        String filePath = uploadImage(dtoUserSave.getImage());
+//        User user = new User();
+//        user.setId(dtoUserSave.getId());
+//        user.setImageUrl(filePath);
+//        userDao.updateImage(user);
+//    }
 
+    @Override
+    public User uploadImage(DtoUserSave dtoUserSave) {
+        String rootDir = "/avatar/";
+        if (dtoUserSave.getImage().isEmpty())
+            throw new LogicException("The file is empty!");
+        else {
+            try {
+                MultipartFile multipartFile = dtoUserSave.getImage();
+                String filePath = rootDir + dtoUserSave.getId().toString();
+                saveToDisk(multipartFile, filePath);
+                return saveToDatabase(dtoUserSave.getId(), filePath);
+            } catch (Exception e) {
+                log.error(e);
+                throw new LogicException("Error while uploading file");
+            }
+        }
+    }
+
+    private void saveToDisk(MultipartFile multipartFile, String filePath) throws IOException {
+        byte[] bytes = multipartFile.getBytes();
+        String fileName = multipartFile.getOriginalFilename();
+        log.info("File is not find in base");
+        StringBuilder name = new StringBuilder(fileName);
+        int dot = name.lastIndexOf(".");
+        String format = name.substring(dot - 1);
+        String tmpFilePath = getFilePath("tmp." + format);
+        File uploadedFile = new File(tmpFilePath);
+        try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile))) {
+            stream.write(bytes);
+        }
+        try(FileInputStream stream = new FileInputStream(tmpFilePath)) {
+            fileService.uploadFileToServer(filePath, fileName, stream);
+        }
+        catch (FileNotFoundException e){
+            log.error("Error while sending file to server");
+            log.error(e);
+        }
+        File file = new File(tmpFilePath);
+        file.delete();
+    }
+
+    private String getFilePath(String name) {
+        String rootPath = "src/main/resources";
+        File dir = new File(rootPath + File.separator + "images" );
+        if (!dir.exists()) {
+            if(!dir.mkdirs()){
+                throw new LogicException("Error, could not upload file" );
+            }
+        }
+        return dir.getAbsolutePath() + File.separator + name;
+    }
+
+    private User saveToDatabase(Integer id, String filePath) {
+        User user = userDao.getEntityById(id);
+        user.setImageUrl(filePath);
+        userDao.updateImage(user);
+        return user;
     }
 
     @Override
