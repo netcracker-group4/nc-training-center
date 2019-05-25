@@ -178,8 +178,22 @@
                 return null;
 
             },
+            dateCheck(){
+                if(this.startDay >= this.endDay){
+                    return 'End date should be more than start date';
+                }else return false;
+            },
             submit() {
                 this.setData();
+                let s = this.dateCheck;
+                if(s){
+                    this.$snotify.error(s, {
+                        timeout: 2000,
+                        showProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true
+                    });
+                }
                 let nullField =this.check();
                 if (nullField) {
                     this.$snotify.error(nullField+' is required!', {

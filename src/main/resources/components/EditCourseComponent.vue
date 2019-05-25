@@ -78,7 +78,7 @@
                                                 v-on="on"
                                         ></v-text-field>
                                     </template>
-                                    <v-date-picker v-model="startDay"></v-date-picker>
+                                    <v-date-picker :min="getCurrent" v-model="startDay"></v-date-picker>
                                 </v-menu>
                             </v-flex>
                             <v-flex xs4>
@@ -101,7 +101,7 @@
                                                 v-on="on"
                                         ></v-text-field>
                                     </template>
-                                    <v-date-picker v-model="endDay"></v-date-picker>
+                                    <v-date-picker :min="startDay" v-model="endDay"></v-date-picker>
                                 </v-menu>
                             </v-flex>
                         </v-layout>
@@ -148,6 +148,12 @@
         },
         methods: {
             trainerName: item => item.firstName + " " + item.lastName,
+            getCurrent(){
+                let date = new Date();
+                let year = date.getFullYear();
+                let month = date.getMonth();
+                return year+'-'+month+'-'+date.getDay();
+            },
             save() {
                 let self = this;
                 let form = new FormData();

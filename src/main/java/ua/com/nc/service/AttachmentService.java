@@ -10,8 +10,6 @@ public interface AttachmentService {
 
     void add(Integer lessonId, String url, String name, Integer trainerId, String description);
 
-    void delete(Integer id);
-
     Attachment uploadFile(Integer trainerId, DtoAttachment dtoAttachment);
 
     InputStream downloadFile(Integer id);

@@ -8,5 +8,5 @@ import java.util.List;
 public interface AttachmentDao extends GenericDao<Attachment> {
     List<Attachment> getByLessonId(Integer lessonId);
     List<Attachment> getByTrainerId(Integer trainerId);
-    Attachment getByName(String url) throws PersistException;
+    Attachment getByUrl(String url) throws PersistException;
 }
