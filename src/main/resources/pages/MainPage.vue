@@ -2,37 +2,38 @@
     <v-container>
         <progress-circular-component v-if="loading"></progress-circular-component>
         <v-layout v-if="!loading" wrap row>
-            <v-container fluid class="trainer-container">
-                <v-layout row>
-                    <v-flex xs4 v-for="trainer in trainers" :key="trainer.id" class="trainer-element" @click="forwardToUserPage(trainer.id)">
-                        <v-card dark tile flat color="red lighten-1">
-                            <v-card flat color="grey lighten-4">
-                                <v-img  v-if="trainer.imageUrl != null"
-                                        :src="'/img/' + course.imageUrl + '.jpg'"
-                                        aspect-ratio="2.20"
-                                ></v-img>
-                                <img v-if="trainer.imageUrl == null"
-                                       src="https://png.pngtree.com/svg/20161212/f93e57629c.svg"
-                                       class="avatar">
+            <v-flex xs12 sm12 md12>
+                <v-container fluid class="trainer-container">
+                    <v-layout row>
+                        <v-flex xs4 v-for="trainer in trainers" :key="trainer.id" class="trainer-element" @click="forwardToUserPage(trainer.id)">
+                            <v-card dark tile flat color="red lighten-1">
+                                <v-card flat color="grey lighten-4">
+                                    <v-img  v-if="trainer.imageUrl != null"
+                                            :src="'/img/' + trainer.imageUrl + '.jpg'"
+                                            aspect-ratio="2.20"
+                                    ></v-img>
+                                    <img v-if="trainer.imageUrl == null"
+                                         src="https://png.pngtree.com/svg/20161212/f93e57629c.svg"
+                                         class="avatar">
 
-                                <v-card-title primary-title>
-                                    <div>
-                                        <h3 class="headline mb-0 trainer-name">{{trainer.firstName + ' ' + trainer.lastName}}</h3>
-                                    </div>
-                                </v-card-title>
+                                    <v-card-title primary-title>
+                                        <div>
+                                            <h3 class="headline mb-0 trainer-name">{{trainer.firstName + ' ' + trainer.lastName}}</h3>
+                                        </div>
+                                    </v-card-title>
+                                </v-card>
                             </v-card>
-                        </v-card>
-                    </v-flex>
+                        </v-flex>
 
-                </v-layout>
-            </v-container>
-
+                    </v-layout>
+                </v-container>
+            </v-flex>
             <v-flex xs12 sm12 md12 >
                 <carousel :per-page="1" :mouse-drag="true">
                     <slide v-for="course in courses" :key="course.id">
                         <v-card flat color="grey lighten-4">
                             <v-img
-                                    :src="'/img/' + course.imageUrl + '.jpg'"
+                                    :src="'/img/' + course.imageUrl"
                                     aspect-ratio="2.20"
                             ></v-img>
 

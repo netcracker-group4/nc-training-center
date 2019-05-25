@@ -257,7 +257,7 @@
                     });
                     let form = new FormData();
                     form.append('img', files[0]);
-                    axios.put(this.$store.state.apiServer + '/api/getcourses/'+this.$route.params.id+'/upload-img',form, {
+                    axios.put(this.$store.state.apiServer + '/api/getcourses/'+ this.$route.params.id+'/upload-img',form, {
                         headers:{
                             'Content-Type': 'multipart/form-data'
                         }
