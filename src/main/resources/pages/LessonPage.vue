@@ -60,6 +60,7 @@
         </v-layout>
         <lesson-attendance-table v-if="!loading"
                                  :lessonId="this.$route.params.id"
+                                 :trainerId="this.trainer.id"
                                  :key="this.$route.params.id"/>
     </v-container>
 
@@ -152,7 +153,7 @@
                             });
                         self.date = dat.time;
                         self.duration = dat.duration;
-                        if (dat.isCanceled == true) {
+                        if (dat.isCanceled === true) {
                             self.status = "Canceled";
                         }
 
@@ -173,7 +174,7 @@
                     });
             },
             isLessonTrainer() {
-                return this.$store.state.user.id == this.trainer.id;
+                return this.$store.state.user.id === parseInt(this.trainer.id);
             },
             downloadFile(id) {
                 window.open(this.$store.state.apiServer + '/api/attachments/download/' + id);

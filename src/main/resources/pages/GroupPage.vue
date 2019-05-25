@@ -134,18 +134,18 @@
         },
         methods: {
             isBtnShow() {
-                let id = this.$route.params.id
+                let id = this.$route.params.id;
                 alert(this.$store.state.trainerGroups)
             },
             chatsReload() {
-                let self = this
+                let self = this;
                 axios.get(this.$store.state.apiServer + '/api/chats')
                     .then(response => {
                         self.$store.state.chats = response.data
                     })
             },
             sendMessage() {
-                let self = this
+                let self = this;
                 let form = new FormData();
                 let request = new XMLHttpRequest();
                 request.open('POST', this.$store.state.apiServer + '/api/messages');
@@ -153,10 +153,10 @@
                 form.append('senderId', this.$store.state.user.id);
                 form.append('groupId', this.group.id);
                 request.send(form);
-                this.message = ''
+                this.message = '';
                 request.onloadend = function () {
                     self.chatsReload()
-                }
+                };
                 this.sendMessageWindowShow = false
 
             },
