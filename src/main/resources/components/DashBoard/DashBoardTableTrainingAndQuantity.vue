@@ -24,9 +24,8 @@
             <v-toolbar flat color="white">
                 <v-toolbar-title>Trainings and quantity of employees</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn flat color="primary" @click="downloadDashboardReport" class="download-button">download excel
-                    report
-                </v-btn>
+                <v-btn large flat @click="downloadDashboardReport">
+                    <b>download excel report</b></v-btn>
             </v-toolbar>
 
             <v-data-table

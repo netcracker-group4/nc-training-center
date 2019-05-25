@@ -58,11 +58,6 @@
         border-bottom: none;
     }
 
-    .attendance {
-        margin-bottom: 20px;
-        margin-top: 20px;
-    }
-
     .margin {
         margin-top: 30px;
         margin-bottom: 30px;

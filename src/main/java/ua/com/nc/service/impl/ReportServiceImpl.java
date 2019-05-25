@@ -33,7 +33,6 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private CourseDao courseDao;
 
-    private final int COLUMN_WIDTH = 255;
     private String[] dashboardSheetNames = {"Level And Quantity", "Level And Trainers", "Training And Quantity"};
     private String[] levelAndQuantityColumns = {"Level", "Course Name", "Group Name"};
     private String[] levelAndTrainersColumns = {"Trainer", "Course Name and Level"};
@@ -86,6 +85,7 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
+    //get dashboard report
     @Override
     public ByteArrayInputStream getDashboardExcel() throws IOException {
         try (XSSFWorkbook workbook = new XSSFWorkbook();
@@ -122,14 +122,15 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
-    private void drawGroupSheet(CellStyle headerStyle, CellStyle presenceStyle, Group group, Sheet groupSheet, int rowCount, Row headerRow) {
+    private void drawGroupSheet(CellStyle headerStyle, CellStyle presenceStyle, Group group,
+                                Sheet groupSheet, int rowCount, Row headerRow) {
         for (User student : userDao.getByGroupId(group.getId())) {
             rowCount++;
             int cellCount = 0;
             String studentFullName = student.getFirstName() + " " + student.getLastName();
             Row studentRow = groupSheet.createRow(rowCount);
-            writeRow(headerStyle,studentRow, cellCount, studentFullName);
-            groupSheet.setColumnWidth(cellCount, COLUMN_WIDTH * 25);
+            writeCell(headerStyle, studentRow, cellCount, studentFullName);
+            groupSheet.autoSizeColumn(cellCount);
             writeAttendance(headerStyle, presenceStyle, group,
                     groupSheet, headerRow, student, cellCount, studentRow);
         }
@@ -138,16 +139,15 @@ public class ReportServiceImpl implements ReportService {
     private void writeAttendance(CellStyle headerStyle, CellStyle presenceStyle,
                                  Group group, Sheet groupSheet, Row headerRow,
                                  User student, int cellCount, Row studentRow) {
-        for (Attendance attendance:
+        for (Attendance attendance :
                 attendanceDao.getAttendanceByStudentIdAndGroupId(
                         student.getId(), group.getId())) {
             Lesson lesson = lessonDao.getEntityById(attendance.getLessonId());
             String lessonTopicAndDate = lesson.getTopic() + "\n" + lesson.getTimeDate();
-            String studentsAbsenceStatus = attendance.getStatus();
             cellCount++;
             writeStudentsAttendance(headerStyle, presenceStyle,
                     groupSheet, headerRow, studentRow, cellCount,
-                    studentsAbsenceStatus, lessonTopicAndDate);
+                    attendance.getStatus(), lessonTopicAndDate);
         }
     }
 
@@ -155,17 +155,11 @@ public class ReportServiceImpl implements ReportService {
                                          Sheet groupSheet, Row headerRow, Row studentRow,
                                          int cellCount, String studentsAbsenceStatus,
                                          String lessonTopicAndDate) {
-        writeRow(headerStyle, headerRow, cellCount, lessonTopicAndDate);
-        writeRow(presenceStyle, studentRow, cellCount, studentsAbsenceStatus);
-        groupSheet.setColumnWidth(cellCount,
-                COLUMN_WIDTH * lessonTopicAndDate.length());
+        writeCell(headerStyle, headerRow, cellCount, lessonTopicAndDate);
+        writeCell(presenceStyle, studentRow, cellCount, studentsAbsenceStatus);
+        groupSheet.autoSizeColumn(cellCount);
     }
 
-    private void writeRow(CellStyle cellStyle, Row row, int cellCount, String content) {
-        Cell cell = row.createCell(cellCount);
-        cell.setCellStyle(cellStyle);
-        cell.setCellValue(content);
-    }
 
     private Sheet createSheetAndHeader(XSSFWorkbook workbook, String dashboardName,
                                        String[] trainingAndQuantityColumns) {
@@ -178,82 +172,97 @@ public class ReportServiceImpl implements ReportService {
         return sheetName;
     }
 
-    private void drawLevelAndQuantity(Sheet sheetName) {
-        int levelRowCount = 1;
+    private void drawLevelAndQuantity(Sheet sheet) {
 
         for (Level level : levelDao.getAll()) {
-            String levelTitle = level.getTitle();
-            Row levelRowColumn = sheetName.createRow(levelRowCount++);
-            Cell levelCell = levelRowColumn.createCell(0);
-            sheetName.setColumnWidth(0, COLUMN_WIDTH * 12);
-            levelCell.setCellStyle(headerStyle((XSSFWorkbook) sheetName.getWorkbook()));
-            levelCell.setCellValue(levelTitle);
-            for (Course course : courseDao.getAllByLevel(level.getId())) {
-                String courseName = course.getName();
-                Row courseRowColumn = sheetName.createRow(levelRowCount++);
-                Cell courseCell = courseRowColumn.createCell(1);
-                sheetName.setColumnWidth(1, COLUMN_WIDTH * 25);
-                courseCell.setCellStyle(presenceStyle((XSSFWorkbook) sheetName.getWorkbook()));
-                courseCell.setCellValue(courseName);
-                for (Group group : groupDao.getAllGroupsOfCourse(course.getId())) {
-                    String groupName = group.getTitle();
-                    Row groupRowColumn = sheetName.createRow(levelRowCount++);
-                    groupRowColumn.createCell(2).setCellValue(groupName);
-                    sheetName.setColumnWidth(2, COLUMN_WIDTH * 25);
-                }
-            }
+            Row levelRowColumn = sheet
+                    .createRow(sheet.getLastRowNum() + 1);
+            writeCell(headerStyle((XSSFWorkbook) sheet.getWorkbook()),
+                    levelRowColumn, levelRowColumn.getLastCellNum() + 1, level.getTitle());
+            sheet
+                    .autoSizeColumn(levelRowColumn.getLastCellNum());
+
+            writeCourseQuantity(sheet, level);
+        }
+    }
+
+    private void writeCourseQuantity(Sheet sheet, Level level) {
+        for (Course course : courseDao.getAllByLevel(level.getId())) {
+            Row courseRowColumn = sheet
+                    .createRow(sheet.getLastRowNum() + 1);
+            writeCell(presenceStyle((XSSFWorkbook) sheet.getWorkbook()),
+                    courseRowColumn, courseRowColumn.getLastCellNum() + 2, course.getName());
+            sheet
+                    .autoSizeColumn(courseRowColumn.getLastCellNum());
+
+            writeGroupsQuantity(sheet, course);
+        }
+    }
+
+    private void writeGroupsQuantity(Sheet sheet, Course course) {
+        for (Group group : groupDao.getAllGroupsOfCourse(course.getId())) {
+            Row groupRowColumn = sheet
+                    .createRow(sheet.getLastRowNum() + 1);
+            writeCell(presenceStyle((XSSFWorkbook) sheet.getWorkbook()),
+                    groupRowColumn, groupRowColumn.getLastCellNum() + 3, group.getTitle());
+            sheet
+                    .autoSizeColumn(groupRowColumn.getLastCellNum());
         }
     }
 
 
-    private void drawLevelAndTrainers(Sheet levelAndTrainers) {
+    private void drawLevelAndTrainers(Sheet sheet) {
         int trainerRowCount = 1;
         for (User trainer : userDao.getAllTrainers()) {
-            String trainerFullName = trainer.getFirstName() + " " + trainer.getLastName();
-            Row trainerRowColumn = levelAndTrainers.createRow(trainerRowCount++);
             int trainerCellCount = 0;
-            levelAndTrainers.setColumnWidth(trainerCellCount, COLUMN_WIDTH * 25);
-            Cell trainerCell = trainerRowColumn.createCell(trainerCellCount++);
-            trainerCell.setCellValue(trainerFullName);
-
+            writeCell(presenceStyle((XSSFWorkbook) sheet.getWorkbook()),
+                    sheet.createRow(trainerRowCount++), trainerCellCount++,
+                    trainer.getFirstName() + " " + trainer.getLastName());
+            sheet.autoSizeColumn(trainerCellCount);
             for (Course course : courseDao.getAllByTrainer(trainer.getId())) {
                 Level level = findLevelById(levelDao.getAllByTrainer(trainer.getId()), course.getLevel());
-                String courseAndLevelTitle = course.getName() + " " + level.getTitle();
-                Row courseRowColumn = levelAndTrainers.createRow(trainerRowCount++);
-                if (level.getTitle() != null) {
-                    courseRowColumn.createCell(trainerCellCount).setCellValue(courseAndLevelTitle);
-                    levelAndTrainers.setColumnWidth(trainerCellCount, COLUMN_WIDTH * 30);
-                } else {
-                    courseRowColumn.createCell(trainerCellCount).setCellValue(course.getName());
-                    levelAndTrainers.setColumnWidth(trainerCellCount, COLUMN_WIDTH * 30);
-                }
+                writeCell(presenceStyle((XSSFWorkbook) sheet.getWorkbook()),
+                        sheet.createRow(trainerRowCount++),
+                        trainerCellCount,
+                        course.getName() + " " + level.getTitle());
+                sheet.autoSizeColumn(trainerCellCount);
             }
         }
     }
 
-    private void drawTrainingAndQuantity(Sheet trainingAndQuantity) {
-        trainingAndQuantity.setColumnWidth(2, COLUMN_WIDTH * 25);
-        int[] courseCell = {0, 2};
-        int[] groupCell = {1, 2};
-        int rowCounter = 1;
+    //
+    private void drawTrainingAndQuantity(Sheet sheet) {
+
+        //for each course creating row, writing name
         for (Course course : courseDao.getAll()) {
-            Row courseRow = trainingAndQuantity.createRow(rowCounter++);
-            String courseName = course.getName();
-            trainingAndQuantity.setColumnWidth(0, COLUMN_WIDTH * 25);
-            courseRow.createCell(courseCell[0]).setCellValue(courseName);
             int numberOfEmployeesInCourse = 0;
-            Cell employeesAmountCourse = courseRow.createCell(courseCell[1]);
-            for (Group group : groupDao.getAllGroupsOfCourse(course.getId())) {
-                int numberOfEmployeesInGroup = groupDao.getNumberOfEmployeesInGroup(group.getId());
-                numberOfEmployeesInCourse += numberOfEmployeesInGroup;
-                Row groupRow = trainingAndQuantity.createRow(rowCounter++);
-                String groupTitle = group.getTitle();
-                trainingAndQuantity.setColumnWidth(1, COLUMN_WIDTH * 25);
-                groupRow.createCell(groupCell[0]).setCellValue(groupTitle);
-                groupRow.createCell(groupCell[1]).setCellValue(numberOfEmployeesInGroup);
-            }
-            employeesAmountCourse.setCellValue(numberOfEmployeesInCourse);
+            Row courseRow = sheet.createRow(sheet.getLastRowNum() + 1);
+            writeCell(presenceStyle((XSSFWorkbook) sheet.getWorkbook()),
+                    courseRow, courseRow.getLastCellNum() + 1, course.getName());
+            sheet.autoSizeColumn(courseRow.getFirstCellNum());
+
+            writeEmployeesAmount(sheet, course, numberOfEmployeesInCourse, courseRow);
         }
+
+    }
+
+    private void writeEmployeesAmount(Sheet sheet, Course course, int numberOfEmployeesInCourse, Row courseRow) {
+        Cell employeesAmountCourse = courseRow.createCell(courseRow.getLastCellNum() + 1);
+        //Write groups and amount of employees
+        for (Group group : groupDao.getAllGroupsOfCourse(course.getId())) {
+            int numberOfEmployeesInGroup = groupDao.getNumberOfEmployeesInGroup(group.getId());
+            numberOfEmployeesInCourse += numberOfEmployeesInGroup;
+
+            Row groupRow = sheet.createRow(sheet.getLastRowNum() + 1);
+            writeCell(presenceStyle((XSSFWorkbook) sheet.getWorkbook()), groupRow,
+                    groupRow.getLastCellNum() + 2, group.getTitle());
+            writeCell(presenceStyle((XSSFWorkbook) sheet.getWorkbook()),
+                    groupRow, numberOfEmployeesInGroup);
+
+            sheet.autoSizeColumn(groupRow.getFirstCellNum());
+            sheet.autoSizeColumn(employeesAmountCourse.getColumnIndex());
+        }
+        employeesAmountCourse.setCellValue(numberOfEmployeesInCourse);
     }
 
     private Level findLevelById(List<Level> levels, int id) {
@@ -284,5 +293,17 @@ public class ReportServiceImpl implements ReportService {
         presenceStyle.setWrapText(true);
         presenceStyle.setFont(presenceFont);
         return presenceStyle;
+    }
+
+    private void writeCell(CellStyle cellStyle, Row row, int cellCount, String content) {
+        Cell cell = row.createCell(cellCount);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue(content);
+    }
+
+    private void writeCell(CellStyle cellStyle, Row row, int content) {
+        Cell cell = row.createCell(2);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue(content);
     }
 }

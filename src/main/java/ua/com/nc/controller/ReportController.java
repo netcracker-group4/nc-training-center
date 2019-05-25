@@ -29,8 +29,10 @@ public class ReportController {     //   /dashboard-report
     private GroupsService groupService;
 
 
-    //get attendance of groups by their trainer id, authenticated trainer
-    //else get full attendance report by admin
+    /*
+    get attendance of groups by their trainer id, authenticated trainer
+    else get full attendance report by admin
+    */
     @RequestMapping(value = "/attendance-report", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) " +
             "|| hasAuthority(T(ua.com.nc.domain.Role).TRAINER.name())")
