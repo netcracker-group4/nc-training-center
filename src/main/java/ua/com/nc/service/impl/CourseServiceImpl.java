@@ -158,5 +158,9 @@ public class CourseServiceImpl implements CourseService {
         return dtoCourses;
     }
 
-
+    @Override
+    public InputStream getImage(String imageName) {
+        String path = "img/" + imageName;
+        return fileService.downloadFileFromServer(path);
+    }
 }
