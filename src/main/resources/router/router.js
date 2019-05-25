@@ -1,9 +1,9 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import MainPage from '../pages/MainPage.vue'
-import RegistrationPage from '../pages/RegistrationPage.vue'
+import Vue from 'vue';
+import Router from 'vue-router';
+import MainPage from '../pages/MainPage.vue';
+import RegistrationPage from '../pages/RegistrationPage.vue';
 import DashBoardPage from "../pages/DashBoardPage.vue";
-import LoginPage from '../pages/LoginPage.vue'
+import LoginPage from '../pages/LoginPage.vue';
 import GroupPage from "../pages/GroupPage.vue";
 import CoursePage from "../pages/CoursePage.vue";
 import AdminCourses from "../pages/AdminCourses.vue";
@@ -11,13 +11,12 @@ import CreateCourse from "../pages/CreateCourse.vue";
 import AllUsersPage from "../pages/AllUsersPage.vue";
 import UserPage from "../pages/UserPage.vue";
 import AttendancePage from "../pages/AttendancePage.vue";
-import AbsenceReasons from '../pages/AbsenceReasons.vue'
+import AbsenceReasons from '../pages/AbsenceReasons.vue';
 import DesiredSchedulePage from "../pages/DesiredSchedulePage.vue";
-import AttachmentsPage from "../pages/AttachmentsPage.vue"
-import TestPage from '../pages/TestPage.vue'
+import TestPage from '../pages/TestPage.vue';
 import AllGroups from "../pages/AllGroups.vue";
 import NotFound from "../pages/NotFound.vue";
-import ChatPage from '../pages/ChatPage.vue'
+import ChatPage from '../pages/ChatPage.vue';
 import InfodeskRequest from "../pages/InfodeskRequest.vue";
 import JoinCoursePage from "../pages/JoinCoursePage.vue";
 import LessonPage from "../pages/LessonPage.vue";
@@ -67,9 +66,6 @@ const routes = [
     {path: '/attendance', component: AttendancePage},
     // {path: '/absence-reasons', component: AbsenceReasons},
     {path: '/absence-reasons', component: AbsenceReasons},
-
-    // {path: '/attachments-page', component: AttachmentsPage},
-    {path: '/attachments', component: AttachmentsPage},
 
     // {path: '/test', component: TestPage},
     {path: '/test', component: TestPage},

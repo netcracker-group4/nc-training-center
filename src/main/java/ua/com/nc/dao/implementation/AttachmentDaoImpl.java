@@ -29,8 +29,8 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
     private String attachmentDelete;
     @Value("${attachment.insert}")
     private String attachmentInsert;
-    @Value("${attachment.select-by-name}")
-    private String attachmentSelectByName;
+    @Value("${attachment.select-by-url}")
+    private String attachmentSelectByUrl;
     @Value("${attachment.select-by-lesson-id}")
     private String attachmentSelectByLessonId;
     @Value("${attachment.select-by-trainer-id}")
@@ -91,8 +91,8 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
     }
 
     @Override
-    public Attachment getByName(String url) throws PersistException {
-        String sql = attachmentSelectByName;
+    public Attachment getByUrl(String url) throws PersistException {
+        String sql = attachmentSelectByUrl;
         log.info(" Select attachment by url  " + url + " " + sql);
         return getUniqueFromSqlByString(sql, url);
     }

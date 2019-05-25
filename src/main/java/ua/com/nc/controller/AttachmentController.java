@@ -108,13 +108,6 @@ public class AttachmentController {
             throw new LogicException("Could not upload file");
     }
 
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    public void deleteAttachment(@PathVariable Integer id) {
-        service.delete(id);
-    }
-
-
     @RequestMapping(method = RequestMethod.DELETE, value = "/unlink")
     @ResponseBody
     public void unlink(@RequestBody LessonAttachment lessonAttachment) {
