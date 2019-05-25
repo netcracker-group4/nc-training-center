@@ -1,8 +1,8 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div class="row">
         <progress-circular-component v-if="loading"></progress-circular-component>
 
-        <v-tabs fixed-tabs v-model="currentDay" centered>
+        <v-tabs v-model="currentDay" centered>
             <v-tab
                     v-for="n in days"
                     :key="n"
@@ -14,9 +14,9 @@
         <br/>
         <br/>
         <br/>
-        <v-container v-if="!loading" fluid grid-list-md>
+        <v-container v-if="!loading" fluid >
             <v-layout row wrap>
-                <v-flex d-flex style="margin-bottom: 50px">
+                <v-flex style="margin-bottom: 50px" lg6 xs12>
                     <div>
                         <h2>All ungrouped students for a course " {{course.name}} "</h2>
                         <table class="zui-table ">
@@ -28,11 +28,12 @@
                                 <th v-for="dayName in dayIntervals" scope="col">{{dayName}}</th>
                             </tr>
                             </thead>
-                            <draggable v-model="allSchedules" tag="tbody" group="people">
+                            <draggable v-model="allSchedules" tag="tbody" group="people" >
                                 <tr v-for="item in allSchedules" :key="item.userId">
                                     <td>{{ item.userId }}</td>
-                                    <td>
+                                    <td style="width: 5%">
                                         <v-switch v-model="item.isAttending"
+                                                  class="ma-0 pa-0 text-xs-center justify-center"
                                                   @change="invertAttending(item.id, item.userName)"></v-switch>
                                     </td>
                                     <td class="student-name"
@@ -51,59 +52,69 @@
                         </v-layout>
                     </div>
                 </v-flex>
-                <v-flex d-flex>
+                <v-flex lg6 xs12>
                     <div>
-                        <div style="margin-bottom: 30px" v-for="(group, index) in groups">
-                            <h2>Drag and drop here students for a group number {{index}}</h2>
-                            <div>
-                                <table class="zui-table ">
-                                    <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">Id</th>
-                                        <th scope="col">Attending</th>
-                                        <th scope="col" class="student-name">Name</th>
-                                        <th v-for="dayName in dayIntervals" scope="col">{{dayName}}</th>
-                                    </tr>
-                                    </thead>
-                                    <draggable v-model="group.groupScheduleList" tag="tbody" group="people">
-                                        <tr v-for="item in group.groupScheduleList" :key="item.userId"
-                                            style="cursor: pointer">
-                                            <td>{{ item.userId }}</td>
-                                            <td>
-                                                <v-switch v-model="item.isAttending"
-                                                          @change="invertAttending(item.id, item.userName)"></v-switch>
-                                            </td>
-                                            <td class="student-name" v-bind:class="{'notAttending': !item.isAttending}">
-                                                {{ item.userName }}
-                                            </td>
-                                            <td v-for="forInterval in item.scheduleForIntervals"
-                                                v-bind:style="{backgroundColor: getColor(forInterval)}">
-                                            </td>
-                                        </tr>
-                                    </draggable>
-                                </table>
-                                <v-layout>
-                                    <v-flex>
-                                        <v-text-field v-model="group.name"
-                                                      placeholder="Name"
-                                                      label="Group Name"
-                                                      required
-                                                      :data-vv-name="'group_' + index"
-                                                      v-validate="'required|max:256'"
-                                                      :error-messages="errors.collect('group_' + index)"
-                                        ></v-text-field>
-                                        <span>{{ errors.first('myinput') }}</span>
-                                    </v-flex>
-                                    <v-spacer></v-spacer>
-                                    <v-btn alert color="error" @click="deleteGroup(index)">Delete Group</v-btn>
-                                    <v-btn alert color="success" @click="saveGroup(index)">Save Group</v-btn>
-                                </v-layout>
+                        <v-expansion-panel
+                                v-model="panel"
+                                expand
+                        >
+                            <v-expansion-panel-content
+                                    v-for="(group, index) in groups"
+                                    :key="index"
+                                    style="margin-bottom:30px; padding: 10px"
 
-                            </div>
-                            <br/>
-                            <br/>
-                            <br/>
-                        </div>
+                            >
+                                <template v-slot:header>
+                                    <div>Drag and drop here students for a group number {{index}}</div>
+                                </template>
+                                <div>
+                                    <table class="zui-table ">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Id</th>
+                                            <th scope="col">Attending</th>
+                                            <th scope="col" class="student-name">Name</th>
+                                            <th v-for="dayName in dayIntervals" scope="col">{{dayName}}</th>
+                                        </tr>
+                                        </thead>
+                                        <draggable v-model="group.groupScheduleList" tag="tbody" group="people" >
+                                            <tr v-for="item in group.groupScheduleList" :key="item.userId"
+                                                style="cursor: pointer">
+                                                <td>{{ item.userId }}</td>
+                                                <td style="width: 5%">
+                                                    <v-switch v-model="item.isAttending"
+                                                              class="ma-0  pa-0  text-xs-center justify-center"
+                                                              @change="invertAttending(item.id, item.userName)"></v-switch>
+                                                </td>
+                                                <td class="student-name" v-bind:class="{'notAttending': !item.isAttending}">
+                                                    {{ item.userName }}
+                                                </td>
+                                                <td v-for="forInterval in item.scheduleForIntervals"
+                                                    v-bind:style="{backgroundColor: getColor(forInterval)}">
+                                                </td>
+                                            </tr>
+                                        </draggable>
+                                    </table>
+                                    <v-layout>
+                                        <v-flex>
+                                            <v-text-field v-model="group.name"
+                                                          placeholder="Name"
+                                                          label="Group Name"
+                                                          required
+                                                          :data-vv-name="'group_' + index"
+                                                          v-validate="'required|max:256'"
+                                                          :error-messages="errors.collect('group_' + index)"
+                                            ></v-text-field>
+                                            <span>{{ errors.first('myinput') }}</span>
+                                        </v-flex>
+                                        <v-spacer></v-spacer>
+                                        <v-btn alert color="error" @click="deleteGroup(index)">Delete Group</v-btn>
+                                        <v-btn alert color="success" @click="saveGroup(index)">Save Group</v-btn>
+                                    </v-layout>
+
+                                </div>
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
                     </div>
                 </v-flex>
             </v-layout>
@@ -127,6 +138,7 @@
             return {
                 loading: false,
                 list2: [],
+                panel : [],
                 errorMessages: '',
                 formHasErrors: false,
                 course: {},
@@ -214,6 +226,7 @@
                         self.allSchedules = self.allSchedules.concat(self.groups[index].groupScheduleList);
                         self.successAutoClosable('Group ' + self.groups[index].name + ' has been deleted');
                         self.groups.splice(index, 1);
+                        self.panel.splice(index, 1);
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -230,7 +243,7 @@
                                 .then(function (response) {
                                     console.log(response);
                                     self.groups[i].id = response.data;
-                                    self.successAutoClosable('Group ' + self.groups[i].name + ' has been deleted');
+                                    self.successAutoClosable('Group ' + self.groups[i].name + ' has been saved');
                                 })
                                 .catch(function (error) {
                                     console.log(error);
@@ -265,6 +278,9 @@
                 axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + self.$route.params.id + '/grouped')
                     .then(function (response) {
                         self.groups = response.data;
+                        self.groups.forEach(function () {
+                            self.panel.push(false);
+                        })
                     })
                     .catch(function (error) {
                         // self.errorAutoClosable(error.response.data);
@@ -282,9 +298,10 @@
                         if (error.response != null && error.response.status == 400)
                             self.$router.push('/404');
                     });
-                axios.get(this.$store.state.apiServer + '/api/desired-schedule/' + self.$route.params.id)
+                axios.get(this.$store.state.apiServer + '/api/getcourses/' + self.$route.params.id)
                     .then(function (response) {
                         self.course = response.data;
+                        console.log(response.data)
                     })
                     .catch(function (error) {
                         // self.errorAutoClosable(error.response.data);
@@ -304,14 +321,15 @@
     .student-name {
         width: 25%;
         cursor: pointer;
+        padding: 5px;
     }
 
     .zui-table {
         border: solid 1px #e6e4ee;
         border-collapse: collapse;
         border-spacing: 0;
-        font: normal 13px Arial, sans-serif;
-        width: 100%;
+        font: normal 10px Arial, sans-serif;
+        /*width: 100%;*/
         margin-top: 20px;
         margin-bottom: 30px;
     }
@@ -320,7 +338,7 @@
         background-color: #eaefed;
         border: solid 1px #eeecec;
         color: #6a6b68;
-        padding: 10px;
+        padding: 3px;
         text-align: left;
         text-shadow: 1px 1px 1px #fff;
     }
@@ -328,7 +346,7 @@
     .zui-table tbody td {
         border: solid 1px #e9eeeb;
         color: #333;
-        padding: 10px;
+        padding-left: 3px;
         text-shadow: 1px 1px 1px #fff;
     }
 

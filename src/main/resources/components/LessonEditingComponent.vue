@@ -228,7 +228,7 @@
                 date: this.currentLesson.timeDate.substr(0, 10),
                 time: this.currentLesson.timeDate.substr(11, 5),
                 appendix: this.currentLesson.timeDate.substr(16, 6),
-                selectedAttachments: this.currentLesson.attachments,
+                selectedAttachments: Object.assign([], this.currentLesson.attachments),
                 file: '',
                 headers: [
                     {
@@ -323,7 +323,7 @@
                 this.$emit('delete-event', this.lesson);
             },
             cancel() {
-                this.$emit('cancel-event', this.lesson);
+                this.$emit('cancel-event');
             },
             getName: item => item.firstName + ' ' + item.lastName,
             toggleAll() {

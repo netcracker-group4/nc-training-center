@@ -224,18 +224,19 @@
     }
 </script>
 
-<style>
+<style >
 
     .student-name {
         width: 25%;
         cursor: pointer;
+        padding: 5px;
     }
 
     .zui-table {
         border: solid 1px #e6e4ee;
         border-collapse: collapse;
         border-spacing: 0;
-        font: normal 13px Arial, sans-serif;
+        font: normal 10px Arial, sans-serif;
         width: 100%;
         margin-top: 20px;
         margin-bottom: 30px;
@@ -245,7 +246,7 @@
         background-color: #eaefed;
         border: solid 1px #eeecec;
         color: #6a6b68;
-        padding: 10px;
+        padding: 3px;
         text-align: left;
         text-shadow: 1px 1px 1px #fff;
     }
@@ -253,7 +254,7 @@
     .zui-table tbody td {
         border: solid 1px #e9eeeb;
         color: #333;
-        padding: 10px;
+        /*padding: 5px;*/
         text-shadow: 1px 1px 1px #fff;
     }
 

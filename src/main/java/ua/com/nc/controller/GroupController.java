@@ -59,7 +59,7 @@ public class GroupController {
 
     @RequestMapping(value = "/{groupId}/user/{userId}", method = RequestMethod.DELETE)
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     public void deleteStudent(@PathVariable Integer groupId, @PathVariable Integer userId) {
         groupsService.removeStudentFromGroup(userId, groupId);
     }

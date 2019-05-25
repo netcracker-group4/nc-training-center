@@ -20,7 +20,7 @@ public class AdminController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     public ResponseEntity<?> getAllUsers() {
         return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }

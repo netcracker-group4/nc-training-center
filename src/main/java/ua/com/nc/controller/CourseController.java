@@ -1,7 +1,6 @@
 package ua.com.nc.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import ua.com.nc.dao.interfaces.CourseDao;
 import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Course;
-import ua.com.nc.domain.Role;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.CourseAndGroups;
 import ua.com.nc.service.CourseService;
@@ -56,7 +54,7 @@ public class CourseController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @ResponseBody
     public void deleteCourse(@PathVariable Integer id) {
         courseDao.delete(id);
@@ -64,7 +62,7 @@ public class CourseController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     public ResponseEntity add(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                     @RequestParam(name = "courseStatus") String courseStatus,
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
@@ -79,20 +77,20 @@ public class CourseController {
         return ResponseEntity.ok().body("Course saved");
     }
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(method = RequestMethod.POST, value = "/upload-img")
     public String uploadFile(@RequestParam("file") MultipartFile img) {
         return courseService.uploadImage(img);
     }
     @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/upload-img")
     public String uploadFile(@RequestParam("img") MultipartFile img,@PathVariable String id) {
         return courseService.uploadImage(img, Integer.parseInt(id));
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/create")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @ResponseBody
     public void update(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                        @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
@@ -108,7 +106,7 @@ public class CourseController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/edit")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @ResponseBody
     public void edit(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                        @RequestParam(name = "courseStatus") String courseStatus,

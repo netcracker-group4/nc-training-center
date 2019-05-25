@@ -21,9 +21,6 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
 
     protected DataSource dataSource;
 
-    AbstractDaoImpl() {
-    }
-
     AbstractDaoImpl(DataSource dataSource) throws PersistException {
         this.dataSource = dataSource;
     }
