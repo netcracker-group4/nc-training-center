@@ -105,8 +105,6 @@
         methods: {
             editItem(item) {
                 this.editedItem.attendanceId = item.attendanceId;
-                //this.editedItem.status = this.statuses.find(status => status.title == item.status)
-                // this.editedItem.reason = this.reasons.find(reason => reason.title == item.reason)
                 this.dialog = true;
             },
             close() {

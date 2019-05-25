@@ -2,7 +2,7 @@
     <v-container>
         <progress-circular-component v-if="loading"></progress-circular-component>
 
-        <v-layout v-if="!loading" row wrap>
+        <v-layout v-if="!loading" row wrap mb-2>
             <v-flex xs12>
                 <template>
                     <v-card>
@@ -26,8 +26,10 @@
             </v-flex>
         </v-layout>
         <v-layout v-if="!loading" row wrap>
-            <v-btn color="success" :disabled="performed" @click="checked()">Check attendance</v-btn>
-            <v-flex xs12>
+            <v-btn color="success" :disabled="performed" v-if="isLessonTrainer()" @click="checked()">
+                <b>Check attendance</b>
+            </v-btn>
+            <v-flex xs12 mt-2>
                 <v-toolbar flat color="white">
                     <span>Lesson attachments</span>
 
