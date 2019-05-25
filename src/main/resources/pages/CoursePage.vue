@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div>
-        <div class="title mb-1">
+        <div class="title mb-1" style="margin-left: 20px">
             {{name}}
             <v-btn @click="edit()">
                 <v-icon>edit</v-icon>
@@ -8,8 +8,8 @@
             <v-btn v-if="checkStud" @click="sign()">Sign course</v-btn>
         </div>
         <v-dialog  v-if="isAdmin" v-model="dialog" max-width="500px">
-            <EditCourseComponent :starting-day="startDay" :ending-day="endDay"
-                                :descr="description" :id="id"/>
+            <EditCourseComponent :starts-day="startDay" :ends-day="endDay"
+                                :descr="description" :id="id" :nm="name"/>
         </v-dialog>
             <v-container
                     fluid
@@ -21,7 +21,7 @@
                             <div class="subheading pt-3"> <b>{{courseStatus}}</b>
                              <p>Level: {{level.title}}</p>
                             </div>
-                                <v-img v-if="imageUrl" :src="this.$store.state.apiServer+imageUrl" aspect-ratio="2"></v-img>
+                                <v-img v-if="imageUrl" :src="this.$store.state.apiServer+'/api/getcourses'+imageUrl" aspect-ratio="2"></v-img>
                             <v-progress-linear v-if="!imageUrl" :indeterminate="true"></v-progress-linear>
                             <div v-if="isAdmin">
                                 <v-text-field label="Select Image" @click='pickFile' v-model='imageUrl' prepend-icon='attach_file'></v-text-field>

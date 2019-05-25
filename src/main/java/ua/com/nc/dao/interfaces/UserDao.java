@@ -10,6 +10,8 @@ public interface UserDao extends GenericDao<User> {
 
     User getByToken(String token);
 
+    int getIdByName(String name);
+
     List<User> getAllTrainers();
 
     List<User> getAllManagers();

@@ -3,9 +3,9 @@ package ua.com.nc.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,11 @@ import ua.com.nc.domain.User;
 import ua.com.nc.dto.CourseAndGroups;
 import ua.com.nc.service.CourseService;
 import ua.com.nc.service.DashBoardService;
+import ua.com.nc.service.FileTransferService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Log4j2
@@ -34,6 +38,8 @@ public class CourseController {
     private CourseService courseService;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private FileTransferService fileTransferService;
 
     private final Gson gson = new Gson();
     @Autowired
@@ -65,7 +71,7 @@ public class CourseController {
     @ResponseBody
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     public ResponseEntity add(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
-                    @RequestParam(name = "courseStatus") String courseStatus,
+                    @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "trainer") String trainer,
                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
                     @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
                     @RequestParam(name = "image") MultipartFile image) {
@@ -73,7 +79,7 @@ public class CourseController {
         if(imageUrl == null){
             return ResponseEntity.status(500).body("Error while creating temp file.");
         }
-        courseService.add(courseService.stringToObjCourse(name, "1", level, courseStatus,
+        courseService.add(courseService.stringToObjCourse(name, trainer, level, courseStatus,
                 imageUrl, isOnLandingPage, desc, startDay, endDay));
         return ResponseEntity.ok().body("Course saved");
     }
@@ -96,12 +102,12 @@ public class CourseController {
     @ResponseBody
     public void update(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
                        @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
-                       @RequestParam(name = "image") MultipartFile image,
+                       @RequestParam(name = "image") MultipartFile image, @RequestParam(name = "trainer") String trainer,
                        @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
                        @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
                        @PathVariable int id) {
         imageUrl = courseService.uploadImage(image);
-        Course course = courseService.stringToObjCourse(name, "1", level, courseStatus,
+        Course course = courseService.stringToObjCourse(name, trainer, level, courseStatus,
                 imageUrl, isOnLandingPage, desc, startDay, endDay);
         course.setId(id);
         courseDao.update(course);
@@ -147,7 +153,22 @@ public class CourseController {
         return new ResponseEntity<>(courseService.getAllByTrainerAndEmployee(trainerId, employeeId), HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/img/{imageName}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<byte[]> getImage(@PathVariable String imageName,final HttpServletResponse response) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        try (InputStream inputStream = fileTransferService.downloadFileFromServer("/img/"+imageName)) {
+            if (inputStream != null) {
+                byte[] media = IOUtils.toByteArray(inputStream);
+                return new ResponseEntity<byte[]>(media, headers, HttpStatus.OK);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<byte[]>(null, headers, HttpStatus.NOT_FOUND);
+    }
 
 
 }

@@ -26,6 +26,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     private String usrSelectAll;
     @Value("${usr.select-by-id}")
     private String usrSelectById;
+    @Value("${usr.select-id-by-name}")
+    private String usrSelectIdByName;
     @Value("${usr.select-by-email}")
     private String usrSelectByEmail;
     @Value("${usr.update}")
@@ -194,6 +196,21 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
             statement.setInt(1, userId);
             statement.setString(2, roleName);
             statement.executeUpdate();
+        } catch (Exception e) {
+            log.error(e);
+            throw new PersistException(e);
+        }
+    }
+
+    @Override
+    public int getIdByName(String name) {
+        String sql = usrSelectIdByName;
+        log.info(" select user " + sql + name);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, name);
+            ResultSet rs = statement.executeQuery();
+            return rs.getInt("ID");
         } catch (Exception e) {
             log.error(e);
             throw new PersistException(e);
