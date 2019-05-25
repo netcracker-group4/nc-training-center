@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.dao.interfaces.*;
@@ -46,13 +47,15 @@ public class UserServiceImpl implements UserService {
     private AttendanceService attendanceService;
     @Autowired
     private FiletransferServiceImpl fileService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void add(DtoUserSave dtoUserSave) {
         User user = new User();
         user.setFirstName(dtoUserSave.getFirstName());
         user.setLastName(dtoUserSave.getLastName());
-        user.setPassword(dtoUserSave.getPassword());
+        user.setPassword(passwordEncoder.encode(dtoUserSave.getPassword()));
         user.setEmail(dtoUserSave.getEmail());
         user.setCreated(OffsetDateTime.now());
 

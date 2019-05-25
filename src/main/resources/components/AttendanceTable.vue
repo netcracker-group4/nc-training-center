@@ -53,7 +53,7 @@
                 <td class="text-xs-left">{{ props.item.status }}</td>
                 <td class="text-xs-left">{{ props.item.reason }}</td>
                 <td class="justify-center layout px-0">
-                    <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+                    <v-icon v-if="" small class="mr-2" @click="editItem(props.item)">edit</v-icon>
                 </td>
             </template>
         </v-data-table>
@@ -68,6 +68,7 @@
         props: ['userId', 'groupId'],
         data: () => ({
             dialog: false,
+            self: this,
             headers: [
                 {
                     text: 'Student name',

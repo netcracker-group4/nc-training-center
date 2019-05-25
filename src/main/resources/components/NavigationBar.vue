@@ -106,7 +106,7 @@
                         }
                     },
                     {
-                        title: 'Groups', icon: 'group', link: '/groups', canBeShown: function () {
+                        title: 'Groups', icon: 'group', link: '/groups', canBeShown: function (self) {
                             return true
                         }
                     },

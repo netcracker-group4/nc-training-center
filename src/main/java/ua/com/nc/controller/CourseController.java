@@ -82,6 +82,7 @@ public class CourseController {
     public String uploadFile(@RequestParam("file") MultipartFile img) {
         return courseService.uploadImage(img);
     }
+
     @ResponseBody
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/upload-img")
