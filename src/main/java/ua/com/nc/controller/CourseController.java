@@ -1,6 +1,7 @@
 package ua.com.nc.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -135,6 +136,8 @@ public class CourseController {
     @RequestMapping(value = "/trainer/{id}", method = RequestMethod.GET)
     @ResponseBody
     public String getTrainersCourses(@PathVariable Integer id) {
+        //this particular response needs this particular date format
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
         return gson.toJson(courseDao.getAllByTrainer(id));
     }
 

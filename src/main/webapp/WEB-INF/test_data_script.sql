@@ -477,10 +477,11 @@ values (1, 2, null, 3),
        (22, 40, null, 1);
 
 
-insert into suitability (id, title, priority)
-values (1, 'perfect', 3),
-       (2, 'suitable', 2),
-       (3, 'normal', 3);
+insert into suitability (title, priority, color)
+values ('perfect', 3, 'green'),
+       ('suitable', 2, 'yellow'),
+       ('normal', 3, 'white'),
+       ('not suitable', -5, 'red');
 
 alter sequence suitability_seq restart with 5;
 

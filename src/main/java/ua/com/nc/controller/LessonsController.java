@@ -97,8 +97,8 @@ public class LessonsController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/lesson/{lessonId}")
-    public String getLesson(@PathVariable String lessonId) {
-        return gson.toJson(lessonsService.getLessonById(Integer.parseInt(lessonId)));
+    public String getLesson(@PathVariable Integer lessonId) {
+        return gson.toJson(lessonsService.getLessonById(lessonId));
     }
 
     @ResponseBody

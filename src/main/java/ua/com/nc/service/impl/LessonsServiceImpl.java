@@ -107,12 +107,12 @@ public class LessonsServiceImpl implements LessonsService {
     }
 
     @Override
-    public Lesson getLessonById(Integer lessonId) {
+    public DtoLesson getLessonById(Integer lessonId) {
         Lesson lesson = lessonDao.getEntityById(lessonId);
         if(lesson == null){
             throw new LogicException("There is no such lesson");
         }
-        return lesson;
+        return convertToDtoLesson(lesson);
     }
 
     @Override

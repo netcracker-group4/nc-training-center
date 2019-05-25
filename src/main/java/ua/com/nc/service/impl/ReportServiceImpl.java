@@ -76,7 +76,7 @@ public class ReportServiceImpl implements ReportService {
 
             List<Group> groups = new ArrayList<>();
             groups.add(groupDao.getEntityById(groupId));
-            User trainer = userDao.getTrainerByGroupId(groupId);
+            User trainer = userDao.getTrainerByCourseId(groupId);
 
             drawTrainersGroups(workbook, headerStyle(workbook), presenceStyle(workbook), trainer, groups);
 
