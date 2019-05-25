@@ -200,7 +200,7 @@
                             self.close();
                             self.successAutoClosable('New password sent to mail');
                         }).catch(function (error) {
-                            self.errorAutoClosable('This user is not registered on the system')
+                            self.errorAutoClosable('This user is not registered on the system');
                         })
                     }
                     this.close();
