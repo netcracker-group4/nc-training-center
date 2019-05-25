@@ -10,6 +10,7 @@
                 >
                     <template v-slot:activator="{ on }">
                         <v-text-field
+                                :min="getCurrent"
                                 :rules="[rules.required]"
                                 :value="StartingDate"
                                 clearable
@@ -43,6 +44,7 @@
                         ></v-text-field>
                     </template>
                     <v-date-picker
+                            :min="date1"
                             v-model="date2"
                             @change="menu2 = false"
                     ></v-date-picker>
@@ -67,7 +69,14 @@
                 required: value => !!value || 'Required.',
             }
         }),
-
+        methods:{
+          getCurrent(){
+              let date = new Date();
+              let year = date.getFullYear();
+              let month = date.getMonth();
+              return year+'-'+month+'-'+date.getDay();
+          },
+        },
         computed: {
             StartingDate() {
                 return this.date1 ? moment(this.date1).format('dddd, MMMM Do YYYY') : ''
