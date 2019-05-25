@@ -28,11 +28,11 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public void add(Integer lessonId, Attachment attachment) {
 
-        if (attachmentDao.getByName(attachment.getName()) == null) {
+        if (attachmentDao.getByUrl(attachment.getUrl()) == null) {
 
             attachmentDao.insert(attachment);
         }
-        link(lessonId, attachmentDao.getByName(attachment.getName()).getId());
+        link(lessonId, attachmentDao.getByUrl(attachment.getUrl()).getId());
     }
 
     @Override
@@ -41,17 +41,6 @@ public class AttachmentServiceImpl implements AttachmentService {
         add(lessonId, attachment);
     }
 
-    @Override
-    public void delete(Integer id) {
-        File file = new File(attachmentDao.getEntityById(id).getUrl());
-        if (file.delete()) {
-            log.info("File removed from directory");
-        } else {
-            log.error("File not found");
-        }
-        lessonAttachmentDao.deleteByAttachmentId(id);
-        attachmentDao.delete(id);
-    }
 
     @Override
     public Attachment uploadFile(Integer trainerId, DtoAttachment dtoAttachment) {
@@ -91,7 +80,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     private void saveToDisk(MultipartFile multipartFile, String filePath) throws IOException {
         byte[] bytes = multipartFile.getBytes();
-        if (attachmentDao.getByName(filePath) == null) {
+        if (attachmentDao.getByUrl(filePath+ "/" + multipartFile.getOriginalFilename()) == null) {
             String fileName = multipartFile.getOriginalFilename();
             log.info("File is not in base");
             StringBuilder name = new StringBuilder(fileName);

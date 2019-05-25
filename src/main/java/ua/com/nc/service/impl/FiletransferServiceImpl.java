@@ -74,7 +74,7 @@ public class FiletransferServiceImpl implements FileTransferService {
             success = ftpClient.storeFile(path+"/"+ name, stream);
             showServerReply(ftpClient);
             if (success) {
-                log.info("Successfully created file: " + path);
+                log.info("Successfully created file: " + path+"/"+ name);
             } else {
                 log.error("Failed to create file.");
             }
