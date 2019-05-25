@@ -106,9 +106,11 @@
                         }
                     },
                     {
-                        title: 'Groups', icon: 'group', link: '/groups', canBeShown: function (self) {
-                            return true
+                        title: 'Groups', icon: 'group', link: '/groups',
+                        canBeShown: function (self) {
+                            return self.$store.getters.isAdmin
                         }
+
                     },
                     {
                         title: 'Dashboard', icon: 'dashboard', link: '/dashboard',

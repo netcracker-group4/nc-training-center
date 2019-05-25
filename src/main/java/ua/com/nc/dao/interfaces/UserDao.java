@@ -40,7 +40,7 @@ public interface UserDao extends GenericDao<User> {
 
     User getLessonTrainer(int lessonId);
 
-    User getTrainerByGroupId(Integer groupId);
+    User getTrainerByCourseId(Integer courseId);
 
     List<User> getSubordinatesOfManager(Integer managerId);
 

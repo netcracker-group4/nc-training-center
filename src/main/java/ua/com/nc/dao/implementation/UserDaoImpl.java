@@ -283,10 +283,10 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public User getTrainerByGroupId(Integer groupId) {
+    public User getTrainerByCourseId(Integer courseId) {
         String sql = getSelectTrainerByCourseId;
-        log.info("find trainer by groupId " + groupId + " " + sql);
-        return getUniqueFromSqlById(sql, groupId);
+        log.info("find trainer by courseId " + courseId + " " + sql);
+        return getUniqueFromSqlById(sql, courseId);
     }
 
 

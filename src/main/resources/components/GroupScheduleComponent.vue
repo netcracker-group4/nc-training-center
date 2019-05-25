@@ -73,11 +73,12 @@
                                                     <v-card-title primary-title>
                                                         <span>{{lesson.topic}}</span>
                                                     </v-card-title>
-                                                    <v-card-text>
+                                                    <v-card-text class="cursor" v-on:click="$router.push('/users/' + lesson.trainerId)">
                                                         <span>{{lesson.trainerName}}</span>
                                                     </v-card-text>
                                                     <v-card-actions>
-                                                        <v-btn v-if="userCanEdit(lesson)" flat color="secondary"
+                                                        <v-btn :disabled="lesson.isPerformed"
+                                                               v-if="userCanEdit(lesson)" flat color="secondary"
                                                                v-on:click="cancelLesson(lesson)">
                                                             <span v-if="lesson.isCanceled">Activate</span>
                                                             <span v-else>cancel</span>
@@ -121,10 +122,15 @@
                             <v-card-actions>
                                 <v-list-tile class="grow">
                                     <v-list-tile-content>
-                                        <v-list-tile-title>{{lesson.trainerName}}</v-list-tile-title>
+                                        <v-list-tile-title
+                                                class="cursor"
+                                                v-on:click="$router.push('/users/' + lesson.trainerId)">
+                                            {{lesson.trainerName}}
+                                        </v-list-tile-title>
                                     </v-list-tile-content>
                                     <v-layout align-center justify-end>
-                                        <v-btn flat color="secondary" v-on:click="cancelLesson(lesson)"
+                                        <v-btn :disabled="lesson.isPerformed"
+                                               flat color="secondary" v-on:click="cancelLesson(lesson)"
                                                v-if="userCanEdit(lesson)">
                                             <span v-if="lesson.isCanceled">Activate</span>
                                             <span v-else>cancel</span>
@@ -462,6 +468,10 @@
 </script>
 
 <style scoped>
+    .cursor{
+        cursor: pointer;
+    }
+
     .my-lesson {
         overflow: hidden;
         text-overflow: ellipsis;

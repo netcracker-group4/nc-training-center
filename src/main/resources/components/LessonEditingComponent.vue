@@ -51,7 +51,7 @@
                                     v-on="on"
                             ></v-text-field>
                         </template>
-                        <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
+                        <v-date-picker v-model="date" @input="menu = false" :min="firstDayOfMonth"></v-date-picker>
                     </v-menu>
                 </v-flex>
                 <v-flex>
@@ -193,18 +193,8 @@
                 </template>
             </v-data-table>
             <v-layout style="margin-top: 20px">
-                <!--                <input-->
-                <!--                        type="file"-->
-                <!--                        style="display: none"-->
-                <!--                        ref="file"-->
-                <!--                        @change="handleFileUpload()"-->
-                <!--                >-->
                 <v-btn color="success" @click="$refs.inputUpload.click()">Upload file</v-btn>
                 <input v-show="false" ref="inputUpload" type="file" @change="handleFileUpload">
-                <!--                <label>File-->
-                <!--                    <input type="file" id="file" ref="file" v-on:change=""/>-->
-                <!--                </label>-->
-                <!--                <v-btn v-on:click="submitFile()">Submit</v-btn>-->
                 <v-spacer></v-spacer>
                 <v-btn color="error" @click="deleteLesson">delete</v-btn>
                 <v-btn color="success" @click="save">save</v-btn>
@@ -229,6 +219,7 @@
                 time: this.currentLesson.timeDate.substr(11, 5),
                 appendix: this.currentLesson.timeDate.substr(16, 6),
                 selectedAttachments: Object.assign([], this.currentLesson.attachments),
+                previouslySelectedAttachments: Object.assign([], this.currentLesson.attachments),
                 file: '',
                 headers: [
                     {
@@ -339,6 +330,7 @@
                 }
             },
             remove(attachment) {
+                // attachment.selected = false;
                 this.selectedAttachments = this.selectedAttachments.filter(el => el.id !== attachment.id);
             },
             toDateFunction(str, format) {
@@ -380,7 +372,7 @@
                 this.attachments.forEach(function (value) {
                     a.push(value);
                 });
-                this.selectedAttachments.forEach(function (value) {
+                this.previouslySelectedAttachments.forEach(function (value) {
                     let h = a.filter(function (e) {
                         return e.id == value.id
                     });
@@ -389,6 +381,10 @@
                     }
                 });
                 return a;
+            },
+            firstDayOfMonth(){
+                let date = new Date(), y = date.getFullYear(), m = date.getMonth();
+                return new Date(y, m, 1).toISOString();
             },
             computedTime: function () {
                 return this.ampmTime(this.time);
