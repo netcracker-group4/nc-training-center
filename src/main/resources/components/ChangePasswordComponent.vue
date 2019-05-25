@@ -108,10 +108,10 @@
                 this.dialog = true;
             },
             close() {
+                this.dialog = false;
                 this.oldPassword = '';
                 this.newPassword = '';
                 this.$validator.reset();
-                this.dialog = false;
                 setTimeout(() => {
                 }, 300)
             },

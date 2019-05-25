@@ -26,8 +26,6 @@ public interface UserDao extends GenericDao<User> {
 
     void updateTrainerLandingPage(int id, boolean isOnLandingPage);
 
-    void updateUserByAdmin(User user);
-
     void updateActive(User user);
 
     List<User> getTrainersOnCourse(int id);

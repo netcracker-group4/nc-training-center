@@ -231,23 +231,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public void updateUserByAdmin(User user) {
-        String sql = usrUpdateUsrByAdmin;
-        log.info(sql + " update user by admin user= " + user.toString());
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, user.getFirstName());
-            statement.setString(2, user.getLastName());
-            statement.setInt(3, user.getManagerId());
-            statement.setInt(4, user.getId());
-            statement.executeUpdate();
-        } catch (Exception e) {
-            log.error(e);
-            throw new PersistException(e);
-        }
-    }
-
-    @Override
     public void updateActive(User user) {
         String sql = usrUpdateChangeActive;
         log.info("change active by admin user" + user.toString() + " " + sql);
