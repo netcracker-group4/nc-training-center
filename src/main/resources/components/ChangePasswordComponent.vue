@@ -21,21 +21,27 @@
                     <v-container grid-list-md>
                         <v-layout wrap>
                             <v-flex xs10>
-                                <v-text-field v-model="oldPassword"
-                                              label="Enter the old password"
-                                              v-validate="'required'"
-                                              :error-messages="errors.collect('oldPassword')"
-                                              data-vv-name="oldPassword"
-                                              required
+                                <v-text-field
+                                        :type="'password'"
+                                        class="input-group--focused"
+                                        v-model="oldPassword"
+                                        label="Enter the old password"
+                                        v-validate="'required'"
+                                        :error-messages="errors.collect('oldPassword')"
+                                        data-vv-name="oldPassword"
+                                        required
                                 ></v-text-field>
                             </v-flex>
                             <v-flex xs10>
-                                <v-text-field v-model="newPassword"
-                                              label="Enter the new password"
-                                              v-validate="'required'"
-                                              :error-messages="errors.collect('newPassword')"
-                                              data-vv-name="newPassword"
-                                              required
+                                <v-text-field
+                                        :type="'password'"
+                                        class="input-group--focused"
+                                        v-model="newPassword"
+                                        label="Enter the new password"
+                                        v-validate="'required'"
+                                        :error-messages="errors.collect('newPassword')"
+                                        data-vv-name="newPassword"
+                                        required
                                 ></v-text-field>
                             </v-flex>
 
