@@ -199,7 +199,7 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        if (error.response != null && error.response.status == 400)
+                        if (error.response != null && (error.response.status == 400 || error.response.status == 404))
                             self.$router.push('/404');
                         // self.errorAutoClosable(error.response.data);
                     });

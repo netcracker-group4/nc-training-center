@@ -112,15 +112,15 @@
 
             <!--            description-->
             <v-flex xs12 md6 style="padding: 10px">
-                    <v-textarea
-                            id="course-descr-text"
-                            name="input-7-1"
-                            label="Description"
-                            :value="description"
-                            :readonly="!isAdmin"
-                            box
-                            auto-grow
-                    ></v-textarea>
+                <v-textarea
+                        id="course-descr-text"
+                        name="input-7-1"
+                        label="Description"
+                        :value="description"
+                        :readonly="!isAdmin"
+                        box
+                        auto-grow
+                ></v-textarea>
                 <v-layout>
                     <v-spacer></v-spacer>
                     <v-btn color="success" @click="submit">submit</v-btn>
@@ -193,7 +193,7 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        if (error.response != null && error.response.status == 400)
+                        if (error.response != null && (error.response.status == 400 || error.response.status == 404))
                             self.$router.push('/404');
                     });
             },

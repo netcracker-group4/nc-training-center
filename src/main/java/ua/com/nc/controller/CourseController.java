@@ -19,6 +19,8 @@ import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.CourseAndGroups;
+import ua.com.nc.dto.DtoCourse;
+import ua.com.nc.exceptions.NotFoundException;
 import ua.com.nc.service.CourseService;
 import ua.com.nc.service.DashBoardService;
 import ua.com.nc.service.FileTransferService;
@@ -59,7 +61,10 @@ public class CourseController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity<Course> getCourse(@PathVariable Integer id) {
-        return ResponseEntity.ok(courseDao.getEntityById(id));
+        Course course = courseDao.getEntityById(id);
+        if (course == null)
+            throw new NotFoundException("Course not found");
+        return ResponseEntity.ok(course);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
@@ -102,11 +107,11 @@ public class CourseController {
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/create")
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     public ResponseEntity<?> update(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
-                       @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
-                       @RequestParam(name = "image") MultipartFile image, @RequestParam(name = "trainer") String trainer,
-                       @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
-                       @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
-                       @PathVariable int id) {
+                                    @RequestParam(name = "courseStatus") String courseStatus, @RequestParam(name = "imageUrl") String imageUrl,
+                                    @RequestParam(name = "image") MultipartFile image, @RequestParam(name = "trainer") String trainer,
+                                    @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
+                                    @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
+                                    @PathVariable int id) {
         imageUrl = courseService.uploadImage(image);
         Course course = courseService.stringToObjCourse(name, trainer, level, courseStatus,
                 imageUrl, isOnLandingPage, desc, startDay, endDay);
@@ -118,10 +123,10 @@ public class CourseController {
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/edit")
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     public ResponseEntity<?> edit(@RequestParam(name = "name") String name, @RequestParam(name = "level") String level,
-                     @RequestParam(name = "courseStatus") String courseStatus,
-                     @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
-                     @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
-                     @PathVariable int id) {
+                                  @RequestParam(name = "courseStatus") String courseStatus,
+                                  @RequestParam(name = "isOnLandingPage") String isOnLandingPage, @RequestParam(name = "description") String desc,
+                                  @RequestParam(name = "startDay") String startDay, @RequestParam(name = "endDay") String endDay,
+                                  @PathVariable int id) {
         courseService.edit(id, name, level, courseStatus,
                 isOnLandingPage, desc, startDay, endDay);
         return ResponseEntity.ok("Updated");
@@ -147,9 +152,10 @@ public class CourseController {
     }
 
     @RequestMapping(value = "/get-all-courses-by-trainer-and-employee", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllCoursesByTrainerAndByEmployee(@RequestParam Integer trainerId,
-                                                                 @RequestParam Integer employeeId) {
-        return new ResponseEntity<>(courseService.getAllByTrainerAndEmployee(trainerId, employeeId), HttpStatus.OK);
+    public ResponseEntity<List<DtoCourse>> getAllCoursesByTrainerAndByEmployee(@RequestParam Integer trainerId,
+                                                                               @RequestParam Integer employeeId) {
+        return ResponseEntity.ok(
+                courseService.getAllByTrainerAndEmployee(trainerId, employeeId));
     }
 
     @RequestMapping(value = "/img/{imageName}", method = RequestMethod.GET)

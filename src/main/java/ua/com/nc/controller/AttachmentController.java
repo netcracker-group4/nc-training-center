@@ -17,6 +17,7 @@ import ua.com.nc.domain.Role;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoAttachment;
 import ua.com.nc.exceptions.LogicException;
+import ua.com.nc.exceptions.NotFoundException;
 import ua.com.nc.service.AttachmentService;
 import ua.com.nc.service.RoleService;
 
@@ -87,7 +88,7 @@ public class AttachmentController {
     @RequestMapping(method = RequestMethod.POST, value = "/lesson/upload-file",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Attachment> uploadFile(@ModelAttribute DtoAttachment dtoAttachment,
-                                        @AuthenticationPrincipal User user) {
+                                                 @AuthenticationPrincipal User user) {
         log.debug(dtoAttachment);
         if (user != null) {
             List<Role> roles = roleService.findAllByUserId(user.getId());
@@ -117,6 +118,9 @@ public class AttachmentController {
         InputStream in = service.downloadFile(id);
         HttpHeaders headers = new HttpHeaders();
         Attachment attachment = attachmentDao.getEntityById(id);
+        if (attachment == null) {
+            throw new NotFoundException("Attachment not found");
+        }
         String headerValue = "attachment; filename = " + attachment.getName();
         headers.add("Content-Disposition",
                 headerValue);

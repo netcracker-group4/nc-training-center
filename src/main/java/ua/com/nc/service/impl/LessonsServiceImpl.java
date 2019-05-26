@@ -9,7 +9,7 @@ import ua.com.nc.domain.Lesson;
 import ua.com.nc.domain.LessonAttachment;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoLesson;
-import ua.com.nc.exceptions.LogicException;
+import ua.com.nc.exceptions.NotFoundException;
 import ua.com.nc.service.LessonsService;
 
 import java.util.ArrayList;
@@ -108,9 +108,8 @@ public class LessonsServiceImpl implements LessonsService {
     @Override
     public DtoLesson getLessonById(Integer lessonId) {
         Lesson lesson = lessonDao.getEntityById(lessonId);
-        if(lesson == null){
-            throw new LogicException("There is no such lesson");
-        }
+        if (lesson == null)
+            throw new NotFoundException("Lesson not found");
         return convertToDtoLesson(lesson);
     }
 

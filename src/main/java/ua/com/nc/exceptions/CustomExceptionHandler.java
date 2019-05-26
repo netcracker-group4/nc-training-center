@@ -68,7 +68,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public String handleNotFoundException(LogicException exception) {
+    public String handleNotFoundException(NotFoundException exception) {
         log.error(exception.getMessage(), exception);
         return exception.getMessage();
     }

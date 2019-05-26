@@ -16,6 +16,7 @@ import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoChangePassword;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dto.DtoUserSave;
+import ua.com.nc.exceptions.NotFoundException;
 import ua.com.nc.service.FileTransferService;
 import ua.com.nc.service.UserService;
 
@@ -48,7 +49,10 @@ public class UserController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getById(@AuthenticationPrincipal User user, @PathVariable Integer id) {
-        return ResponseEntity.ok(userService.getById(id));
+        DtoUserProfiles userById = userService.getById(id);
+        if (userById == null)
+            throw new NotFoundException("User not found");
+        return ResponseEntity.ok(userById);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)

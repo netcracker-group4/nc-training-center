@@ -100,6 +100,7 @@ public class LessonsController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/lesson/{lessonId}")
     public ResponseEntity<String> getLesson(@PathVariable Integer lessonId) {
-        return ResponseEntity.ok(gson.toJson(lessonsService.getLessonById(lessonId)));
+        DtoLesson lessonById = lessonsService.getLessonById(lessonId);
+        return ResponseEntity.ok(gson.toJson(lessonById));
     }
 }

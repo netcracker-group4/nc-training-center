@@ -15,6 +15,7 @@ import ua.com.nc.domain.Course;
 import ua.com.nc.domain.Group;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoGroup;
+import ua.com.nc.exceptions.NotFoundException;
 import ua.com.nc.service.GroupsService;
 
 import java.util.List;
@@ -45,7 +46,10 @@ public class GroupController {
     @RequestMapping(value = "/{groupId}")
     public ResponseEntity<DtoGroup> getGroup(@PathVariable Integer groupId) {
         log.info("retrieving group with  groupId = " + groupId);
-        return ResponseEntity.ok(groupsService.getGroupById(groupId));
+        DtoGroup groupById = groupsService.getGroupById(groupId);
+        if(groupById == null)
+            throw new NotFoundException("Group not found");
+        return ResponseEntity.ok(groupById);
     }
 
     @RequestMapping(value = "/{groupId}/users", method = RequestMethod.GET)
