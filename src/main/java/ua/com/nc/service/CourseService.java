@@ -2,6 +2,7 @@ package ua.com.nc.service;
 
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.domain.Course;
+import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoCourse;
 
 import java.io.InputStream;
@@ -24,4 +25,6 @@ public interface CourseService {
     void edit(int id, String name, String level, String courseStatus, String isOnLandingPage, String desc, String startDay, String endDay);
 
     InputStream getImage(String imageName);
+
+    boolean canJoinCourse(User user, Integer courseId);
 }

@@ -20,13 +20,17 @@
                 >
                     <template v-slot:items="props">
                         <tr>
-                            <td class="text-xs-left">{{ props.item.course.id }}</td>
-                            <td class="my-link clickable">
-                                <div @click="goToCoursePage(props.item.course.id)">{{ props.item.course.name }}</div>
+                            <td class="text-xs-left" @click="goToCoursePage(props.item.course.id)">
+                                {{ props.item.course.id }}
                             </td>
-                            <td class="text-xs-right">{{ props.item.numberOfEmployees }}</td>
+                            <td class="my-link clickable" @click="goToCoursePage(props.item.course.id)">
+                                {{ props.item.course.name }}
+                            </td>
+                            <td class="text-xs-right" @click="goToCoursePage(props.item.course.id)">
+                                {{ props.item.numberOfEmployees }}
+                            </td>
                             <td class="text-xs-right" v-if="isAdmin">
-                                <v-btn color="error" @click="deleteCourse(props.item.course.id)">Delete</v-btn>
+                                <v-btn color="error" @click="deleteCourse(props.item.course)">Delete</v-btn>
                             </td>
 
                         </tr>
@@ -88,19 +92,40 @@
                 });
         },
         methods: {
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             goToCoursePage(id) {
                 this.$router.push('/courses/' + id);
             },
-            deleteCourse(courseId) {
-                if (confirm("Are you sure you want to delete " + this.findCourseById(courseId).name)) {
-                    axios.delete(this.$store.state.apiServer + '/api/getcourses/' + courseId)
+            deleteCourse(course) {
+                let self = this;
+                if (confirm("Are you sure you want to delete " + course.name)) {
+                    axios.delete(this.$store.state.apiServer + '/api/getcourses/' + course.id)
+                        .then(function () {
+                            self.successAutoClosable("Course" + course.name + " has been deleted");
+                            self.coursesAndQuantities = self.coursesAndQuantities.filter(function (e) {
+                                return e.course.id != course.id;
+                            })
+                        })
                         .catch(function (error) {
                             console.log(error);
+                            self.errorAutoClosable(error.response.data);
                         });
                 }
-            },
-            findCourseById(id) {
-                return this.coursesAndQuantities.find(c => c.course.id === id).course;
             },
             update(courseId) {
                 this.$router.push('/courses/' + courseId + '/edit');
