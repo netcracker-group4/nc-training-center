@@ -53,7 +53,7 @@
                 <td class="text-xs-left">{{ props.item.status }}</td>
                 <td class="text-xs-left">{{ props.item.reason }}</td>
                 <td class="justify-center layout px-0">
-                    <v-icon v-if="" small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+                    <v-icon v-if="isAdmin | isTrainer | isManager" small class="mr-2" @click="editItem(props.item)">edit</v-icon>
                 </td>
             </template>
         </v-data-table>
@@ -66,32 +66,36 @@
     export default {
         name: "AttendanceTable",
         props: ['userId', 'groupId'],
-        data: () => ({
-            dialog: false,
-            self: this,
-            headers: [
-                {
-                    text: 'Student name',
-                    align: 'left',
-                    sortable: false,
-                    value: 'name'
+        data(){
+            return {
+                dialog: false,
+                isAdmin: this.$store.getters.isAdmin,
+                isTrainer: this.$store.getters.isTrainer,
+                isManager : this.$store.getters.isManager,
+                headers: [
+                    {
+                        text: 'Student name',
+                        align: 'left',
+                        sortable: false,
+                        value: 'name'
+                    },
+                    {text: 'Topic', value: 'topic', align: 'left', sortable: false,},
+                    {text: 'Date', value: 'date', sortable: false,},
+                    {text: 'Attendance', value: 'attendance', sortable: false,},
+                    {text: 'Reason', value: 'reason', sortable: false,},
+                    {text: 'Actions', value: 'name', sortable: false}
+                ],
+                statuses: [],
+                reasons: [],
+                attendances: [],
+                editedIndex: -1,
+                editedItem: {
+                    attendanceId: null,
+                    status: null,
+                    reason: null
                 },
-                {text: 'Topic', value: 'topic', align: 'left', sortable: false,},
-                {text: 'Date', value: 'date', sortable: false,},
-                {text: 'Attendance', value: 'attendance', sortable: false,},
-                {text: 'Reason', value: 'reason', sortable: false,},
-                {text: 'Actions', value: 'name', sortable: false}
-            ],
-            statuses: [],
-            reasons: [],
-            attendances: [],
-            editedIndex: -1,
-            editedItem: {
-                attendanceId: null,
-                status: null,
-                reason: null
-            },
-        }),
+            }
+        },
 
         watch: {
             dialog(val) {

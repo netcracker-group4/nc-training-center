@@ -11,6 +11,7 @@ import ua.com.nc.service.EmailService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 @Log4j2
@@ -25,6 +26,7 @@ public class EmailServiceImpl implements EmailService {
 
     //    @Value ()
     private String textTemplate = "There are students who were absent with no reason: ";
+
 
     @Override
     public void sendSimpleMessage(DtoMailSender dtoMailSender) {
@@ -44,23 +46,6 @@ public class EmailServiceImpl implements EmailService {
             text += '\n' + student.getFirstName() + ' ' + student.getLastName();
         }
         return text;
-    }
-
-    @Override
-    public HashMap<User, ArrayList<User>> reverseHashMap (HashMap <User, User> studentsAndManagers) {
-        HashMap<User, ArrayList<User>> managersAndStudents = new HashMap<>();
-        for(HashMap.Entry<User, User> entry : studentsAndManagers.entrySet()){
-            User student = entry.getKey();
-            User manager = entry.getValue();
-            if (managersAndStudents.containsKey(manager)) {
-                managersAndStudents.get(manager).add(student);
-            } else {
-                ArrayList <User> firstStudent = new ArrayList<> ();
-                firstStudent.add(student);
-                managersAndStudents.put(manager, firstStudent);
-            }
-        }
-        return managersAndStudents;
     }
 
     @Override
