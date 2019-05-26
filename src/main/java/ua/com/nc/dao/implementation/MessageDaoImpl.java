@@ -20,7 +20,8 @@ import java.util.List;
 @PropertySource("classpath:sql_queries.properties")
 public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageDao {
 
-    public static final Integer PAGE_SIZE = 3;
+    @Value("${chat.page-size}")
+    private Integer pageSize;
 
     @Value("${message.insert}")
     private String messageInsert;
@@ -93,8 +94,8 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
         try(Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, chatId);
-            preparedStatement.setInt(2, PAGE_SIZE);
-            preparedStatement.setInt(3, PAGE_SIZE * page);
+            preparedStatement.setInt(2, pageSize);
+            preparedStatement.setInt(3, pageSize * page);
             ResultSet resultSet = preparedStatement.executeQuery();
             messages = parseResultSet(resultSet);
         } catch (SQLException e) {

@@ -176,7 +176,7 @@
                                         <div class="text-xs-center">
                         <v-dialog v-model="sendMessageWindowShow" width="500">
                             <template v-slot:activator="{ on }">
-                                <v-btn v-if="self.$store.state.user.id != self.$route.params.id" color="success" large
+                                <v-btn v-if="isBtnShow" color="success" large
                                        @click="sendMessageWindowShow = ! sendMessageWindowShow">Message
                                 </v-btn>
                             </template>
@@ -250,6 +250,7 @@
             '$route'(ro, from){
                 if(this.$store.state.user.id != this.$route.params.id){
                     this.isBtnShow = true
+                    location.reload()
                 }else{
                     this.isBtnShow = false
                 }
@@ -264,7 +265,14 @@
             }
         },
         methods: {
-                       chatsReload() {
+            btnReload(){
+                if(this.$store.state.user.id != this.$route.params.id){
+                    this.isBtnShow = true
+                                    }else{
+                    this.isBtnShow = false
+                }
+            },
+            chatsReload() {
                 let self = this
                 axios.get(this.$store.state.apiServer + '/api/chats')
                     .then(response => {

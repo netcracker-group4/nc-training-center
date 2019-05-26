@@ -84,6 +84,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     private String usrUpdatePassword;
     @Value("${usr.select-students-by-lesson-id}")
     private String getSelectStudentsByLessonId;
+    @Value("${usr.select-by-attendance-id}")
+    private String getSelectByAttendanceId;
 
     @Autowired
     public UserDaoImpl(DataSource dataSource) throws PersistException {
@@ -349,6 +351,13 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
             log.error(e);
             throw new PersistException(e);
         }
+    }
+
+    @Override
+    public User getByAttendanceId(Integer attendanceId) {
+        String sql = getSelectByAttendanceId;
+        log.info(sql + "select user by attendance id " + attendanceId);
+        return getUniqueFromSqlById(sql, attendanceId);
     }
 
 

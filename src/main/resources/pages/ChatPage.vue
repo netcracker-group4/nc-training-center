@@ -61,6 +61,7 @@
         components: {},
         data() {
             return {
+                pageSize: 3,
                 self: this,
                 message: '',
                 messages: [],
@@ -77,7 +78,8 @@
             })
         },
         mounted(){
-
+            axios.get(this.$store.state.apiServer + '/api/chats/page-size')
+                .then(response => this.pageSize = response.data)
             connect()
         },
         updated() {
@@ -96,8 +98,10 @@
                     sendMessage(msg)
                     this.message = ''
                 }
+                this.scroll()
             },
             loadPage() {
+                let self = this
                 let id = this.$route.params.id;
                 if (this.messageListPage != -1) {
                     axios.get(this.$store.state.apiServer + '/api/messages?chatId=' + id + '&page=' + this.messageListPage)
@@ -106,9 +110,15 @@
                                 this.addMessagesToEnd(response.data.messages)
                             }
                             this.messageListPage = response.data.page
-                        }).catch(function (error) {
-                        if (error.response != null && error.response.status == 400)
+                        })
+                        .catch(function (error) {
+                            if(error.response.status == 400)
+                                console.log(error)
                             self.$router.push('/404');
+                            if(error.response.status == 403){
+                                self.$router.push('/403')
+                            }
+
                     })
                 }
 
@@ -121,8 +131,8 @@
                 return date.substr(0, 10) + ' at ' + date.substr(11, 2) + ':' + date.substr(14, 2)
             },
             addMessagesToEnd(...messages) {
-                if (messages.length[0] < 3) {
-                    alert(messages[0].length)
+                if (messages.length[0] < this.pageSize) {
+                    //alert(messages[0].length)
                     this.isLessThenPage = true
                 }
                 if (messages != null) {
@@ -133,7 +143,7 @@
                 }
             },
             isBtnShow() {
-                if (this.messageListPage == -1 | this.messages.length < 3) {
+                if (this.messageListPage == -1 | this.messages.length < this.pageSize) {
                     return false
                 } else {
                     return true

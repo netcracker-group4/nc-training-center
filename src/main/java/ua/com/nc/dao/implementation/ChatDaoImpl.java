@@ -101,8 +101,8 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
         log.info(sql + " insert user to chat");
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(insertUser)) {
-            statement.setInt(1, chatId);
             statement.setInt(2, userId);
+            statement.setInt(1, chatId);
             statement.executeUpdate();
         } catch (Exception e) {
             log.error(e);

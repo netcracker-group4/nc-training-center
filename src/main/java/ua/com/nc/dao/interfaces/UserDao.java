@@ -54,4 +54,6 @@ public interface UserDao extends GenericDao<User> {
 
     void updatePassword(User user);
 
+    User getByAttendanceId(Integer attendanceId);
+
 }

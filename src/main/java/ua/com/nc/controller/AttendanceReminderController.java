@@ -25,7 +25,7 @@ public class AttendanceReminderController {
 
     public void sendAttendanceReminders (@RequestParam(name = "lessonId") int lessonId) {
 
-        emailService.sendAttendanceReminders(lessonId);
+        //emailService.sendAttendanceReminders(lessonId);
 
     }
 

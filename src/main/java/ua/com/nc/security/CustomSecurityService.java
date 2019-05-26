@@ -14,6 +14,7 @@ import ua.com.nc.dto.DtoLesson;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dto.schedule.DesiredToSave;
 import ua.com.nc.exceptions.LogicException;
+import ua.com.nc.service.ChatService;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.List;
 @Component("customSecuritySecurity")
 public class CustomSecurityService {
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
     @Autowired
     private RoleDao roleDao;
     @Autowired
@@ -33,6 +34,8 @@ public class CustomSecurityService {
     private GroupDao groupDao;
     @Autowired
     private UserGroupDaoImpl userGroupDao;
+    @Autowired
+    private ChatService chatService;
 
 
     public boolean hasPermissionToSeeScheduleOf(Authentication authentication, Integer userId) {
@@ -129,6 +132,26 @@ public class CustomSecurityService {
         return user.getRoles().contains(Role.ADMIN) || dtoUserProfiles.getId().equals(user.getId());
     }
 
+    public boolean hasPermissionToUpdateAttendance(Authentication authentication, Integer attendanceId){
+        User authenticatedUser = (User) authentication.getPrincipal();
+        User userOfUpdatingLesson = userDao.getByAttendanceId(attendanceId);
+        if(userOfUpdatingLesson != null){
+            return  authenticatedUser.getRoles().contains(Role.ADMIN) |
+                    authenticatedUser.getRoles().contains(Role.TRAINER) |
+                    userOfUpdatingLesson.getManagerId() == authenticatedUser.getId() &
+                            userOfUpdatingLesson.getId() != authenticatedUser.getId();
+        }else{
+            return false;
+        }
 
+    }
 
+    public boolean hasPermissionToGetChatMessages(Authentication authentication, Integer chatId){
+        User user = (User) authentication.getPrincipal();
+        if(chatService.getByUserIdAndChatId(user.getId(), chatId) != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
