@@ -78,7 +78,7 @@
                                                 v-on="on"
                                         ></v-text-field>
                                     </template>
-                                    <v-date-picker :min="getCurrent" v-model="startDay"></v-date-picker>
+                                    <v-date-picker :min="getCurrent()" v-model="startDay"></v-date-picker>
                                 </v-menu>
                             </v-flex>
                             <v-flex xs4>
@@ -94,6 +94,7 @@
                                 >
                                     <template v-slot:activator="{ on }">
                                         <v-text-field
+
                                                 v-model="endDay"
                                                 label="Ends on"
                                                 persistent-hint
@@ -101,7 +102,7 @@
                                                 v-on="on"
                                         ></v-text-field>
                                     </template>
-                                    <v-date-picker :min="startDay" v-model="endDay"></v-date-picker>
+                                    <v-date-picker :ranges="startDay" v-model="endDay"></v-date-picker>
                                 </v-menu>
                             </v-flex>
                         </v-layout>
@@ -125,7 +126,7 @@
     import axios from 'axios'
 
     export default {
-        props: ['startsDay','endsDay','descr','nm','id'],
+        props: {course:{}},
         name: "EditCourseComponent",
         data() {
             return {
@@ -152,15 +153,15 @@
                 let date = new Date();
                 let year = date.getFullYear();
                 let month = date.getMonth();
-                return year+'-'+month+'-'+date.getDay();
+                let day = date.getDay();
+                return year+'-'+month+'-'+day;
             },
             save() {
                 let self = this;
                 let form = new FormData();
                 let request = new XMLHttpRequest();
-                self.checkFields();
                 try {
-                    request.open('PUT', this.$store.state.apiServer + '/api/getcourses/' + self.id + '/edit');
+                    request.open('PUT', this.$store.state.apiServer + '/api/getcourses/' + self.course.id + '/edit');
                     form.append('id', self.id);
                     form.append('name', self.name);
                     form.append('level', self.level);
@@ -187,28 +188,27 @@
                     });
                 }
             },
-            checkFields() {
-                if (!this.description) {
-                    this.description = this.descr;
-                }
-                if (!this.name)
-                    this.name = this.nm;
-                if (!this.startDay)
-                    this.startDay = this.startsDay;
-                if (!this.endDay)
-                    this.endDay = this.endsDay;
-            },
+            setFields(){
+                this.name = this.course.name;
+                this.status= this.course.status;
+                this.level = this.course.level;
+                this.description = this.course.description;
+                this.startDay = this.course.startDay;
+                this.endDay = this.course.endDay;
+                this.trainer = this.course.trainer;
+                this.isOnLandingPage = this.course.isOnLandingPage;
+            }
         },
-        mounted() {
+        beforeMount() {
             let self = this;
-
+            self.setFields();
             axios.get(this.$store.state.apiServer + '/api/getInfo/getStatuses')
                 .then(function (response) {
                     self.statuses = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
-                    if (error.response != null && error.response.status == 400)
+                    if (error.response != null && error.response.status === 400)
                         self.$router.push('/404');
                 });
             axios.get(this.$store.state.apiServer + '/api/getInfo/getLevels')
@@ -216,7 +216,7 @@
                     self.levels = response.data;
                 })
                 .catch(function (error) {
-                    if (error.response != null && error.response.status == 400)
+                    if (error.response != null && error.response.status === 400)
                         self.$router.push('/404');
                     console.log(error);
                 });
@@ -225,7 +225,7 @@
                     self.trainers = response.data;
                 })
                 .catch(function (error) {
-                    if (error.response != null && error.response.status == 400)
+                    if (error.response != null && error.response.status === 400)
                         self.$router.push('/404');
                     console.log(error);
                 });

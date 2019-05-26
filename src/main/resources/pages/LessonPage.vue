@@ -47,7 +47,7 @@
             </v-flex>
         </v-layout>
         <v-layout v-if="!loading" row wrap>
-            <v-btn color="success" :disabled="performed"
+            <v-btn color="success" :disabled="lesson.isPerformed || lesson.isCanceled"
                    v-if="isLessonTrainer() || $store.getters.isAdmin" @click="checked()">
                 <b>Check attendance</b>
             </v-btn>
