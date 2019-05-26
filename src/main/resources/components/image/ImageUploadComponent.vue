@@ -9,8 +9,9 @@
 <!--                    <v-avatar size="200px" v-ripple v-if="user.image" class="grey lighten-3 mb-3">-->
 <!--                        <img :src="image + user.image" id="image" alt="avatar">-->
 <!--                    </v-avatar>-->
-                    <v-avatar size="200px" v-ripple v-else class="mb-3">
-                        <img src="http://localhost:8080/api/users/image" id="image" alt="avatar">
+                    <v-avatar size="200" v-ripple v-else class="mb-3">
+                        <v-img :src="self.$store.state.apiServer + '/api/users/image?url=' + user.image" id="image" alt="avatar"
+                        aspect-ratio="2"/>
                     </v-avatar>
                 </div>
             </image-input-component>
@@ -35,11 +36,10 @@
         ],
         data() {
             return {
+                self: this,
                 avatar: null,
                 saving: false,
                 saved: false,
-                apiServer: 'http://45.66.10.81:21',
-                imageUrl: store.state.apiServer + '/api/users/image/',
             }
         },
         components: {

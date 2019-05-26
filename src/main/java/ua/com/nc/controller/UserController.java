@@ -82,11 +82,13 @@ public class UserController {
 
     @RequestMapping(value = "/image", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<byte[]> getImage(final HttpServletResponse response) {
+    public ResponseEntity<byte[]> getImage(final HttpServletResponse response,
+                                           @RequestParam String url) {
+        System.out.println(url);
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-        try (InputStream inputStream = fileTransferService.downloadFileFromServer("/avatar/Image1.jpg")) {
+        try (InputStream inputStream = fileTransferService.downloadFileFromServer(url)) {
             if (inputStream != null) {
                 byte[] media = IOUtils.toByteArray(inputStream);
                 return new ResponseEntity<byte[]>(media, headers, HttpStatus.OK);

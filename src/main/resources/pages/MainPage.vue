@@ -4,24 +4,23 @@
         <v-layout v-if="!loading" wrap row>
             <v-flex xs12 sm12 md12>
                 <v-container fluid class="trainer-container">
+                    <h1 class="mr">Trainers</h1>
                     <v-layout row>
                         <v-flex xs4 v-for="trainer in trainers" :key="trainer.id" class="trainer-element" @click="forwardToUserPage(trainer.id)">
-                            <v-card dark tile flat color="red lighten-1">
-                                <v-card flat color="grey lighten-4">
-                                    <!-- <v-img  v-if="trainer.imageUrl != null"
-                                             :src="'/img/' + trainer.imageUrl + '.jpg'"
-                                            aspect-ratio="2.20"
-                                    ></v-img>-->
-                                    <img v-if="trainer.imageUrl == null"
-                                         src="https://png.pngtree.com/svg/20161212/f93e57629c.svg"
-                                         class="avatar">
+                            <v-card flat color="grey lighten-4" class="tr-card">
+                                <v-img  v-if="trainer.imageUrl != null"
+                                        :src="self.$store.state.apiServer + '/api/users/image?url='+ trainer.imageUrl"
+                                        aspect-ratio="1.25"
+                                ></v-img>
+                                <img v-if="trainer.imageUrl == null"
+                                     src="https://png.pngtree.com/svg/20161212/f93e57629c.svg"
+                                     class="avatar">
 
-                                    <v-card-title primary-title>
-                                        <div>
-                                            <h3 class="headline mb-0 trainer-name">{{trainer.firstName + ' ' + trainer.lastName}}</h3>
-                                        </div>
-                                    </v-card-title>
-                                </v-card>
+                                <v-card-title primary-title>
+                                    <div>
+                                        <h3 class="headline mb-0 trainer-name">{{trainer.firstName + ' ' + trainer.lastName}}</h3>
+                                    </div>
+                                </v-card-title>
                             </v-card>
                         </v-flex>
 
@@ -29,13 +28,14 @@
                 </v-container>
             </v-flex>
             <v-flex xs12 sm12 md12 >
+                <h1 class="mr">Courses</h1>
                 <carousel :per-page="1" :mouse-drag="true">
                     <slide v-for="course in courses" :key="course.id">
                         <v-card flat color="grey lighten-4">
-                            <!-- <v-img
-                                     :src="'/img/' + course.imageUrl"
+                            <v-img
+                                     :src="self.$store.state.apiServer + '/api/users/image?url='+ course.imageUrl"
                                      aspect-ratio="2.20"
-                             ></v-img>-->
+                             ></v-img>
 
                              <v-card-title primary-title>
                                  <div>
@@ -68,6 +68,7 @@
          },
          data: function () {
              return {
+                 self: this,
                  courses: [],
                  trainers: [],
                  loading: true
@@ -143,8 +144,15 @@
      }
      .trainer-element :hover{
          cursor: pointer;
+
      }
      .trainer-name{
          color: rgba(0,0,0,.87)
+     }
+     .mr{
+         margin-bottom: 30px;
+     }
+     .tr-card{
+         padding: 20px;
      }
  </style>
