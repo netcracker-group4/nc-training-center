@@ -101,7 +101,6 @@
                 });
             },
             editItem() {
-                // this.editUser = Object.assign({}, this.user);
                 this.oldPassword = '';
                 this.newPassword = '';
                 this.$validator.reset();
@@ -127,7 +126,7 @@
                             self.close();
                             self.successAutoClosable('Password is updated');
                         }).catch(function (error) {
-                            self.errorAutoClosable('Password is incorrect')
+                            self.errorAutoClosable('Password is incorrect');
                         })
                     }
                 })

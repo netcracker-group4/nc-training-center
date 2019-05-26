@@ -90,7 +90,7 @@
                                         </div>
                                     </div>
                                     <div class="div_feedbackTimeDate">
-                                        {{ props.item.timeDate }}
+                                        {{ props.item.time }}
                                     </div>
                                 </td>
                             </div>
@@ -116,6 +116,7 @@
         ],
         data: () => ({
             feedbackText: '',
+            text: '',
             userFeedback: [],
             defaultFeedback: '',
             selectCourse: {
@@ -161,8 +162,10 @@
                             course: this.selectCourse,
                             text: this.feedbackText,
                         }).then(response => {
+                            self.text = self.feedbackText;
                             self.feedbackText = '';
                             self.selectCourse = Object.assign({}, self.defaultSelectCourse);
+                            this.sendMessageToManager();
                             console.log(response);
                             this.getFeedback();
                             this.$validator.reset();
@@ -172,6 +175,18 @@
                     }
                 })
 
+            },
+            sendMessageToManager() {
+                axios.post(this.$store.state.apiServer + '/api/email', {
+                    studentId: this.user.id,
+                    teacher: this.getAuthorizationUser(),
+                    course: this.selectCourse,
+                    text: this.text,
+                }).then(response => {
+                    console.log(response);
+                }).catch(function (error) {
+                    console.log(error);
+                });
             },
             isNotOnlyTrainer() {
                 return store.state.userRoles.includes("ADMIN") ||
