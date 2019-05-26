@@ -2,19 +2,14 @@ package ua.com.nc.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.ChatDao;
-import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.dao.interfaces.MessageDao;
 import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.Chat;
-import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Message;
 import ua.com.nc.domain.User;
-import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.service.ChatService;
 import ua.com.nc.service.GroupsService;
-import ua.com.nc.service.UserService;
 
 import java.util.List;
 
@@ -44,7 +39,7 @@ public class ChatServiceImpl implements ChatService {
             String chatName = groupName + " chat";
             List<User> studentsOfGroup = userDao.getByGroupId(groupId);
             Chat newChat = new Chat(chatName, message.getDateTime(), groupId);
-            User trainer = userDao.getTrainerByGroupId(groupId);
+            User trainer = userDao.getTrainerByCourseId(groupId);
 
             Integer newChatId = chatDao.addChatReturningId(newChat);
 

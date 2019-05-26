@@ -30,6 +30,8 @@ public class CourseServiceImpl implements CourseService {
     private LevelDao levelDao;
     @Autowired
     private FiletransferServiceImpl fileService;
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public void add(Course course) {
@@ -54,7 +56,7 @@ public class CourseServiceImpl implements CourseService {
             log.trace(e);
         }
         int lvl = levelDao.getIdByName(level.trim());
-        int statusId = status.ordinal();
+        int statusId = status.ordinal() +1;
         boolean isLanding = Boolean.parseBoolean(isOnLandingPage);
         courseDao.edit(id, name, lvl, statusId, isLanding,
                 new java.sql.Date(starts.getTime()),
@@ -65,9 +67,8 @@ public class CourseServiceImpl implements CourseService {
     public Course stringToObjCourse(String name, String user, String level,
                                     String courseStatus, String imageUrl, String isOnLandingPage,
                                     String desc, String startDay, String endDay) {
-        //int statusId = statusDao.getIdByName(courseStatus.getName());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int userId = 1;
+        int userId = Integer.parseInt(user);
         CourseStatus status = CourseStatus.valueOf(courseStatus);
         boolean isLanding = Boolean.parseBoolean(isOnLandingPage);
         Date startingDay = new Date();
@@ -78,7 +79,7 @@ public class CourseServiceImpl implements CourseService {
         } catch (ParseException e) {
             log.trace(e);
         }
-        int statusId = status.ordinal();
+        int statusId = status.ordinal()+1;
         int lvl = levelDao.getIdByName(level.trim());
 
         return new Course(name, lvl, statusId, userId, imageUrl,
@@ -158,5 +159,9 @@ public class CourseServiceImpl implements CourseService {
         return dtoCourses;
     }
 
-
+    @Override
+    public InputStream getImage(String imageName) {
+        String path = "img/" + imageName;
+        return fileService.downloadFileFromServer(path);
+    }
 }

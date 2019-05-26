@@ -94,7 +94,7 @@ public class AttachmentServiceImpl implements AttachmentService {
             try(FileInputStream stream = new FileInputStream(tmpFilePath)) {
                 fileService.uploadFileToServer(filePath,fileName,stream);
             }
-            catch (FileNotFoundException e){
+            catch (FileNotFoundException e) {
                 log.error("Error while sending file to server");
                 log.error(e);
             }

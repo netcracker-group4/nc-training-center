@@ -125,7 +125,7 @@
     import axios from 'axios'
 
     export default {
-        props: {endingDay: '', startingDay: '', descr: '', nm: '', id: 0},
+        props: ['startsDay','endsDay','descr','nm','id'],
         name: "EditCourseComponent",
         data() {
             return {
@@ -194,13 +194,14 @@
                 if (!this.name)
                     this.name = this.nm;
                 if (!this.startDay)
-                    this.startDay = this.startingDay;
+                    this.startDay = this.startsDay;
                 if (!this.endDay)
-                    this.endDay = this.endingDay;
-            }
+                    this.endDay = this.endsDay;
+            },
         },
         mounted() {
             let self = this;
+
             axios.get(this.$store.state.apiServer + '/api/getInfo/getStatuses')
                 .then(function (response) {
                     self.statuses = response.data;

@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.com.nc.domain.Course;
 import ua.com.nc.dto.DtoCourse;
 
+import java.io.InputStream;
 import java.util.List;
 
 public interface CourseService {
@@ -21,4 +22,6 @@ public interface CourseService {
     List<DtoCourse> getAllByTrainerAndEmployee(Integer trainerId, Integer employeeId);
 
     void edit(int id, String name, String level, String courseStatus, String isOnLandingPage, String desc, String startDay, String endDay);
+
+    InputStream getImage(String imageName);
 }

@@ -26,6 +26,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     private String usrSelectAll;
     @Value("${usr.select-by-id}")
     private String usrSelectById;
+    @Value("${usr.select-id-by-name}")
+    private String usrSelectIdByName;
     @Value("${usr.select-by-email}")
     private String usrSelectByEmail;
     @Value("${usr.update}")
@@ -201,6 +203,21 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
     @Override
+    public int getIdByName(String name) {
+        String sql = usrSelectIdByName;
+        log.info(" select user " + sql + name);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, name);
+            ResultSet rs = statement.executeQuery();
+            return rs.getInt("ID");
+        } catch (Exception e) {
+            log.error(e);
+            throw new PersistException(e);
+        }
+    }
+
+    @Override
     public List<User> getAllTrainers() {
         String sql = usrSelectAllTrainers;
         log.info("select all trainers " + sql);
@@ -228,23 +245,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         String sql = usrSelectUngroupedByCourseId;
         log.info("select ungrouped employees for a course " + courseId + " " + sql);
         return getFromSqlById(sql, courseId);
-    }
-
-    @Override
-    public void updateUserByAdmin(User user) {
-        String sql = usrUpdateUsrByAdmin;
-        log.info(sql + " update user by admin user= " + user.toString());
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, user.getFirstName());
-            statement.setString(2, user.getLastName());
-            statement.setInt(3, user.getManagerId());
-            statement.setInt(4, user.getId());
-            statement.executeUpdate();
-        } catch (Exception e) {
-            log.error(e);
-            throw new PersistException(e);
-        }
     }
 
     @Override
@@ -300,10 +300,10 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public User getTrainerByGroupId(Integer groupId) {
+    public User getTrainerByCourseId(Integer courseId) {
         String sql = getSelectTrainerByCourseId;
-        log.info("find trainer by groupId " + groupId + " " + sql);
-        return getUniqueFromSqlById(sql, groupId);
+        log.info("find trainer by courseId " + courseId + " " + sql);
+        return getUniqueFromSqlById(sql, courseId);
     }
 
 

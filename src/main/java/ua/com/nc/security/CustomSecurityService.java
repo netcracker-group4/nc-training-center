@@ -74,24 +74,32 @@ public class CustomSecurityService {
 
     public boolean hasPermissionToDeleteLesson(Authentication authentication, Integer lessonId) {
         User user = (User) authentication.getPrincipal();
-        return user.getRoles().contains(Role.ADMIN) || userDao.getTrainerByGroupId(
+        return user.getRoles().contains(Role.ADMIN) || userDao.getTrainerByCourseId(
                 lessonDao.getEntityById(lessonId).getGroupId()).getId().equals(user.getId());
     }
 
     public boolean hasPermissionToCancelLesson(Authentication authentication, Integer lessonId) {
         User user = (User) authentication.getPrincipal();
+        log.info("user" + user);
         Lesson lesson = lessonDao.getEntityById(lessonId);
+        User trainerByLesson = userDao.getTrainerByCourseId(
+                courseDao.getCourseByGroup(lesson.getGroupId()).getId());
+//        log.info("lesson" + lesson);
+//        log.info("trainerByLesson" + trainerByLesson);
+//        log.info("user.getId().equals(lesson.getTrainerId())" + (user.getId().equals(lesson.getTrainerId())));
+//        log.info("trainerByLesson.getId().equals(user.getId())" + (trainerByLesson.getId().equals(user.getId())));
         return user.getRoles().contains(Role.ADMIN)
                 || user.getId().equals(lesson.getTrainerId())
-                || userDao.getTrainerByGroupId(lesson.getGroupId()).getId().equals(user.getId());
+                || trainerByLesson.getId().equals(user.getId());
     }
 
     public boolean hasPermissionToRetrieveLessons(Authentication authentication, Integer groupId) {
         User user = (User) authentication.getPrincipal();
         UserGroup userGroup = userGroupDao.getByUserAndGroup(user.getId(), groupId);
+        Integer courseTrainerId = userDao.getTrainerByCourseId(courseDao.getCourseByGroup(groupId).getId()).getId();
         return user.getRoles().contains(Role.ADMIN)
                 || user.getRoles().contains(Role.TRAINER)
-                || userDao.getTrainerByGroupId(groupId).getId().equals(user.getId())
+                || courseTrainerId.equals(user.getId())
                 || userGroup != null;
     }
 
@@ -112,7 +120,7 @@ public class CustomSecurityService {
 
     public boolean canWriteToGroupChat(Integer userId, Integer groupId){
         Group group = groupDao.getByUserIdAndGroupId(userId, groupId);
-        User trainer = userDao.getTrainerByGroupId(groupId);
+        User trainer = userDao.getTrainerByCourseId(groupId);
         return group != null || trainer.getId().equals(userId);
     }
 

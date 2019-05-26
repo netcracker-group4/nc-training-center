@@ -6,6 +6,7 @@
                 <h2>404 - The Page can't be found</h2>
             </div>
             <a v-on:click="$router.push('/')">Go TO Homepage</a>
+            <a v-on:click="$router.go(-2)">Go Back</a>
         </div>
     </div>
 </template>

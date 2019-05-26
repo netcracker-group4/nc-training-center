@@ -17,7 +17,6 @@ import TestPage from '../pages/TestPage.vue';
 import AllGroups from "../pages/AllGroups.vue";
 import NotFound from "../pages/NotFound.vue";
 import ChatPage from '../pages/ChatPage.vue';
-import InfodeskRequest from "../pages/InfodeskRequest.vue";
 import JoinCoursePage from "../pages/JoinCoursePage.vue";
 import LessonPage from "../pages/LessonPage.vue";
 import AccessDenied from "../pages/AccessDenied.vue";
@@ -75,8 +74,6 @@ const routes = [
 
     // {path: '/infodesk', component: InfodeskPage},
     {path: '/requests', component: InfodeskPage},
-    // {path: '/requests', component: InfodeskRequest},
-    {path: '/requests/new', component: InfodeskRequest},
 
     {path: '/404', component: NotFound},
     {path: '/403', component: AccessDenied},

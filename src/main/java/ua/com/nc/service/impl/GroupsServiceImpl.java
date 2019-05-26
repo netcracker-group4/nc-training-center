@@ -101,7 +101,7 @@ public class GroupsServiceImpl implements GroupsService {
 
     @Override
     public User getTrainer(int id) {
-        return userDao.getTrainerByGroupId(id);
+        return userDao.getTrainerByCourseId(id);
     }
 
 

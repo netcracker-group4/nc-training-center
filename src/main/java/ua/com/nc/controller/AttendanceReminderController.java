@@ -25,29 +25,8 @@ public class AttendanceReminderController {
 
     public void sendAttendanceReminders (@RequestParam(name = "lessonId") int lessonId) {
 
-        HashMap<User, User> absentStudentsAndTheirManagers =
-                attendanceReminderService.getStudentsAbsentWitNoReason(lessonId);
-        Set<User> students = absentStudentsAndTheirManagers.keySet();
-        String studentsText = emailService.textGenerator(students);
+        emailService.sendAttendanceReminders(lessonId);
 
-        User admin = attendanceReminderService.getAdmin();
-        String adminEmail = admin.getEmail();
-        emailService.sendAttendanceReminderEmail(adminEmail, studentsText);
-
-        User trainer = attendanceReminderService.getLessonTrainer(lessonId);
-        String trainerEmail = trainer.getEmail();
-        emailService.sendAttendanceReminderEmail(trainerEmail, studentsText);
-
-        HashMap<User, ArrayList<User>> managersAndStudents =
-                emailService.reverseHashMap (absentStudentsAndTheirManagers);
-
-        for (HashMap.Entry<User, ArrayList<User>> entry : managersAndStudents.entrySet()) {
-            User manager = entry.getKey();
-            Set <User> managerStudents = new HashSet<>(entry.getValue());
-            String managerStudentsText = emailService.textGenerator(managerStudents);
-            String managerEmail = manager.getEmail();
-            emailService.sendAttendanceReminderEmail(managerEmail, managerStudentsText);
-        }
     }
 
 }

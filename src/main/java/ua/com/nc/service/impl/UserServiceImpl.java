@@ -2,6 +2,8 @@ package ua.com.nc.service.impl;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +16,7 @@ import ua.com.nc.domain.Role;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.*;
 import ua.com.nc.exceptions.LogicException;
+import ua.com.nc.mapper.UserMapper;
 import ua.com.nc.service.AttendanceService;
 import ua.com.nc.service.EmailService;
 import ua.com.nc.service.UserService;
@@ -26,7 +29,16 @@ import java.util.*;
 
 @Log4j2
 @Service
+@PropertySource("message_text.properties")
 public class UserServiceImpl implements UserService {
+    @Value("${title.message-to-new-employee}")
+    private String titleMessageToNewEmployee;
+    @Value("${text.message-to-new-employee}")
+    private String textMessageToNewEmployee;
+    @Value("${title.message-to-new-manager-or-trainer}")
+    private String titleMessageToNewManagerOrTrainer;
+    @Value("${text.message-to-new-manager-or-trainer}")
+    private String textMessageToNewManagerOrTrainer;
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -49,32 +61,44 @@ public class UserServiceImpl implements UserService {
     private FiletransferServiceImpl fileService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public void add(DtoUserSave dtoUserSave) {
-        User user = new User();
-        user.setFirstName(dtoUserSave.getFirstName());
-        user.setLastName(dtoUserSave.getLastName());
-        user.setPassword(passwordEncoder.encode(dtoUserSave.getPassword()));
-        user.setEmail(dtoUserSave.getEmail());
-        user.setCreated(OffsetDateTime.now());
+        User user = userMapper.toModel(dtoUserSave);
 
-        if (dtoUserSave.getRole() != null) {
+        String title;
+        String text;
+
+        if (Objects.nonNull(dtoUserSave.getRole())) {
             user.setActive(true);
             userDao.insert(user);
             userDao.addUserRole(user.getId(), dtoUserSave.getRole().name());
+            title = titleMessageToNewManagerOrTrainer;
+            text = String.format(textMessageToNewManagerOrTrainer,
+                    dtoUserSave.getRole(),
+                    dtoUserSave.getEmail(),
+                    dtoUserSave.getPassword());
         } else {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             userDao.insert(user);
-            userDao.addUserRole(user.getId(), "EMPLOYEE");
-
-            DtoMailSender dtoMailSender = new DtoMailSender();
-            dtoMailSender.setTo(user.getEmail());
-            dtoMailSender.setSubject("Invite");
-            dtoMailSender.setText("http://localhost:8080/api/users/activate/" + token);
-            emailService.sendSimpleMessage(dtoMailSender);
+            userDao.addUserRole(user.getId(), Role.EMPLOYEE.name());
+            title = titleMessageToNewEmployee;
+            text = String.format(textMessageToNewEmployee, "http://localhost:8080", user.getToken());
         }
+
+        sendMessage(user, title, text);
+
+    }
+
+    private void sendMessage(User user, String title, String text) {
+        DtoMailSender dtoMailSender = new DtoMailSender();
+        dtoMailSender.setTo(user.getEmail());
+        dtoMailSender.setSubject(title);
+        dtoMailSender.setText(text);
+        emailService.sendSimpleMessage(dtoMailSender);
     }
 
     @Override
@@ -136,7 +160,9 @@ public class UserServiceImpl implements UserService {
         User user = userDao.getEntityById(dtoUserProfiles.getId());
         user.setFirstName(dtoUserProfiles.getFirstName());
         user.setLastName(dtoUserProfiles.getLastName());
-        user.setManagerId(dtoUserProfiles.getDtoManager().getId());
+        if (dtoUserProfiles.getDtoManager() != null) {
+            user.setManagerId(dtoUserProfiles.getDtoManager().getId());
+        }
         userDao.update(user);
     }
 
@@ -291,15 +317,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User uploadImage(DtoUserSave dtoUserSave) {
-        String rootDir = "/avatar/";
+        String rootDir = "/avatar";
         if (dtoUserSave.getImage().isEmpty())
             throw new LogicException("The file is empty!");
         else {
             try {
                 MultipartFile multipartFile = dtoUserSave.getImage();
-                String filePath = rootDir + dtoUserSave.getId().toString();
+                String filePath = rootDir;
                 saveToDisk(multipartFile, filePath);
-                return saveToDatabase(dtoUserSave.getId(), filePath);
+                return saveToDatabase(dtoUserSave.getId(), filePath + "/" + multipartFile.getOriginalFilename());
             } catch (Exception e) {
                 log.error(e);
                 throw new LogicException("Error while uploading file");
@@ -313,7 +339,7 @@ public class UserServiceImpl implements UserService {
         log.info("File is not find in base");
         StringBuilder name = new StringBuilder(fileName);
         int dot = name.lastIndexOf(".");
-        String format = name.substring(dot - 1);
+        String format = name.substring(dot + 1);
         String tmpFilePath = getFilePath("tmp." + format);
         File uploadedFile = new File(tmpFilePath);
         try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile))) {
@@ -352,7 +378,7 @@ public class UserServiceImpl implements UserService {
     public void updatePassword(DtoChangePassword changePassword) {
         User user = new User();
         user.setId(changePassword.getUserId());
-        user.setPassword(changePassword.getNewPassword());
+        user.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
         userDao.updatePassword(user);
     }
 
@@ -360,7 +386,7 @@ public class UserServiceImpl implements UserService {
     public void recoverPassword(String email) {
         User user = userDao.getByEmail(email);
         String password = generateRandomPassword();
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
         userDao.updatePassword(user);
 
         DtoMailSender dtoMailSender = new DtoMailSender();

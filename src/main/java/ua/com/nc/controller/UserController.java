@@ -1,20 +1,24 @@
 package ua.com.nc.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoChangePassword;
 import ua.com.nc.dto.DtoUserProfiles;
 import ua.com.nc.dto.DtoUserSave;
+import ua.com.nc.service.FileTransferService;
 import ua.com.nc.service.UserService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 @Log4j2
@@ -23,22 +27,18 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private FileTransferService fileTransferService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> save(@RequestBody DtoUserSave dtoUserSave) {
-//        log.debug(user);
-        if (dtoUserSave != null &&
-                dtoUserSave.getEmail() != null &&
-                dtoUserSave.getFirstName() != null &&
-                dtoUserSave.getLastName() != null &&
-                dtoUserSave.getPassword() != null) {
-            if (userService.getByEmail(dtoUserSave.getEmail()) != null) {
-                return ResponseEntity.ok().body("This user already exists");
-            }
+        if (userService.getByEmail(dtoUserSave.getEmail()) != null) {
+            return ResponseEntity.badRequest().body("This user already exists");
+        } else {
             userService.add(dtoUserSave);
             return ResponseEntity.ok().body("User saved");
-        } else {
-            return ResponseEntity.badRequest().body("Incorrectly entered fields");
         }
 
     }
@@ -69,10 +69,38 @@ public class UserController {
         return new ResponseEntity<>(userService.uploadImage(dtoUserSave), HttpStatus.OK);
     }
 
+//    @RequestMapping(value = "/image", method = RequestMethod.GET)
+//    @ResponseBody
+//    public BufferedImage getImage() {
+//        try (InputStream inputStream = fileTransferService.downloadFileFromServer("/img/temp.jpg")) {
+//            return ImageIO.read(inputStream);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+    @RequestMapping(value = "/image", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<byte[]> getImage(final HttpServletResponse response) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        try (InputStream inputStream = fileTransferService.downloadFileFromServer("/avatar/Image1.jpg")) {
+            if (inputStream != null) {
+                byte[] media = IOUtils.toByteArray(inputStream);
+                return new ResponseEntity<byte[]>(media, headers, HttpStatus.OK);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<byte[]>(null, headers, HttpStatus.NOT_FOUND);
+    }
+
     @RequestMapping(value = "/update-password", method = RequestMethod.PUT)
     public ResponseEntity<?> updatePassword(@RequestBody DtoChangePassword dtoChangePassword) {
         User user = userService.getEntityById(dtoChangePassword.getUserId());
-        if (user.getPassword().equals(dtoChangePassword.getOldPassword())) {
+        if (passwordEncoder.matches(dtoChangePassword.getOldPassword(), user.getPassword())) {
             userService.updatePassword(dtoChangePassword);
             return ResponseEntity.ok().body("Update password");
         } else {

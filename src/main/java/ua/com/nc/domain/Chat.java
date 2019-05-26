@@ -3,7 +3,6 @@ package ua.com.nc.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Data

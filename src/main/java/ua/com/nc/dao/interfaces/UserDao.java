@@ -2,13 +2,17 @@ package ua.com.nc.dao.interfaces;
 
 import ua.com.nc.domain.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public interface UserDao extends GenericDao<User> {
     User getByEmail(String email);
 
     User getByToken(String token);
+
+    int getIdByName(String name);
 
     List<User> getAllTrainers();
 
@@ -26,8 +30,6 @@ public interface UserDao extends GenericDao<User> {
 
     void updateTrainerLandingPage(int id, boolean isOnLandingPage);
 
-    void updateUserByAdmin(User user);
-
     void updateActive(User user);
 
     List<User> getTrainersOnCourse(int id);
@@ -42,7 +44,7 @@ public interface UserDao extends GenericDao<User> {
 
     User getLessonTrainer(int lessonId);
 
-    User getTrainerByGroupId(Integer groupId);
+    User getTrainerByCourseId(Integer courseId);
 
     List<User> getSubordinatesOfManager(Integer managerId);
 

@@ -129,7 +129,8 @@
                     forDays: this.desiredSchedule2
                 }).then(function (response) {
                     console.log(response);
-                    self.successAutoClosable("You successfully joined course!")
+                    self.successAutoClosable("You successfully joined course!");
+                    self.$router.push('/');
                 })
                     .catch(function (error) {
                         console.log(error);
@@ -167,7 +168,6 @@
                             value: 'am'
                         }));
                         console.log(self.dayIntervals);
-                        console.log(self.desiredSchedule);
                         self.loading = false;
                     })
                     .catch(function (error) {
@@ -176,13 +176,13 @@
                          if (error.response != null && error.response.status == 400)
                             self.$router.push('/404');
                     });
+                console.log("this.$route.params.id" + this.$route.params.id);
                 axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id)
                     .then(function (response) {
                         self.course = response.data;
                         console.log(self.course);
                     })
                     .catch(function (error) {
-                        // self.errorAutoClosable(error.response.data);
                         console.log(error);
                          if (error.response != null && error.response.status == 400)
                             self.$router.push('/404');
@@ -197,7 +197,6 @@
                         console.log(self.suitabilities)
                     })
                     .catch(function (error) {
-                        // self.errorAutoClosable(error.response.data);
                         console.log(error);
                          if (error.response != null && error.response.status == 400)
                             self.$router.push('/404');
@@ -209,14 +208,12 @@
             axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id + '/course-group')
                 .then(function (response) {
                     console.log(response.data);
-                    if (response.data == true) {
+                    if (response.data == true || response.data == undefined) {
                         self.$router.push('/404');
                     }
                     self.loadInfo();
                 }).catch(function (error) {
                 console.log(error);
-                // console.log(error.response.data);
-                // self.errorAutoClosable(error.response.data);
                  if (error.response != null && error.response.status == 400)
                     self.$router.push('/404');
             });

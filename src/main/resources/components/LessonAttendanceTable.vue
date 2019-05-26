@@ -22,7 +22,7 @@
                             <v-flex xs12 sm12 md10>
                                 <v-select v-model="editedItem.reason"
                                           :items="reasons" label="Change reason"
-                                          :disabled="editedItem.status == null || editedItem.status.id != 2">
+                                          :disabled="editedItem.status == null || editedItem.status.id !== 2">
                                     <template slot="selection" slot-scope="status">
                                         {{ status.item.title}}
                                     </template>
@@ -55,8 +55,8 @@
                     </td>
                     <td class="text-xs-left">{{ props.item.status }}</td>
                     <td class="text-xs-center">{{ props.item.reason }}</td>
-                    <td class="justify-center px-0">
-                        <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+                    <td class="justify-center px-0" >
+                        <v-icon v-if="isLessonTrainer() || $store.getters.isAdmin" small class="mr-2" @click="editItem(props.item)">edit</v-icon>
                     </td>
                 </template>
             </v-data-table>
@@ -69,7 +69,7 @@
 
     export default {
         name: "LessonAttendanceTable",
-        props: ['lessonId'],
+        props: ['lessonId','trainerId'],
         data: () => ({
             dialog: false,
             headers: [
@@ -105,8 +105,6 @@
         methods: {
             editItem(item) {
                 this.editedItem.attendanceId = item.attendanceId;
-                //this.editedItem.status = this.statuses.find(status => status.title == item.status)
-                // this.editedItem.reason = this.reasons.find(reason => reason.title == item.reason)
                 this.dialog = true;
             },
             close() {
@@ -118,7 +116,7 @@
                 let attendanceId = self.editedItem.attendanceId;
                 let statusId = self.editedItem.status.id;
                 let reasonId = null;
-                if (self.editedItem.reason == null || self.editedItem.reason === "undefined") {
+                if (self.editedItem.reason) {
                     reasonId = null
                 } else {
                     reasonId = self.editedItem.reason.id
@@ -136,10 +134,6 @@
                             .then(response => self.attendances = response.data)
                             .catch(error => console.log(error))
                     }
-                    if (request.status === 404) {
-                        //self.modalMessage = "There is no user with such email and password"
-                        //self.dialog = true
-                    }
                 };
                 console.log(this.editedItem);
                 this.close();
@@ -147,15 +141,18 @@
             forwardToUserPage(id) {
                 this.$router.push('/users/' + id)
             },
+            isLessonTrainer() {
+                return this.$store.state.user.id === parseInt(this.trainerId);
+            }
         },
         mounted() {
             axios.get(this.$store.state.apiServer + '/api/attendances?lessonId=' + this.lessonId)
                 .then(response => this.attendances = response.data)
-                .catch(error =>{
-                    if (error.response != null && error.response.status == 400)
+                .catch(error => {
+                    if (error.response && error.response.status === 400)
                         self.$router.push('/404');
                     console.log(error)
-                } );
+                });
 
             axios.get(this.$store.state.apiServer + '/api/attendance-status')
                 .then(response => this.statuses = response.data)

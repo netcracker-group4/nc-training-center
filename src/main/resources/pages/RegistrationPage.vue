@@ -137,6 +137,22 @@
             toLoginPage() {
                 this.$router.push('/login');
             },
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             submitUser() {
                 this.$validator.validateAll().then((result) => {
                     if (result) {
@@ -150,7 +166,14 @@
                             role: this.user.role
                         }).then(response => {
                             console.log(response);
+                            if (self.isAdmin()) {
+                                self.successAutoClosable('New ' + this.user.role.toLowerCase() + ' has been added');
+                            } else {
+                                self.successAutoClosable('Registration was successful! Confirm letter was send to your email');
+                            }
                             self.$validator.reset();
+                        }).catch(function (error) {
+                            self.errorAutoClosable('User with this email already exists');
                         });
                     }
                 })
