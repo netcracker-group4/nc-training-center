@@ -17,6 +17,7 @@ public class SerializationServiceImpl implements SerializationService {
 
     @Override
     public String serializeWithDateFormat(Object element) {
+        gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").serializeNulls().create();
         return gson.toJson(element);
     }
 
