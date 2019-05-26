@@ -87,7 +87,6 @@ values (1, 'theking@gmail.com', 'kingthe', 'THE', 'KING', 'jt4RFkGzmaSq',
        (40, 'emailname40@gmail.com', 'password40', 'firstname40', 'lasttname40', 'qgryhfbutwaprukx',
         '2012-04-09 10:31:17', 2, true, false, 'EMPLOYEE');
 
-alter sequence usr_seq restart with 19879;
 
 
 insert into role_r (id, name)
@@ -96,7 +95,6 @@ values (1, 'admin'),
        (3, 'trainer'),
        (4, 'employee');
 
-alter sequence role_seq restart with 5;
 
 
 insert into assigned_role (user_id, role_id)
@@ -150,8 +148,6 @@ values (1, 'beginner'),
        (3, 'middle'),
        (4, 'advanced');
 
-alter sequence level_seq restart with 5;
-
 
 insert into course_status (id, name, description)
 values (1, 'planned', 'The registration has not started yet'),
@@ -194,8 +190,6 @@ values (1, 'Java Beginner Course', 1, 2, 4, '2019-08-29', '2019-12-05', true,
         'https://cdn-images-1.medium.com/max/1200/1*5T57bx4OS6o6lPe1ryU9oQ.png',
         'C++ Programming Course For Advanced C# Developers');
 
-alter sequence course_seq restart with 5;
-
 
 insert into problem_status (id, title, description)
 values (1, 'draft', 'The employee created request but the request is not submitted.'),
@@ -205,7 +199,6 @@ values (1, 'draft', 'The employee created request but the request is not submitt
        (4, 'answered', 'The employee marked request as answered. The admin cannot type anything in this request.'),
        (5, 'reopened', 'The employee reopened the request.');
 
-alter sequence problem_status_seq restart with 6;
 
 
 insert into absence_reason (id, title)
@@ -214,15 +207,11 @@ values (1, 'No reason'),
        (3, 'Business trip'),
        (4, 'Project activities');
 
-alter sequence absence_reason_seq restart with 5;
-
 
 insert into attendance_status (id, title)
 values (1, 'present'),
        (2, 'absent'),
        (3, 'late');
-
-alter sequence attendance_status_seq restart with 5;
 
 
 insert into grup (id, course_id, title)
@@ -232,8 +221,6 @@ values (1, 3, 'Java Seniors'),
        (4, 6, 'C# Seniors'),
        (5, 2, 'Java Standard'),
        (6, 1, 'Java Beginner');
-
-alter sequence grup_seq restart with 2;
 
 
 insert into usr_group (user_id, group_id, is_attending, course_id)
@@ -281,46 +268,44 @@ values (2, 1, true, 3),
 
 
 insert into lesson (id, group_id, topic, trainer_id, time_date, is_archived, is_canceled, duration, PERFORMED)
-values (1,     1,	'Generics',  4,	'2012-05-29 15:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',               true),
-       (2,     1,	'Java EE',  5,	'2012-05-26 15:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',               true),
-       (3,     1,	'Interfaces',  5,	'2019-05-02 03:25:00.000000',	false,	true,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (4,     1,	'Classes',  4,	'2019-05-10 16:10:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',               true),
-       (5,     1,	'lessonTopic1',  1,	'2012-06-19 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (6,     1,	'lessonTopic2',  1,	'2012-06-19 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (7,     1,	'lessonTopic3',  1,	'2012-06-19 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (8,     2,	'lessonTopic4',  4,	'2012-08-13 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (9,     2,	'lessonTopic5',  4,	'2012-08-13 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (10,   	2,	'lessonTopic6',  4,	'2012-08-13 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (11,   	3,	'lessonTopic7',  5,	'2012-08-23 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (12,   	3,	'lessonTopic8',  5,	'2012-08-23 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (13,   	3,	'lessonTopic9',  5,	'2012-08-23 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (14,   	4,	'lessonTopic10',  5,	'2012-06-14 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (15,   	4,	'lessonTopic11',  5,	'2012-06-14 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (16,   	4,	'lessonTopic12',  5,	'2012-06-14 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (17,   	5,	'lessonTopic13',  1,	'2012-08-09 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (18,   	5,	'lessonTopic14',  1,	'2012-08-09 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (19,   	5,	'lessonTopic15',  1,	'2012-08-09 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (20,   	6,	'lessonTopic16',  4,	'2012-08-16 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (21,   	6,	'lessonTopic17',  4,	'2012-08-16 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (22,   	6,	'lessonTopic18',  4,	'2012-08-16 00:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (23,   	1,	'Multithreading',  4,	'2019-05-15 05:10:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (24,   	1,	'Classes new!!',  5,	'2019-05-31 08:11:00.000000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (25,   	1,	'Generics advanced',  1,	'2019-05-31 16:30:41.760000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',   true),
-       (26,   	1,	'test',  4,	'2019-05-16 14:07:43.690000',	true,   true,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',                   true),
-       (27,   	1,	'""',  1,	'2019-05-06 11:57:46.930000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',                   true),
-       (28,   	1,	'""',  1,	'2019-05-11 12:40:36.050000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',                   true),
-       (29,   	1,	'hjhjkhjkhjkghjk',  1,	'2019-05-11 12:42:29.430000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',       true),
-       (30,   	1,	'new one',  1,	'2019-05-11 12:45:36.270000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',               true),
-       (31,   	1,	'dfdfdfd',  1,	'2019-05-11 12:51:14.680000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',               true),
-       (32,   	6,	'Basics',  5,	'2019-05-13 12:49:15.250000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',               true),
-       (33,   	4,	'Basics of C#',  5,	'2019-05-13 13:11:18.100000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (34,   	1,	'new lesson',  1,	'2019-05-15 03:43:59.380000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',           true),
-       (35,   	1,	'new',  4,	'2019-05-19 18:34:15.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',                   true),
-       (36,   	3,	'Intro to Data types', 5,	'2019-05-20 07:05:19.290000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs',   true);
+values (1,  1,	'Generics',  4,	         '2019-05-02 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (2,  1,	'Java EE',  5,	         '2019-05-02 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (3,  1,	'Interfaces',  5,	     '2019-05-08 08:25:00.000000',	false,	true,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (4,  1,	'Classes',  4,	         '2019-05-25 20:10:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (5,  1,	'lessonTopic1',  1,	     '2019-05-03 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (6,  1,	'lessonTopic2',  1,	     '2019-05-04 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (7,  1,	'lessonTopic3',  1,	     '2019-05-05 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (8,  2,	'lessonTopic4',  4,	     '2019-05-08 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (9,  2,	'lessonTopic5',  4,	     '2019-05-09 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (10, 2,	'lessonTopic6',  4,	     '2019-05-10 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (11, 3,	'lessonTopic7',  5,	     '2019-05-07 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (12, 3,	'lessonTopic8',  5,	     '2019-05-08 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (13, 3,	'lessonTopic9',  5,	     '2019-05-09 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (14, 4,	'lessonTopic10',  5,	 '2019-05-14 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (15, 4,	'lessonTopic11',  5,	 '2019-05-15 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (16, 4,	'lessonTopic12',  5,	 '2019-05-16 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (17, 5,	'lessonTopic13',  1,	 '2019-05-17 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (18, 5,	'lessonTopic14',  1,	 '2019-05-18 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (19, 5,	'lessonTopic15',  1,	 '2019-05-19 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (20, 6,	'lessonTopic16',  4,	 '2019-05-20 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (21, 6,	'lessonTopic17',  4,	 '2019-05-21 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (22, 6,	'lessonTopic18',  4,	 '2019-05-22 14:00:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (23, 1,	'Multithreading',  4,	 '2019-05-15 05:10:00.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (24, 1,	'Classes new!!',  5,	 '2019-05-31 08:11:00.000000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (25, 1,	'Generics advanced',  1, '2019-05-31 16:30:41.760000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (26, 1,	'test',          4,	     '2019-05-16 14:07:43.690000',	true,   true,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (27, 1,	'""',  1,	             '2019-05-06 11:57:46.930000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (28, 1,	'""',  1,	             '2019-05-11 12:40:36.050000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (29, 1,	'hjhjkhjkhjkghjk',  1,	 '2019-05-11 12:42:29.430000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (30, 1,	'new one',  1,	         '2019-05-11 12:45:36.270000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (31, 1,	'dfdfdfd',  1,	         '2019-05-11 12:51:14.680000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (32, 6,	'Basics',  5,	         '2019-05-13 12:49:15.250000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (33, 4,	'Basics of C#',  5,	     '2019-05-13 13:11:18.100000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (34, 1,	'new lesson',  1,	     '2019-05-15 03:43:59.380000',	true,   false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (35, 1,	'new',  4,	             '2019-05-19 18:34:15.000000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true),
+       (36, 3,	'Intro to Data types',5, '2019-05-20 07:05:19.290000',	false,	false,	'0 years 0 mons 0 days 1 hours 0 mins 0.00 secs', true);
 
 
-
-alter sequence lesson_seq restart with 120;
 
 
 /*
@@ -483,7 +468,6 @@ values ('perfect', 3, 'green'),
        ('normal', 3, 'white'),
        ('not suitable', -5, 'red');
 
-alter sequence suitability_seq restart with 5;
 
 insert into attachment (id, url, description, name, trainer_id)
 values (1, '//url', 'description', 'attachment-name', 5);
@@ -498,11 +482,4 @@ values (11, 'Problem!', 2, 'trouble', null, '2019-05-17 06:00:23'),
        (12, 'Problems', 3, 'FIXME', null, '2019-05-17 07:00:23'),
        (13, 'Problema', 1, 'fixit', null, '2019-05-17 08:00:23');
 
-
-update lesson
-set is_archived = false;
-update lesson
-set is_canceled = false;
-update lesson
-set duration = '1h';
-commit;
+COMMIT;

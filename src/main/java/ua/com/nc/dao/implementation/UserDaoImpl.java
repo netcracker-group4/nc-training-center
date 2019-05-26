@@ -286,7 +286,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public void updateTrainerLandingPage(int id, boolean isOnLandingPage) {
+    public void updateTrainerLandingPage(Integer id, boolean isOnLandingPage) {
         String sql = usrUpdateLandingPage;
         log.debug("update trainer on landing page id " + id + " isOnLandingPage " + isOnLandingPage + " " + sql);
         try (Connection connection = dataSource.getConnection();
@@ -360,7 +360,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
 
 
-    public HashMap<User, User> getStudentsAbsentWitNoReason(int lessonId) {
+    public HashMap<User, User> getStudentsAbsentWitNoReason(Integer lessonId) {
         List<User> students = new ArrayList<>();
         String sql = selectStudentsAbsentOnLessonWithNoReason;
         log.debug("selectStudentsAbsentOnLessonWithNoReason " + lessonId + " " + sql);
@@ -393,7 +393,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         return admin.get(0);
     }
 
-    public User getLessonTrainer(int lessonId) {
+    public User getLessonTrainer(Integer lessonId) {
         String sql = getLessonTrainer;
         log.debug("find trainer of lesson by lessonId" + lessonId + " " + sql);
         return getUniqueFromSqlById(sql, lessonId);

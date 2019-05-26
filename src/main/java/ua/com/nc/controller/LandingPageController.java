@@ -44,14 +44,14 @@ public class LandingPageController {
 
     @RequestMapping(value = {"/update-course-landing-page"}, method = RequestMethod.POST)
     public ResponseEntity<String> updateCourseLandingPage(@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage,
-                                                          @RequestParam(name = "id") int id) {
+                                        @RequestParam(name = "id") Integer id) {
         landingPageService.updateCourseLandingPage(id, isOnLandingPage);
         return ResponseEntity.ok("Updated");
     }
 
     @RequestMapping(value = {"/update-trainer-landing-page"}, method = RequestMethod.POST)
     public ResponseEntity<String> updateTrainerLandingPage(@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage,
-                                                           @RequestParam(name = "id") int id) {
+                                                           @RequestParam(name = "id") Integer id) {
         landingPageService.updateTrainerLandingPage(id, isOnLandingPage);
         return ResponseEntity.ok("Updated");
     }

@@ -6,12 +6,15 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import ua.com.nc.exceptions.LogicException;
 import ua.com.nc.service.FileTransferService;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
@@ -108,5 +111,23 @@ public class FiletransferServiceImpl implements FileTransferService {
 
         }
         return null;
+    }
+
+    @Override
+    public byte[] getImage(HttpServletResponse response, String url) {
+        byte[] media = null;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        try (InputStream inputStream = downloadFileFromServer(url)) {
+            if (inputStream != null) {
+                media = IOUtils.toByteArray(inputStream);
+            }else{
+                media = null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return media;
     }
 }
