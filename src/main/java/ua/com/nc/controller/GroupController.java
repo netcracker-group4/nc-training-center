@@ -97,7 +97,7 @@ public class GroupController {
         return groupsService.getAllByTrainerId(employeeId);
     }
 
-    @RequestMapping(value = "{id}/getAttendanceGraph")
+    @RequestMapping(value = "{id}/attendance-graph")
     @ResponseBody
     public Map<String, Double> getAttendanceGraph(@PathVariable Integer id){
         return groupsService.getAttendanceGraph(id);
