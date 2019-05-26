@@ -72,53 +72,6 @@
                         <image-upload-component style="margin:auto;" :user="user"></image-upload-component>
                     </v-flex>
                     <v-flex xs12 md7 class="text-xs-right" style="padding: 20px 0">
-<!--                        <table class="zui-table">-->
-<!--                            <tbody>-->
-<!--                            <tr>-->
-<!--                                <td><span class="grey&#45;&#45;text">Name :</span></td>-->
-<!--                                <td> <span-->
-<!--                                        class="font-weight-medium">{{user.firstName}}</span>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td><span class="grey&#45;&#45;text">Surname :</span></td>-->
-<!--                                <td><span-->
-<!--                                        class="font-weight-medium">{{user.lastName}}</span>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td><span class="grey&#45;&#45;text">Email :</span></td>-->
-<!--                                <td><span-->
-<!--                                        class="font-weight-medium">{{user.email}}</span>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr v-if="canShowManager()" class="cursor"-->
-<!--                                v-on:click="goToUserPage(user.dtoManager) ">-->
-<!--                                <td><span class="grey&#45;&#45;text">Manger :</span></td>-->
-<!--                                <td> <span-->
-<!--                                        class="font-weight-medium">{{getManagersName(user.dtoManager)}}</span>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr v-if="canShowManager()">-->
-<!--                                <td><span class="grey&#45;&#45;text">Teachers :</span></td>-->
-<!--                                <td><span v-if="trainers.length < 1">No teachers yet</span>-->
-<!--                                    <span v-else v-on:click="goToUserPage(teacher) "-->
-<!--                                          v-for="teacher in trainers" class="font-weight-medium cursor">-->
-<!--                                        {{getManagersName(teacher)}}</span>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            <tr v-if="canShowManager()">-->
-<!--                                <td>-->
-<!--                                    <span class="grey&#45;&#45;text">Groups :</span>-->
-<!--                                </td>-->
-<!--                                <td>-->
-<!--                                    <span v-if="groups.length < 1">No groups yet</span>-->
-<!--                                    <span v-else v-for="group in groups" v-on:click="goToGroupPage(group.id)"-->
-<!--                                          class="font-weight-medium cursor">{{group.title}}</span>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
                         <v-list>
                             <v-list-tile>
                                 <v-list-tile-content>

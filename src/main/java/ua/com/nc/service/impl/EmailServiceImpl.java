@@ -14,9 +14,6 @@ import ua.com.nc.dto.DtoFeedback;
 import ua.com.nc.dto.DtoMailSender;
 import ua.com.nc.service.EmailService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 @Log4j2
@@ -35,14 +32,17 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendSimpleMessage(DtoMailSender dtoMailSender) {
+        log.debug("try to send this message" + dtoMailSender);
         SimpleMailMessage message = new SimpleMailMessage();
-
         message.setTo(dtoMailSender.getTo());
         message.setSubject(dtoMailSender.getSubject());
         message.setText(dtoMailSender.getText());
-
+        log.debug("created message");
         emailSender.send(message);
+        log.debug("sent");
+
     }
+
 
     @Override
     public void sendMessageToManager(DtoFeedback dtoFeedback) {
