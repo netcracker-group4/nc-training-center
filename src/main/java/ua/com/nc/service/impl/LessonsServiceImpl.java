@@ -9,7 +9,6 @@ import ua.com.nc.domain.Lesson;
 import ua.com.nc.domain.LessonAttachment;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoLesson;
-import ua.com.nc.dto.DtoUser;
 import ua.com.nc.exceptions.LogicException;
 import ua.com.nc.service.LessonsService;
 
@@ -54,18 +53,18 @@ public class LessonsServiceImpl implements LessonsService {
     }
 
     @Override
-    public String updateLesson(DtoLesson toUpdate) {
+    public Integer updateLesson(DtoLesson toUpdate) {
         Lesson domainLesson = toUpdate.getDomainLesson();
         lessonDao.update(domainLesson);
         lessonAttachmentDao.deleteByLessonId(toUpdate.getId());
         for (LessonAttachment attachment : toUpdate.getDomainAttachments()) {
             lessonAttachmentDao.insertAttachment(attachment);
         }
-        return Integer.toString(toUpdate.getId());
+        return toUpdate.getId();
     }
 
     @Override
-    public String addLesson(DtoLesson lessonToInsert) {
+    public Integer addLesson(DtoLesson lessonToInsert) {
         Lesson domainLesson = lessonToInsert.getDomainLesson();
         lessonDao.insert(domainLesson);
         Integer newLessonId = domainLesson.getId();
@@ -73,7 +72,7 @@ public class LessonsServiceImpl implements LessonsService {
             LessonAttachment lessonAttachment = new LessonAttachment(attachment.getId(), newLessonId);
             lessonAttachmentDao.insertAttachment(lessonAttachment);
         }
-        return Integer.toString(newLessonId);
+        return newLessonId;
     }
 
 
@@ -86,12 +85,12 @@ public class LessonsServiceImpl implements LessonsService {
     }
 
     @Override
-    public String invertIsCanceledForLesson(Integer lessonId) {
+    public boolean invertIsCanceledForLesson(Integer lessonId) {
         Lesson lesson = lessonDao.getEntityById(lessonId);
         boolean newCanceled = !lesson.isCanceled();
         lesson.setCanceled(newCanceled);
         lessonDao.update(lesson);
-        return Boolean.toString(newCanceled);
+        return newCanceled;
     }
 
     @Override
@@ -116,11 +115,11 @@ public class LessonsServiceImpl implements LessonsService {
     }
 
     @Override
-    public String invertIsPerformedForLesson(Integer lessonId) {
+    public boolean invertIsPerformedForLesson(Integer lessonId) {
         Lesson lesson = lessonDao.getEntityById(lessonId);
         boolean newPerformed = !lesson.isPerformed();
         lesson.setPerformed(newPerformed);
         lessonDao.update(lesson);
-        return Boolean.toString(newPerformed);
+        return newPerformed;
     }
 }

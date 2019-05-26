@@ -110,7 +110,7 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
                     isPerformed, isArchived);
             lessons.add(lesson);
         }
-        log.info("Retrieved lessons from database " + lessons);
+        log.debug("Retrieved lessons from database " + lessons);
         return lessons;
     }
 
@@ -118,7 +118,7 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     @Override
     public List<Lesson> getByGroupIdAndUserId(Integer groupId, Integer userId) {
         String sql = getSelectByGroupIdAndUserId;
-        log.info("getByGroupIdAndUserId groupId " + groupId + " userId " + userId + "   " + sql);
+        log.debug("getByGroupIdAndUserId groupId " + groupId + " userId " + userId + "   " + sql);
         List<Lesson> lessons;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -136,14 +136,14 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     @Override
     public List<Lesson> getByGroupId(Integer groupId) {
         String sql = selectByGroupId;
-        log.info("getByGroupId groupId " + groupId + "  " + sql);
+        log.debug("getByGroupId groupId " + groupId + "  " + sql);
         return getFromSqlById(sql, groupId);
     }
 
     @Override
     public List<Lesson> getByEmployee(Integer employeeId) {
         String sql = selectByEmployeeId;
-        log.info("getByUserId employeeId " + employeeId + "  " + sql);
+        log.debug("getByUserId employeeId " + employeeId + "  " + sql);
         return getFromSqlById(sql, employeeId);
     }
 
@@ -167,7 +167,7 @@ public class LessonDaoImpl extends AbstractDaoImpl<Lesson> implements LessonDao 
     @Override
     public List<Lesson> getByTrainer(Integer userId) {
         String sql = selectByTrainerId;
-        log.info("getByUserId  " + userId + "  " + sql);
+        log.debug("getByUserId  " + userId + "  " + sql);
         return getFromSqlById(sql, userId);
     }
 }

@@ -3,7 +3,10 @@ package ua.com.nc.controller;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,8 +47,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getById(@AuthenticationPrincipal User user,  @PathVariable Integer id) {
-        return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
+    public ResponseEntity<?> getById(@AuthenticationPrincipal User user, @PathVariable Integer id) {
+        return ResponseEntity.ok(userService.getById(id));
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
@@ -66,11 +69,11 @@ public class UserController {
     @RequestMapping(value = "/upload-image", method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> uploadImage(@ModelAttribute DtoUserSave dtoUserSave) {
-        return new ResponseEntity<>(userService.uploadImage(dtoUserSave), HttpStatus.OK);
+        return ResponseEntity.ok(userService.uploadImage(dtoUserSave));
     }
 
 //    @RequestMapping(value = "/image", method = RequestMethod.GET)
-//    @ResponseBody
+//
 //    public BufferedImage getImage() {
 //        try (InputStream inputStream = fileTransferService.downloadFileFromServer("/img/temp.jpg")) {
 //            return ImageIO.read(inputStream);
@@ -81,7 +84,6 @@ public class UserController {
 //    }
 
     @RequestMapping(value = "/image", method = RequestMethod.GET)
-    @ResponseBody
     public ResponseEntity<byte[]> getImage(final HttpServletResponse response) {
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
@@ -89,12 +91,14 @@ public class UserController {
         try (InputStream inputStream = fileTransferService.downloadFileFromServer("/avatar/Image1.jpg")) {
             if (inputStream != null) {
                 byte[] media = IOUtils.toByteArray(inputStream);
-                return new ResponseEntity<byte[]>(media, headers, HttpStatus.OK);
+                return ResponseEntity.ok().headers(headers).body(media);
+//                return new ResponseEntity<>(media, headers, HttpStatus.OK);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<byte[]>(null, headers, HttpStatus.NOT_FOUND);
+        return ResponseEntity.badRequest().headers(headers).build();
+//        return new ResponseEntity<>(null, headers, HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "/update-password", method = RequestMethod.PUT)
@@ -120,23 +124,23 @@ public class UserController {
 
     @RequestMapping(value = "/get-all-managers", method = RequestMethod.GET)
     public ResponseEntity<?> getAllManagers() {
-        return new ResponseEntity<>(userService.getAllManagers(), HttpStatus.OK);
+        return ResponseEntity.ok(userService.getAllManagers());
     }
 
     @RequestMapping(value = "/{id}/subordinates", method = RequestMethod.GET)
     public ResponseEntity<?> getSubordinatesOfManager(@PathVariable Integer id) {
-        return new ResponseEntity<>(userService.getSubordinatesOfManager(id), HttpStatus.OK);
+        return ResponseEntity.ok(userService.getSubordinatesOfManager(id));
     }
 
     @RequestMapping(value = "/{employeeId}/trainers", method = RequestMethod.GET)
     @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
     public ResponseEntity<?> getTrainersOfEmployee(@PathVariable Integer employeeId) {
-        return new ResponseEntity<>(userService.getTrainersOfEmployee(employeeId), HttpStatus.OK);
+        return ResponseEntity.ok(userService.getTrainersOfEmployee(employeeId));
     }
 
     @RequestMapping(value = "/get-all-trainers", method = RequestMethod.GET)
     public ResponseEntity<?> getAllTrainers() {
-        return new ResponseEntity<>(userService.getAllTrainers(), HttpStatus.OK);
+        return ResponseEntity.ok(userService.getAllTrainers());
     }
 
     @RequestMapping(value = "/activate/{token}", method = RequestMethod.GET)
@@ -147,7 +151,7 @@ public class UserController {
 
     @RequestMapping(value = "{employeeId}/getAttendanceGraph")
     @PreAuthorize("@customSecuritySecurity.hasPermissionToRetrieveGroups(authentication, #employeeId)")
-    public Map<String, Double> getAttendanceGraph(@PathVariable Integer employeeId){
-        return userService.getAttandanceGraph(employeeId);
+    public ResponseEntity<Map<String, Double>> getAttendanceGraph(@PathVariable Integer employeeId) {
+        return ResponseEntity.ok(userService.getAttandanceGraph(employeeId));
     }
 }

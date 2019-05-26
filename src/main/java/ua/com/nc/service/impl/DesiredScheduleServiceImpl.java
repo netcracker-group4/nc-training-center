@@ -69,7 +69,7 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
             userGroupDao.deleteAllForGroup(groupId);
             groupDao.delete(groupId);
             return true;
-        }catch (PersistException e){
+        } catch (PersistException e) {
             throw new LogicException("The group with lessons can't be deleted", e);
         }
     }
@@ -209,6 +209,7 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
             saveDesiredScheduleForDay(userId, courseId, scheduleForDay);
         }
     }
+
     @Async
     private void sendNewAttendeeNotificationToTrainer(Integer userId, Integer courseId) {
         User newAttendee = userDao.getEntityById(userId);

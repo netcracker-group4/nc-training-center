@@ -59,6 +59,20 @@ public class CustomExceptionHandler {
         return exception.getMessage();
     }
 
+
+    /**
+     * @param exception NotFoundException
+     * @return error message that can then be displayed to user with some notification
+     * @see ua.com.nc.exceptions.NotFoundException
+     */
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public String handleNotFoundException(LogicException exception) {
+        log.error(exception.getMessage(), exception);
+        return exception.getMessage();
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody

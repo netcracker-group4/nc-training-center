@@ -18,7 +18,8 @@ public interface CourseService {
 
 
     String uploadImage(MultipartFile image);
-    String uploadImage(MultipartFile image,int courseId);
+
+    String uploadImage(MultipartFile image, int courseId);
 
     List<DtoCourse> getAllByTrainerAndEmployee(Integer trainerId, Integer employeeId);
 

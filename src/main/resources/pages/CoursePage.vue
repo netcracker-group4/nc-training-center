@@ -315,6 +315,7 @@
                 .then(function (response) {
                     console.log(response.data);
                     console.log(self.$store.state.userRoles);
+                    console.log("can join course " + response.data);
                     self.canJoinCourse = response.data;
                 }).catch(function (error) {
                 self.canJoinCourse = false;

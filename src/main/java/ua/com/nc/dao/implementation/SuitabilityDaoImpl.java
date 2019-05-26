@@ -43,7 +43,7 @@ public class SuitabilityDaoImpl extends AbstractDaoImpl<Suitability> implements 
             String color = rs.getString("color");
             list.add(new Suitability(id, title, color, priority));
         }
-        log.info("Retrieved Suitabilities from database " + list);
+        log.debug("Retrieved Suitabilities from database " + list);
         return list;
     }
 }

@@ -23,11 +23,12 @@
                             <draggable v-model="allSchedules" tag="tbody" group="people">
                                 <tr v-for="item in allSchedules" :key="item.userId" style="cursor: pointer">
                                     <td>{{ item.userId }}</td>
-                                    <td class="student-name" v-bind:class="{'notAttending': !item.isAttending}"
+                                    <td class="student-name" v-bind:class="{'notAttending': !item.attending}"
                                         v-bind:style="{width: '30%'}">{{ item.userName }}
                                     </td>
                                     <td v-for="forInterval in item.scheduleForIntervals"
                                         v-bind:style="{backgroundColor: getColor(forInterval)}">
+                                        {{item.isAttending}}
                                     </td>
                                 </tr>
                             </draggable>
