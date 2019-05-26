@@ -90,8 +90,8 @@ public class EmailReminderServiceImpl implements EmailReminderService {
     }
 
     @Override
-    public void sendUserAttendanceReminder (Set<User> students) {
-        for (User user : students) {
+    public void sendUserAttendanceReminder (Set<User> users) {
+        for (User user : users) {
             sendEmail(user.getEmail(), userAttendanceReminderSubject, userAttendanceReminderText);
         }
     }
