@@ -47,7 +47,8 @@
             </v-flex>
         </v-layout>
         <v-layout v-if="!loading" row wrap>
-            <v-btn color="success" :disabled="performed" v-if="isLessonTrainer()" @click="checked()">
+            <v-btn color="success" :disabled="performed"
+                   v-if="isLessonTrainer() || $store.getters.isAdmin" @click="checked()">
                 <b>Check attendance</b>
             </v-btn>
             <v-flex xs12 mt-2>
@@ -78,6 +79,11 @@
                 </v-data-table>
             </v-flex>
         </v-layout>
+        <lesson-attendance-table v-if="!loading"
+                                 :lessonId="this.$route.params.id"
+                                 :trainerId="this.trainer.id"
+                                 :key="this.$route.params.id"/>
+
         <lesson-editing-component ref='form' style="margin-bottom: 20px" v-if="editing" @saving-event="save"
                                   @delete-event="deleteLesson"
                                   @cancel-event="cancel"
@@ -85,11 +91,6 @@
                                   :currentLesson="currentEditingLesson"
                                   :trainers="allTrainers"
                                   :courseTrainerId="courseTrainerId"></lesson-editing-component>
-
-        <lesson-attendance-table v-if="!loading"
-                                 :lessonId="this.$route.params.id"
-                                 :trainerId="this.trainer.id"
-                                 :key="this.$route.params.id"/>
     </v-container>
 
 </template>

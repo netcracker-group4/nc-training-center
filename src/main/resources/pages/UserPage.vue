@@ -288,7 +288,7 @@
                 return this.$store.state.user.id.toString() === this.$route.params.id;
             },
             downloadGroupsAttendanceReport() {
-                window.open(this.$store.state.apiServer + "/attendance-report", "_blank");
+                window.open(this.$store.state.apiServer + "/api/download-report/attendance-report", "_blank");
             }
         }
         ,

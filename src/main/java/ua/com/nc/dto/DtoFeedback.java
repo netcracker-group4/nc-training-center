@@ -2,6 +2,7 @@ package ua.com.nc.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 
 public class DtoFeedback {
@@ -10,19 +11,19 @@ public class DtoFeedback {
     private DtoTeacherAndManager teacher;
     private DtoCourse course;
     private String text;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm", timezone="GMT")
-    private OffsetDateTime timeDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
+    private Timestamp time;
 
     public DtoFeedback() {
     }
 
-    public DtoFeedback(Integer id, Integer studentId, DtoTeacherAndManager teacher, DtoCourse course, String text, OffsetDateTime timeDate) {
+    public DtoFeedback(Integer id, Integer studentId, DtoTeacherAndManager teacher, DtoCourse course, String text, Timestamp time) {
         this.id = id;
         this.studentId = studentId;
         this.teacher = teacher;
         this.course = course;
         this.text = text;
-        this.timeDate = timeDate;
+        this.time = time;
     }
 
     public Integer getId() {
@@ -65,11 +66,11 @@ public class DtoFeedback {
         this.text = text;
     }
 
-    public OffsetDateTime getTimeDate() {
-        return timeDate;
+    public Timestamp getTime() {
+        return time;
     }
 
-    public void setTimeDate(OffsetDateTime timeDate) {
-        this.timeDate = timeDate;
+    public void setTime(Timestamp time) {
+        this.time = time;
     }
 }

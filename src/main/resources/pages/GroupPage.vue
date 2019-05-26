@@ -53,7 +53,7 @@
                                           :is-student-of-group="isStudentOfGroup()"></group-schedule-component>
             </v-flex>
 
-            <v-flex style="margin-bottom: 50px" xs12 sm12 v-if="hasRights()">
+            <v-flex mb-50 xs12 sm12 v-if="hasRights()">
                 <group-attendance-graph :absenceReasons="reasons"/>
             </v-flex>
         </v-layout>
@@ -205,7 +205,7 @@
                 return this.students.filter(e => e.id === self.$store.state.user.id).length > 0;
             },
             downloadGroupAttendanceReport() {
-                window.open(this.$store.state.apiServer + "/attendance-report/" + this.id, "_blank");
+                window.open(this.$store.state.apiServer + "/api/download-report/attendance-report/" + this.id, "_blank");
             },
 
         },
@@ -258,7 +258,7 @@
                 });
 
 
-            axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/getAttendanceGraph')
+            axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/attendance-graph')
                 .then(function (response) {
                     self.reasons = response.data;
                     console.log(response.data);

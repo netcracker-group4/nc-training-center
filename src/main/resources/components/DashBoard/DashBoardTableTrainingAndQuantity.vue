@@ -120,7 +120,7 @@
                 this.$router.push('/courses/' + courseId);
             },
             downloadDashboardReport() {
-                window.open(this.$store.state.apiServer + "/dashboard-report", "_blank");
+                window.open(this.$store.state.apiServer + "/api/download-report/dashboard-report", "_blank");
             }
         },
         mounted() {

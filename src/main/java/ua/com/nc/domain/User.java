@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,7 +22,7 @@ public class User extends Entity implements UserDetails {
     private String firstName;
     private String lastName;
     private String token;
-    private OffsetDateTime created;
+    private Timestamp created;
     private Integer managerId;
     private String imageUrl;
     private boolean isActive;
@@ -32,7 +33,7 @@ public class User extends Entity implements UserDetails {
     public User() {
     }
 
-    public User(Integer id, String email, String password, String firstName, String lastName, String token, OffsetDateTime created, Integer managerId, String image, boolean isActive) {
+    public User(Integer id, String email, String password, String firstName, String lastName, String token, Timestamp created, Integer managerId, String image, boolean isActive) {
         super(id);
         this.setEmail(email);
         this.setPassword(password);
@@ -45,7 +46,7 @@ public class User extends Entity implements UserDetails {
         this.setActive(isActive);
     }
 
-    public User(String email, String password, String firstName, String lastName, String token, OffsetDateTime created, Integer managerId, String image, boolean isActive) {
+    public User(String email, String password, String firstName, String lastName, String token, Timestamp created, Integer managerId, String image, boolean isActive) {
         this.setEmail(email);
         this.setPassword(password);
         this.setFirstName(firstName);

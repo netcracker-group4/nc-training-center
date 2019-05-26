@@ -3,14 +3,14 @@
         <v-container grid-list-xl style="min-height: 10px">
             <image-input-component :user="user" v-model="avatar">
                 <div slot="activator">
-<!--                    <v-avatar size="200px" v-ripple v-if="true" class="grey lighten-3 mb-3">-->
-<!--                        <img src="https://png.pngtree.com/svg/20161212/f93e57629c.svg" alt="avatar">-->
-<!--                    </v-avatar>-->
-                    <v-avatar size="200px" v-ripple v-if="true" class="grey lighten-3 mb-3">
-                        <img src="http://localhost:8080/api/users/image" id="image" alt="avatar">
+                    <v-avatar size="200px" v-ripple v-if="!user.image" class="grey lighten-3 mb-3">
+                        <img src="https://png.pngtree.com/svg/20161212/f93e57629c.svg" alt="avatar">
                     </v-avatar>
+<!--                    <v-avatar size="200px" v-ripple v-if="user.image" class="grey lighten-3 mb-3">-->
+<!--                        <img :src="image + user.image" id="image" alt="avatar">-->
+<!--                    </v-avatar>-->
                     <v-avatar size="200px" v-ripple v-else class="mb-3">
-                        <img :src="apiServer + user.image" alt="avatar">
+                        <img src="http://localhost:8080/api/users/image" id="image" alt="avatar">
                     </v-avatar>
                 </div>
             </image-input-component>
@@ -25,6 +25,7 @@
 
 <script>
     import axios from 'axios';
+    import store from '../../store/store.js';
     import ImageInputComponent from './ImageInputComponent.vue';
 
     export default {
@@ -38,7 +39,7 @@
                 saving: false,
                 saved: false,
                 apiServer: 'http://45.66.10.81:21',
-                image: '',
+                imageUrl: store.state.apiServer + '/api/users/image/',
             }
         },
         components: {
@@ -80,24 +81,7 @@
                 this.saving = false;
                 this.saved = true;
             },
-            getPath() {
-                return "https://45.66.10.81:21/" + this.user.image;
-            },
-            getImage() {
-                let self = this;
-                axios.get(this.$store.state.apiServer + '/api/users/image')
-                    .then(function (response) {
-                        self.image = response.data;
-                        // document.getElementById("image").src = response.data;
-                    })
-                    .catch(function (error) {
-
-                    });
-            }
         },
-        mounted() {
-            this.getImage();
-        }
     }
 </script>
 

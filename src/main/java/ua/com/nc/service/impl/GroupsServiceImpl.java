@@ -128,21 +128,33 @@ public class GroupsServiceImpl implements GroupsService {
 
     @Override
     public Map<String, Double> getAttendanceGraph(Integer groupId) {
-        Map<String, Integer> attendance = new HashMap<>();
-        statusDao.getAll().forEach(reason -> attendance.put(reason.getTitle().toLowerCase(), 0));
-        List<Attendance> attendances = attendanceDao.getAttendanceByGroupId(groupId);
         int coefficient = 0;
+        int latenessCoefficient = 0;
+        Map<String, Double> attendance = new HashMap<>();
+        statusDao.getAll().forEach(reason -> attendance.put(reason.getTitle().toLowerCase(), 0.0));
+        List<Attendance> attendances = attendanceDao.getAttendanceByGroupId(groupId);
+
         if (attendances != null && !attendances.isEmpty()) {
-            for (Attendance instance : attendanceDao.getAttendanceByGroupId(groupId)) {
+            for (Attendance instance : attendances) {
                 String status = instance.getStatus().toLowerCase();
-                attendance.put(status, attendance.get(status) + 1);
-                coefficient++;
+                if(status.equals("late")){
+                    attendance.put("present", attendance.get("present") + 1);
+                    coefficient++;
+                    latenessCoefficient++;
+                } else {
+                    attendance.put(status, attendance.get(status) + 1);
+                    coefficient++;
+                }
             }
+            Map<String, Double> result = new HashMap<>();
+            final double percentage = 100.0 / coefficient;
+            attendance.forEach((key, value) -> result.put(key, (value * percentage)));
+            final double latenessPercentage = 100.0 / (attendance.get("present") - latenessCoefficient);
+            result.replace("late", latenessCoefficient * latenessPercentage);
+            return result;
+        } else {
+            return attendance;
         }
-        final double percentage = 100.0 / coefficient;
-        Map<String, Double> result = new HashMap<>();
-        attendance.forEach((key, value) -> result.put(key, (value * percentage)));
-        return result;
     }
 
 
