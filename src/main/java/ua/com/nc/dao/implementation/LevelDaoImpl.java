@@ -87,7 +87,7 @@ public class LevelDaoImpl extends AbstractDaoImpl<Level> implements LevelDao {
             Level level = new Level(id, title);
             levels.add(level);
         }
-        log.info("Retrieved levels from database " + levels);
+        log.debug("Retrieved levels from database " + levels);
         return levels;
     }
 
@@ -95,7 +95,7 @@ public class LevelDaoImpl extends AbstractDaoImpl<Level> implements LevelDao {
     @Override
     public List<Level> getAllByTrainer(int trainerId) {
         String sql = levelSelectByTrainer;
-        log.info("find all levels by trainer " + trainerId + " " + sql);
+        log.debug("find all levels by trainer " + trainerId + " " + sql);
         return getFromSqlById(sql, trainerId);
     }
 

@@ -1,15 +1,15 @@
 package ua.com.nc.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import ua.com.nc.domain.Attendance;
-import ua.com.nc.dto.AttendanceDto;
 import ua.com.nc.security.CustomSecurityService;
 import ua.com.nc.service.AttendanceService;
 import ua.com.nc.service.SerializationService;
@@ -38,10 +38,9 @@ public class AttendanceController {
                                            @RequestParam(required = false, name = "groupId") Integer groupId,
                                            @RequestParam(required = false, name = "lessonId") Integer lessonId) {
 
-        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").serializeNulls().create();
-
+//        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").serializeNulls().create();
         List<Attendance> attendances = attendanceService.getAttendance(userId, courseId, groupId, lessonId);
-        if(attendances != null){
+        if (attendances != null) {
             return ResponseEntity.ok().body(serializationService.serializeWithDateFormat(attendances));
         } else return ResponseEntity.badRequest().body("Bad request");
     }
@@ -49,7 +48,7 @@ public class AttendanceController {
     @RequestMapping(value = "/{lessonId}", method = RequestMethod.POST)
     public ResponseEntity<?> setAttendance(@PathVariable Integer lessonId) {
         attendanceService.attendanceInsert(lessonId);
-        return ResponseEntity.ok().body("OK");
+        return ResponseEntity.ok("OK");
     }
 
 
@@ -61,6 +60,6 @@ public class AttendanceController {
 
         Integer integerAbsenceId = CastUtils.castIntegerToString(absenceId);
         attendanceService.attendanceUpdate(attendanceId, statusId, integerAbsenceId);
-        return ResponseEntity.ok().body("Ok");
+        return ResponseEntity.ok("Ok");
     }
 }

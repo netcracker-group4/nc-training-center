@@ -54,7 +54,7 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
             Chat chat = new Chat(id, name, timeDate, groupId);
             list.add(chat);
         }
-        log.info("Retrieved Chats from database " + list);
+        log.debug("Retrieved Chats from database " + list);
         return list;
     }
 
@@ -62,7 +62,7 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
     public Chat getChatBySenderIdAndReceiverId(Integer senderId, Integer receiverId) {
         List<Chat> list;
         String sql = selectChatBySenderIdAndReceiverId;
-        log.info(sql + " select chat by sender and receiver");
+        log.debug(sql + " select chat by sender and receiver");
         list = getFromSqlByTwoId(selectChatBySenderIdAndReceiverId, senderId, receiverId);
         if (list.size() != 1) {
             return null;
@@ -75,7 +75,7 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
     public Integer addChatReturningId(Chat chat) {
         Integer id;
         String sql = insertChat;
-        log.info(sql + " insert chat");
+        log.debug(sql + " insert chat");
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(insertChat)) {
             statement.setString(1, chat.getName());
@@ -98,7 +98,7 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
     @Override
     public void addUserToChat(Integer chatId, Integer userId) {
         String sql = insertUser;
-        log.info(sql + " insert user to chat");
+        log.debug(sql + " insert user to chat");
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(insertUser)) {
             statement.setInt(2, userId);
@@ -113,14 +113,14 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
     @Override
     public List<Chat> getChatsByUserId(Integer userId) {
         String sql = chatSelectByUserId;
-        log.info(sql + "get chat by user id");
+        log.debug(sql + "get chat by user id");
         return getFromSqlById(sql, userId);
     }
 
     @Override
     public Chat getByUserIdAndChatId(Integer userId, Integer chatId) {
         String sql = chatSelectByUserIdAndChatId;
-        log.info(sql + "get chat by user id and chat id");
+        log.debug(sql + "get chat by user id and chat id");
         List<Chat> chats = getFromSqlByTwoId(sql, userId, chatId);
         if (chats != null && chats.size() > 0) {
             return chats.get(0);
@@ -132,7 +132,7 @@ public class ChatDaoImpl extends AbstractDaoImpl<Chat> implements ChatDao {
     @Override
     public Chat getByGroupId(Integer groupId) {
         String sql = chatSelectByGroupId;
-        log.info(sql + " get chat by group id");
+        log.debug(sql + " get chat by group id");
         return getUniqueFromSqlById(sql, groupId);
     }
 

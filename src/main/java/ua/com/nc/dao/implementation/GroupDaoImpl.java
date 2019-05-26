@@ -102,27 +102,27 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
             Group group = new Group(id, courseId, title);
             groups.add(group);
         }
-        log.info("Retrieved groups from database " + groups);
+        log.debug("Retrieved groups from database " + groups);
         return groups;
     }
 
     @Override
     public List<Group> getAllGroupsOfCourse(Integer courseId) {
         String sql = groupSelectByCourse;
-        log.info("find all groups by courseId " + courseId + "  " + sql);
+        log.debug("find all groups by courseId " + courseId + "  " + sql);
         return getFromSqlById(sql, courseId);
     }
 
     @Override
     public int getNumberOfEmployeesInGroup(Integer groupId) {
         String sql = groupSelectNumberOfEmployees;
-        log.info("select number of employees for a groupId " + groupId + " " + sql);
+        log.debug("select number of employees for a groupId " + groupId + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, groupId);
             ResultSet rs = statement.executeQuery();
             int numberOfEmployees = (rs.next()) ? rs.getInt(1) : 0;
-            log.info("retrieved from database number of employees for a group " + numberOfEmployees);
+            log.debug("retrieved from database number of employees for a group " + numberOfEmployees);
             return numberOfEmployees;
         } catch (Exception e) {
             log.error(e);
@@ -133,14 +133,14 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     @Override
     public List<Group> getAllGroupsByStudent(Integer studentId) {
         String sql = groupSelectByEmployee;
-        log.info("select all groups by studentId " + studentId + " " + sql);
+        log.debug("select all groups by studentId " + studentId + " " + sql);
         return getFromSqlById(sql, studentId);
     }
 
     @Override
     public List<Group> getGroupByTrainerId(Integer trainerId) {
         String sql = groupSelectByTrainerId;
-        log.info("select all groups for trainer " + trainerId + " " + sql);
+        log.debug("select all groups for trainer " + trainerId + " " + sql);
         return getFromSqlById(sql, trainerId);
     }
 

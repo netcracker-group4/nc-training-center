@@ -83,7 +83,7 @@ public class AbsenceReasonDaoImpl extends AbstractDaoImpl<AbsenceReason> impleme
             AbsenceReason reason = new AbsenceReason(id, title);
             list.add(reason);
         }
-        log.info("AbsenceReasons retrieved object from database" +  list);
+        log.debug("AbsenceReasons retrieved object from database" +  list);
         return list;
     }
 

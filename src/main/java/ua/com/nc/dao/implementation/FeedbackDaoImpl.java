@@ -14,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,14 +100,14 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
                     courseId, text, timestamp);
             feedbacks.add(feedback);
         }
-        log.info("Retrieved Feedbacks from database " + feedbacks);
+        log.debug("Retrieved Feedbacks from database " + feedbacks);
         return feedbacks;
     }
 
     @Override
     public List<Feedback> getAllByUserId(Integer userId) {
         String sql = feedbackSelectAllByUser;
-        log.info("select all feedbacks by userId " + userId + " " + sql);
+        log.debug("select all feedbacks by userId " + userId + " " + sql);
         return getFromSqlById(sql, userId);
     }
 
@@ -116,7 +115,7 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
     @Override
     public List<Feedback> getAllByTrainerIdAndUserId(Integer userId, Integer trainerId) {
         String sql = feedbackSelectAllByTrainerIdAndByUserId;
-        log.info("select all feedbacks by trainer " + trainerId + " and by employee " + userId  + " " +sql);
+        log.debug("select all feedbacks by trainer " + trainerId + " and by employee " + userId  + " " +sql);
         return getFromSqlByTwoId(sql, userId, trainerId);
     }
 }

@@ -42,7 +42,7 @@ public class AttendanceStatusDaoImpl extends AbstractDaoImpl<AttendanceStatus> i
             AttendanceStatus reason = new AttendanceStatus(id, title);
             list.add(reason);
         }
-        log.info("Retrieved Attendance Statuses from database " + list);
+        log.debug("Retrieved Attendance Statuses from database " + list);
         return list;
     }
 

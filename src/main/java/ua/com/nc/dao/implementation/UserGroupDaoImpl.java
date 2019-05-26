@@ -99,14 +99,14 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
             UserGroup userGroup = new UserGroup(id, userId, groupId, courseId, isAttending);
             list.add(userGroup);
         }
-        log.info("Retrieved UserGroups from database " + list);
+        log.debug("Retrieved UserGroups from database " + list);
         return list;
     }
 
     @Override
     public void deleteAllForGroup(Integer groupId) {
         String sql = userGroupDeleteForGroup;
-        log.info("delete employees from group  " + groupId + " " + sql);
+        log.debug("delete employees from group  " + groupId + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, groupId);
@@ -121,7 +121,7 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     @Override
     public UserGroup getByUserAndCourse(Integer userId, Integer courseId) {
         String sql = userGroupSelectByUsrAndCourse;
-        log.info("get UserGroup by userId " + userId + " courseId " + courseId + " " + sql);
+        log.debug("get UserGroup by userId " + userId + " courseId " + courseId + " " + sql);
         return getUniqueByTwoId(sql, courseId, userId);
     }
 
@@ -139,14 +139,14 @@ public class UserGroupDaoImpl extends AbstractDaoImpl<UserGroup> implements User
     @Override
     public UserGroup getByUserAndGroup(Integer userId, Integer groupId) {
         String sql = userGroupSelectByUsrAndGroup;
-        log.info(" UserAndGroup by userId " + userId + " groupId " + groupId + " " + sql);
+        log.debug("UserAndGroup by userId " + userId + " groupId " + groupId + " " + sql);
         return getUniqueByTwoId(sql, groupId, userId);
     }
 
     @Override
     public List<UserGroup> getByUser(Integer userId) {
         String sql = userGroupSelectByUserId;
-        log.info("get all userGroups by userId " + userId);
+        log.debug("get all userGroups by userId " + userId);
         return getFromSqlById(sql, userId);
     }
 }

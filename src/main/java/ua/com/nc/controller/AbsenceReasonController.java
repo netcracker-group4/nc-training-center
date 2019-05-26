@@ -1,13 +1,19 @@
 package ua.com.nc.controller;
 
-import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ua.com.nc.dao.interfaces.AbsenceReasonDao;
 import ua.com.nc.domain.AbsenceReason;
 import ua.com.nc.service.AbsenceReasonService;
+import ua.com.nc.service.SerializationService;
+
+import java.util.List;
 
 @Log4j2
 @Controller
@@ -17,32 +23,30 @@ public class AbsenceReasonController {
     private AbsenceReasonDao absenceReasonDao;
     @Autowired
     private AbsenceReasonService service;
-
-    private final Gson gson = new Gson();
+    @Autowired
+    private SerializationService serializationService;
 
     @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
-    public String getReasons() {
-        return gson.toJson(absenceReasonDao.getAll());
+    public ResponseEntity<List<AbsenceReason>> getReasons() {
+        return ResponseEntity.ok(absenceReasonDao.getAll());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    @ResponseBody
-    public String getReason(@PathVariable Integer id) {
-        return gson.toJson(absenceReasonDao.getEntityById(id));
+    public ResponseEntity<AbsenceReason> getReason(@PathVariable Integer id) {
+        AbsenceReason absenceReason = absenceReasonDao.getEntityById(id);
+        return ResponseEntity.ok(absenceReason);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    @ResponseBody
-    public void deleteReason(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteReason(@PathVariable Integer id) {
         absenceReasonDao.delete(id);
+        return ResponseEntity.ok("Deleted");
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public Integer add(@RequestBody AbsenceReason absenceReason) {
+    public ResponseEntity<?> add(@RequestBody AbsenceReason absenceReason) {
         log.info("absenceReason from RequestBody  " + absenceReason);
-        return service.add(absenceReason);
+        return ResponseEntity.ok(service.add(absenceReason));
     }
 
 }
