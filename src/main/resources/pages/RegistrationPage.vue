@@ -168,10 +168,12 @@
                             console.log(response);
                             if (self.isAdmin()) {
                                 self.successAutoClosable('New ' + this.user.role.toLowerCase() + ' has been added');
+                                this.$router.push('/users');
                             } else {
                                 self.successAutoClosable('Registration was successful! Confirm letter was send to your email');
+                                this.$router.push('/login');
                             }
-                            self.$validator.reset();
+                            this.clearUser();
                         }).catch(function (error) {
                             self.errorAutoClosable('User with this email already exists');
                         });

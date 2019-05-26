@@ -6,14 +6,13 @@
             <!--            toolbar-->
             <v-flex xs12 style="margin-bottom: 50px">
                 <v-toolbar flat color="white">
-                    <v-toolbar-title>Course : {{name}}</v-toolbar-title>
+                    <v-toolbar-title>Course : {{course.name}}</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn flat @click="edit()">
                         <v-icon>edit</v-icon>
                     </v-btn>
                     <v-dialog v-if="isAdmin" v-model="dialog" max-width="500px">
-                        <EditCourseComponent :starts-day="startDay" :ends-day="endDay"
-                                             :descr="description" :id="id" :nm="name"/>
+                        <EditCourseComponent :course="course"/>
                     </v-dialog>
                     <v-btn v-if="canJoinCourse" @click="sign()">Sign course</v-btn>
                 </v-toolbar>
@@ -25,32 +24,32 @@
                     <v-list-tile>
                         <v-list-tile-content>
                             <v-list-tile-title><span class="grey--text name-my">Status :</span> <span
-                                    class="font-weight-medium">{{courseStatus}}</span></v-list-tile-title>
+                                    class="font-weight-medium">{{course.status}}</span></v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
                         <v-list-tile-content>
                             <v-list-tile-title><span class="grey--text name-my">Level:</span> <span
-                                    class="font-weight-medium">{{level.title}}</span></v-list-tile-title>
+                                    class="font-weight-medium">{{course.level.title}}</span></v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
                         <v-list-tile-content>
                             <v-list-tile-title><span class="grey--text name-my">Starts on:</span> <span
-                                    class="font-weight-medium">{{startDay}}</span></v-list-tile-title>
+                                    class="font-weight-medium">{{course.startDay}}</span></v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
                         <v-list-tile-content>
                             <v-list-tile-title><span class="grey--text name-my">Ends on:</span> <span
-                                    class="font-weight-medium">{{endDay}}</span>
+                                    class="font-weight-medium">{{course.endDay}}</span>
                             </v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
-                        <v-list-tile-content @click="goTrainerPage(trainer.id)" class="clickable">
+                        <v-list-tile-content @click="goTrainerPage(course.trainer.id)" class="clickable">
                             <v-list-tile-title><span class="grey--text name-my">Trainer:</span> <span
-                                    class="font-weight-medium">{{trainer.firstName }} {{trainer.lastName}}</span>
+                                    class="font-weight-medium">{{course.trainer.firstName }} {{course.trainer.lastName}}</span>
                             </v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
@@ -89,14 +88,14 @@
         </v-layout>
         <v-layout v-if="!loading" row wrap>
             <v-flex xs12 md6 style="padding: 10px">
-                <v-img v-if="imageUrl"
-                       :src="this.$store.state.apiServer+ '/api/files-img?url=' + imageUrl"
+                <v-img v-if="course.imageUrl"
+                       :src="this.$store.state.apiServer+ '/api/files-img?url=' + course.imageUrl"
                        aspect-ratio="2"></v-img>
-                <v-progress-linear v-if="!imageUrl" :indeterminate="true"></v-progress-linear>
+                <v-progress-linear v-if="!course.imageUrl" :indeterminate="true"></v-progress-linear>
                 <div v-if="isAdmin">
                     <v-text-field label="Select Image"
                                   @click='pickFile'
-                                  v-model='imageUrl'
+                                  v-model='course.imageUrl'
                                   prepend-icon='attach_file'></v-text-field>
                     <form id="uploadForm" name="uploadForm" enctype="multipart/form-data" style="height: 0">
                         <input
@@ -112,19 +111,15 @@
 
             <!--            description-->
             <v-flex xs12 md6 style="padding: 10px">
-                <v-textarea
-                        id="course-descr-text"
-                        name="input-7-1"
-                        label="Description"
-                        :value="description"
-                        :readonly="!isAdmin"
-                        box
-                        auto-grow
-                ></v-textarea>
-                <v-layout>
-                    <v-spacer></v-spacer>
-                    <v-btn color="success" @click="submit">submit</v-btn>
-                </v-layout>
+                    <v-textarea
+                            id="course-descr-text"
+                            name="input-7-1"
+                            label="Description"
+                            :value="course.description"
+                            :readonly="true"
+                            box
+                            auto-grow
+                    ></v-textarea>
             </v-flex>
         </v-layout>
     </v-container>
@@ -141,20 +136,22 @@
         components: {EditCourseComponent, CourseDate, ProgressCircularComponent},
         data() {
             return {
-                id: this.$route.params.id,
-                name: null,
+                course:{
+                    id: this.$route.params.id,
+                    name: null,
+                    level: {title: ''},
+                    status: null,
+                    imageUrl: null,
+                    isOnLandingPage: null,
+                    description: null,
+                    startDay: null,
+                    endDay: null,
+                    trainer: {firstName: '', lastName: ''},
+                },
                 canJoinCourse: false,
                 levelId: null,
-                level: {title: ''},
-                courseStatus: null,
                 courseStatusId: null,
-                imageUrl: null,
                 img: null,
-                isOnLandingPage: null,
-                description: null,
-                startDay: null,
-                endDay: null,
-                trainer: {firstName: '', lastName: ''},
                 groups: [],
                 isAdmin: this.$store.getters.isAdmin,
                 isNotAdmin: this.isAdmin === "false",
@@ -175,18 +172,18 @@
         methods: {
             setCourse() {
                 let self = this;
-                axios.get(this.$store.state.apiServer + '/api/getcourses/' + self.id)
+                axios.get(this.$store.state.apiServer + '/api/getcourses/' + self.course.id)
                     .then(function (response) {
                         let dat = response.data;
-                        self.name = dat.name;
+                        self.course.name = dat.name;
                         self.levelId = dat.level;
                         self.setLevel(dat.level);
                         self.getStatus(dat.courseStatusId);
-                        self.isOnLandingPage = dat.isOnLandingPage;
-                        self.imageUrl = dat.imageUrl;
-                        self.description = dat.description;
-                        self.startDay = new Date(dat.startDate).toISOString().substr(0, 10);
-                        self.endDay = new Date(dat.endDate).toISOString().substr(0, 10);
+                        self.course.isOnLandingPage = dat.isOnLandingPage;
+                        self.course.imageUrl = dat.imageUrl;
+                        self.course.description = dat.description;
+                        self.course.startDay = new Date(dat.startDate).toISOString().substr(0, 10);
+                        self.course.endDay = new Date(dat.endDate).toISOString().substr(0, 10);
                         self.getTrainer();
                         self.getGroups();
                         self.loading = false;
@@ -201,23 +198,22 @@
                 let self = this;
                 axios.get(this.$store.state.apiServer + '/api/getInfo/getStatus/' + id)
                     .then(function (response) {
-                        self.courseStatus = response.data;
+                        self.course.status = response.data;
                     })
                     .catch(function (error) {
                         console.log(error);
-                        if (error.response != null && error.response.status == 400)
+                        if (error.response != null && error.response.status === 400)
                             self.$router.push('/404');
                     });
             },
             getTrainer() {
                 let self = this;
-                axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id + '/trainer')
+                axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.course.id + '/trainer')
                     .then(function (response) {
-                        self.trainer = response.data[0];
+                        self.course.trainer = response.data[0];
                     })
                     .catch(function (error) {
-                        console.log(error);
-                        if (error.response != null && error.response.status == 400)
+                        if (error.response != null && error.response.status === 400)
                             self.$router.push('/404');
                     });
             },
@@ -228,17 +224,16 @@
                 this.$router.push('/groups/' + id);
             },
             sign() {
-                this.$router.push('/courses/' + this.id + '/join');
+                this.$router.push('/courses/' + this.course.id + '/join');
             },
             getGroups() {
                 let self = this;
-                axios.get(this.$store.state.apiServer + '/api/groups/get-groups/' + self.id)
+                axios.get(this.$store.state.apiServer + '/api/groups/get-groups/' + self.course.id)
                     .then(function (response) {
                         self.groups = response.data;
                     })
                     .catch(function (error) {
-                        console.log(error);
-                        if (error.response != null && error.response.status == 400)
+                        if (error.response != null && error.response.status === 400)
                             self.$router.push('/404');
                     });
             },
@@ -249,31 +244,13 @@
                 let self = this;
                 axios.get(this.$store.state.apiServer + '/api/getInfo/getLevel/' + levelId)
                     .then(function (response) {
-                        self.level = response.data;
+                        self.course.level = response.data;
                     })
                     .catch(function (error) {
                         console.log(error);
-                        if (error.response != null && error.response.status == 400)
+                        if (error.response != null && error.response.status === 400)
                             self.$router.push('/404');
                     });
-            },
-            submit() {
-                this.description = document.querySelector('#course-descr-text')._value;
-                let form = new FormData();
-                let request = new XMLHttpRequest();
-                request.open('PUT', this.$store.state.apiServer + '/getcourses/' + this.$route.params.id + '/create');
-                form.append('name', this.name);
-                form.append('level', this.level.title);
-                form.append('courseStatus', this.courseStatus);
-                form.append('imageUrl', this.imageUrl);
-                form.append('image', this.img);
-                form.append('trainer', this.trainer);
-                form.append('isOnLandingPage', this.isOnLandingPage);
-                form.append('description', this.description);
-                form.append('startDay', this.startDay);
-                form.append('endDay', this.endDay);
-                request.send(form);
-
             },
             pickFile() {
                 this.$refs.image.click()
@@ -284,7 +261,7 @@
                     const fr = new FileReader();
                     fr.readAsDataURL(files[0]);
                     fr.addEventListener('load', () => {
-                        this.imageUrl = fr.result;
+                        this.course.imageUrl = fr.result;
                         this.img = files[0]
                     });
                     let form = new FormData();
@@ -302,7 +279,7 @@
                         });
                 } else {
                     this.img = '';
-                    this.imageUrl = '';
+                    this.course.imageUrl = '';
                 }
             },
             manageGroups() {
@@ -313,9 +290,6 @@
             let self = this;
             axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id + '/can-join')
                 .then(function (response) {
-                    console.log(response.data);
-                    console.log(self.$store.state.userRoles);
-                    console.log("can join course " + response.data);
                     self.canJoinCourse = response.data;
                 }).catch(function (error) {
                 self.canJoinCourse = false;

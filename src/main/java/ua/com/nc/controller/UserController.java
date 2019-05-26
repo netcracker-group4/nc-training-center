@@ -120,7 +120,8 @@ public class UserController {
 
     @RequestMapping(value = "/recover-password", method = RequestMethod.POST)
     public ResponseEntity<?> recoverPassword(@RequestBody User user) {
-        if (userService.getByEmail(user.getEmail()) != null) {
+        user = userService.getByEmail(user.getEmail());
+        if (user != null && user.isActive()) {
             userService.recoverPassword(user.getEmail());
             return ResponseEntity.ok().body("Password is recover");
         } else {

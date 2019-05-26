@@ -48,12 +48,14 @@ public class ReportServiceImpl implements ReportService {
         try (XSSFWorkbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
-            for (User trainer : userDao.getAllTrainers()) {
-                List<Group> groups = groupDao.getGroupByTrainerId(trainer.getId());
-                drawTrainersGroups(workbook, headerStyle(workbook), presenceStyle(workbook), trainer, groups);
+            List<Group> groups = groupDao.getAll();
+            if (!groups.isEmpty()) {
+                drawGroupsPage(workbook, headerStyle(workbook), presenceStyle(workbook), groups);
+                workbook.write(out);
+                return new ByteArrayInputStream(out.toByteArray());
+            } else {
+                throw new IOException("No groups to report");
             }
-            workbook.write(out);
-            return new ByteArrayInputStream(out.toByteArray());
         }
     }
 
@@ -119,6 +121,17 @@ public class ReportServiceImpl implements ReportService {
             //foreach trainer's group create sheet with title
             Sheet groupSheet = workbook.createSheet(trainer.getLastName()
                     + "'s " + group.getTitle());
+            int rowCount = 0;
+            Row headerRow = groupSheet.createRow(rowCount);
+            drawGroupSheet(headerStyle, presenceStyle, group, groupSheet, rowCount, headerRow);
+        }
+    }
+
+    private void drawGroupsPage(XSSFWorkbook workbook, CellStyle headerStyle,
+                                CellStyle presenceStyle, List<Group> groups) {
+        for (Group group : groups) {
+            //foreach group create sheet with title
+            Sheet groupSheet = workbook.createSheet(group.getTitle());
             int rowCount = 0;
             Row headerRow = groupSheet.createRow(rowCount);
             drawGroupSheet(headerStyle, presenceStyle, group, groupSheet, rowCount, headerRow);

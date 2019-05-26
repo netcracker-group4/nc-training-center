@@ -7,7 +7,6 @@ import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoUserSave;
 
 import java.sql.Timestamp;
-import java.time.OffsetDateTime;
 
 @Component
 public class UserMapper {
