@@ -10,10 +10,11 @@ import ua.com.nc.domain.Feedback;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoCourse;
 import ua.com.nc.dto.DtoFeedback;
+import ua.com.nc.dto.DtoMailSender;
 import ua.com.nc.dto.DtoTeacherAndManager;
+import ua.com.nc.mapper.FeedbackMapper;
 import ua.com.nc.service.FeedbackService;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,16 +26,14 @@ public class FeedbackServiceImpl implements FeedbackService {
     private FeedbackDao feedbackDao;
     @Autowired
     private CourseDao courseDao;
+    @Autowired
+    private FeedbackMapper feedbackMapper;
+    @Autowired
+    private EmailServiceImpl emailService;
 
     @Override
     public void add(DtoFeedback dtoFeedback) {
-        Feedback feedback = new Feedback();
-        feedback.setStudentId(dtoFeedback.getStudentId());
-        feedback.setTrainerId(dtoFeedback.getTeacher().getId());
-        feedback.setCourseId(dtoFeedback.getCourse().getId());
-        feedback.setText(dtoFeedback.getText());
-        feedback.setTimeDate(OffsetDateTime.now());
-
+        Feedback feedback = feedbackMapper.toModel(dtoFeedback);
         feedbackDao.insert(feedback);
     }
 
@@ -82,7 +81,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                         dtoTeacher,
                         dtoCourse,
                         feedback.getText(),
-                        feedback.getTimeDate()
+                        feedback.getTime()
                 ));
             }
         }
