@@ -24,6 +24,7 @@ import ua.com.nc.service.UserService;
 
 import java.io.*;
 import java.security.SecureRandom;
+import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -40,6 +41,10 @@ public class UserServiceImpl implements UserService {
     private String titleMessageToNewManagerOrTrainer;
     @Value("${text.message-to-new-manager-or-trainer}")
     private String textMessageToNewManagerOrTrainer;
+    @Value("${title.message-recover-password}")
+    private String titleMessageRecoverPassword;
+    @Value("${text.message-recover-password}")
+    private String textMessageRecoverPassword;
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -202,14 +207,24 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        if (ChronoUnit.HOURS.between(user.getCreated(), OffsetDateTime.now()) > 24) {
+        if (timeDifference(user.getCreated()) > 23) {
             return false;
         }
-//        user.setToken(null);
+
         user.setActive(true);
         userDao.updateActive(user);
 
         return true;
+    }
+
+    private Integer timeDifference(Timestamp userCreated) {
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        long milliseconds = currentTime.getTime() - userCreated.getTime();
+        int seconds = (int) milliseconds / 1000;
+
+        int hours = seconds / 3600;
+
+        return hours;
     }
 
     @Override
@@ -273,49 +288,6 @@ public class UserServiceImpl implements UserService {
         att.forEach((key, value) -> result.put(key, (value * 100.0) / a));
         return result;
     }
-
-//    public String uploadImage(MultipartFile image) {
-//        if (!image.isEmpty()) {
-//            try {
-//                byte[] bytes = image.getBytes();
-//                String name = image.getOriginalFilename();
-//                String rootPath = "src/main/resources/avatar/";
-//                File dir = new File(rootPath);
-//
-//                if (!dir.exists()) {
-//                    if(!dir.mkdirs()){
-//                        return null;
-//                    }
-//                }
-//                String filePath = dir.getAbsolutePath() + File.separator + name;
-//                File uploadedFile = new File(filePath);
-//                try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile))) {
-//                    stream.write(bytes);
-//                }
-//                try(FileInputStream stream = new FileInputStream(filePath)) {
-//                    String path = "/avatar/";
-//                    filePath = path + name;
-//                    fileService.uploadFileToServer(path, name, stream);
-//                    if(!uploadedFile.delete()){
-//                        log.error("Temp file " + uploadedFile.getName() + " wasn't deleted!");
-//                    }
-//                    return filePath;
-//                }
-//            } catch (Exception e) {
-//                log.error(e);
-//            }
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public void uploadImage(DtoUserSave dtoUserSave) {
-//        String filePath = uploadImage(dtoUserSave.getImage());
-//        User user = new User();
-//        user.setId(dtoUserSave.getId());
-//        user.setImageUrl(filePath);
-//        userDao.updateImage(user);
-//    }
 
     @Override
     public User uploadImage(DtoUserSave dtoUserSave) {
@@ -393,8 +365,8 @@ public class UserServiceImpl implements UserService {
 
         DtoMailSender dtoMailSender = new DtoMailSender();
         dtoMailSender.setTo(email);
-        dtoMailSender.setSubject("Recover password");
-        dtoMailSender.setText("Your new password " + password);
+        dtoMailSender.setSubject(titleMessageRecoverPassword);
+        dtoMailSender.setText(String.format(textMessageRecoverPassword, password));
         emailService.sendSimpleMessage(dtoMailSender);
 
     }

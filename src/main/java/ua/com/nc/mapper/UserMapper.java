@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoUserSave;
 
+import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 
 @Component
@@ -21,7 +22,7 @@ public class UserMapper {
         user.setLastName(dtoUserSave.getLastName());
         user.setPassword(passwordEncoder.encode(dtoUserSave.getPassword()));
         user.setEmail(dtoUserSave.getEmail());
-        user.setCreated(OffsetDateTime.now());
+        user.setCreated(new Timestamp(System.currentTimeMillis()));
 
         return user;
     }

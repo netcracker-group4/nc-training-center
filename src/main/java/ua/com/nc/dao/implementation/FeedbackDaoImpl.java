@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
         statement.setInt(2, entity.getTrainerId());
         statement.setInt(3, entity.getCourseId());
         statement.setString(4, entity.getText());
-        statement.setObject(5, entity.getTimeDate());
+        statement.setObject(5, entity.getTime());
     }
 
     @Override
@@ -95,9 +96,9 @@ public class FeedbackDaoImpl extends AbstractDaoImpl<Feedback> implements Feedba
             Integer trainerId = rs.getInt("trainer_id");
             Integer courseId = rs.getInt("course_id");
             String text = rs.getString("text");
-            OffsetDateTime offsetDateTime = rs.getObject("date_time", OffsetDateTime.class);
+            Timestamp timestamp = rs.getTimestamp("date_time");
             Feedback feedback = new Feedback(id, studentId, trainerId,
-                    courseId, text, offsetDateTime);
+                    courseId, text, timestamp);
             feedbacks.add(feedback);
         }
         log.info("Retrieved Feedbacks from database " + feedbacks);

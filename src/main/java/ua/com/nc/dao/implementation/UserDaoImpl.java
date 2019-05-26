@@ -147,7 +147,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
             String firstName = rs.getString("FIRST_NAME");
             String lastName = rs.getString("LAST_NAME");
             String token = rs.getString("TOKEN");
-            OffsetDateTime created = rs.getObject("CREATED", OffsetDateTime.class);
+            Timestamp created = rs.getTimestamp("CREATED");
             Integer managerId = rs.getInt("MANAGER_ID");
             String imageUrl = rs.getString("IMAGE_URL");
             boolean isActive = rs.getBoolean("IS_ACTIVE");

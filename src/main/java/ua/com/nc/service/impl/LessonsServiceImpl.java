@@ -116,18 +116,6 @@ public class LessonsServiceImpl implements LessonsService {
     }
 
     @Override
-    public List<DtoUser> getStudentsIdsByLessonId(Integer lessonId) {
-        List<DtoUser> dtoUsers = new ArrayList<>();
-        List<User> users = userDao.getStudentsByLessonId(lessonId);
-        if (!users.isEmpty()) {
-            for (User user : users) {
-                dtoUsers.add(new DtoUser(user.getId()));
-            }
-        }
-        return dtoUsers;
-    }
-
-    @Override
     public String invertIsPerformedForLesson(Integer lessonId) {
         Lesson lesson = lessonDao.getEntityById(lessonId);
         boolean newPerformed = !lesson.isPerformed();
