@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of ReportService
+ */
 @Log4j2
 @Service
 public class ReportServiceImpl implements ReportService {
