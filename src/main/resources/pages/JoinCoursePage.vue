@@ -1,17 +1,15 @@
 <!--suppress ALL -->
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div class="row">
+    <v-container>
         <progress-circular-component v-if="loading"></progress-circular-component>
-
-        <v-container v-if="!loading" fluid grid-list-md>
-            <v-layout row wrap>
+            <v-layout row wrap v-if="!loading">
                 <v-flex d-flex style="margin-bottom: 50px">
-                    <div>
+                    <div class="clickable" v-on:click="$router.push('/courses/' + course.id)">
                         <h2>Desired Schedule for " {{course.name}} "</h2>
                     </div>
                 </v-flex>
             </v-layout>
-            <v-layout row wrap>
+            <v-layout row wrap v-if="!loading">
                 <v-flex d-flex style="margin-bottom: 20px">
                     <v-radio-group v-model="activeSuitability" row>
                         <v-radio v-for="s in suitabilities"
@@ -20,11 +18,14 @@
                                  :key="s.id"></v-radio>
                     </v-radio-group>
                     <v-spacer></v-spacer>
-                    <v-btn style="margin-top: 15px" large :color="getColor(activeSuitability)">selected</v-btn>
+                    <v-card style="margin-top: 15px; padding: 10px"
+                            class="text-xs-center text--darken-2"
+                            :color="getColor(activeSuitability)">selected
+                    </v-card>
                 </v-flex>
             </v-layout>
 
-            <v-layout row wrap>
+            <v-layout row wrap v-if="!loading">
                 <v-flex d-flex style="margin-bottom: 50px">
                     <v-data-table
                             :headers="headers"
@@ -45,17 +46,12 @@
                     </v-data-table>
                 </v-flex>
             </v-layout>
-            <v-layout row wrap>
-                <v-flex d-flex style="margin-bottom: 50px">
-                    <v-btn alert @click="$router.push('/')">Discard</v-btn>
-                </v-flex>
+            <v-layout row wrap v-if="!loading">
                 <v-spacer></v-spacer>
-                <v-flex d-flex style="margin-bottom: 50px">
-                    <v-btn alert @click="save">Save</v-btn>
-                </v-flex>
+                <v-btn color="error"  alert @click="$router.push('/')">Discard</v-btn>
+                <v-btn color="success" @click="save">Save</v-btn>
             </v-layout>
-        </v-container>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -124,6 +120,7 @@
                     courseId: this.$route.params.id,
                     array: this.desiredSchedule2
                 });
+                this.loading = true;
                 axios.post(this.$store.state.apiServer + '/api/desired-schedule/join/', {
                     courseId: this.$route.params.id,
                     forDays: this.desiredSchedule2
@@ -173,7 +170,7 @@
                     .catch(function (error) {
                         // self.errorAutoClosable(error.response.data);
                         console.log(error);
-                         if (error.response != null && error.response.status == 400)
+                        if (error.response != null && error.response.status == 400)
                             self.$router.push('/404');
                     });
                 console.log("this.$route.params.id" + this.$route.params.id);
@@ -184,7 +181,7 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                         if (error.response != null && error.response.status == 400)
+                        if (error.response != null && error.response.status == 400)
                             self.$router.push('/404');
                     });
 
@@ -198,30 +195,40 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                         if (error.response != null && error.response.status == 400)
+                        if (error.response != null && error.response.status == 400)
                             self.$router.push('/404');
                     });
             }
         },
         mounted() {
             let self = this;
-            axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id + '/course-group')
+            axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id + '/can-join')
                 .then(function (response) {
                     console.log(response.data);
-                    if (response.data == true || response.data == undefined) {
+                    console.log(self.$store.state.userRoles);
+                    if (response.data == false){
                         self.$router.push('/404');
                     }
                     self.loadInfo();
                 }).catch(function (error) {
-                console.log(error);
-                 if (error.response != null && error.response.status == 400)
+                if (error.response != null && error.response.status == 400)
                     self.$router.push('/404');
             });
+            // axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id + '/can-join')
+            //     .then(function (response) {
+            //         console.log(response.data);
+            //         if (response.data == true || response.data == undefined || !self.$store.state.userRoles.includes('EMPLOYEE')) {
+            //         }
+            //
+            //     }).catch(function (error) {
+            //     console.log(error);
+            //
+            // });
         }
     }
 </script>
 
-<style >
+<style>
 
     .student-name {
         width: 25%;

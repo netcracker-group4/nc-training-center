@@ -40,7 +40,6 @@ public class CourseController {
     private UserDao userDao;
     @Autowired
     private FileTransferService fileTransferService;
-
     private final Gson gson = new Gson();
     @Autowired
     private UserGroupDao userGroupDao;
@@ -133,11 +132,12 @@ public class CourseController {
         return userDao.getTrainersOnCourse(id);
     }
 
-    @RequestMapping(value = "/{id}/course-group", method = RequestMethod.GET)
+    @RequestMapping(value = "/{courseId}/can-join", method = RequestMethod.GET)
     @ResponseBody
-    public String getCourseUser(@AuthenticationPrincipal User user,@PathVariable Integer id) {
-        return Boolean.toString(userGroupDao.getByUserAndCourse(user.getId(), id) != null);
+    public String getCourseUser(@AuthenticationPrincipal User user,@PathVariable Integer courseId) {
+        return Boolean.toString(courseService.canJoinCourse(user, courseId));
     }
+
 
     @RequestMapping(value = "/trainer/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -162,12 +162,12 @@ public class CourseController {
         try (InputStream inputStream = fileTransferService.downloadFileFromServer("/img/"+imageName)) {
             if (inputStream != null) {
                 byte[] media = IOUtils.toByteArray(inputStream);
-                return new ResponseEntity<byte[]>(media, headers, HttpStatus.OK);
+                return new ResponseEntity<>(media, headers, HttpStatus.OK);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<byte[]>(null, headers, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(null, headers, HttpStatus.NOT_FOUND);
     }
 
 

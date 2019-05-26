@@ -153,9 +153,11 @@
                     :items="allAttachments"
                     :pagination.sync="pagination"
                     select-all
+                    :loading="loadingFile"
                     item-key="id"
                     class="elevation-1"
             >
+                <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
                 <template v-slot:headers="props">
                     <tr>
                         <th>
@@ -238,6 +240,7 @@
                 menu: false,
                 menu2: false,
                 menu3: false,
+                loadingFile : false
 
             }
         },
@@ -267,7 +270,14 @@
             },
             submitFile() {
                 let self = this;
+                this.loadingFile = true;
                 if (this.file != '' && this.file != undefined) {
+                    if (this.file.size > 1024 * 1024 * 20) {
+                        self.errorAutoClosable('File too big (> 20MB)');
+                        self.file = '';
+                        self.loadingFile = false;
+                        return;
+                    }
                     let formData = new FormData();
                     formData.append('file', this.file);
                     formData.append('lessonId', this.lesson.id);
@@ -282,12 +292,17 @@
                         .then(function (response) {
                             console.log(response.data);
                             self.selectedAttachments.push(response.data);
-                            self.successAutoClosable(response.data.name + ' has been uplosded');
+                            self.previouslySelectedAttachments.push(response.data);
+                            self.successAutoClosable(response.data.name + ' has been uploaded');
                             self.file = '';
+                            self.loadingFile = false;
+
                         })
                         .catch(function (error) {
                             console.log(error);
                             self.errorAutoClosable("Error while loading file")
+                            self.loadingFile = false;
+
                         });
                 }
 

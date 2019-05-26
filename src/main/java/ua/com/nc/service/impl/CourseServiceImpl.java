@@ -2,40 +2,68 @@ package ua.com.nc.service.impl;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
-import ua.com.nc.dao.interfaces.*;
+import ua.com.nc.dao.interfaces.CourseDao;
+import ua.com.nc.dao.interfaces.LevelDao;
+import ua.com.nc.dao.interfaces.UserDao;
+import ua.com.nc.dao.interfaces.UserGroupDao;
 import ua.com.nc.domain.Course;
 import ua.com.nc.domain.CourseStatus;
+import ua.com.nc.domain.Role;
+import ua.com.nc.domain.User;
 import ua.com.nc.dto.DtoCourse;
+import ua.com.nc.dto.DtoMailSender;
 import ua.com.nc.service.CourseService;
+import ua.com.nc.service.EmailService;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 
 @Log4j2
 @Service
 public class CourseServiceImpl implements CourseService {
     @Autowired
+    private UserGroupDao userGroupDao;
+    @Autowired
     private CourseDao courseDao;
     @Autowired
     private LevelDao levelDao;
     @Autowired
+    private UserDao userDao;
+    @Autowired
     private FiletransferServiceImpl fileService;
     @Autowired
-    private UserDao userDao;
+    private EmailService emailService;
+    @Value("${subject.new-course}")
+    private String newCourseMessageTitle;
+    @Value("${text.new-course}")
+    private String newCourseMessageText;
 
     @Override
     public void add(Course course) {
+        User trainer = userDao.getEntityById(course.getUserId());
         courseDao.insert(course);
+       sendNotification(course, trainer);
+    }
+
+    @Async
+    private void sendNotification(Course course, User trainer) {
+        String text = new Formatter().format(newCourseMessageText, course.getName(), course.getId()).toString();
+        DtoMailSender dtoMailSender = new DtoMailSender(
+                trainer.getEmail(), newCourseMessageTitle, text);
+        log.debug("about to send the message" + dtoMailSender);
+        emailService.sendSimpleMessage(dtoMailSender);
     }
 
     @Override
@@ -44,7 +72,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void edit(int id, String name, String level, String courseStatus, String isOnLandingPage, String desc, String startDay, String endDay) {
+    public void edit(int id, String name, String level, String courseStatus,
+                     String isOnLandingPage, String desc, String startDay, String endDay) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         CourseStatus status = CourseStatus.valueOf(courseStatus);
         Date starts = new Date();
@@ -56,7 +85,7 @@ public class CourseServiceImpl implements CourseService {
             log.trace(e);
         }
         int lvl = levelDao.getIdByName(level.trim());
-        int statusId = status.ordinal() +1;
+        int statusId = status.ordinal() + 1;
         boolean isLanding = Boolean.parseBoolean(isOnLandingPage);
         courseDao.edit(id, name, lvl, statusId, isLanding,
                 new java.sql.Date(starts.getTime()),
@@ -79,7 +108,7 @@ public class CourseServiceImpl implements CourseService {
         } catch (ParseException e) {
             log.trace(e);
         }
-        int statusId = status.ordinal()+1;
+        int statusId = status.ordinal() + 1;
         int lvl = levelDao.getIdByName(level.trim());
 
         return new Course(name, lvl, statusId, userId, imageUrl,
@@ -91,7 +120,7 @@ public class CourseServiceImpl implements CourseService {
     /**
      * @return path to the image + it`s name.
      * Produces null if - image parameter is null;
-     *                  - local dirs to the temp file can`t be made.
+     * - local dirs to the temp file can`t be made.
      */
     @Nullable
     @Override
@@ -104,26 +133,26 @@ public class CourseServiceImpl implements CourseService {
                 File dir = new File(rootPath);
 
                 if (!dir.exists()) {
-                    if(!dir.mkdirs()){
+                    if (!dir.mkdirs()) {
                         return null;
                     }
                 }
                 String filePath = dir.getAbsolutePath() + File.separator + name;
-                int i =1;
-                while (fileService.downloadFileFromServer(filePath)!=null){
-                    filePath = dir.getAbsolutePath() + File.separator + name+" ("+i+")";
+                int i = 1;
+                while (fileService.downloadFileFromServer(filePath) != null) {
+                    filePath = dir.getAbsolutePath() + File.separator + name + " (" + i + ")";
                 }
                 File uploadedFile = new File(filePath);
                 try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(uploadedFile))
-                    ) {
-                        stream.write(bytes);
-                    }
-                try(FileInputStream stream = new FileInputStream(filePath)) {
+                ) {
+                    stream.write(bytes);
+                }
+                try (FileInputStream stream = new FileInputStream(filePath)) {
                     String path = "/img";
                     filePath = path + "/" + name;
                     fileService.uploadFileToServer(path, name, stream);
-                    if(!uploadedFile.delete()){
-                        log.error("Temp file "+uploadedFile.getName()+" wasn`t deleted!");
+                    if (!uploadedFile.delete()) {
+                        log.error("Temp file " + uploadedFile.getName() + " wasn`t deleted!");
                     }
                     return filePath;
                 }
@@ -164,4 +193,11 @@ public class CourseServiceImpl implements CourseService {
         String path = "img/" + imageName;
         return fileService.downloadFileFromServer(path);
     }
+
+    @Override
+    public boolean canJoinCourse(@AuthenticationPrincipal User user, @PathVariable Integer courseId) {
+        boolean isAlreadyInCourse = userGroupDao.getByUserAndCourse(user.getId(), courseId) != null;
+        return !isAlreadyInCourse && user.getRoles().contains(Role.EMPLOYEE);
+    }
+
 }

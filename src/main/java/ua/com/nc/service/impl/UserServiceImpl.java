@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -86,13 +87,14 @@ public class UserServiceImpl implements UserService {
             userDao.insert(user);
             userDao.addUserRole(user.getId(), Role.EMPLOYEE.name());
             title = titleMessageToNewEmployee;
-            text = String.format(textMessageToNewEmployee, "http://localhost:8080", user.getToken());
+            text = String.format(textMessageToNewEmployee, user.getToken());
         }
 
         sendMessage(user, title, text);
 
     }
 
+    @Async
     private void sendMessage(User user, String title, String text) {
         DtoMailSender dtoMailSender = new DtoMailSender();
         dtoMailSender.setTo(user.getEmail());

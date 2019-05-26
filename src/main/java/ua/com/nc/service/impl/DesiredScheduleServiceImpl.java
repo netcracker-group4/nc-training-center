@@ -3,13 +3,19 @@ package ua.com.nc.service.impl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import ua.com.nc.dao.PersistException;
 import ua.com.nc.dao.interfaces.*;
 import ua.com.nc.domain.*;
+import ua.com.nc.dto.DtoMailSender;
 import ua.com.nc.dto.schedule.*;
+import ua.com.nc.exceptions.LogicException;
 import ua.com.nc.service.DesiredScheduleService;
+import ua.com.nc.service.EmailService;
 
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
 @Log4j2
@@ -33,6 +39,18 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
     @Value("${end.of.day}")
     private Integer endOfDay;
 
+    @Autowired
+    private EmailService emailService;
+    @Value("${subject.new-attendee}")
+    private String newAttendeeTitle;
+    @Value("${text.new-attendee}")
+    private String newAttendeeText;
+
+    @Value("${subject.new-group}")
+    private String newGroupTitle;
+    @Value("${text.new-group}")
+    private String newGroupText;
+
 
     @Override
     public int update(GroupSchedule groupSchedule) {
@@ -47,9 +65,13 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
 
     @Override
     public boolean delete(int groupId) {
-        userGroupDao.deleteAllForGroup(groupId);
-        groupDao.delete(groupId);
-        return true;
+        try {
+            userGroupDao.deleteAllForGroup(groupId);
+            groupDao.delete(groupId);
+            return true;
+        }catch (PersistException e){
+            throw new LogicException("The group with lessons can't be deleted", e);
+        }
     }
 
 
@@ -57,8 +79,20 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
     public int add(GroupSchedule groupSchedule) {
         Group groupToInsert = new Group(groupSchedule.getCourseId(), groupSchedule.getName());
         groupDao.insert(groupToInsert);
+        sendNotificationToTrainerAboutNewGroup(groupSchedule, groupToInsert.getId());
         updateStudentsForGroup(groupSchedule, groupToInsert);
         return groupToInsert.getId();
+    }
+
+    @Async
+    private void sendNotificationToTrainerAboutNewGroup(GroupSchedule groupSchedule, Integer groupId) {
+        String text = new Formatter().format(this.newGroupText, groupSchedule.getName(),
+                courseDao.getEntityById(groupSchedule.getCourseId()).getName(), groupId).toString();
+        User trainer = userDao.getTrainerByCourseId(groupSchedule.getCourseId());
+        DtoMailSender dtoMailSender = new DtoMailSender(
+                trainer.getEmail(), newGroupTitle, text);
+        log.debug("about to send mail about new group" + dtoMailSender);
+        emailService.sendSimpleMessage(dtoMailSender);
     }
 
 
@@ -170,9 +204,22 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
     public void saveDesired(Integer userId, DesiredToSave desiredToSave) {
         Integer courseId = desiredToSave.getCourseId();
         saveUsrGroup(userId, courseId);
+        sendNewAttendeeNotificationToTrainer(userId, courseId);
         for (ScheduleForDay scheduleForDay : desiredToSave.getForDays()) {
             saveDesiredScheduleForDay(userId, courseId, scheduleForDay);
         }
+    }
+    @Async
+    private void sendNewAttendeeNotificationToTrainer(Integer userId, Integer courseId) {
+        User newAttendee = userDao.getEntityById(userId);
+        String attendeeName = newAttendee.getFirstName() + " " + newAttendee.getLastName();
+        String text = new Formatter().format(this.newAttendeeText, attendeeName,
+                courseDao.getEntityById(courseId).getName(), userId).toString();
+        User trainer = userDao.getTrainerByCourseId(courseId);
+        DtoMailSender dtoMailSender = new DtoMailSender(
+                trainer.getEmail(), newAttendeeTitle, text);
+        log.debug("about to send mail about new attendee" + dtoMailSender);
+        emailService.sendSimpleMessage(dtoMailSender);
     }
 
     private void saveUsrGroup(Integer userId, Integer courseId) {

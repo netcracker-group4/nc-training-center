@@ -29,9 +29,7 @@
                                         v-for="lvl in levels"
                                         :key="lvl.id"
                                         :label="lvl.title"
-                                        :value="lvl.title"
-                                        v-validate="'required'"
-                                ></v-radio>
+                                        :value="lvl.title"></v-radio>
                             </v-radio-group>
                         </v-flex>
                         <v-flex xs12 sm12>
@@ -154,25 +152,25 @@
                 this.endDay = ChooserDate.data().date2;
             },
             check() {
-                if(!this.name){
+                if (!this.name) {
                     return 'Name';
                 }
-                if(!this.level){
+                if (!this.level) {
                     return 'Level';
                 }
-                if(!this.courseStatus){
+                if (!this.courseStatus) {
                     return 'Status';
                 }
-                if(!this.imageUrl){
+                if (!this.imageUrl) {
                     return 'Image';
                 }
-                if(!this.trainer){
+                if (!this.trainer) {
                     return 'Trainer';
                 }
-                if(!this.description){
+                if (!this.description) {
                     return 'Description';
                 }
-                if(!this.startDay || !this.endDay){
+                if (!this.startDay || !this.endDay) {
                     return 'Date';
                 }
                 return null;
@@ -180,15 +178,16 @@
             },
             submit() {
                 this.setData();
-                let nullField =this.check();
+                let nullField = this.check();
                 if (nullField) {
-                    this.$snotify.error(nullField+' is required!', {
+                    this.$snotify.error(nullField + ' is required!', {
                         timeout: 2000,
                         showProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true
                     });
                 } else {
+                    let self = this;
                     let form = new FormData();
                     let request = new XMLHttpRequest();
                     try {
@@ -197,6 +196,11 @@
                         } else {
                             request.open('PUT', this.$store.state.apiServer + '/api/getcourses/create');
                         }
+                        request.onreadystatechange = function() {
+                            if (request.readyState == XMLHttpRequest.DONE) {
+                                self.$router.push("/courses");
+                            }
+                        };
                         form.append('name', this.name);
                         form.append('level', this.level);
                         form.append('courseStatus', this.courseStatus);
@@ -207,6 +211,7 @@
                         form.append('description', this.description);
                         form.append('startDay', this.startDay);
                         form.append('endDay', this.endDay);
+                        self.loading = true;
                         request.send(form);
                         this.$snotify.success('Course created', {
                             timeout: 2000,
@@ -222,7 +227,6 @@
                             pauseOnHover: true
                         });
                     }
-                    this.$router.push("/courses");
                 }
             },
             pickFile() {
