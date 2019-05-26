@@ -2,7 +2,6 @@
     <v-layout row wrap>
         <v-expansion-panel expand>
             <v-expansion-panel-content>
-                <!--suppress HtmlUnknownBooleanAttribute -->
                 <template v-slot:header>
                     <div>Manager's subordinates</div>
                 </template>
@@ -17,9 +16,6 @@
                             </td>
                             <td class="text-xs-right">
                                 {{props.item.email}}
-                            </td>
-                            <td class="text-xs-right ">
-                                <v-btn color="success">Message</v-btn>
                             </td>
                         </template>
                     </v-data-table>
@@ -44,7 +40,6 @@
                         value: 'name'
                     },
                     {text: 'Email', value: 'email', align: 'right'},
-                    {text: 'Message', value: 'message', align: 'right'}
                 ],
             }
         },

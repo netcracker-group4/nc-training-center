@@ -6,7 +6,6 @@
                     <td @click="forwardTo(props.item.id)">
                         <div>{{ props.item.firstName + ' ' + props.item.lastName}}</div>
                     </td>
-                    <td class="text-xs-right">{{ props.item.groups.length }}</td>
                 </tr>
             </template>
         </v-data-table>
@@ -26,10 +25,7 @@
                         align: 'left',
                         value: 'level.title'
                     },
-                    {
-                        text: 'Number of groups', value: 'quantityOfGroups',
-                        width: "20", align: 'right'
-                    },
+
                 ],
             }
         },

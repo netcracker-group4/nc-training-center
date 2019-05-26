@@ -5,11 +5,15 @@ import com.google.gson.GsonBuilder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.domain.Attendance;
 import ua.com.nc.dto.AttendanceDto;
+import ua.com.nc.security.CustomSecurityService;
 import ua.com.nc.service.AttendanceService;
+import ua.com.nc.service.SerializationService;
+import ua.com.nc.utils.CastUtils;
 
 import java.util.List;
 
@@ -21,30 +25,25 @@ public class AttendanceController {
     @Autowired
     private AttendanceService attendanceService;
 
-    @ResponseBody
+    @Autowired
+    private CustomSecurityService customSecurityService;
+
+    @Autowired
+    private SerializationService serializationService;
+
+
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getAttendance(@RequestParam(required = false, name = "userId") Integer userId,
                                            @RequestParam(required = false, name = "courseId") Integer courseId,
                                            @RequestParam(required = false, name = "groupId") Integer groupId,
                                            @RequestParam(required = false, name = "lessonId") Integer lessonId) {
 
-        if (userId != null && courseId != null) {
-            List<Attendance> attendances = attendanceService.getAttendanceByStudentIdAndCourseId(userId, courseId);
-            return ResponseEntity.ok().body(new Gson().toJson(attendances));
-        }
-        if (lessonId != null) {
-            Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
-            List<Attendance> attendances = attendanceService.getAttendanceByLessonId(lessonId);
-            return ResponseEntity.ok().body(gson.toJson(attendances));
-        }
-        if (userId != null && groupId != null) {
-            Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").serializeNulls().create();
-            List<Attendance> attendances = attendanceService.getAttendanceByStudentIdAndGroupId(userId, groupId);
-            return ResponseEntity.ok().body(gson.toJson(attendances));
-        } else {
-            AttendanceDto attendanceDto = attendanceService.getAttendance();
-            return ResponseEntity.ok().body(new Gson().toJson(attendanceDto));
-        }
+        Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").serializeNulls().create();
+
+        List<Attendance> attendances = attendanceService.getAttendance(userId, courseId, groupId, lessonId);
+        if(attendances != null){
+            return ResponseEntity.ok().body(serializationService.serializeWithDateFormat(attendances));
+        } else return ResponseEntity.badRequest().body("Bad request");
     }
 
     @RequestMapping(value = "/{lessonId}", method = RequestMethod.POST)
@@ -55,30 +54,13 @@ public class AttendanceController {
 
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<?> updateAttendance(@RequestParam String attendanceId,
-                                              @RequestParam String statusId,
+    @PreAuthorize("@customSecuritySecurity.hasPermissionToUpdateAttendance(authentication, #attendanceId)")
+    public ResponseEntity<?> updateAttendance(@RequestParam Integer attendanceId,
+                                              @RequestParam Integer statusId,
                                               @RequestParam String absenceId) {
-        Integer integerAttendanceId;
-        Integer integerStatusId;
-        Integer integerAbsenceId;
 
-        if (attendanceId.trim().equals("null") || attendanceId.equals("undefined")) {
-            integerAttendanceId = null;
-        } else {
-            integerAttendanceId = Integer.parseInt(attendanceId);
-        }
-        if (statusId.trim().equals("null") || statusId.equals("undefined")) {
-            integerStatusId = null;
-        } else {
-            integerStatusId = Integer.parseInt(statusId);
-        }
-        if (absenceId.trim().equals("null") || absenceId.equals("undefined")) {
-            integerAbsenceId = null;
-        } else {
-            integerAbsenceId = Integer.parseInt(absenceId);
-        }
-
-        attendanceService.attendanceUpdate(integerAttendanceId, integerStatusId, integerAbsenceId);
+        Integer integerAbsenceId = CastUtils.castIntegerToString(absenceId);
+        attendanceService.attendanceUpdate(attendanceId, statusId, integerAbsenceId);
         return ResponseEntity.ok().body("Ok");
     }
 }
