@@ -1,113 +1,144 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div>
-        <div class="title mb-1" style="margin-left: 20px">
-            {{name}}
-            <v-btn @click="edit()">
-                <v-icon>edit</v-icon>
-            </v-btn>
-            <v-btn v-if="canJoinCourse" @click="sign()">Sign course</v-btn>
-        </div>
-        <v-dialog v-if="isAdmin" v-model="dialog" max-width="500px">
-            <EditCourseComponent :starts-day="startDay" :ends-day="endDay"
-                                 :descr="description" :id="id" :nm="name"/>
-        </v-dialog>
-        <v-container
-                fluid
-                grid-list-md
-        >
-            <v-layout row wrap>
-                <v-flex xs5>
-                    <v-layout column>
-                        <div class="subheading pt-3"><b>{{courseStatus}}</b>
-                            <p>Level: {{level.title}}</p>
-                        </div>
-                        <v-img v-if="imageUrl" :src="this.$store.state.apiServer+'/api/getcourses'+imageUrl"
-                               aspect-ratio="2"></v-img>
-                        <v-progress-linear v-if="!imageUrl" :indeterminate="true"></v-progress-linear>
-                        <div v-if="isAdmin">
-                            <v-text-field label="Select Image" @click='pickFile' v-model='imageUrl'
-                                          prepend-icon='attach_file'></v-text-field>
-                            <form id="uploadForm" name="uploadForm" enctype="multipart/form-data">
-                                <input
-                                        type="file"
-                                        style="display: none"
-                                        ref="image"
-                                        accept="image/*"
-                                        @change="onFilePicked"
-                                        id="img"
-                                ></form>
-                        </div>
-                    </v-layout>
-                </v-flex>
-                <v-flex offset-xs0 offset-lg0 style="margin-left: 2%">
-                    <v-layout column>
-                        <div>
-                            <b>
-                                <p>Starts on: {{startDay}}</p>
-                                <p>Ends on: {{endDay}}</p>
-                            </b>
-                        </div>
-                        <div class="subheading pt-3"><b>Trainer</b></div>
-                        <div>
-                            <b @click="goTrainerPage(tr.id)"> {{trainer.firstName }} {{trainer.lastName}} </b>
-                        </div>
-                        <div class="subheading pt-3">
-                            <b>Groups</b>
-                            <v-btn :small="true" v-if="isAdmin" @click="manageGroups()">Manage groups</v-btn>
-                        </div>
-                        <v-data-table
-                                :headers="headers"
-                                :items="groups"
-                                :expand="true"
-                                item-key="id"
-                        >
-                            <template v-slot:items="props">
-                                <tr>
-                                    <td class="my-link">
-                                        <div @click="">{{ props.item.id }}</div>
-                                    </td>
-                                    <td class="my-link clickable">
-                                        <div @click="goGroupPage(props.item.id)">{{props.item.title}}</div>
-                                    </td>
-                                </tr>
-                            </template>
-                        </v-data-table>
-                    </v-layout>
-                </v-flex>
-            </v-layout>
-        </v-container>
-        <v-container
-                fluid
-                grid-list-md
-        >
-            <v-layout row wrap>
-                <v-flex xs5>
+    <v-container>
+        <progress-circular-component v-if="loading"></progress-circular-component>
+        <v-layout v-if="!loading" row wrap>
+
+            <!--            toolbar-->
+            <v-flex xs12 style="margin-bottom: 50px">
+                <v-toolbar flat color="white">
+                    <v-toolbar-title>Course : {{name}}</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn flat @click="edit()">
+                        <v-icon>edit</v-icon>
+                    </v-btn>
+                    <v-dialog v-if="isAdmin" v-model="dialog" max-width="500px">
+                        <EditCourseComponent :starts-day="startDay" :ends-day="endDay"
+                                             :descr="description" :id="id" :nm="name"/>
+                    </v-dialog>
+                    <v-btn v-if="canJoinCourse" @click="sign()">Sign course</v-btn>
+                </v-toolbar>
+            </v-flex>
+
+            <!--            status-->
+            <v-flex xs12 md6 style="padding: 10px">
+                <v-list>
+                    <v-list-tile>
+                        <v-list-tile-content>
+                            <v-list-tile-title><span class="grey--text name-my">Status :</span> <span
+                                    class="font-weight-medium">{{courseStatus}}</span></v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile>
+                        <v-list-tile-content>
+                            <v-list-tile-title><span class="grey--text name-my">Level:</span> <span
+                                    class="font-weight-medium">{{level.title}}</span></v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile>
+                        <v-list-tile-content>
+                            <v-list-tile-title><span class="grey--text name-my">Starts on:</span> <span
+                                    class="font-weight-medium">{{startDay}}</span></v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile>
+                        <v-list-tile-content>
+                            <v-list-tile-title><span class="grey--text name-my">Ends on:</span> <span
+                                    class="font-weight-medium">{{endDay}}</span>
+                            </v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile>
+                        <v-list-tile-content @click="goTrainerPage(trainer.id)" class="clickable">
+                            <v-list-tile-title><span class="grey--text name-my">Trainer:</span> <span
+                                    class="font-weight-medium">{{trainer.firstName }} {{trainer.lastName}}</span>
+                            </v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                </v-list>
+            </v-flex>
+
+            <!--            groups-->
+            <v-flex xs12 md6 style="padding: 10px">
+                <v-toolbar flat color="white">
+                    <v-toolbar-title>Groups</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn :small="true" v-if="isAdmin" @click="manageGroups()">Manage groups</v-btn>
+                </v-toolbar>
+                <v-data-table
+                        :headers="headers"
+                        :items="groups"
+                        :expand="true"
+                        item-key="id"
+                        hide-actions
+                >
+                    <template v-slot:items="props">
+                        <tr>
+                            <td class="my-link">
+                                <div @click="">{{ props.item.id }}</div>
+                            </td>
+                            <td class="my-link clickable">
+                                <div @click="goGroupPage(props.item.id)">{{props.item.title}}</div>
+                            </td>
+                        </tr>
+                    </template>
+                </v-data-table>
+
+            </v-flex>
+
+            <!--            image-->
+        </v-layout>
+        <v-layout v-if="!loading" row wrap>
+            <v-flex xs12 md6 style="padding: 10px">
+                <v-img v-if="imageUrl"
+                       :src="this.$store.state.apiServer+'/api/getcourses'+imageUrl"
+                       aspect-ratio="2"></v-img>
+                <v-progress-linear v-if="!imageUrl" :indeterminate="true"></v-progress-linear>
+                <div v-if="isAdmin">
+                    <v-text-field label="Select Image"
+                                  @click='pickFile'
+                                  v-model='imageUrl'
+                                  prepend-icon='attach_file'></v-text-field>
+                    <form id="uploadForm" name="uploadForm" enctype="multipart/form-data" style="height: 0">
+                        <input
+                                type="file"
+                                style="display: none"
+                                ref="image"
+                                accept="image/*"
+                                @change="onFilePicked"
+                                id="img"
+                        ></form>
+                </div>
+            </v-flex>
+
+            <!--            description-->
+            <v-flex xs12 md6 style="padding: 10px">
                     <v-textarea
                             id="course-descr-text"
                             name="input-7-1"
-                            box
                             label="Description"
-                            auto-grow
                             :value="description"
                             :readonly="!isAdmin"
+                            box
+                            auto-grow
                     ></v-textarea>
-                </v-flex>
-            </v-layout>
-            <v-flex xs12 sm12>
-                <v-btn @click="submit">submit</v-btn>
+                <v-layout>
+                    <v-spacer></v-spacer>
+                    <v-btn color="success" @click="submit">submit</v-btn>
+                </v-layout>
             </v-flex>
-        </v-container>
-    </div>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
     import axios from 'axios'
     import CourseDate from "../components/CourseDate.vue";
     import EditCourseComponent from "../components/EditCourseComponent.vue";
+    import ProgressCircularComponent from "../components/ProgressCircularComponent.vue";
 
     export default {
         name: "CoursePage",
-        components: {EditCourseComponent, CourseDate},
+        components: {EditCourseComponent, CourseDate, ProgressCircularComponent},
         data() {
             return {
                 id: this.$route.params.id,
@@ -137,7 +168,8 @@
                     {
                         text: 'Group title', value: 'title'
                     }
-                ]
+                ],
+                loading: true
             }
         },
         methods: {
@@ -157,7 +189,7 @@
                         self.endDay = new Date(dat.endDate).toISOString().substr(0, 10);
                         self.getTrainer();
                         self.getGroups();
-                        self.getTrainers();
+                        self.loading = false;
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -276,18 +308,6 @@
             manageGroups() {
                 this.$router.push('/courses/' + this.$route.params.id + '/desired-schedule');
             },
-            manageSchedule(id) {
-                this.$router.push('/groups/' + id + '/schedule');
-            },
-        },
-        created() {
-            try {
-                let self = this;
-                self.setCourse();
-            } catch (e) {
-                console.log(e);
-            }
-            console.log(this);
         },
         mounted() {
             let self = this;
@@ -297,13 +317,16 @@
                     console.log(self.$store.state.userRoles);
                     self.canJoinCourse = response.data;
                 }).catch(function (error) {
-                    self.canJoinCourse = false;
+                self.canJoinCourse = false;
             });
-
+            self.setCourse();
         }
     }
 </script>
 
 <style scoped>
-
+    .name-my {
+        width: 21%;
+        display: inline-block;
+    }
 </style>

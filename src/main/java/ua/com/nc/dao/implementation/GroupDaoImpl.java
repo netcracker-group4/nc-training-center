@@ -140,7 +140,7 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     @Override
     public List<Group> getGroupByTrainerId(Integer trainerId) {
         String sql = groupSelectByTrainerId;
-        log.info("select all groups for trainer " + trainerId + " " + sql );
+        log.info("select all groups for trainer " + trainerId + " " + sql);
         return getFromSqlById(sql, trainerId);
     }
 
@@ -149,8 +149,8 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     public Group getByUserIdAndGroupId(Integer userId, Integer groupId) {
         List<Group> groups = null;
         String sql = selectByUserIdAndGroupId;
-        try(    Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(selectByUserIdAndGroupId)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(selectByUserIdAndGroupId)) {
             statement.setInt(1, userId);
             statement.setInt(2, groupId);
             ResultSet resultSet = statement.executeQuery();
@@ -158,9 +158,9 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
         } catch (SQLException e) {
             log.error(e + "select group by group id and user id");
         }
-        if(groups != null & groups.size() > 0){
+        if (groups != null & groups.size() > 0) {
             return groups.get(0);
-        }else {
+        } else {
             return null;
         }
     }

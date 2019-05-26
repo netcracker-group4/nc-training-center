@@ -214,16 +214,6 @@
                 if (error.response != null && error.response.status == 400)
                     self.$router.push('/404');
             });
-            // axios.get(this.$store.state.apiServer + '/api/getcourses/' + this.$route.params.id + '/can-join')
-            //     .then(function (response) {
-            //         console.log(response.data);
-            //         if (response.data == true || response.data == undefined || !self.$store.state.userRoles.includes('EMPLOYEE')) {
-            //         }
-            //
-            //     }).catch(function (error) {
-            //     console.log(error);
-            //
-            // });
         }
     }
 </script>
