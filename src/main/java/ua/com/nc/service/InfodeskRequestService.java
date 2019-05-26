@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface InfodeskRequestService {
 
-    void createRequest (int userId, String description, String message);
+    void createRequest (int userId, String description, String message, String requestType);
 
     List<ProblemStatus> getStatuses();
 

@@ -34,8 +34,9 @@ public class Problem extends Entity {
 
     public Problem () {}
 
-    public Problem (Integer studentId, String description, String message, Integer status, Integer chatId) {
-        this.studentId = studentId ;
+    public Problem (Integer id, Integer studentId, String description, String message, Integer status, Integer chatId) {
+        super(id);
+        this.studentId = studentId;
         this.description = description;
         this.message = message;
         this.status = status;

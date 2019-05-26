@@ -21,9 +21,15 @@ public class InfodeskRequestServiceImpl implements InfodeskRequestService {
     private ProblemStatusDao problemStatusDao;
 
     @Override
-    public void createRequest (int userId, String description, String message) {
+    public void createRequest (int userId, String description, String message, String requestType) {
         Problem problem = new Problem (userId, description, message, 2);
-        problemDao.insert (problem);
+        List<ProblemStatus> ps = problemStatusDao.getAll();
+        for (ProblemStatus status : ps) {
+            if (status.getTitle().equals(requestType)) {
+                problem.setStatus (status.getId());
+                problemDao.insert (problem);
+            }
+        }
     }
 
     @Override

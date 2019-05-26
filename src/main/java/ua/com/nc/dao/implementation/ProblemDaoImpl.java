@@ -30,8 +30,11 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     @Value ("${problem.insert}")
     private String insertQuery;
 
-    @Value ("${problem.update-request")
+    @Value ("${problem.update-request}")
     private String updateQuery;
+
+    @Value("${problem.select-by-id}")
+    private String selectById;
 
     @Autowired
     public ProblemDaoImpl (DataSource dataSource) throws PersistException {
@@ -43,6 +46,8 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     public String getInsertQuery () {return insertQuery; }
 
     public String getUpdateQuery () { return updateQuery; }
+
+    protected String getSelectByIdQuery() { return selectById; }
 
     private void setAllFields (PreparedStatement statement, Problem entity) throws SQLException {
         statement.setInt(1, entity.getStudentId());
@@ -65,13 +70,13 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     protected List <Problem> parseResultSet(ResultSet rs) throws SQLException {
         List<Problem> list = new ArrayList<>();
         while (rs.next()) {
-            Integer id = rs.getInt("id");
+            Integer id = rs.getInt("ID");
             Integer studentId = rs.getInt("USER_ID");
             String description = rs.getString("TITLE");
             Integer status = rs.getInt("PROBLEM_STATUS_ID");
             String message = rs.getString("DESCRIPTION");
             Integer chatId = rs.getInt("CHAT_ID");
-            Problem problem = new Problem (studentId, description, message, status, chatId);
+            Problem problem = new Problem (id, studentId, description, message, status, chatId);
             list.add(problem);
         }
         log.info("Retrieved Problems from database " + list);

@@ -17,7 +17,6 @@ import TestPage from '../pages/TestPage.vue';
 import AllGroups from "../pages/AllGroups.vue";
 import NotFound from "../pages/NotFound.vue";
 import ChatPage from '../pages/ChatPage.vue';
-import InfodeskRequest from "../pages/InfodeskRequest.vue";
 import JoinCoursePage from "../pages/JoinCoursePage.vue";
 import LessonPage from "../pages/LessonPage.vue";
 import AccessDenied from "../pages/AccessDenied.vue";
@@ -29,34 +28,52 @@ Vue.use(Router);
 const routes = [
     {path: '/', component: MainPage},
 
+    // {path: '/login', component: LoginPage},
     {path: '/login', component: LoginPage},
+    // {path: '/registration', component: RegistrationPage},
     {path: '/registration', component: RegistrationPage},
 
+    // {path: '/dashboard', component: DashBoardPage},
     {path: '/dashboard', component: DashBoardPage},
 
+    // {path: '/allgroups', component: AllGroups},
     {path: '/groups', component: AllGroups},
+    // {path: '/group/:id', component: GroupPage, props: true},
     {path: '/groups/:id', component: GroupPage, props: true},
+    // {path: '/lesson/:id', component: LessonPage},
     {path: '/lessons/:id', component: LessonPage},
 
+    // {path: '/admincourses', component: AdminCourses},
     {path: '/courses', component: AdminCourses},
+    // {path: '/coursecreate', component: CreateCourse},
     {path: '/courses/new', component: CreateCourse},
+    // {path: '/courses/:id', component: CoursePage, props: true},
     {path: '/courses/:id', component: CoursePage, props: true},
+    // {path: '/coursecreate/:id', component: CreateCourse,props: true},
     {path: '/courses/:id/edit', component: CreateCourse, props: true},
+    // {path: '/courses/:id/join', component: JoinCoursePage, props: true},
     {path: '/courses/:id/join', component: JoinCoursePage, props: true},
+    // {path: '/desired-schedule/:id', component: DesiredSchedulePage},
     {path: '/courses/:id/desired-schedule', component: DesiredSchedulePage},
 
+    // {path: '/userpage', component: AllUsersPage},
     {path: '/users', component: AllUsersPage},
+    // {path: '/userpage/:id', component: UserPage},
     {path: '/users/:id', component: UserPage},
 
+    // {path: '/attendance', component: AttendancePage},
     {path: '/attendance', component: AttendancePage},
+    // {path: '/absence-reasons', component: AbsenceReasons},
     {path: '/absence-reasons', component: AbsenceReasons},
 
+    // {path: '/test', component: TestPage},
     {path: '/test', component: TestPage},
 
+    // {path: '/chat/:id', component: ChatPage},
     {path: '/chats/:id', component: ChatPage},
 
+    // {path: '/infodesk', component: InfodeskPage},
     {path: '/requests', component: InfodeskPage},
-    {path: '/requests/new', component: InfodeskRequest},
 
     {path: '/404', component: NotFound},
     {path: '/403', component: AccessDenied},
