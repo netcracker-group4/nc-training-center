@@ -33,7 +33,7 @@
                     <slide v-for="course in courses" :key="course.id">
                         <v-card flat color="grey lighten-4">
                             <v-img
-                                     :src="self.$store.state.apiServer + '/api/users/image?url='+ course.imageUrl"
+                                     :src="self.$store.state.apiServer+ '/api/files-img?url=' + course.imageUrl"
                                      aspect-ratio="2.20"
                              ></v-img>
 

@@ -90,7 +90,7 @@
         <v-layout v-if="!loading" row wrap>
             <v-flex xs12 md6 style="padding: 10px">
                 <v-img v-if="imageUrl"
-                       :src="this.$store.state.apiServer+'/api/getcourses'+imageUrl"
+                       :src="this.$store.state.apiServer+ '/api/files-img?url=' + imageUrl"
                        aspect-ratio="2"></v-img>
                 <v-progress-linear v-if="!imageUrl" :indeterminate="true"></v-progress-linear>
                 <div v-if="isAdmin">

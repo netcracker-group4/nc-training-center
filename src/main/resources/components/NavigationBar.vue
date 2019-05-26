@@ -9,7 +9,7 @@
                 <v-list-tile avatar>
                     <v-list-tile-avatar class="cursor-pointer" v-on:click="goToMyPage()">
                         <v-icon v-if="$store.state.user.imageUrl == null">account_circle</v-icon>
-                        <v-avatar >
+                        <v-avatar size="36">
                             <v-img :src="self.$store.state.apiServer + '/api/users/image?url=' + self.$store.state.user.imageUrl"
                                    aspect-ratio="2"/>
                         </v-avatar>
