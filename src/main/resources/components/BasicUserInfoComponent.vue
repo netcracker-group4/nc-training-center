@@ -33,11 +33,11 @@
                                             <v-text-field v-model="editUser.lastName"
                                                           label="Surname"></v-text-field>
                                         </v-flex>
-                                        <v-flex xs10 v-if="viewerIsAdmin()">
+                                        <v-flex xs10 v-if="viewerIsAdmin() && isEmployeeProfile()">
                                             <v-select
                                                     v-model="editUser.dtoManager"
                                                     :items="managers"
-                                                    label="Change manager"
+                                                    :label="isManagerPresent()"
                                             >
                                                 <template slot="selection" slot-scope="managers">
                                                     {{ managers.item.firstName }} {{ managers.item.lastName }}
@@ -250,9 +250,6 @@
                 this.message = ''
                 this.sendMessageWindowShow = false
             },
-            onFileSelected(event) {
-                this.user.image = event.target.files[0]
-            },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
                     timeout: 2000,
@@ -272,8 +269,18 @@
             viewerIsAdmin() {
                 return store.getters.isAdmin;
             },
+            isEmployeeProfile() {
+                return this.user.roles.includes("EMPLOYEE");
+            },
             isUserThisProfile() {
                 return store.state.user.id === this.user.id;
+            },
+            isManagerPresent() {
+                if (this.user.dtoManager !== null) {
+                    return "Change manager"
+                } else {
+                    return "Choose manager"
+                }
             },
             getManagersName(dtoManager) {
                 if (dtoManager !== null) {
