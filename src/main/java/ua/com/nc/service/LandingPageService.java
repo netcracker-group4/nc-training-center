@@ -12,7 +12,7 @@ public interface LandingPageService {
 
     List<User> getLandingPageTrainers();
 
-    void updateCourseLandingPage(int id, boolean isOnLandingPage);
+    void updateCourseLandingPage(Integer id, boolean isOnLandingPage);
 
-    void updateTrainerLandingPage(int id, boolean isOnLandingPage);
+    void updateTrainerLandingPage(Integer id, boolean isOnLandingPage);
 }

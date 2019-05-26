@@ -7,6 +7,7 @@ import ua.com.nc.dao.interfaces.ProblemDao;
 import ua.com.nc.dao.interfaces.ProblemStatusDao;
 import ua.com.nc.domain.Problem;
 import ua.com.nc.domain.ProblemStatus;
+import ua.com.nc.service.EmailReminderService;
 import ua.com.nc.service.InfodeskRequestService;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public class InfodeskRequestServiceImpl implements InfodeskRequestService {
     @Autowired
     private ProblemStatusDao problemStatusDao;
 
+    @Autowired
+    private EmailReminderService emailReminderService;
+
     @Override
     public void createRequest (int userId, String description, String message, String requestType) {
         Problem problem = new Problem (userId, description, message, 2);
@@ -30,6 +34,7 @@ public class InfodeskRequestServiceImpl implements InfodeskRequestService {
                 problemDao.insert (problem);
             }
         }
+        emailReminderService.sendInfodeskNotification ();
     }
 
     @Override
