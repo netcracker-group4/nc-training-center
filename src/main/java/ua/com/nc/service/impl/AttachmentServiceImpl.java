@@ -25,6 +25,12 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Autowired
     private FiletransferServiceImpl fileService;
 
+    /**
+     * saves to database information (given by entity) about uploaded file and its link to lesson with given id
+     *
+     * @param lessonId id of lesson to which this attachment should be linked
+     * @param attachment  object that represents the file
+     */
     @Override
     public void add(Integer lessonId, Attachment attachment) {
 
@@ -35,12 +41,30 @@ public class AttachmentServiceImpl implements AttachmentService {
         link(lessonId, attachmentDao.getByUrl(attachment.getUrl()).getId());
     }
 
+    /**
+     * saves to database information (given by params) about uploaded file and its link to lesson with given id
+     *
+     * @param lessonId id of lesson to which this attachment should be linked
+     * @param url path to the file on the server
+     * @param name original name of uploaded file
+     * @param description description given to the attachment
+     * @param trainerId id of trainer who is uploading the file
+     */
+
     @Override
     public void add(Integer lessonId, String url, String name, Integer trainerId, String description) {
         Attachment attachment = new Attachment(url, name, trainerId, description);
         add(lessonId, attachment);
     }
 
+    /**
+     * returns all attachments that are now attached to lesson plus all attachments
+     * that are owned by the trainer that is editing the lesson at the moment
+     *
+     * @param trainerId id of trainer who is uploading the file
+     * @param dtoAttachment  object with file MultipartFile, lessonId and description
+     * @return saved into database object that represents the file
+     */
 
     @Override
     public Attachment uploadFile(Integer trainerId, DtoAttachment dtoAttachment) {
@@ -60,12 +84,29 @@ public class AttachmentServiceImpl implements AttachmentService {
         throw new LogicException("The file is empty!");
     }
 
+    /**
+     * saves information about uploaded file to the database
+     *
+     * @param trainerId id of trainer who is uploading the file
+     * @param dtoAttachment  object with file MultipartFile, lessonId and description
+     * @param name original name of uploaded file
+     * @param filePath  path to the file on the server
+     * @return saved into database object that represents the file
+     */
+
     private Attachment saveToDatabase(Integer trainerId, DtoAttachment dtoAttachment, String name, String filePath) {
         Attachment newAttachment = new Attachment(filePath, name,
                 trainerId, dtoAttachment.getDescription());
         attachmentDao.insert(newAttachment);
         return newAttachment;
     }
+
+    /**
+     * returns path to the local file
+     *
+     * @param name name of the file in local repository
+     * @return path to the file
+     */
 
     private String getFilePath(String name) {
         String rootPath = "src/main/resources";
@@ -77,6 +118,13 @@ public class AttachmentServiceImpl implements AttachmentService {
         }
         return dir.getAbsolutePath() + File.separator + name;
     }
+
+    /**
+     * saves file to the repository on the FTP server
+     *
+     * @param multipartFile file that is being saved
+     * @param filePath path to the location where file should be saved
+     */
 
     private void saveToDisk(MultipartFile multipartFile, String filePath) throws IOException {
         byte[] bytes = multipartFile.getBytes();
@@ -102,6 +150,12 @@ public class AttachmentServiceImpl implements AttachmentService {
             file.delete();
         }
     }
+    /**
+     * returns input stream from the FTP server with the file of given id
+     *
+     * @param id id of of file to download
+     * @return stream containing file that is downloaded
+     */
 
     @Override
     public InputStream downloadFile(Integer id) {
@@ -111,12 +165,26 @@ public class AttachmentServiceImpl implements AttachmentService {
         return fileService.downloadFileFromServer(path);
     }
 
+    /**
+     * creates link between attachment with given id and lesson with given id
+     *
+     * @param lessonId id of lesson
+     * @param attachmentId id of attachment
+     */
+
     @Override
     public void link(Integer lessonId, Integer attachmentId) {
         unlink(lessonId,attachmentId);
         LessonAttachment lessonAttachment = new LessonAttachment(attachmentId, lessonId);
         lessonAttachmentDao.insert(lessonAttachment);
     }
+
+    /**
+     * deletes link between attachment with given id and lesson with given id
+     *
+     * @param lessonId id of lesson
+     * @param attachmentId id of attachment
+     */
 
     @Override
     public void unlink(Integer lessonId, Integer attachmentId) {

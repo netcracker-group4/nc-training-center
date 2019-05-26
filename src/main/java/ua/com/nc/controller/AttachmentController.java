@@ -37,10 +37,23 @@ public class AttachmentController {
     @Autowired
     private RoleService roleService;
 
+    /**
+     * returns all attachments that are linked to the lesson at the moment
+     *
+     * @return list of available attachments
+     */
+
     @RequestMapping(method = RequestMethod.GET, value = "/lesson/{id}")
     public ResponseEntity<List<Attachment>> getLessonAttachments(@PathVariable Integer id) {
         return ResponseEntity.ok(attachmentDao.getByLessonId(id));
     }
+
+    /**
+     * returns all attachments that are owned by the trainer
+     *
+     * @param user     logged in user
+     * @return list of available attachments
+     */
 
     @RequestMapping(method = RequestMethod.GET, value = "/all")
     public ResponseEntity<List<Attachment>> getAllAttachments(@AuthenticationPrincipal User user) {
@@ -60,8 +73,10 @@ public class AttachmentController {
      * @param lessonId lesson that is edited
      * @return list of available attachments
      */
+
     @RequestMapping(method = RequestMethod.GET, value = "/all/{lessonId}")
-    public ResponseEntity<List<Attachment>> getAllAttachmentsForLessonAndTrainer(@AuthenticationPrincipal User user, @PathVariable Integer lessonId) {
+    public ResponseEntity<List<Attachment>> getAllAttachmentsForLessonAndTrainer(@AuthenticationPrincipal User user,
+                                                                                 @PathVariable Integer lessonId) {
         List<Attachment> attachmentList = new ArrayList<>();
         if (user != null && roleService.findAllByUserId(user.getId()).contains(Role.ADMIN)) {
             attachmentList.addAll(attachmentDao.getAll());
@@ -71,6 +86,13 @@ public class AttachmentController {
         attachmentList.addAll(attachmentDao.getByLessonId(lessonId));
         return ResponseEntity.ok(attachmentList);
     }
+
+    /**
+     * returns attachment by given id
+     *
+     * @param id file id
+     * @return response entity with json representing file
+     */
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity<?> getAttachment(@PathVariable Integer id) {
@@ -100,18 +122,35 @@ public class AttachmentController {
         } else
             throw new LogicException("Could not upload file");
     }
-
+    /**
+     * deletes link between attachment with given id and lesson with given id
+     *
+     * @param lessonAttachment object with attachmentId, lessonId
+     */
     @RequestMapping(method = RequestMethod.DELETE, value = "/unlink")
     public void unlink(@RequestBody LessonAttachment lessonAttachment) {
         service.unlink(lessonAttachment.getLessonId(), lessonAttachment.getAttachmentId());
     }
 
+    /**
+     * creates link between attachment with given id and lesson with given id
+     *
+     * @param lessonId id of lesson
+     * @param attachmentId id of attachment
+     */
 
     @RequestMapping(method = RequestMethod.POST, value = "/link")
-    public void linkFile(@RequestParam("lessonId") Integer lessonId, @RequestParam("attachmentId") Integer attachmentId) {
+    public void linkFile(@RequestParam("lessonId") Integer lessonId,
+                         @RequestParam("attachmentId") Integer attachmentId) {
         service.link(lessonId, attachmentId);
     }
 
+    /**
+     * uploads the file sent from the front-end
+     *
+     * @param id attachment id
+     * @return response entity containing file which id was given
+     */
 
     @RequestMapping(value = "/download/{id}", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable Integer id) {
