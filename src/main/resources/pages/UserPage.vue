@@ -6,7 +6,8 @@
             <basic-user-info-component :user="user" :groups="groups" :trainers="trainers"
                                        :elem-name="userComponentHeader"/>
 
-            <v-btn justify-start large flat @click="downloadGroupsAttendanceReport()" v-if="isTrainer() && isMyPage()">
+            <v-btn justify-start small flat @click="downloadGroupsAttendanceReport()"
+                   v-if="isTrainer() && isMyPage() && !$store.getters.isAdmin">
                 Download attendance reports
             </v-btn>
 
