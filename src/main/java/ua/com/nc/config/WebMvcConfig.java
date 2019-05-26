@@ -18,7 +18,7 @@ import javax.servlet.MultipartConfigElement;
 @Configuration
 @EnableWebMvc
 @ComponentScan
-public class WebmvcConfig implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
     public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> webServerCustomizer() {

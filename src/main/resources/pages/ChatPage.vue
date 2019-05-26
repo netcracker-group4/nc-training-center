@@ -54,6 +54,7 @@
 <script>
     import axios from 'axios'
     import {addHandler, sendMessage} from "../websocket/ws";
+    import {connect} from '../websocket/ws'
 
     export default {
         name: "MessagePage",
@@ -67,9 +68,17 @@
             }
         },
         created() {
-            //let id = this.$route.params.id;
+            let id = this.$route.params.id;
             this.loadPage()
-            addHandler(data => this.messages.push(data))
+            addHandler(data => {
+                if(data.chatId == id){
+                    this.messages.push(data)
+                }
+            })
+        },
+        mounted(){
+
+            connect()
         },
         updated() {
             if (this.messageListPage == 1) {
