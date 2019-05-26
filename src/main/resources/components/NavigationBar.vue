@@ -6,7 +6,7 @@
                 temporary
         >
             <v-list class="pa-1">
-                <v-list-tile avatar>
+                <v-list-tile avatar v-if="$store.state.isAuthorized">
                     <v-list-tile-avatar class="cursor-pointer" v-on:click="goToMyPage()">
                         <v-icon v-if="$store.state.user.imageUrl == null">account_circle</v-icon>
                         <v-avatar size="36">
@@ -118,6 +118,12 @@
                     },
                     {
                         title: 'Dashboard', icon: 'dashboard', link: '/dashboard',
+                        canBeShown: function (self) {
+                            return self.$store.getters.isAdmin
+                        }
+                    },
+                    {
+                        title: 'Attendance', icon: 'how_to_reg', link: '/attendance',
                         canBeShown: function (self) {
                             return self.$store.getters.isAdmin
                         }
