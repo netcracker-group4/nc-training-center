@@ -4,7 +4,7 @@
             <v-layout style="margin-bottom: 50px">
                 <h2>All problems </h2>
                 <v-spacer></v-spacer>
-                <infodesk-request v-if="!isAdmin" :problem="{description: '', message: '', studentId: 0}"></infodesk-request>
+                <infodesk-request v-if="!isAdmin()" :problem="{description: '', message: '', studentId: 0}"></infodesk-request>
             </v-layout>
             <v-flex xs12 sm12>
                 <v-tabs v-model="currentStatus" centered style="width: 100%; margin-bottom: 50px">

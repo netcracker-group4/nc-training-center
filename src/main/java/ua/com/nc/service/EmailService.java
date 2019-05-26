@@ -11,5 +11,4 @@ public interface EmailService {
     void sendSimpleMessage(DtoMailSender dtoMailSender);
     String textGenerator(Set<User> students);
     void sendAttendanceReminderEmail(String to, String studentsText);
-    HashMap <User, ArrayList<User>> reverseHashMap (HashMap <User, User> studentsAndManagers);
 }

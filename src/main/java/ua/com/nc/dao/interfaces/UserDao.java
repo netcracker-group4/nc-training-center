@@ -2,8 +2,10 @@ package ua.com.nc.dao.interfaces;
 
 import ua.com.nc.domain.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public interface UserDao extends GenericDao<User> {
     User getByEmail(String email);
