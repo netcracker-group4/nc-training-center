@@ -1,6 +1,7 @@
 package ua.com.nc.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.ChatDao;
 import ua.com.nc.dao.interfaces.MessageDao;
@@ -8,9 +9,11 @@ import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.Chat;
 import ua.com.nc.domain.Message;
 import ua.com.nc.domain.User;
+import ua.com.nc.security.CustomSecurityService;
 import ua.com.nc.service.ChatService;
 import ua.com.nc.service.GroupsService;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -20,6 +23,9 @@ public class ChatServiceImpl implements ChatService {
     private ChatDao chatDao;
 
     @Autowired
+    private CustomSecurityService customSecurityService;
+
+    @Autowired
     private MessageDao messageDao;
 
     @Autowired
@@ -27,6 +33,27 @@ public class ChatServiceImpl implements ChatService {
 
     @Autowired
     private UserDao userDao;
+
+    @Override
+    public Integer addMessage(String text, Integer senderId, Integer receiverId, Integer groupId) {
+        Message message = new Message(null, senderId, new Timestamp(System.currentTimeMillis()), text);
+
+        if(receiverId != null & groupId == null){
+            return addMessageToChat(message, receiverId);
+        }
+        if(groupId != null && receiverId == null){
+            if(customSecurityService.canWriteToGroupChat(senderId, groupId)){
+                return addMessageToGroupChat(message, groupId);
+            }else{
+                return null;
+            }
+        }
+        if(receiverId == null & senderId == null){
+            return null;
+        }else{
+            return null;
+        }
+    }
 
     @Override
     public Integer addMessageToGroupChat(Message message, Integer groupId) {

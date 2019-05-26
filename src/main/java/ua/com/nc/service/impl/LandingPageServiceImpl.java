@@ -32,12 +32,12 @@ public class LandingPageServiceImpl implements LandingPageService {
     }
 
     @Override
-    public void updateCourseLandingPage(int id, boolean isOnLandingPage) {
+    public void updateCourseLandingPage(Integer id, boolean isOnLandingPage) {
         courseDao.updateCourseLandingPage(id, isOnLandingPage);
     }
 
     @Override
-    public void updateTrainerLandingPage(int id, boolean isOnLandingPage) {
+    public void updateTrainerLandingPage(Integer id, boolean isOnLandingPage) {
         userDao.updateTrainerLandingPage(id, isOnLandingPage);
     }
 }

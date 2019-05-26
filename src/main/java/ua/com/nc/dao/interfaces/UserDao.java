@@ -28,7 +28,7 @@ public interface UserDao extends GenericDao<User> {
 
     List<User> getUngroupedByCourse(Integer id);
 
-    void updateTrainerLandingPage(int id, boolean isOnLandingPage);
+    void updateTrainerLandingPage(Integer id, boolean isOnLandingPage);
 
     void updateActive(User user);
 
@@ -38,11 +38,11 @@ public interface UserDao extends GenericDao<User> {
 
     void addUserRole(Integer userId, String roleName);
 
-    HashMap<User, User> getStudentsAbsentWitNoReason(int lessonId);
+    HashMap<User, User> getStudentsAbsentWitNoReason(Integer lessonId);
 
     User getAdmin();
 
-    User getLessonTrainer(int lessonId);
+    User getLessonTrainer(Integer lessonId);
 
     User getTrainerByCourseId(Integer courseId);
 
@@ -53,5 +53,7 @@ public interface UserDao extends GenericDao<User> {
     void updateImage(User user);
 
     void updatePassword(User user);
+
+    User getByAttendanceId(Integer attendanceId);
 
 }

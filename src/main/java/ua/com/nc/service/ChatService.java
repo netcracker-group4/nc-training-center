@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ChatService {
 
+    Integer addMessage(String text, Integer senderId, Integer receiverId, Integer groupId);
+
     Integer addMessageToGroupChat(Message message, Integer groupId);
 
     Integer addMessageToChat(Message message, Integer receiverId);

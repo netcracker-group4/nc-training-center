@@ -6,7 +6,7 @@
                     <td @click="forwardTo(props.item.id)">
                         <div>{{props.item.firstName + ' ' + props.item.lastName}}</div>
                     </td>
-                    <td class="text-xs-right">{{ props.item.lessons.length }}</td>
+                    <!--<td class="text-xs-right">{{ props.item.lessons.length }}</td>-->
                 </tr>
             </template>
         </v-data-table>
@@ -25,10 +25,6 @@
                         text: 'Student name',
                         align: 'left',
                         value: 'level.title'
-                    },
-                    {
-                        text: 'Number of lectures', value: 'quantityOfGroups',
-                        width: "20", align: 'right'
                     },
                 ],
             }

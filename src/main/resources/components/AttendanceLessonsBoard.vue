@@ -6,8 +6,8 @@
                     <td>
                         <div>{{props.item.topic}}</div>
                     </td>
-                    <td class="text-xs-right">{{props.item.absenceStatus}}</td>
-                    <td class="text-xs-right">{{props.item.absenceReason}}</td>
+                    <td>{{props.item.status}}</td>
+                    <td>{{props.item.reason}}</td>
                 </tr>
             </template>
         </v-data-table>
@@ -29,11 +29,11 @@
                     },
                     {
                         text: 'Absence', value: 'quantityOfGroups',
-                        width: "20", align: 'right'
+                        width: "20", align: 'left'
                     },
                     {
                         text: 'Absence reason', value: 'quantityOfGroups',
-                        width: "20", align: 'right'
+                        width: "20", align: 'left'
                     },
                 ],
             }

@@ -17,7 +17,7 @@
                 </v-stepper-step>
 
                 <v-stepper-content step="1">
-                    <attendance-trainer-board :data="attendances.trainers" @forward="next"></attendance-trainer-board>
+                    <attendance-trainer-board :data="trainers" @forward="next"></attendance-trainer-board>
                 </v-stepper-content>
 
                 <v-stepper-step :complete="e6 > 2" step="2">Choose group</v-stepper-step>
@@ -58,14 +58,18 @@
         data() {
             return {
                 e6: 0,
+                trainers: [],
                 attendances: [],
                 groups: [],
                 students: [],
-                lessons: []
+                lessons: [],
+                groupId: null
             }
         },
         mounted() {
-            axios.get(this.$store.state.apiServer + '/api/attendances')
+            axios.get(this.$store.state.apiServer + '/api/users/get-all-trainers')
+                .then(response => this.trainers = response.data)
+            /*axios.get(this.$store.state.apiServer + '/api/attendances')
                 .then(response => {
                     this.attendances = response.data
                 })
@@ -73,20 +77,25 @@
                     console.log(error);
                     if (error.response != null && error.response.status == 400)
                         self.$router.push('/404');
-                })
+                })*/
         },
         methods: {
             next(item) {
                 this.e6++
                 if (this.e6 == 2) {
-                    this.groups = this.attendances.trainers.find(trainer => trainer.id == item).groups
+                    axios.get(this.$store.state.apiServer + '/api/groups/trainer/' + item)
+                        .then(response => this.groups = response.data)
                 }
                 if (this.e6 == 3) {
-                    this.students = this.groups.find(group => group.id == item).students
+                    axios.get(this.$store.state.apiServer + '/api/groups/' + item + '/users')
+                        .then(response => {
+                            this.students = response.data
+                            this.groupId = item
+                        })
                 }
                 if (this.e6 == 4) {
-                    this.lessons = this.students.find(student => student.id == item).lessons
-                    console.log(this.lessons)
+                    axios.get(this.$store.state.apiServer + '/api/attendances?userId=' + item + '&groupId=' + this.groupId)
+                        .then(response => this.lessons = response.data)
                 }
             },
             downloadAttendance() {

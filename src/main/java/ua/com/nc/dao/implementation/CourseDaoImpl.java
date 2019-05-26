@@ -144,7 +144,7 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     }
 
     @Override
-    public void updateCourseLandingPage(int id, boolean isOnLandingPage) {
+    public void updateCourseLandingPage(Integer id, boolean isOnLandingPage) {
         String sql = courseUpdateLandingPage;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
