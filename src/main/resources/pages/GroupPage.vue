@@ -206,7 +206,7 @@
                 return this.students.filter(e => e.id === self.$store.state.user.id).length > 0;
             },
             downloadGroupAttendanceReport() {
-                window.open(this.$store.state.apiServer + "/attendance-report/" + this.id, "_blank");
+                window.open(this.$store.state.apiServer + "/api/download-report/attendance-report/" + this.id, "_blank");
             },
 
         },
