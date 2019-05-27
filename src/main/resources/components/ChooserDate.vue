@@ -1,12 +1,12 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container grid-list-md>
-        <v-layout row wrap>
-            <v-flex xs12 lg6>
+        <v-layout row wrap style="display: block">
+            <v-flex >
                 <v-menu
                         v-model="menu1"
                         :close-on-content-click="false"
                         full-width
-                        max-width="290"
+
                 >
                     <template v-slot:activator="{ on }">
                         <v-text-field
@@ -26,7 +26,7 @@
                 </v-menu>
             </v-flex>
 
-            <v-flex xs12 lg6>
+            <v-flex >
                 <v-menu
                         v-model="menu2"
                         :close-on-content-click="false"
@@ -71,10 +71,7 @@
         }),
         methods:{
           getCurrent(){
-              let date = new Date();
-              let year = date.getFullYear();
-              let month = date.getMonth();
-              return year+'-'+month+'-'+date.getDay();
+              return new Date().toISOString().substr(0, 10);
           },
         },
         computed: {

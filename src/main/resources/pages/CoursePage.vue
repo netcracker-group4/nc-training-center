@@ -140,12 +140,12 @@
             return {
                 course:{
                     id: this.$route.params.id,
-                    name: null,
+                    name: '',
                     level: {title: ''},
-                    status: null,
-                    imageUrl: null,
-                    isOnLandingPage: null,
-                    description: null,
+                    status: '',
+                    imageUrl: '',
+                    isOnLandingPage: false,
+                    description: '',
                     startDay: null,
                     endDay: null,
                     trainer: {firstName: '', lastName: ''},

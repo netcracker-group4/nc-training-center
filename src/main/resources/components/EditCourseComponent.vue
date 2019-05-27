@@ -149,11 +149,7 @@
         methods: {
             trainerName: item => item.firstName + " " + item.lastName,
             getCurrent(){
-                let date = new Date();
-                let year = date.getFullYear();
-                let month = date.getMonth();
-                let day = date.getDay();
-                return year+'-'+month+'-'+day;
+                return new Date().toISOString().substr(0, 10);
             },
             save() {
                 let self = this;

@@ -1,9 +1,9 @@
 <template>
     <v-container>
         <v-layout row wrap>
-            <v-flex xs12 sm4>
-                <v-container>
-                    <v-layout row wrap>
+            <v-flex >
+                <v-container style="display: flex; position: absolute;">
+                    <div style="margin-left: auto">
                         <v-flex xs12 sm12>
                             <v-text-field :rules="[rules.required]" v-model="name" label="name"></v-text-field>
                         </v-flex>
@@ -58,12 +58,18 @@
 
                             ></v-select>
                         </v-flex>
+                        <v-spacer></v-spacer>
+                        <v-flex xs12 sm12>
+                            <v-btn @click="submit">submit</v-btn>
+                        </v-flex>
+                    </div>
+                    <div style="justify-content: center; display: block; margin-right: auto; margin-left: 5%;">
                         <v-flex>
                             <p style="margin-top: 3%">
                                 <v-checkbox v-model="isOnLandingPage" :label="`Is on landing page? `"></v-checkbox>
                             </p>
                         </v-flex>
-                        <v-flex xs12 style="width: 30%">
+                        <v-flex xs12 >
                             <v-textarea
                                     id="course-descr-text"
                                     box
@@ -74,11 +80,7 @@
                             ></v-textarea>
                         </v-flex>
                         <ChooserDate/>
-                        <v-spacer></v-spacer>
-                        <v-flex xs12 sm12>
-                            <v-btn @click="submit">submit</v-btn>
-                        </v-flex>
-                    </v-layout>
+                    </div>
                 </v-container>
             </v-flex>
         </v-layout>
