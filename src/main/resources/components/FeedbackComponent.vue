@@ -69,7 +69,8 @@
                             <div class="table_item" style="position: relative"
                                  @mouseenter="props.expanded = true" @mouseleave="props.expanded = false">
                                 <td>
-                                    <v-list-tile-avatar class="cursor-pointer feedback_avatar">
+                                    <v-list-tile-avatar class="cursor-pointer feedback_avatar"
+                                                        @click="forwardToUser(props.item.teacher.id)">
                                         <v-icon v-if="props.item.teacher.imageUrl == null">account_circle</v-icon>
                                         <v-avatar size="70">
                                             <v-img :src="$store.state.apiServer + '/api/users/image?url=' + props.item.teacher.imageUrl"
@@ -79,7 +80,10 @@
                                 </td>
                                 <td style="vertical-align: top;">
                                     <div class="div_teacherName">
-                                        {{ props.item.teacher.firstName }} {{ props.item.teacher.lastName }}
+                                        <span class="cursor-pointer"
+                                              @click="forwardToUser(props.item.teacher.id)">
+                                            {{ props.item.teacher.firstName }} {{ props.item.teacher.lastName }}
+                                        </span>
                                         <span class="span_courseName">{{ props.item.course.name }}</span>
                                     </div>
                                     <div class="div_feedbackText">
@@ -191,6 +195,9 @@
                 }).catch(function (error) {
                     console.log(error);
                 });
+            },
+            forwardToUser(id) {
+                this.$router.push('/users/' + id);
             },
             isNotOnlyTrainer() {
                 return store.state.userRoles.includes("ADMIN") ||
@@ -308,6 +315,10 @@
     .v-container_button {
         padding-top: 0;
         padding-bottom: 0;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
     }
 
 </style>

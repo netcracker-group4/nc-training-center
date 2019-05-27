@@ -2,25 +2,29 @@
     <v-container>
         <progress-circular-component v-if="loading"></progress-circular-component>
 
-        <v-layout v-if="!loading" row wrap style="margin-bottom: 50px">
-            <v-flex md6 lg4 sx12>
-                <span class="grey--text" style="font-size: 22px; margin-top: 15px">Group :  </span>
-                <span style="font-size: 22px; margin-top: 15px"
-                      class="font-weight-medium">{{ group.title}}</span>
-            </v-flex>
-            <v-flex md6 lg3 sx12>
-                <v-btn flat v-on:click="downloadGroupAttendanceReport()" v-if="hasRights()">
-                    <b>Download group attendance</b></v-btn>
-            </v-flex>
-            <v-flex md6 lg2 sx12>
-                <v-btn flat v-on:click="$router.push('/courses/' + course.id)">
-                    <b>Course: {{course.name}}</b></v-btn>
-            </v-flex>
-            <v-flex md6 lg3 sx12>
-                <v-btn flat v-on:click="forwardToUserPage(teacher.id)">
-                    <b>Trainer: {{teacher.firstName + ' ' + teacher.lastName}}</b></v-btn>
-            </v-flex>
-
+        <v-container v-if="!loading" row wrap style="margin-bottom: 50px">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <v-flex md6 lg4 sx12>
+                    <span class="grey--text" style="font-size: 22px; margin-top: 15px">Group:  </span>
+                    <span style="font-size: 22px; margin-top: 15px"
+                          class="font-weight-medium">{{ group.title}}</span>
+                </v-flex>
+                <v-flex style="position: relative;">
+                    <v-btn flat v-on:click="downloadGroupAttendanceReport()"
+                           style="position: absolute; top: 0; right: 0;" color="orange" v-if="hasRights()">
+                        <b>Download group attendance</b></v-btn>
+                </v-flex>
+            </div>
+            <div>
+                <v-flex md6 lg2 sx12>
+                    <v-btn flat v-on:click="$router.push('/courses/' + course.id)" style="margin: 0">
+                        <b>Course: {{course.name}}</b></v-btn>
+                </v-flex>
+                <v-flex md6 lg3 sx12>
+                    <v-btn flat v-on:click="forwardToUserPage(teacher.id)" style="margin: 0">
+                        <b>Trainer: {{teacher.firstName + ' ' + teacher.lastName}}</b></v-btn>
+                </v-flex>
+            </div>
             <v-flex xs12 sm12 style="margin-bottom: 50px">
                 <v-data-table
                         :headers="headers"
@@ -56,7 +60,7 @@
             <v-flex mb-50 xs12 sm12 v-if="hasRights()">
                 <group-attendance-graph :absenceReasons="reasons"/>
             </v-flex>
-        </v-layout>
+        </v-container>
         <v-layout v-if="!loading" row wrap style="margin-bottom: 40px">
             <v-spacer></v-spacer>
             <div class="text-xs-center">

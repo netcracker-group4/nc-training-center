@@ -56,26 +56,33 @@ public class GroupsServiceImpl implements GroupsService {
         List<DtoGroup> dtoGroups = new ArrayList<>();
         List<Level> levels = levelDao.getAll();
         List<UserGroup> userGroups = userGroupDao.getByUser(employeeId);
-        userGroups.forEach(g -> dtoGroups.add(getExtendedGtoGroup(levels, g)));
+        for (UserGroup userGroup : userGroups) {
+            DtoGroup extendedGtoGroup = getExtendedGtoGroup(levels, userGroup);
+            if (extendedGtoGroup != null)
+                dtoGroups.add(extendedGtoGroup);
+        }
         return dtoGroups;
     }
 
     private DtoGroup getExtendedGtoGroup(List<Level> levels, UserGroup userGroup) {
         int courseId = userGroup.getCourseId();
         Course course = courseDao.getEntityById(courseId);
-        String levelName = getLevelName(levels, course.getLevel());
-        Integer groupId;
-        String title;
-        if (userGroup.getGroupId() == null || userGroup.getGroupId() == 0) {
-            title = "";
-            groupId = null;
-        } else {
-            Group group = groupDao.getEntityById(userGroup.getGroupId());
-            title = group.getTitle();
-            groupId = userGroup.getGroupId();
+        if (course != null) {
+            String levelName = getLevelName(levels, course.getLevel());
+            Integer groupId;
+            String title;
+            if (userGroup.getGroupId() == null || userGroup.getGroupId() == 0) {
+                title = "";
+                groupId = null;
+            } else {
+                Group group = groupDao.getEntityById(userGroup.getGroupId());
+                title = group.getTitle();
+                groupId = userGroup.getGroupId();
+            }
+            return new DtoGroup(groupId, title, courseId,
+                    course.getName(), course.getUserId(), levelName);
         }
-        return new DtoGroup(groupId, title, courseId,
-                course.getName(), course.getUserId(), levelName);
+        return null;
     }
 
     private String getLevelName(List<Level> levels, int levelId) {
@@ -137,7 +144,7 @@ public class GroupsServiceImpl implements GroupsService {
         if (attendances != null && !attendances.isEmpty()) {
             for (Attendance instance : attendances) {
                 String status = instance.getStatus().toLowerCase();
-                if(status.equals("late")){
+                if (status.equals("late")) {
                     attendance.put("present", attendance.get("present") + 1);
                     coefficient++;
                     latenessCoefficient++;
