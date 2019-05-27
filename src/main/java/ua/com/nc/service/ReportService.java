@@ -9,6 +9,15 @@ import java.io.IOException;
  * Report interface provides creating excel reports
  */
 public interface ReportService {
+    /**
+     * Some constants using in reports
+     */
+    String[] dashboardSheetNames = {"Level And Quantity", "Level And Trainers", "Training And Quantity"};
+    String[] levelAndQuantityColumns = {"Level", "Course Name", "Group Name"};
+    String[] levelAndTrainersColumns = {"Trainer", "Course Name and Level"};
+    String[] trainingAndQuantityColumns = {"Course Name", "Group Name", "Amount of Employees"};
+    String groupsNotFound = "No groups to report";
+    String levelException = "Can't find Level for Id ";
 
     /**
      * @return full attendance report of all courses and their groups
@@ -39,6 +48,4 @@ public interface ReportService {
      * @see org.apache.poi.xssf.usermodel.XSSFWorkbook
      */
     ByteArrayInputStream getDashboardExcel() throws IOException;
-
-
 }
