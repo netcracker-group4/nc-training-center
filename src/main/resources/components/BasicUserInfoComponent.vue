@@ -7,7 +7,7 @@
                     <v-spacer></v-spacer>
                     <span v-if="viewerIsAdmin()" class="text-xs-center align-center">
                         <v-switch
-                                v-if="viewerIsAdmin()" style="margin-bottom: -20px"
+                                v-if="viewerIsAdmin() && !isAdminProfile()" style="margin-bottom: -20px"
                                 v-model="user.active"
                                 @change="isActive"
                                 label="active">
@@ -276,6 +276,9 @@
             },
             viewerIsAdmin() {
                 return store.getters.isAdmin;
+            },
+            isAdminProfile() {
+                return this.user.roles.includes("ADMIN");
             },
             isEmployeeProfile() {
                 return this.user.roles.includes("EMPLOYEE");
