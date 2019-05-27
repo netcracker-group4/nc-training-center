@@ -58,4 +58,6 @@ public interface UserDao extends GenericDao<User> {
 
     User getByAttendanceId(Integer attendanceId);
 
+    User getTrainerByGroupId(Integer groupId);
+
 }

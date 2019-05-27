@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.ChatDao;
+import ua.com.nc.dao.interfaces.GroupDao;
 import ua.com.nc.dao.interfaces.MessageDao;
 import ua.com.nc.dao.interfaces.UserDao;
 import ua.com.nc.domain.Chat;
+import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Message;
 import ua.com.nc.domain.User;
 import ua.com.nc.security.CustomSecurityService;
@@ -23,9 +25,6 @@ public class ChatServiceImpl implements ChatService {
     private ChatDao chatDao;
 
     @Autowired
-    private CustomSecurityService customSecurityService;
-
-    @Autowired
     private MessageDao messageDao;
 
     @Autowired
@@ -33,6 +32,9 @@ public class ChatServiceImpl implements ChatService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private GroupDao groupDao;
 
     @Override
     public Integer addMessage(String text, Integer senderId, Integer receiverId, Integer groupId) {
@@ -42,11 +44,12 @@ public class ChatServiceImpl implements ChatService {
             return addMessageToChat(message, receiverId);
         }
         if(groupId != null && receiverId == null){
-            if(customSecurityService.canWriteToGroupChat(senderId, groupId)){
+            if(canWriteToGroupChat(senderId, groupId)){
                 return addMessageToGroupChat(message, groupId);
             }else{
                 return null;
             }
+
         }
         if(receiverId == null & senderId == null){
             return null;
@@ -66,7 +69,8 @@ public class ChatServiceImpl implements ChatService {
             String chatName = groupName + " chat";
             List<User> studentsOfGroup = userDao.getByGroupId(groupId);
             Chat newChat = new Chat(chatName, message.getDateTime(), groupId);
-            User trainer = userDao.getTrainerByCourseId(groupId);
+
+            User trainer = userDao.getTrainerByGroupId(groupId);
 
             Integer newChatId = chatDao.addChatReturningId(newChat);
 
@@ -106,6 +110,12 @@ public class ChatServiceImpl implements ChatService {
             return messageDao.insertMessageReturningId(message);
 
         }
+    }
+
+    private boolean canWriteToGroupChat(Integer userId, Integer groupId){
+        Group group = groupDao.getByUserIdAndGroupId(userId, groupId);
+        User trainer = userDao.getTrainerByGroupId(groupId);
+        return group != null || trainer.getId().equals(userId);
     }
 
     @Override

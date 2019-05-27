@@ -378,6 +378,13 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         return getUniqueFromSqlById(sql, attendanceId);
     }
 
+    @Override
+    public User getTrainerByGroupId(Integer groupId) {
+        String sql = getSelectTrainerByGroupId;
+        log.debug("select trainer by group id" + groupId);
+        return getUniqueFromSqlById(sql, groupId);
+    }
+
 
     public HashMap<User, User> getStudentsAbsentWitNoReason(Integer lessonId) {
         List<User> students = new ArrayList<>();
