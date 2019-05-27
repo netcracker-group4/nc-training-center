@@ -124,6 +124,7 @@ public class FiletransferServiceImpl implements FileTransferService {
             if (!success) {
                 log.error("Could not login to the server");
             }
+            ftpClient.enterLocalPassiveMode();
             return ftpClient.retrieveFileStream(path);
         }
         catch (IOException ex){

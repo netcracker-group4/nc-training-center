@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Async
-    private void sendMessage(User user, String title, String text) {
+    void sendMessage(User user, String title, String text) {
         DtoMailSender dtoMailSender = new DtoMailSender();
         dtoMailSender.setTo(user.getEmail());
         dtoMailSender.setSubject(title);
