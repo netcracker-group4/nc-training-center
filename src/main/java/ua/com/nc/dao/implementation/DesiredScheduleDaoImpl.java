@@ -70,7 +70,7 @@ public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> imp
                     courseId, cronInterval, suitability);
             list.add(desiredSchedule);
         }
-        log.info("Retrieved DesiredSchedules from database " + list);
+        log.debug("Retrieved DesiredSchedules from database " + list);
         return list;
     }
 
@@ -78,7 +78,7 @@ public class DesiredScheduleDaoImpl extends AbstractDaoImpl<DesiredSchedule> imp
     @Override
     public List<DesiredSchedule> getByUsrGroupId(Integer usrGroupId) {
         String sql = desirableScheduleSelectByUsrGroupId;
-        log.info("find  all DesiredSchedule by UsrGroupId " + usrGroupId + "  " + sql);
+        log.debug("find  all DesiredSchedule by UsrGroupId " + usrGroupId + "  " + sql);
         return getFromSqlById(sql, usrGroupId);
     }
 }

@@ -37,6 +37,11 @@
                                         required
                                 ></v-text-field>
                                 <v-text-field
+                                        :append-icon="pass_show ? 'visibility' : 'visibility_off'"
+                                        :type="pass_show ? 'text' : 'password'"
+                                        name="input-10-2"
+                                        class="input-group--focused"
+                                        @click:append="pass_show = !pass_show"
                                         v-model="user.password"
                                         v-validate="'required'"
                                         :error-messages="errors.collect('password')"
@@ -104,6 +109,7 @@
                 password: '',
                 role: null,
             },
+            pass_show: false,
             dictionary: {
                 attributes: {
                     email: 'E-mail Address',
@@ -168,10 +174,12 @@
                             console.log(response);
                             if (self.isAdmin()) {
                                 self.successAutoClosable('New ' + this.user.role.toLowerCase() + ' has been added');
+                                this.$router.push('/users');
                             } else {
                                 self.successAutoClosable('Registration was successful! Confirm letter was send to your email');
+                                this.$router.push('/login');
                             }
-                            self.$validator.reset();
+                            this.clearUser();
                         }).catch(function (error) {
                             self.errorAutoClosable('User with this email already exists');
                         });

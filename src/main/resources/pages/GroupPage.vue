@@ -9,15 +9,15 @@
                       class="font-weight-medium">{{ group.title}}</span>
             </v-flex>
             <v-flex md6 lg3 sx12>
-                <v-btn large flat v-on:click="downloadGroupAttendanceReport()" v-if="hasRights()">
+                <v-btn flat v-on:click="downloadGroupAttendanceReport()" v-if="hasRights()">
                     <b>Download group attendance</b></v-btn>
             </v-flex>
-            <v-flex md6 lg3 sx12>
-                <v-btn large flat v-on:click="$router.push('/courses/' + course.id)">
+            <v-flex md6 lg2 sx12>
+                <v-btn flat v-on:click="$router.push('/courses/' + course.id)">
                     <b>Course: {{course.name}}</b></v-btn>
             </v-flex>
-            <v-flex md6 lg2 sx12>
-                <v-btn large flat v-on:click="forwardToUserPage(teacher.id)">
+            <v-flex md6 lg3 sx12>
+                <v-btn flat v-on:click="forwardToUserPage(teacher.id)">
                     <b>Trainer: {{teacher.firstName + ' ' + teacher.lastName}}</b></v-btn>
             </v-flex>
 
@@ -219,7 +219,7 @@
                 })
                 .catch(function (error) {
                     console.log(error);
-                    if (error.response != null && error.response.status == 400)
+                    if (error.response != null && (error.response.status == 400 || error.response.status == 404))
                         self.$router.push('/404');
                 });
             axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id + '/course')

@@ -86,14 +86,14 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
             Attachment attachment = new Attachment(id, url, name, trainerId, description);
             attachments.add(attachment);
         }
-        log.info("received Attachments from database  "  + attachments);
+        log.debug("received Attachments from database  "  + attachments);
         return attachments;
     }
 
     @Override
     public Attachment getByUrl(String url) throws PersistException {
         String sql = attachmentSelectByUrl;
-        log.info(" Select attachment by url  " + url + " " + sql);
+        log.debug("Select attachment by url  " + url + " " + sql);
         return getUniqueFromSqlByString(sql, url);
     }
 
@@ -101,14 +101,14 @@ public class AttachmentDaoImpl extends AbstractDaoImpl<Attachment> implements At
     @Override
     public List<Attachment> getByLessonId(Integer lessonId) {
         String sql = attachmentSelectByLessonId;
-        log.info(" Select attachment for lesson by lesson id  " + lessonId + " " + sql);
+        log.debug("Select attachment for lesson by lesson id  " + lessonId + " " + sql);
         return getFromSqlById(sql, lessonId);
     }
 
     @Override
     public List<Attachment> getByTrainerId(Integer trainerId) {
         String sql = attachmentSelectByTrainerId;
-        log.info(" Select attachments uploaded by  trainer, trainerId  " + trainerId + " " + sql);
+        log.debug("Select attachments uploaded by  trainer, trainerId  " + trainerId + " " + sql);
         return getFromSqlById(sql, trainerId);
     }
 

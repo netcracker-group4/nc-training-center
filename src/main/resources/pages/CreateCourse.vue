@@ -11,10 +11,14 @@
                             <v-text-field v-model="imageUrl" label="image url" clearable></v-text-field>
                             <v-btn @click="uploadFile">Upload</v-btn>
                         </v-flex>-->
-                        <v-flex xs12 sm12 class="text-xs-center text-sm-center text-md-center text-lg-center">
+                        <v-flex xs12 sm12 class="text-xs-left text-sm-left text-md-left text-lg-left">
                             <img :src="imageUrl" height="150" v-if="imageUrl"/>
-                            <v-text-field :rules="[rules.required]" label="Select Image" @click='pickFile'
-                                          v-model='imageUrl' prepend-icon='attach_file'></v-text-field>
+                            <div @click="pickFile()" style="cursor: pointer;">
+                                <v-icon>
+                                    attach_file
+                                </v-icon>
+                                Select Image
+                            </div>
                             <input
                                     type="file"
                                     style="display: none"
@@ -191,13 +195,9 @@
                     let form = new FormData();
                     let request = new XMLHttpRequest();
                     try {
-                        if (this.id === undefined) {
-                            request.open('POST', this.$store.state.apiServer + '/api/getcourses/create');
-                        } else {
-                            request.open('PUT', this.$store.state.apiServer + '/api/getcourses/create');
-                        }
+                        request.open('POST', this.$store.state.apiServer + '/api/getcourses/create');
                         request.onreadystatechange = function() {
-                            if (request.readyState == XMLHttpRequest.DONE) {
+                            if (request.readyState === XMLHttpRequest.DONE) {
                                 self.$router.push("/courses");
                             }
                         };
@@ -219,6 +219,7 @@
                             closeOnClick: false,
                             pauseOnHover: true
                         });
+                        self.$router.push("/courses");
                     } catch (e) {
                         this.$snotify.error(e.toString(), {
                             timeout: 2000,

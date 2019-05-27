@@ -8,7 +8,7 @@
                 <v-toolbar flat color="white">
                     <v-toolbar-title>Course : {{course.name}}</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-btn flat @click="edit()">
+                    <v-btn v-if="isAdmin" flat @click="edit()">
                         <v-icon>edit</v-icon>
                     </v-btn>
                     <v-dialog v-if="isAdmin" v-model="dialog" max-width="500px">
@@ -93,10 +93,12 @@
                        aspect-ratio="2"></v-img>
                 <v-progress-linear v-if="!course.imageUrl" :indeterminate="true"></v-progress-linear>
                 <div v-if="isAdmin">
-                    <v-text-field label="Select Image"
-                                  @click='pickFile'
-                                  v-model='course.imageUrl'
-                                  prepend-icon='attach_file'></v-text-field>
+                    <div @click="pickFile()" style="cursor: pointer;">
+                        <v-icon>
+                            attach_file
+                        </v-icon>
+                        Select Image
+                    </div>
                     <form id="uploadForm" name="uploadForm" enctype="multipart/form-data" style="height: 0">
                         <input
                                 type="file"
@@ -189,7 +191,8 @@
                         self.loading = false;
                     })
                     .catch(function (error) {
-                        if (error.response != null && error.response.status === 400)
+                        console.log(error);
+                        if (error.response != null && (error.response.status == 400 || error.response.status == 404))
                             self.$router.push('/404');
                     });
             },
@@ -271,7 +274,7 @@
                         }
                     })
                         .then(function (response) {
-                            console.log(response);
+                            document.location.reload(true);
                         })
                         .catch(function (error) {
                             console.log(error);

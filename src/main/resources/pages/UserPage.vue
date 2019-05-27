@@ -6,7 +6,8 @@
             <basic-user-info-component :user="user" :groups="groups" :trainers="trainers"
                                        :elem-name="userComponentHeader"/>
 
-            <v-btn justify-start large flat @click="downloadGroupsAttendanceReport()" v-if="isTrainer() && isMyPage()">
+            <v-btn justify-start small flat @click="downloadGroupsAttendanceReport()"
+                   v-if="isTrainer() && isMyPage() && !$store.getters.isAdmin">
                 Download attendance reports
             </v-btn>
 
@@ -199,7 +200,7 @@
                     })
                     .catch(function (error) {
                         console.log(error);
-                        if (error.response != null && error.response.status == 400)
+                        if (error.response != null && (error.response.status == 400 || error.response.status == 404))
                             self.$router.push('/404');
                         // self.errorAutoClosable(error.response.data);
                     });

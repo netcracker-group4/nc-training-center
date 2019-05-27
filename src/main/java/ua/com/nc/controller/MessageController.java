@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ua.com.nc.dao.implementation.MessageDaoImpl;
 import ua.com.nc.domain.Chat;
 import ua.com.nc.domain.Message;
 import ua.com.nc.domain.User;

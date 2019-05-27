@@ -118,28 +118,28 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
             Course newCourse = new Course(id, name, level, courseStatusId, userId, imageUrl, startDate, endDate, isOnLandingPage, description);
             list.add(newCourse);
         }
-        log.info("Retrieved Courses from database " + list);
+        log.debug("Retrieved Courses from database " + list);
         return list;
     }
 
     @Override
     public List<Course> getAllByLevel(int levelId) {
         String sql = courseSelectByLevel;
-        log.info("find all courses by level " + levelId + " " + sql);
+        log.debug("find all courses by level " + levelId + " " + sql);
         return getFromSqlById(sql, levelId);
     }
 
     @Override
     public List<Course> getAllByTrainer(int trainerId) {
         String sql = courseSelectByTrainer;
-        log.info(sql + " find all courses by trainer " + trainerId);
+        log.debug("find all courses by trainer " + trainerId + " " + sql);
         return getFromSqlById(sql, trainerId);
     }
 
     @Override
     public List<Course> getLandingPageCourses() {
         String sql = courseLandingPage;
-        log.info("find all courses on landing page " + sql);
+        log.debug("find all courses on landing page " + sql);
         return getListFromSql(sql);
     }
 
@@ -160,21 +160,21 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     @Override
     public Course getCourseByGroup(int groupId) {
         String sql = selectCourseByGroupId;
-        log.info("find all courses by groupId " + sql);
+        log.debug("find all courses by groupId " + sql);
         return getUniqueFromSqlById(sql, groupId);
     }
 
     @Override
     public Course getCourseByFeedback(Integer feedbackId) {
         String sql = selectCourseByFeedbackId;
-        log.info("find a course by feedbackId " + feedbackId + " " + sql);
+        log.debug("find a course by feedbackId " + feedbackId + " " + sql);
         return getUniqueFromSqlById(sql, feedbackId);
     }
 
     @Override
     public List<Course> getAllCoursesByTrainerAndByEmployee(Integer trainerId, Integer employeeId) {
         String sql = courseSelectAllByTrainerAndEmployee;
-        log.info("find all courses by trainerId " + trainerId + " and employeeId " + employeeId + " " + sql);
+        log.debug("find all courses by trainerId " + trainerId + " and employeeId " + employeeId + " " + sql);
         return getFromSqlByTwoId(sql, trainerId, employeeId);
     }
 

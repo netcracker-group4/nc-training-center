@@ -1,20 +1,24 @@
 package ua.com.nc.controller;
 
-import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ua.com.nc.dao.interfaces.SuitabilityDao;
 import ua.com.nc.domain.User;
 import ua.com.nc.dto.schedule.DesiredToSave;
 import ua.com.nc.dto.schedule.GroupSchedule;
+import ua.com.nc.dto.schedule.ScheduleForUser;
 import ua.com.nc.service.DesiredScheduleService;
+
+import java.util.List;
 
 @Log4j2
 @Controller
@@ -23,81 +27,83 @@ public class DesiredScheduleController {
 
     @Autowired
     private DesiredScheduleService desiredScheduleService;
-
-    private final Gson gson = new Gson();
-
     @Autowired
     private SuitabilityDao suitabilityDao;
 
-    @ResponseBody
+
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(value = {"/{id}/ungrouped"}, method = RequestMethod.GET)
-    public String getDesiredScheduleForUngroupedStudentsForCourse(@PathVariable("id") Integer id) throws Exception {
-        return gson.toJson(desiredScheduleService.getDesiredScheduleForUngroupedStudentsOfCourse(id));
+    public ResponseEntity<List<ScheduleForUser>> getDesiredScheduleForUngroupedStudentsForCourse(
+            @PathVariable("id") Integer id) throws Exception {
+        return ResponseEntity.ok(
+                desiredScheduleService.getDesiredScheduleForUngroupedStudentsOfCourse(id));
     }
 
-    @ResponseBody
+
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(value = {"/{id}/grouped"}, method = RequestMethod.GET)
-    public String getDesiredScheduleForFormedGroupsForCourse(@PathVariable("id") Integer id) throws Exception {
-        return gson.toJson(desiredScheduleService.getDesiredScheduleForFormedGroupsForCourse(id));
+    public ResponseEntity<List<GroupSchedule>> getDesiredScheduleForFormedGroupsForCourse(
+            @PathVariable("id") Integer id) throws Exception {
+        return ResponseEntity.ok(
+                desiredScheduleService.getDesiredScheduleForFormedGroupsForCourse(id));
     }
 
 
-    @ResponseBody
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String addGroup(@RequestBody GroupSchedule groupSchedule) {
+    public ResponseEntity<Integer> addGroup(@RequestBody GroupSchedule groupSchedule) {
         int newId;
         if (groupSchedule.getId() == 0) {
             newId = desiredScheduleService.add(groupSchedule);
         } else {
             newId = desiredScheduleService.update(groupSchedule);
         }
-        return Integer.toString(newId);
+        return ResponseEntity.ok(newId);
     }
 
-    @ResponseBody
+
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(path = "/invert-attending/{userGroupId}", method = RequestMethod.GET)
-    public void invertUser(@PathVariable Integer userGroupId) {
+    public ResponseEntity<String> invertUser(@PathVariable Integer userGroupId) {
         desiredScheduleService.invertAttending(userGroupId);
+        return ResponseEntity.ok("Inverted");
     }
 
-    @ResponseBody
+
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    public void deleteGroup(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteGroup(@PathVariable Integer id) {
         desiredScheduleService.delete(id);
+        return ResponseEntity.ok("Deleted");
     }
 
-    @ResponseBody
+
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) " +
             "|| hasAuthority(T(ua.com.nc.domain.Role).TRAINER.name())")
     @RequestMapping(value = {"/{groupId}"}, method = RequestMethod.GET)
-    public String getDesiredScheduleForGroup(@PathVariable("groupId") Integer groupId) throws Exception {
-        return gson.toJson(desiredScheduleService.getDesiredScheduleForGroup(groupId));
+    public ResponseEntity<List<ScheduleForUser>> getDesiredScheduleForGroup(@PathVariable("groupId") Integer groupId) throws Exception {
+        return ResponseEntity.ok(desiredScheduleService.getDesiredScheduleForGroup(groupId));
     }
 
-    @ResponseBody
+
     @RequestMapping(value = {"/day-intervals"}, method = RequestMethod.GET)
-    public String getDayIntervals() {
-        return gson.toJson(desiredScheduleService.getDayIntervals());
+    public ResponseEntity<List<String>> getDayIntervals() {
+        return ResponseEntity.ok(desiredScheduleService.getDayIntervals());
     }
 
 
-    @ResponseBody
     @PreAuthorize("@customSecuritySecurity.canJoinCourse(authentication, #desiredToSave)")
     @RequestMapping(value = "/join", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void addGroup(@AuthenticationPrincipal User user, @RequestBody DesiredToSave desiredToSave) {
+    public ResponseEntity<String> addGroup(@AuthenticationPrincipal User user, @RequestBody DesiredToSave desiredToSave) {
         log.info(desiredToSave);
         desiredScheduleService.saveDesired(user.getId(), desiredToSave);
+        return ResponseEntity.ok("Saved");
     }
 
 
     @RequestMapping(value = "/suitabilities", method = RequestMethod.GET)
     public ResponseEntity<?> getSuitabilities() {
-        return new ResponseEntity<>(suitabilityDao.getAll(), HttpStatus.OK);
+        return ResponseEntity.ok(suitabilityDao.getAll());
     }
 
 

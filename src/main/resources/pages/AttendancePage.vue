@@ -3,10 +3,7 @@
         <v-layout>
             <h1>Attendance</h1>
             <v-spacer></v-spacer>
-            <v-btn flat color="primary"
-                   v-if="  this.$store.getters.isAuthorized &&
-                                            (this.$store.getters.isAdmin
-                                            || this.$store.getters.isTrainer)"
+            <v-btn flat v-if="this.$store.getters.isAdmin"
                    @click="downloadAttendance" class="download-button">download attendance report
             </v-btn>
         </v-layout>

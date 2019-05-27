@@ -11,7 +11,6 @@ import ua.com.nc.domain.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -157,42 +156,42 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
                     lastName, token, created, managerId, imageUrl, isActive);
             list.add(user);
         }
-        log.info("Retrieved Users from database " + list);
+        log.debug("Retrieved Users from database " + list);
         return list;
     }
 
     @Override
     public User getByEmail(String email) {
         String sql = usrSelectByEmail;
-        log.info("find user by email " + email + " " + sql);
+        log.debug("find user by email " + email + " " + sql);
         return getUniqueFromSqlByString(sql, email);
     }
 
     @Override
     public User getByToken(String token) {
         String sql = usrSelectByToken;
-        log.info("find user by token " + token + " " + sql);
+        log.debug("find user by token " + token + " " + sql);
         return getUniqueFromSqlByString(sql, token);
     }
 
     @Override
     public List<User> getTrainersOnCourse(int courseId) {
         String sql = getSelectTrainerByCourseId;
-        log.info("find trainers by courseId " + courseId + " " + sql);
+        log.debug("find trainers by courseId " + courseId + " " + sql);
         return getFromSqlById(sql, courseId);
     }
 
     @Override
     public User getTrainerByFeedback(Integer feedbackId) {
         String sql = usrSelectTrainerByFeedback;
-        log.info("find trainer by feedbackId " + feedbackId + " " + sql);
+        log.debug("find trainer by feedbackId " + feedbackId + " " + sql);
         return getUniqueFromSqlById(sql, feedbackId);
     }
 
     @Override
     public void addUserRole(Integer userId, String roleName) {
         String sql = usrInsertUserRole;
-        log.info(" insert user " + userId + " role " + roleName + " " + sql);
+        log.debug("insert user " + userId + " role " + roleName + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
@@ -207,7 +206,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public int getIdByName(String name) {
         String sql = usrSelectIdByName;
-        log.info(" select user " + sql + name);
+        log.debug("select user " + sql + name);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
@@ -222,7 +221,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public List<User> getAllTrainers() {
         String sql = usrSelectAllTrainers;
-        log.info("select all trainers " + sql);
+        log.debug("select all trainers " + sql);
         return getListFromSql(sql);
     }
 
@@ -230,7 +229,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public List<User> getAllManagers() {
         String sql = usrSelectAllManagers;
-        log.info("select all managers " + sql);
+        log.debug("select all managers " + sql);
         return getListFromSql(sql);
     }
 
@@ -238,21 +237,21 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public List<User> getByGroupId(Integer groupId) {
         String sql = usrSelectByGroupId;
-        log.info("select employees by groupId " + sql);
+        log.debug("select employees by groupId " + sql);
         return getFromSqlById(sql, groupId);
     }
 
     @Override
     public List<User> getUngroupedByCourse(Integer courseId) {
         String sql = usrSelectUngroupedByCourseId;
-        log.info("select ungrouped employees for a course " + courseId + " " + sql);
+        log.debug("select ungrouped employees for a course " + courseId + " " + sql);
         return getFromSqlById(sql, courseId);
     }
 
     @Override
     public void updateActive(User user) {
         String sql = usrUpdateChangeActive;
-        log.info("change active by admin user" + user.toString() + " " + sql);
+        log.debug("change active by admin user" + user.toString() + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, user.isActive());
@@ -268,28 +267,28 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public List<User> getLandingPageTrainers() {
         String sql = usrLandingPage;
-        log.info("select trainers on landing page " + sql);
+        log.debug("select trainers on landing page " + sql);
         return getListFromSql(sql);
     }
 
     @Override
     public User getManagerByEmployeeId(Integer employeeId) {
         String sql = usrSelectManagerById;
-        log.info("find manager by employeeId " + employeeId + " " + sql);
+        log.debug("find manager by employeeId " + employeeId + " " + sql);
         return getUniqueFromSqlById(sql, employeeId);
     }
 
     @Override
     public List<User> getEmployeeTrainersByEmployeeId(Integer employeeId) {
         String sql = usrSelectAllTrainersById;
-        log.info("find all trainers by employeeId " + employeeId + " " + sql);
+        log.debug("find all trainers by employeeId " + employeeId + " " + sql);
         return getFromSqlById(sql, employeeId);
     }
 
     @Override
     public void updateTrainerLandingPage(Integer id, boolean isOnLandingPage) {
         String sql = usrUpdateLandingPage;
-        log.info(" update trainer on landing page id " + id + " isOnLandingPage " + isOnLandingPage + " " + sql);
+        log.debug("update trainer on landing page id " + id + " isOnLandingPage " + isOnLandingPage + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, isOnLandingPage);
@@ -304,7 +303,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public User getTrainerByCourseId(Integer courseId) {
         String sql = getSelectTrainerByCourseId;
-        log.info("find trainer by courseId " + courseId + " " + sql);
+        log.debug("find trainer by courseId " + courseId + " " + sql);
         return getUniqueFromSqlById(sql, courseId);
     }
 
@@ -312,21 +311,21 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public List<User> getSubordinatesOfManager(Integer managerId) {
         String sql = getSelectSubordinatesByManager;
-        log.info("find subordinates by managerId = " + managerId + "  " + sql);
+        log.debug("find subordinates by managerId = " + managerId + "  " + sql);
         return getFromSqlById(sql, managerId);
     }
 
     @Override
     public List<User> getStudentsByLessonId(Integer lessonId) {
         String sql = getSelectStudentsByLessonId;
-        log.info("find students by lessonId = " + lessonId + "  " + sql);
+        log.debug("find students by lessonId = " + lessonId + "  " + sql);
         return getFromSqlById(sql, lessonId);
     }
 
     @Override
     public void updateImage(User user) {
         String sql = usrUpdateImage;
-        log.info("upload image" + user.toString() + " " + sql);
+        log.debug("upload image" + user.toString() + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getImageUrl());
@@ -341,7 +340,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public void updatePassword(User user) {
         String sql = usrUpdatePassword;
-        log.info("update password" + user.toString() + " " + sql);
+        log.debug("update password" + user.toString() + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getPassword());
@@ -356,7 +355,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     public User getByAttendanceId(Integer attendanceId) {
         String sql = getSelectByAttendanceId;
-        log.info(sql + "select user by attendance id " + attendanceId);
+        log.debug("select user by attendance id " + attendanceId + "  " + sql);
         return getUniqueFromSqlById(sql, attendanceId);
     }
 
@@ -364,7 +363,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     public HashMap<User, User> getStudentsAbsentWitNoReason(Integer lessonId) {
         List<User> students = new ArrayList<>();
         String sql = selectStudentsAbsentOnLessonWithNoReason;
-        log.info(sql + " selectStudentsAbsentOnLessonWithNoReason " + lessonId);
+        log.debug("selectStudentsAbsentOnLessonWithNoReason " + lessonId + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, lessonId);
@@ -383,7 +382,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     public User getAdmin() {
         String sql = getAdmin;
-        log.info("find admin " + sql);
+        log.debug("find admin " + sql);
         List<User> admin = getListFromSql(sql);
         if (admin == null || admin.size() == 0) {
             return null;
@@ -396,7 +395,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
     public User getLessonTrainer(Integer lessonId) {
         String sql = getLessonTrainer;
-        log.info("find trainer of lesson by lessonId" + lessonId + " " + sql);
+        log.debug("find trainer of lesson by lessonId" + lessonId + " " + sql);
         return getUniqueFromSqlById(sql, lessonId);
     }
 

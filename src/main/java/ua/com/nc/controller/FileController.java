@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ua.com.nc.dao.interfaces.CourseDao;
-import ua.com.nc.domain.Course;
 import ua.com.nc.service.CourseService;
 import ua.com.nc.service.FileTransferService;
 
@@ -31,14 +30,12 @@ public class FileController {
     private FileTransferService fileTransferService;
 
 
-    @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/img/{imageName}")
     public ResponseEntity<InputStreamResource> getImage(@PathVariable String imgName) {
         InputStream in = courseService.getImage(imgName);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition",
-                "image; filename = "+imgName);
-
+                "image; filename = " + imgName);
         return ResponseEntity.ok().headers(headers).body(new InputStreamResource(in));
     }
 
@@ -49,6 +46,6 @@ public class FileController {
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         byte[] media = fileTransferService.getImage(response, url);
-        return new ResponseEntity<>(media, headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(media);
     }
 }

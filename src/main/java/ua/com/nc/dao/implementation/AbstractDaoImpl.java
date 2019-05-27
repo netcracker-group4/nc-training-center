@@ -35,7 +35,7 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     public List<E> getAll() throws PersistException {
         List<E> list;
         String sql = getSelectQuery();
-        log.info("find all   " + sql);
+        log.debug("find all   " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
@@ -58,7 +58,7 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     public E getEntityById(Integer id) throws PersistException {
         List<E> list;
         String sql = getSelectByIdQuery();
-        log.info(" select by id with id " + id.toString() + "  " + sql);
+        log.debug("select by id with id " + id.toString() + "  " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, id);
@@ -87,7 +87,7 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     @Override
     public void update(E entity) throws PersistException {
         String sql = getUpdateQuery();
-        log.info("update with arguments  " + entity.toString() + "  " + sql);
+        log.debug("update with arguments  " + entity.toString() + "  " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForUpdate(statement, entity);
@@ -110,7 +110,7 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
     @Override
     public void delete(Integer id) throws PersistException {
         String sql = getDeleteQuery();
-        log.info("delete with id " + id.toString() + " " + sql);
+        log.debug("delete with id " + id.toString() + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, id);
@@ -137,7 +137,7 @@ public abstract class AbstractDaoImpl<E extends Entity> implements GenericDao<E>
             throw new PersistException("Object is already persist.");
         }
         String sql = getInsertQuery();
-        log.info("insert with parameters" + entity.toString() + " " + sql);
+        log.debug("insert with parameters" + entity.toString() + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForInsert(statement, entity);

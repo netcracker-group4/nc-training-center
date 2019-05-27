@@ -1,20 +1,19 @@
 package ua.com.nc.service;
 
 import ua.com.nc.dto.DtoLesson;
-import ua.com.nc.dto.DtoUser;
 
 import java.util.List;
 
 public interface LessonsService {
     List<DtoLesson> getAllForGroup(Integer groupId);
 
-    String updateLesson(DtoLesson toUpdate);
+    Integer updateLesson(DtoLesson toUpdate);
 
-    String addLesson(DtoLesson toAdd);
+    Integer addLesson(DtoLesson toAdd);
 
     void deleteLesson(int toDelete);
 
-    String invertIsCanceledForLesson(Integer lessonId);
+    boolean invertIsCanceledForLesson(Integer lessonId);
 
     List<DtoLesson> getAllForEmployee(Integer userId);
 
@@ -22,5 +21,5 @@ public interface LessonsService {
 
     DtoLesson getLessonById(Integer lessonId);
 
-    String invertIsPerformedForLesson(Integer lessonId);
+    boolean invertIsPerformedForLesson(Integer lessonId);
 }

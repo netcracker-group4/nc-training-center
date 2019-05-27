@@ -79,7 +79,7 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
             Problem problem = new Problem (id, studentId, description, message, status, chatId);
             list.add(problem);
         }
-        log.info("Retrieved Problems from database " + list);
+        log.debug("Retrieved Problems from database " + list);
         return list;
     }
 

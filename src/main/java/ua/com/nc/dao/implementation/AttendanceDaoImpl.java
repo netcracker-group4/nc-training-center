@@ -72,42 +72,42 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
                     lastName, courseId, courseName, timeDate, topic));
 
         }
-        log.info("Retrieved attendances from database   " + attendances);
+        log.debug("Retrieved attendances from database   " + attendances);
         return attendances;
     }
 
     @Override
     public List<Attendance> getAttendanceByStudentIdAndCourseId(Integer studentId, Integer courseId) {
         String sql = this.selectAttendanceByStudentIdAndCourseId;
-        log.info("Select attendance by student " + studentId + " and course " + courseId + " " + sql);
+        log.debug("Select attendance by student " + studentId + " and course " + courseId + " " + sql);
         return getFromSqlByTwoId(sql, studentId, courseId);
     }
 
     @Override
     public List<Attendance> getAttendanceByStudentIdAndGroupId(Integer studentId, Integer groupId) {
         String sql = this.selectAttendanceByStudentIdAndGroupId;
-        log.info("Select attendance by student " + studentId + " and group " + groupId + " " + sql);
+        log.debug("Select attendance by student " + studentId + " and group " + groupId + " " + sql);
         return getFromSqlByTwoId(sql, studentId, groupId);
     }
 
     @Override
     public List<Attendance> getAttendanceByLessonId(Integer lessonId) {
         String sql = this.selectAttendanceByLessonId;
-        log.info(" Select attendance for lesson by lesson id  " + lessonId + " " + sql);
+        log.debug("Select attendance for lesson by lesson id  " + lessonId + " " + sql);
         return getFromSqlById(sql, lessonId);
     }
 
     @Override
     public List<Attendance> getAttendanceByGroupId(Integer groupId){
         String sql = this.selectByGroupId;
-        log.info(" Select attendance for group by groupId  " + groupId + " " + sql);
+        log.debug("Select attendance for group by groupId  " + groupId + " " + sql);
         return getFromSqlById(sql, groupId);
     }
 
     @Override
     public void attendanceInsert(Integer lessonId, List<User> employees) {
         String sql = attendanceInsert;
-        log.info(" attendance insert with parameters lessonId " + lessonId +
+        log.debug("attendance insert with parameters lessonId " + lessonId +
                 ",  employees " + employees.toString() + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -126,7 +126,7 @@ public class AttendanceDaoImpl extends AbstractDaoImpl<Attendance> implements At
     @Override
     public void attendanceUpdate(Integer attendanceId, Integer statusId, Integer reasonId) {
         String sql = attendanceUpdate;
-        log.info(" attendance update with parameters attendanceId " + attendanceId +
+        log.debug("attendance update with parameters attendanceId " + attendanceId +
                 ",  statusId " + statusId + ",  reasonId " + reasonId + " " + sql);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {

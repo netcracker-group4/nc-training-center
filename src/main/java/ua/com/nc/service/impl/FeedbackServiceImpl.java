@@ -28,8 +28,6 @@ public class FeedbackServiceImpl implements FeedbackService {
     private CourseDao courseDao;
     @Autowired
     private FeedbackMapper feedbackMapper;
-    @Autowired
-    private EmailServiceImpl emailService;
 
     @Override
     public void add(DtoFeedback dtoFeedback) {
