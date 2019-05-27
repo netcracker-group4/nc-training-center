@@ -47,6 +47,11 @@ public class UserController {
 
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> getAll(){
+        return ResponseEntity.ok().body(userService.getAll());
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getById(@AuthenticationPrincipal User user, @PathVariable Integer id) {
         DtoUserProfiles userById = userService.getById(id);

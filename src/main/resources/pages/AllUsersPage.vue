@@ -96,7 +96,7 @@
         mounted() {
             if (this.$store.getters.isAdmin) {
                 let self = this;
-                axios.get(this.$store.state.apiServer + '/api/users/get-all')
+                axios.get(this.$store.state.apiServer + '/api/users')
                     .then(function (response) {
                         self.allUsers = response.data;
                         self.loading = false;

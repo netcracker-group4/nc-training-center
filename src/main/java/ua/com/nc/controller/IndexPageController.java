@@ -3,6 +3,7 @@ package ua.com.nc.controller;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,6 @@ public class IndexPageController {
 
     @Autowired
     private RoleService roleService;
-
 
     @RequestMapping(method = RequestMethod.GET)
     public String showIndexPage(@AuthenticationPrincipal User user, Model model, HttpServletRequest request) {
