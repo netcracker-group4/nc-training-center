@@ -48,6 +48,4 @@ public interface ReportService {
      * @see org.apache.poi.xssf.usermodel.XSSFWorkbook
      */
     ByteArrayInputStream getDashboardExcel() throws IOException;
-
-
 }
