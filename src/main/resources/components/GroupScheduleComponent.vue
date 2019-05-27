@@ -114,7 +114,7 @@
                                 <v-divider></v-divider>
                                 <div class="text-xs-left">
                                     <v-chip v-for="attachment in lesson.attachments" :key="attachment.id">
-                                        {{attachment.description}}
+                                        {{attachment.name}}
                                     </v-chip>
                                 </div>
                             </v-card-text>

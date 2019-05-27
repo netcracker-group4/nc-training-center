@@ -126,7 +126,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, User entity) throws SQLException {
         setAllFields(statement, entity);
-        statement.setInt(10, entity.getId());
+        statement.setInt(9, entity.getId());
     }
 
     private void setAllFields(PreparedStatement statement, User entity) throws SQLException {
@@ -136,9 +136,13 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         statement.setString(4, entity.getLastName());
         statement.setString(5, entity.getToken());
         statement.setObject(6, entity.getCreated());
-        statement.setObject(7, entity.getManagerId(), Types.INTEGER);
+        if (entity.getManagerId() == null || entity.getManagerId() == 0) {
+            statement.setNull(7, Types.INTEGER);
+        } else {
+            statement.setInt(7, entity.getManagerId());
+        }
         statement.setBoolean(8, entity.isActive());
-        statement.setBoolean(9, entity.isOnLandingPage());
+//        statement.setBoolean(9, entity.isOnLandingPage());
     }
 
     @Override
@@ -157,7 +161,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
             boolean isActive = rs.getBoolean("IS_ACTIVE");
             boolean isOnLandingPage = rs.getBoolean("IS_ON_LANDING_PAGE");
             User user = new User(userId, email, passwordHash, firstName,
-                    lastName, token, created, managerId, imageUrl, isActive, isOnLandingPage);
+                    lastName, token, created, managerId, imageUrl,
+                    isActive, isOnLandingPage);
             list.add(user);
         }
         log.debug("Retrieved Users from database " + list);
