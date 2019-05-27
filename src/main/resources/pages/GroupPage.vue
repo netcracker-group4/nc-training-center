@@ -15,16 +15,15 @@
                         <b>Download group attendance</b></v-btn>
                 </v-flex>
             </div>
-            <div>
-                <v-flex md6 lg2 sx12>
-                    <v-btn flat v-on:click="$router.push('/courses/' + course.id)" style="margin: 0">
-                        <b>Course: {{course.name}}</b></v-btn>
-                </v-flex>
-                <v-flex md6 lg3 sx12>
-                    <v-btn flat v-on:click="forwardToUserPage(teacher.id)" style="margin: 0">
-                        <b>Trainer: {{teacher.firstName + ' ' + teacher.lastName}}</b></v-btn>
-                </v-flex>
-            </div>
+            <v-layout>
+                <v-spacer></v-spacer>
+                <v-btn flat v-on:click="$router.push('/courses/' + course.id)" style="margin: 0">
+                    <b>Course: {{course.name}}</b></v-btn>
+
+                <v-btn flat v-on:click="forwardToUserPage(teacher.id)" style="margin: 0">
+                    <b>Trainer: {{teacher.firstName + ' ' + teacher.lastName}}</b></v-btn>
+
+            </v-layout>
             <v-flex xs12 sm12 style="margin-bottom: 50px">
                 <v-data-table
                         :headers="headers"
@@ -211,7 +210,7 @@
 
         },
         mounted() {
-           // alert(self.group.trainerId == self.$store.state.user.id)
+            // alert(self.group.trainerId == self.$store.state.user.id)
             let self = this;
             axios.get(this.$store.state.apiServer + '/api/groups/' + self.$route.params.id)
                 .then(function (response) {
