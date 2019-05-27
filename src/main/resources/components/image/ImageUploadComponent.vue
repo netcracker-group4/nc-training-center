@@ -26,14 +26,13 @@
 
 <script>
     import axios from 'axios';
-    import store from '../../store/store.js';
     import ImageInputComponent from './ImageInputComponent.vue';
 
     export default {
         name: 'image-upload-component',
-        props: [
-            'user',
-        ],
+        props: {
+            user: {}
+        },
         data() {
             return {
                 self: this,

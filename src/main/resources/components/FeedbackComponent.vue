@@ -10,11 +10,13 @@
                     <template v-if="canShowLeaveFeedbackBlock()">
                         <form>
                             <v-container style="display:flex; justify-content: space-between;">
-                                <v-avatar size="60px">
-                                    <img
-                                            src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
-                                            alt="Avatar"/>
-                                </v-avatar>
+                                <v-list-tile-avatar class="cursor-pointer feedback_avatar">
+                                    <v-icon v-if="$store.state.user.imageUrl == null">account_circle</v-icon>
+                                    <v-avatar size="70">
+                                        <v-img :src="$store.state.apiServer + '/api/users/image?url=' + $store.state.user.imageUrl"
+                                               aspect-ratio="2"/>
+                                    </v-avatar>
+                                </v-list-tile-avatar>
                                 <div style="width: 90%;">
                                     <v-textarea
                                             box
@@ -67,11 +69,13 @@
                             <div class="table_item" style="position: relative"
                                  @mouseenter="props.expanded = true" @mouseleave="props.expanded = false">
                                 <td>
-                                    <v-avatar size="60px">
-                                        <img
-                                                src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
-                                                alt="Avatar"/>
-                                    </v-avatar>
+                                    <v-list-tile-avatar class="cursor-pointer feedback_avatar">
+                                        <v-icon v-if="props.item.teacher.imageUrl == null">account_circle</v-icon>
+                                        <v-avatar size="70">
+                                            <v-img :src="$store.state.apiServer + '/api/users/image?url=' + props.item.teacher.imageUrl"
+                                                   aspect-ratio="2"/>
+                                        </v-avatar>
+                                    </v-list-tile-avatar>
                                 </td>
                                 <td style="vertical-align: top;">
                                     <div class="div_teacherName">
@@ -279,6 +283,10 @@
         color: #656266;
     }
 
+    .feedback_avatar {
+        padding: 20px 0 0 0;
+    }
+
     .feedback_buttons {
         position: absolute;
         width: 20px;
@@ -291,12 +299,6 @@
 
     .feedback_buttons .delete {
         cursor: pointer;
-    }
-
-    .show_buttons {
-        /*display: block;*/
-        opacity: 1;
-        transition-duration: 0.5s;
     }
 
     .div_feedbackTimeDate {

@@ -33,7 +33,8 @@ public class User extends Entity implements UserDetails {
     public User() {
     }
 
-    public User(Integer id, String email, String password, String firstName, String lastName, String token, Timestamp created, Integer managerId, String image, boolean isActive) {
+    public User(Integer id, String email, String password, String firstName, String lastName, String token,
+                Timestamp created, Integer managerId, String image, boolean isActive, boolean isOnLandingPage) {
         super(id);
         this.setEmail(email);
         this.setPassword(password);
@@ -44,6 +45,7 @@ public class User extends Entity implements UserDetails {
         this.setManagerId(managerId);
         this.setImageUrl(image);
         this.setActive(isActive);
+        this.setOnLandingPage(isOnLandingPage);
     }
 
     public User(String email, String password, String firstName, String lastName, String token, Timestamp created, Integer managerId, String image, boolean isActive) {
@@ -56,6 +58,7 @@ public class User extends Entity implements UserDetails {
         this.setManagerId(managerId);
         this.setImageUrl(image);
         this.setActive(isActive);
+        this.setOnLandingPage(isOnLandingPage);
     }
 
     @Override

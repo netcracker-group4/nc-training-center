@@ -63,9 +63,12 @@ public class FeedbackServiceImpl implements FeedbackService {
                         teacher.getId(),
                         teacher.getFirstName(),
                         teacher.getLastName(),
+                        teacher.getImageUrl(),
                         teacher.isActive(),
-                        teacher.getImageUrl()
+                        teacher.getEmail()
                 );
+
+
 
                 DtoCourse dtoCourse = new DtoCourse();
                 if (course != null) {

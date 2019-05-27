@@ -145,6 +145,7 @@ public class UserServiceImpl implements UserService {
                     user,
                     role,
                     user.isActive(),
+                    user.isOnLandingPage(),
                     dtoManager
             );
         }
@@ -176,6 +177,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateActive(User user) {
         userDao.updateActive(user);
+    }
+
+    @Override
+    public void updateOnLandingPage(User user) {
+        userDao.updateOnLandingPage(user);
     }
 
     @Override

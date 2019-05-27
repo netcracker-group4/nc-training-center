@@ -5,11 +5,14 @@
                 <v-toolbar flat color="white">
                     <span>{{elemName}}</span>
                     <v-spacer></v-spacer>
-                    <span v-if="viewerIsAdmin()" class="text-xs-center align-center ">
-                        <v-switch v-if="viewerIsAdmin()" style="margin-bottom: -20px"
-                                  v-model="user.active"
-                                  @change="isActive"
-                                  label="Active"></v-switch>
+                    <span v-if="viewerIsAdmin()" class="text-xs-center align-center">
+                        <v-switch
+                                v-if="viewerIsAdmin()" style="margin-bottom: -20px"
+                                v-model="user.active"
+                                @change="isActive"
+                                label="active">
+
+                        </v-switch>
                     </span>
                     <v-dialog v-if="viewerIsAdmin() || isUserThisProfile()" v-model="dialog" max-width="500px">
                         <template v-slot:activator="{ on }">
@@ -64,11 +67,6 @@
 
                 <v-layout row wrap>
                     <v-flex xs12 md5 aling-center class="text-xs-center" style="display: flex;">
-                        <!--                        <v-avatar style="margin: auto" size="75%" class="avatar">-->
-                        <!--                            <img src="https://png.pngtree.com/svg/20161212/f93e57629c.svg" alt="avatar">-->
-                        <!--                        </v-avatar>-->
-                        <!--                        <input type="file" style="display: none" @change="onFileSelected()" ref="fileInput"/>-->
-                        <!--                        <v-btn @click="$refs.fileInput.click()">Pick photo</v-btn>-->
                         <image-upload-component style="margin:auto;" :user="user"></image-upload-component>
                     </v-flex>
                     <v-flex xs12 md7 class="text-xs-right" style="padding: 20px 0">
@@ -122,11 +120,21 @@
                                 </v-list-tile-content>
                             </v-list-tile>
                         </v-list>
+                        <v-flex xs12 sm4 md4>
+                            <v-checkbox
+                                    v-if="viewerIsAdmin() && isTrainerProfile()"
+                                    v-model="user.onLandingPage"
+                                    color="orange"
+                                    label="on landing page"
+                                    @change="isOnLandingPage"
+                                    hide-details
+                            ></v-checkbox>
+                        </v-flex>
                     </v-flex>
                 </v-layout>
                 <v-layout row wrap style="margin-bottom: 40px">
                     <v-spacer></v-spacer>
-                                        <div class="text-xs-center">
+                    <div class="text-xs-center">
                         <v-dialog v-model="sendMessageWindowShow" width="500">
                             <template v-slot:activator="{ on }">
                                 <v-btn v-if="isBtnShow" color="success" large
@@ -272,6 +280,9 @@
             isEmployeeProfile() {
                 return this.user.roles.includes("EMPLOYEE");
             },
+            isTrainerProfile() {
+                return this.user.roles.includes("TRAINER");
+            },
             isUserThisProfile() {
                 return store.state.user.id === this.user.id;
             },
@@ -333,6 +344,21 @@
                     if (self.user.active)
                         self.successAutoClosable("User is now active");
                     else self.successAutoClosable("User is now not active")
+                }).catch(function (error) {
+                    console.log(error);
+                    self.errorAutoClosable('Server error occurred. User is not updated');
+                })
+            },
+
+            isOnLandingPage() {
+                let self = this;
+                axios.put(this.$store.state.apiServer + '/api/users/update-on-landing-page', {
+                    onLandingPage: this.user.onLandingPage,
+                    id: this.user.id
+                }).then(function (response) {
+                    if (self.user.onLandingPage)
+                        self.successAutoClosable("Trainer is on landing page now");
+                    else self.successAutoClosable("Trainer is not on landing page now")
                 }).catch(function (error) {
                     console.log(error);
                     self.errorAutoClosable('Server error occurred. User is not updated');

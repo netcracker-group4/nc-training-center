@@ -22,6 +22,8 @@ public interface UserService extends UserDetailsService {
 
     void updateActive(User user);
 
+    void updateOnLandingPage(User user);
+
     List<DtoTeacherAndManager> getAllManagers();
 
     List<DtoTeacherAndManager> getAllTrainers();

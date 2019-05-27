@@ -17,10 +17,12 @@ public class DtoUserProfiles {
     private String image;
     private List<Role> roles;
     private boolean isActive;
+    private boolean isOnLandingPage;
     private DtoTeacherAndManager dtoManager;
 
     public DtoUserProfiles(Integer id, String firstName, String lastName, String email, String image,
-                           List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager) {
+                           List<Role> roles, boolean isActive, boolean isOnLandingPage,
+                           DtoTeacherAndManager dtoManager) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -28,10 +30,12 @@ public class DtoUserProfiles {
         this.image = image;
         this.roles = roles;
         this.isActive = isActive;
+        this.isOnLandingPage = isOnLandingPage;
         this.dtoManager = dtoManager;
     }
 
-    public DtoUserProfiles(User user, List<Role> roles, boolean isActive, DtoTeacherAndManager dtoManager) {
+    public DtoUserProfiles(User user, List<Role> roles, boolean isActive, boolean isOnLandingPage,
+                           DtoTeacherAndManager dtoManager) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
@@ -39,6 +43,7 @@ public class DtoUserProfiles {
         this.image = user.getImageUrl();
         this.roles = roles;
         this.isActive = isActive;
+        this.isOnLandingPage = isOnLandingPage;
         this.dtoManager = dtoManager;
     }
 }

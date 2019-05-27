@@ -7,11 +7,11 @@ import ua.com.nc.domain.User;
 @Data
 @NoArgsConstructor
 public class DtoTeacherAndManager {
-    private boolean isActive;
     private Integer id;
     private String firstName;
     private String lastName;
-    private String photoUrl;
+    private String imageUrl;
+    private boolean isActive;
     private String email;
 
 
@@ -19,7 +19,7 @@ public class DtoTeacherAndManager {
         this.id = user.getId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
-        this.photoUrl = user.getImageUrl();
+        this.imageUrl = user.getImageUrl();
         this.isActive = user.isActive();
         this.email = user.getEmail();
     }
@@ -30,7 +30,7 @@ public class DtoTeacherAndManager {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.photoUrl = photoUrl;
+        this.imageUrl = photoUrl;
         this.isActive = isActive;
         this.email = email;
     }

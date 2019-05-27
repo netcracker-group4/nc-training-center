@@ -81,6 +81,8 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     private String usrUpdateImage;
     @Value("${usr.update-password}")
     private String usrUpdatePassword;
+    @Value("${usr.update-change-on-landing-page}")
+    private String usrUpdateOnLandingPage;
     @Value("${usr.select-students-by-lesson-id}")
     private String getSelectStudentsByLessonId;
     @Value("${usr.select-by-attendance-id}")
@@ -124,7 +126,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, User entity) throws SQLException {
         setAllFields(statement, entity);
-        statement.setInt(9, entity.getId());
+        statement.setInt(10, entity.getId());
     }
 
     private void setAllFields(PreparedStatement statement, User entity) throws SQLException {
@@ -136,6 +138,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         statement.setObject(6, entity.getCreated());
         statement.setObject(7, entity.getManagerId(), Types.INTEGER);
         statement.setBoolean(8, entity.isActive());
+        statement.setBoolean(9, entity.isOnLandingPage());
     }
 
     @Override
@@ -152,8 +155,9 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
             Integer managerId = rs.getInt("MANAGER_ID");
             String imageUrl = rs.getString("IMAGE_URL");
             boolean isActive = rs.getBoolean("IS_ACTIVE");
+            boolean isOnLandingPage = rs.getBoolean("IS_ON_LANDING_PAGE");
             User user = new User(userId, email, passwordHash, firstName,
-                    lastName, token, created, managerId, imageUrl, isActive);
+                    lastName, token, created, managerId, imageUrl, isActive, isOnLandingPage);
             list.add(user);
         }
         log.debug("Retrieved Users from database " + list);
@@ -255,6 +259,21 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBoolean(1, user.isActive());
+            statement.setInt(2, user.getId());
+            statement.executeUpdate();
+        } catch (Exception e) {
+            log.error(e);
+            throw new PersistException(e);
+        }
+    }
+
+    @Override
+    public void updateOnLandingPage(User user) {
+        String sql = usrUpdateOnLandingPage;
+        log.debug("change on landing page by admin user" + user.toString() + " " + sql);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBoolean(1, user.isOnLandingPage());
             statement.setInt(2, user.getId());
             statement.executeUpdate();
         } catch (Exception e) {

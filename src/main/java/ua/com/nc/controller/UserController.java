@@ -70,6 +70,13 @@ public class UserController {
         return ResponseEntity.ok().body("Update user active");
     }
 
+    @RequestMapping(value = "/update-on-landing-page", method = RequestMethod.PUT)
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
+    public ResponseEntity<?> updateOnLandingPage(@RequestBody User user) {
+        userService.updateOnLandingPage(user);
+        return ResponseEntity.ok().body("Update on landing page");
+    }
+
     @RequestMapping(value = "/upload-image", method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> uploadImage(@ModelAttribute DtoUserSave dtoUserSave) {

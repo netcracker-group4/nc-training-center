@@ -25,6 +25,7 @@
 </template>
 
 <script>
+    import store from '../../store/store.js';
     export default {
         name: 'image-input-component',
         data: () => ({
@@ -36,10 +37,19 @@
         props: {
             // Use "value" here to enable compatibility with v-model
             value: Object,
+            user: {},
         },
         methods: {
+            viewerIsAdmin() {
+                return store.getters.isAdmin;
+            },
+            isUserThisProfile() {
+                return store.state.user.id === this.user.id;
+            },
             launchFilePicker() {
-                this.$refs.file.click();
+                if (this.viewerIsAdmin() || this.isUserThisProfile()) {
+                    this.$refs.file.click();
+                }
             },
             onFileChange(fieldName, file) {
                 const {maxSize} = this
