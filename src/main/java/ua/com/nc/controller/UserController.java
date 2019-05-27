@@ -83,17 +83,6 @@ public class UserController {
         return ResponseEntity.ok(userService.uploadImage(dtoUserSave));
     }
 
-//    @RequestMapping(value = "/image", method = RequestMethod.GET)
-//
-//    public BufferedImage getImage() {
-//        try (InputStream inputStream = fileTransferService.downloadFileFromServer("/img/temp.jpg")) {
-//            return ImageIO.read(inputStream);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
     @RequestMapping(value = "/image", method = RequestMethod.GET)
     public ResponseEntity<byte[]> getImage(final HttpServletResponse response,
                                            @RequestParam String url) {
