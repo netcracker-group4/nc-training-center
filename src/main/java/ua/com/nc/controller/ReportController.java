@@ -32,6 +32,8 @@ public class ReportController {
     /**
      * Retrieves attendance of groups by their trainer id, if authenticated trainer
      * else get full attendance report by admin
+     * @param user to check who is requesting
+     * @return automatically download process with excel to be downloaded
      */
     @RequestMapping(value = "/attendance-report", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) " +
@@ -43,6 +45,8 @@ public class ReportController {
 
     /**
      * Get group attendance report by group id
+     * @param groupId used to find particular group
+     * @return automatically download process with excel to be downloaded
      */
     @RequestMapping(value = "/attendance-report/{groupId}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) " +
@@ -57,7 +61,8 @@ public class ReportController {
     }
 
     /**
-     * Get dashboard report, 
+     * Get dashboard report, Level And Quantity, Level And Trainers, Training And Quantity
+     * @return automatically download process with excel to be downloaded
      */
     @RequestMapping(value = "/dashboard-report", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) ")
