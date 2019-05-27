@@ -304,6 +304,11 @@
         opacity: 0;
     }
 
+    .show_buttons {
+        opacity: 1;
+        transition-duration: 0.6s;
+    }
+
     .feedback_buttons .delete {
         cursor: pointer;
     }
