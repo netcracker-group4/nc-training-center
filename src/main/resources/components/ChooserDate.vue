@@ -10,7 +10,6 @@
                 >
                     <template v-slot:activator="{ on }">
                         <v-text-field
-                                :min="getCurrent"
                                 :rules="[rules.required]"
                                 :value="StartingDate"
                                 clearable
@@ -20,6 +19,7 @@
                         ></v-text-field>
                     </template>
                     <v-date-picker
+                            :min="getCurrent()"
                             v-model="date1"
                             @change="menu1 = false"
                     ></v-date-picker>

@@ -57,8 +57,8 @@
                                 </v-checkbox>
                             </p>
                         </v-flex>
-                        <v-layout row wrap>
-                            <v-flex xs4>
+                        <v-layout row wrap xs12>
+                            <v-flex xs5>
                                 <v-menu
                                         :v-model="false"
                                         :close-on-content-click="false"
@@ -66,8 +66,8 @@
                                         lazy
                                         transition="scale-transition"
                                         offset-y
-                                        max-width="200px"
-                                        min-width="200px"
+                                        max-width="275px"
+                                        min-width="275px"
                                 >
                                     <template v-slot:activator="{ on }">
                                         <v-text-field
@@ -81,7 +81,7 @@
                                     <v-date-picker :min="getCurrent()" v-model="startDay"></v-date-picker>
                                 </v-menu>
                             </v-flex>
-                            <v-flex xs4>
+                            <v-flex xs5>
                                 <v-menu
                                         :v-model="false"
                                         :close-on-content-click="false"
@@ -89,12 +89,11 @@
                                         lazy
                                         transition="scale-transition"
                                         offset-y
-                                        max-width="200px"
-                                        min-width="200px"
+                                        max-width="275px"
+                                        min-width="275px"
                                 >
                                     <template v-slot:activator="{ on }">
                                         <v-text-field
-
                                                 v-model="endDay"
                                                 label="Ends on"
                                                 persistent-hint
@@ -102,7 +101,7 @@
                                                 v-on="on"
                                         ></v-text-field>
                                     </template>
-                                    <v-date-picker :ranges="startDay" v-model="endDay"></v-date-picker>
+                                    <v-date-picker :min="startDay" v-model="endDay"></v-date-picker>
                                 </v-menu>
                             </v-flex>
                         </v-layout>
