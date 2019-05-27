@@ -140,7 +140,6 @@ public class GroupsServiceImpl implements GroupsService {
         Map<String, Double> attendance = new HashMap<>();
         statusDao.getAll().forEach(reason -> attendance.put(reason.getTitle().toLowerCase(), 0.0));
         List<Attendance> attendances = attendanceDao.getAttendanceByGroupId(groupId);
-
         if (attendances != null && !attendances.isEmpty()) {
             for (Attendance instance : attendances) {
                 String status = instance.getStatus().toLowerCase();
@@ -153,15 +152,23 @@ public class GroupsServiceImpl implements GroupsService {
                     coefficient++;
                 }
             }
-            Map<String, Double> result = new HashMap<>();
-            final double percentage = 100.0 / coefficient;
-            attendance.forEach((key, value) -> result.put(key, (value * percentage)));
-            final double latenessPercentage = 100.0 / (attendance.get("present") - latenessCoefficient);
-            result.replace("late", latenessCoefficient * latenessPercentage);
-            return result;
+            return countPercentages(coefficient, latenessCoefficient, attendance);
         } else {
             return attendance;
         }
+    }
+
+    private Map<String, Double> countPercentages(int coefficient, int latenessCoefficient, Map<String, Double> attendance) {
+        Map<String, Double> result = new HashMap<>();
+        final double percentage = 100.0 / coefficient;
+        attendance.forEach((key, value) -> result.put(key, (value * percentage)));
+        if (!attendance.get("present").equals(0.0)){
+            final double latenessPercentage = 100.0 / (attendance.get("present") - latenessCoefficient);
+            result.replace("late", latenessCoefficient * latenessPercentage);
+        } else {
+            result.replace("late", 0.0);
+        }
+        return result;
     }
 
 
