@@ -75,7 +75,7 @@ public class EmailReminderServiceImpl implements EmailReminderService {
      * manager (if there are his students) and every student
      * Scheduled in cron format to do it at 17-00 every Tuesday
      */
-    @Scheduled(cron = " 0 17 * * 2 *")
+    @Scheduled(cron = "0 17 * * 2 *")
     @Override
     public void sendAttendanceReminders () {
         admin = userDao.getAdmin();
