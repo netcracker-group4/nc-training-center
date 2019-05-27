@@ -36,6 +36,13 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok(userService.getAll());
+    }
+
+
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> save(@RequestBody DtoUserSave dtoUserSave) {
         if (userService.getByEmail(dtoUserSave.getEmail()) != null) {
@@ -45,11 +52,6 @@ public class UserController {
             return ResponseEntity.ok().body("User saved");
         }
 
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<?> getAll(){
-        return ResponseEntity.ok().body(userService.getAll());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
