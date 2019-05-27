@@ -36,7 +36,7 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @RequestMapping(value = "/get-all", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name())")
     public ResponseEntity<?> getAllUsers() {
         return ResponseEntity.ok(userService.getAll());
