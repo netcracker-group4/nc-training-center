@@ -32,6 +32,12 @@ public class FiletransferServiceImpl implements FileTransferService {
     @Value("${spring.ftp.password}")
     private String pass;
 
+    /**
+     * prints current FTP server state to the log
+     *
+     * @param ftpClient of lesson
+     */
+
     private static void showServerReply(FTPClient ftpClient) {
         String[] replies = ftpClient.getReplyStrings();
         if (replies != null && replies.length > 0) {
@@ -40,6 +46,15 @@ public class FiletransferServiceImpl implements FileTransferService {
             }
         }
     }
+
+    /**
+     * uploads file to FTP server to the given location, if location does not exist, creates it
+     *
+     * @param path path to the repository on the sever  where file should be saved
+     * @param name name with which file should be saved on the server
+     * @param stream input stream containing file to save
+     */
+
     @Override
     public void uploadFileToServer(String path, String name, InputStream stream) {
         FTPClient ftpClient = new FTPClient();
@@ -58,7 +73,6 @@ public class FiletransferServiceImpl implements FileTransferService {
                 log.error("Could not login to the server");
                 throw new LogicException("Error while login to server");
             }
-            // Creates a directory if needed
             FTPFile[] remoteFiles = ftpClient.listFiles(path);
             if (remoteFiles.length == 0) {
                 success = ftpClient.makeDirectory(path);
@@ -69,7 +83,6 @@ public class FiletransferServiceImpl implements FileTransferService {
                     log.error("Failed to create directory.");
                 }
             }
-            //Creates file
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
             ftpClient.setFileTransferMode(FTP.BINARY_FILE_TYPE);
@@ -82,13 +95,20 @@ public class FiletransferServiceImpl implements FileTransferService {
                 log.error("Failed to create file.");
             }
 
-            // logs out
+
             ftpClient.logout();
             ftpClient.disconnect();
         } catch (IOException ex) {
             log.error(ex);
         }
     }
+
+    /**
+     * downloads file from FTP server by given path
+     *
+     * @param path path to the file on server, must end with full file name
+     * @return input stream containing file from server
+     */
 
     @Override
     public InputStream downloadFileFromServer(String path) {

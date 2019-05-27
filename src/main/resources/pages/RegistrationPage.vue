@@ -37,6 +37,11 @@
                                         required
                                 ></v-text-field>
                                 <v-text-field
+                                        :append-icon="pass_show ? 'visibility' : 'visibility_off'"
+                                        :type="pass_show ? 'text' : 'password'"
+                                        name="input-10-2"
+                                        class="input-group--focused"
+                                        @click:append="pass_show = !pass_show"
                                         v-model="user.password"
                                         v-validate="'required'"
                                         :error-messages="errors.collect('password')"
@@ -104,6 +109,7 @@
                 password: '',
                 role: null,
             },
+            pass_show: false,
             dictionary: {
                 attributes: {
                     email: 'E-mail Address',

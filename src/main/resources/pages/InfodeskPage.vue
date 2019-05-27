@@ -4,7 +4,8 @@
             <v-layout style="margin-bottom: 50px">
                 <h2>All problems </h2>
                 <v-spacer></v-spacer>
-                <infodesk-request v-if="!isAdmin()" :problem="{description: '', message: '', studentId: 0}"></infodesk-request>
+                <infodesk-request v-if="!isAdmin()"
+                                  :problem="{description: '', message: '', studentId: 0}"></infodesk-request>
             </v-layout>
             <v-flex xs12 sm12>
                 <v-tabs v-model="currentStatus" centered style="width: 100%; margin-bottom: 50px">
@@ -121,13 +122,11 @@
                         .then(function (response) {
                             response.data.forEach(function (p) {
                                 let id = p.studentId;
-                                self.problems.push(p);
                                 axios.get(self.$store.state.apiServer + '/api/users/' + id)
                                     .then(function (response) {
                                         let name = response.data.firstName.toString() + " "
                                             + response.data.lastName.toString();
                                         self.problemsMap.set(p, name);
-                                        console.log(self.problems);
                                         self.problems.push(p);
                                     }).catch(function (error) {
                                     console.log(error);
@@ -196,15 +195,10 @@
 
             },
             markAsAnswered(requestId) {
-                if (this.title === '' || this.description === '')
-                    this.changeRequestType(requestId, 'answered');
-                else alert("You can't leave a field empty");
-
+                this.changeRequestType(requestId, 'answered');
             },
             markAsReopened(requestId) {
-                if (this.title === '' || this.description === '')
-                    this.changeRequestType(requestId, 'reopened');
-                else alert("You can't leave a field empty");
+                this.changeRequestType(requestId, 'reopened');
             },
             successAutoClosable(title) {
                 this.$snotify.success(title, {
