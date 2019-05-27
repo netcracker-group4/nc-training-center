@@ -29,11 +29,12 @@ public class ReportController {
     @Autowired
     private GroupsService groupService;
 
-
-    /*
-    get attendance of groups by their trainer id, authenticated trainer
-    else get full attendance report by admin
-    */
+    /**
+     * Retrieves attendance of groups by their trainer id, if authenticated trainer
+     * else get full attendance report by admin
+     * @param user to check who is requesting
+     * @return automatically download process with excel to be downloaded
+     */
     @RequestMapping(value = "/attendance-report", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) " +
             "|| hasAuthority(T(ua.com.nc.domain.Role).TRAINER.name())")
@@ -42,23 +43,27 @@ public class ReportController {
         return getAttendanceReport(user);
     }
 
-
-    //get group attendance report by group id
+    /**
+     * Get group attendance report by group id
+     * @param groupId used to find particular group
+     * @return automatically download process with excel to be downloaded
+     */
     @RequestMapping(value = "/attendance-report/{groupId}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) " +
             "|| hasAuthority(T(ua.com.nc.domain.Role).TRAINER.name())")
     public ResponseEntity<InputStreamResource> excelGroupAttendanceReport(
             @PathVariable Integer groupId) throws IOException {
         return ResponseEntity.ok()
-                .headers(
-                        getHttpHeaders(
-                                groupService.getGroupById(groupId)
-                                        .getTitle() + " attendance report"))
-                .body(
-                        new InputStreamResource(
-                                reportService.getAttendanceExcel(groupId)));
+                .headers(getHttpHeaders(
+                        groupService.getGroupById(groupId).getTitle() + " attendance report"))
+                .body(new InputStreamResource(
+                        reportService.getAttendanceExcel(groupId)));
     }
 
+    /**
+     * Get dashboard report, Level And Quantity, Level And Trainers, Training And Quantity
+     * @return automatically download process with excel to be downloaded
+     */
     @RequestMapping(value = "/dashboard-report", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority(T(ua.com.nc.domain.Role).ADMIN.name()) ")
     public ResponseEntity<InputStreamResource> excelDashboardReport()
