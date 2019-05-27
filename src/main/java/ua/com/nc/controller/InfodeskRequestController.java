@@ -21,12 +21,12 @@ public class InfodeskRequestController {
     private InfodeskRequestService infodeskRequestService;
 
     @RequestMapping(value = {"/create-request"}, method = RequestMethod.POST)
-    public ResponseEntity<?> createRequest(@RequestParam(name = "userId") String userId,
+    public ResponseEntity<?> createRequest(@RequestParam(name = "userId") Integer userId,
                                            @RequestParam(name = "description") String description,
                                            @RequestParam(name = "message") String message,
                                            @RequestParam(name = "requestType") String requestType) {
-        int id = Integer.parseInt(userId);
-        infodeskRequestService.createRequest(id, description, message, requestType);
+//        Integer id = Integer.parseInt(userId);
+        infodeskRequestService.createRequest(userId, description, message, requestType);
         return ResponseEntity.ok().body("Request is created");
     }
 
@@ -42,10 +42,10 @@ public class InfodeskRequestController {
 
 
     @RequestMapping(value = {"/update-request-type"}, method = RequestMethod.PUT)
-    public ResponseEntity<?> updateRequestType(@RequestParam(name = "requestId") String requestId,
+    public ResponseEntity<?> updateRequestType(@RequestParam(name = "requestId") Integer requestId,
                                                @RequestParam(name = "requestType") String requestType) {
-        int id = Integer.parseInt(requestId);
-        infodeskRequestService.updateRequestType(id, requestType);
+//        Integer id = Integer.parseInt(requestId);
+        infodeskRequestService.updateRequestType(requestId, requestType);
         return ResponseEntity.ok("Request is updated");
     }
 

@@ -244,7 +244,7 @@
                 this.$router.push('/groups/' + groupId)
             },
             sendMessage() {
-                let self = this
+                let self = this;
                 let form = new FormData();
                 let request = new XMLHttpRequest();
                 request.open('POST', this.$store.state.apiServer + '/api/messages');
@@ -254,8 +254,8 @@
                 request.send(form);
                 request.onloadend = function () {
                     self.chatsReload()
-                }
-                this.message = ''
+                };
+                this.message = '';
                 this.sendMessageWindowShow = false
             },
             successAutoClosable(title) {

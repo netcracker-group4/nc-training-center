@@ -36,11 +36,10 @@
                                 <td class="text-xs-right">{{problems.item.description}}</td>
 
                                 <td class="text-xs-right" v-if="n.title !== 'draft'">
-                                    <v-btn color="success">Open Chat</v-btn>
+                                    <v-btn color="success" @click="openChat(problems.item)">Open Chat</v-btn>
                                 </td>
                                 <td class="text-xs-right" v-else>
-                                    <infodesk-request :problem="problems.item"
-                                                      @close="forceRerender">
+                                    <infodesk-request :problem="problems.item">
                                     </infodesk-request>
                                 </td>
 
@@ -113,6 +112,7 @@
                         if (error.response != null && error.response.status == 400)
                             self.$router.push('/404');
                     });
+                console.log (self.statuses);
             },
             loadProblems: function () {
                 let self = this;
@@ -164,7 +164,8 @@
                 })[0];
                 if (status2 !== undefined) {
                     return !(this.$store.state.user.roles.includes('EMPLOYEE') &&
-                        (status2.title === 'open' || status2.title === 'reopened'))
+                        (status2.title === 'open' || status2.title === 'reopened'
+                        || status2.title === 'in progress'))
                 } else return true;
             },
             dataToShowOnTab(status) {
@@ -185,14 +186,22 @@
                 request.send(form);
                 request.onloadend = function () {
                     self.forceRerender();
-                    self.successAutoClosable('Your request is updated');
-                    // for (var i = 0; i < self.problems.length; i++) {
-                    //     if (self.problems[i].id === ) {
-                    //         self.statuses.splice(i, 1);
-                    //     }
-                    // }
+                    if (!self.isAdmin()) self.successAutoClosable('Your request is updated');
+                    for (var i = 0; i < self.problems.length; i++) {
+                        if (self.problems[i].id === requestId) {
+                            self.problems[i].status = self.getStatusId(type);
+                        }
+                    }
                 }
-
+            },
+            getStatusId (type) {
+                let self = this;
+                for (var i = 0; i < self.statuses.length; i++) {
+                    if (self.statuses[i].title === type) {
+                        return self.statuses.id;
+                    }
+                }
+                self.loadProblems();
             },
             markAsAnswered(requestId) {
                 this.changeRequestType(requestId, 'answered');
@@ -219,6 +228,13 @@
             forceRerender() {
                 this.loadProblems();
                 this.componentKey += 1;
+            },
+            openChat (problem) {
+                let self = this;
+                if (self.isAdmin()) {
+                    self.changeRequestType(problem.id, 'in progress');
+                }
+                this.$router.push('/chats/' + problem.chatId);
             }
         },
         mounted() {

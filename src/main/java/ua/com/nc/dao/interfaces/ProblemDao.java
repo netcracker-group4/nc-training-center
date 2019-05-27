@@ -9,6 +9,6 @@ public interface ProblemDao extends GenericDao<Problem> {
 
     List<Problem> getAll ();
 
-    List <Problem> getRequestsByUserId (int userId);
+    List <Problem> getRequestsByUserId (Integer userId);
 
 }

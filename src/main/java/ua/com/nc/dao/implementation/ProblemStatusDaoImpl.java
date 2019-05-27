@@ -23,6 +23,9 @@ public class ProblemStatusDaoImpl extends AbstractDaoImpl<ProblemStatus> impleme
     @Value("${problem-status.select-all}")
     private String selectAllProblemStatus;
 
+    @Value("${problem-status.select-by-title}")
+    private String selectByTitle;
+
     @Autowired
     public ProblemStatusDaoImpl(DataSource dataSource) throws PersistException {
         super(dataSource);
@@ -45,5 +48,11 @@ public class ProblemStatusDaoImpl extends AbstractDaoImpl<ProblemStatus> impleme
         }
         log.debug("Retrieved ProblemStatuses from database " + list);
         return list;
+    }
+
+    public ProblemStatus getProblemStatusByString (String title) {
+        String sql = selectByTitle;
+        log.debug ("get problm status by title " + sql);
+        return getUniqueFromSqlByString (sql, title);
     }
 }

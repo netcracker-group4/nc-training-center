@@ -51,7 +51,7 @@ public class EmailReminderServiceImpl implements EmailReminderService {
     private String userAttendanceReminderText;
 
 
-    @Scheduled(cron = " 30 17 * * 7 *")
+    @Scheduled(cron = " 30 16 * * 2 *")
     @Override
     public void sendAttendanceReminders () {
         admin = userDao.getAdmin();

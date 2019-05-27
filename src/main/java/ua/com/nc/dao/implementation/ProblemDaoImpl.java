@@ -54,6 +54,7 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
         statement.setString(2, entity.getDescription());
         statement.setInt (3, entity.getStatus());
         statement.setString(4, entity.getMessage());
+        statement.setInt(5, entity.getChatId());
     }
 
     protected void prepareStatementForInsert (PreparedStatement statement, Problem entity) throws SQLException {
@@ -62,7 +63,7 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
 
     protected void prepareStatementForUpdate (PreparedStatement statement, Problem entity) throws SQLException {
         setAllFields (statement, entity);
-        statement.setInt(5, entity.getId());
+        statement.setInt(6, entity.getId());
     }
 
 
@@ -84,7 +85,7 @@ public class ProblemDaoImpl extends AbstractDaoImpl<Problem> implements ProblemD
     }
 
     @Override
-    public List<Problem> getRequestsByUserId (int userId) {
+    public List<Problem> getRequestsByUserId (Integer userId) {
         String sql = selectAllByUser;
         return getFromSqlById(sql, userId);
     }
