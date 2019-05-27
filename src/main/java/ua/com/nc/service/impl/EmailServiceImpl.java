@@ -18,17 +18,10 @@ import java.util.Set;
 
 @Log4j2
 @Repository
-@PropertySource("message_text.properties")
 public class EmailServiceImpl implements EmailService {
-    @Value("${title.message-to-manager}")
-    private String titleMessageToManager;
-    @Value("${text.message-to-manager}")
-    private String textMessageToManager;
-    @Autowired
-    private UserDao userDao;
+
     @Autowired
     public JavaMailSender emailSender;
-
 
     @Override
     public void sendSimpleMessage(DtoMailSender dtoMailSender) {
@@ -40,29 +33,6 @@ public class EmailServiceImpl implements EmailService {
         log.debug("created message");
         emailSender.send(message);
         log.debug("sent");
-
-    }
-
-
-    @Override
-    public void sendMessageToManager(DtoFeedback dtoFeedback) {
-        User user = userDao.getManagerByEmployeeId(dtoFeedback.getStudentId());
-        User student = userDao.getEntityById(dtoFeedback.getStudentId());
-        String title = titleMessageToManager;
-        String text = String.format(textMessageToManager,
-                student.getFirstName() + " " + student.getLastName(),
-                dtoFeedback.getTeacher().getFirstName() + " " + dtoFeedback.getTeacher().getLastName(),
-                dtoFeedback.getText());
-
-        sendMessage(user, title, text);
-    }
-
-    private void sendMessage(User user, String title, String text) {
-        DtoMailSender dtoMailSender = new DtoMailSender();
-        dtoMailSender.setTo(user.getEmail());
-        dtoMailSender.setSubject(title);
-        dtoMailSender.setText(text);
-        sendSimpleMessage(dtoMailSender);
     }
 
 }

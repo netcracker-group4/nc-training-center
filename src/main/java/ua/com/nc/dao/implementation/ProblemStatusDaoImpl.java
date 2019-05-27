@@ -52,7 +52,7 @@ public class ProblemStatusDaoImpl extends AbstractDaoImpl<ProblemStatus> impleme
 
     public ProblemStatus getProblemStatusByString (String title) {
         String sql = selectByTitle;
-        log.debug ("get problm status by title " + sql);
+        log.debug ("get problem status by title " + sql);
         return getUniqueFromSqlByString (sql, title);
     }
 }

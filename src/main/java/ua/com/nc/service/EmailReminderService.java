@@ -1,6 +1,7 @@
 package ua.com.nc.service;
 
 import ua.com.nc.domain.User;
+import ua.com.nc.dto.DtoFeedback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,5 +27,7 @@ public interface EmailReminderService {
     void sendAttendanceReminders ();
 
     void sendUserAttendanceReminder (Set<User> users);
+
+    void sendMessageToManager(DtoFeedback dtoFeedback);
 
 }

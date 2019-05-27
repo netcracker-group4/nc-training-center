@@ -1,6 +1,5 @@
 package ua.com.nc.dao.interfaces;
 
-import ua.com.nc.domain.Level;
 import ua.com.nc.domain.Problem;
 
 import java.util.List;

@@ -25,11 +25,8 @@ public class LandingPageController {
     @Autowired
     private SerializationService serializationService;
 
-//    private Gson gson = new GsonBuilder().setDateFormat("yyyy.MM.dd.HH.mm.ss").serializeNulls().create();
-
     @RequestMapping(value = {"/courses-on-landing-page"}, method = RequestMethod.GET)
     public ResponseEntity<String> getLandingPageCourses() {
-        log.info("getting courses on landing page");
         List<Course> landingPageCourses = landingPageService.getLandingPageCourses();
         String body = serializationService.serializationWithDateTimeFormat(landingPageCourses);
         return ResponseEntity.ok(body);
@@ -43,15 +40,17 @@ public class LandingPageController {
     }
 
     @RequestMapping(value = {"/update-course-landing-page"}, method = RequestMethod.POST)
-    public ResponseEntity<String> updateCourseLandingPage(@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage,
-                                        @RequestParam(name = "id") Integer id) {
+    public ResponseEntity<String> updateCourseLandingPage
+            (@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage,
+             @RequestParam(name = "id") Integer id) {
         landingPageService.updateCourseLandingPage(id, isOnLandingPage);
         return ResponseEntity.ok("Updated");
     }
 
     @RequestMapping(value = {"/update-trainer-landing-page"}, method = RequestMethod.POST)
-    public ResponseEntity<String> updateTrainerLandingPage(@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage,
-                                                           @RequestParam(name = "id") Integer id) {
+    public ResponseEntity<String> updateTrainerLandingPage
+            (@RequestParam(name = "isOnLandingPage") boolean isOnLandingPage,
+             @RequestParam(name = "id") Integer id) {
         landingPageService.updateTrainerLandingPage(id, isOnLandingPage);
         return ResponseEntity.ok("Updated");
     }
