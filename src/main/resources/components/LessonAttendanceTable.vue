@@ -55,8 +55,10 @@
                     </td>
                     <td class="text-xs-left">{{ props.item.status }}</td>
                     <td class="text-xs-center">{{ props.item.reason }}</td>
-                    <td class="justify-center px-0" >
-                        <v-icon v-if="isLessonTrainer() || $store.getters.isAdmin" small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+                    <td class="justify-center px-0">
+                        <v-icon v-if="isLessonTrainer() || $store.getters.isAdmin" small class="mr-2"
+                                @click="editItem(props.item)">edit
+                        </v-icon>
                     </td>
                 </template>
             </v-data-table>
@@ -69,7 +71,7 @@
 
     export default {
         name: "LessonAttendanceTable",
-        props: ['lessonId','trainerId'],
+        props: ['lessonId', 'trainerId'],
         data: () => ({
             dialog: false,
             headers: [
@@ -116,14 +118,14 @@
                 let attendanceId = self.editedItem.attendanceId;
                 let statusId = self.editedItem.status.id;
                 let reasonId = null;
-                if (self.editedItem.reason) {
+                if (self.editedItem.reason == null || self.editedItem.reason === "undefined") {
                     reasonId = null
                 } else {
                     reasonId = self.editedItem.reason.id
                 }
                 let form = new FormData();
                 let request = new XMLHttpRequest();
-                request.open('PUT', this.$store.state.apiServer + '/api/attendances');
+                request.open('PUT', self.$store.state.apiServer + '/api/attendances');
                 form.append('attendanceId', attendanceId);
                 form.append('statusId', statusId);
                 form.append('absenceId', reasonId);
