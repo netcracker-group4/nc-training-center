@@ -11,7 +11,7 @@
                 </v-flex>
                 <v-flex style="position: relative;">
                     <v-btn flat v-on:click="downloadGroupAttendanceReport()"
-                           style="position: absolute; top: 0; right: 0;" color="orange" v-if="hasRights()">
+                           style="position: absolute; top: 0; right: 0;" v-if="hasRights()">
                         <b>Download group attendance</b></v-btn>
                 </v-flex>
             </div>
