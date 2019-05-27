@@ -36,11 +36,6 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private CourseDao courseDao;
 
-    private String[] dashboardSheetNames = {"Level And Quantity", "Level And Trainers", "Training And Quantity"};
-    private String[] levelAndQuantityColumns = {"Level", "Course Name", "Group Name"};
-    private String[] levelAndTrainersColumns = {"Trainer", "Course Name and Level"};
-    private String[] trainingAndQuantityColumns = {"Course Name", "Group Name", "Amount of Employees"};
-
 
     //get full attendance report
     @Override
@@ -54,7 +49,7 @@ public class ReportServiceImpl implements ReportService {
                 workbook.write(out);
                 return new ByteArrayInputStream(out.toByteArray());
             } else {
-                throw new IOException("No groups to report");
+                throw new IOException(groupsNotFound);
             }
         }
     }
@@ -118,23 +113,27 @@ public class ReportServiceImpl implements ReportService {
     private void drawTrainersGroups(XSSFWorkbook workbook, CellStyle headerStyle,
                                     CellStyle presenceStyle, User trainer, List<Group> groups) {
         for (Group group : groups) {
-            //foreach trainer's group create sheet with title
-            Sheet groupSheet = workbook.createSheet(trainer.getLastName()
-                    + "'s " + group.getTitle());
-            int rowCount = 0;
-            Row headerRow = groupSheet.createRow(rowCount);
-            drawGroupSheet(headerStyle, presenceStyle, group, groupSheet, rowCount, headerRow);
+            if (!attendanceDao.getAttendanceByGroupId(group.getId()).isEmpty()) {
+                //foreach trainer's group create sheet with title
+                Sheet groupSheet = workbook.createSheet(trainer.getLastName()
+                        + "'s " + group.getTitle());
+                int rowCount = 0;
+                Row headerRow = groupSheet.createRow(rowCount);
+                drawGroupSheet(headerStyle, presenceStyle, group, groupSheet, rowCount, headerRow);
+            }
         }
     }
 
     private void drawGroupsPage(XSSFWorkbook workbook, CellStyle headerStyle,
                                 CellStyle presenceStyle, List<Group> groups) {
         for (Group group : groups) {
-            //foreach group create sheet with title
-            Sheet groupSheet = workbook.createSheet(group.getTitle());
-            int rowCount = 0;
-            Row headerRow = groupSheet.createRow(rowCount);
-            drawGroupSheet(headerStyle, presenceStyle, group, groupSheet, rowCount, headerRow);
+            if (!attendanceDao.getAttendanceByGroupId(group.getId()).isEmpty()) {
+                //foreach group create sheet with title
+                Sheet groupSheet = workbook.createSheet(group.getTitle());
+                int rowCount = 0;
+                Row headerRow = groupSheet.createRow(rowCount);
+                drawGroupSheet(headerStyle, presenceStyle, group, groupSheet, rowCount, headerRow);
+            }
         }
     }
 
@@ -287,9 +286,11 @@ public class ReportServiceImpl implements ReportService {
                 return level;
             }
         }
-        throw new NoSuchUserException("Can't find Level for Id " + id);
+        throw new NoSuchUserException(levelException + id);
     }
 
+
+    /* Some util methods*/
     private CellStyle headerStyle(XSSFWorkbook workbook) {
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
