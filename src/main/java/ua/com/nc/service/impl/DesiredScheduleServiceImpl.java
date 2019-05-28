@@ -204,7 +204,7 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
     public void saveDesired(Integer userId, DesiredToSave desiredToSave) {
         Integer courseId = desiredToSave.getCourseId();
         saveUsrGroup(userId, courseId);
-        sendNewAttendeeNotificationToTrainer(userId, courseId);
+        //sendNewAttendeeNotificationToTrainer(userId, courseId);
         for (ScheduleForDay scheduleForDay : desiredToSave.getForDays()) {
             saveDesiredScheduleForDay(userId, courseId, scheduleForDay);
         }
@@ -220,7 +220,7 @@ public class DesiredScheduleServiceImpl implements DesiredScheduleService {
         DtoMailSender dtoMailSender = new DtoMailSender(
                 trainer.getEmail(), newAttendeeTitle, text);
         log.debug("about to send mail about new attendee" + dtoMailSender);
-        emailService.sendSimpleMessage(dtoMailSender);
+        //emailService.sendSimpleMessage(dtoMailSender);
     }
 
     private void saveUsrGroup(Integer userId, Integer courseId) {
