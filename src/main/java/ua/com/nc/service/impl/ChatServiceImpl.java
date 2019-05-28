@@ -1,7 +1,7 @@
 package ua.com.nc.service.impl;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.com.nc.dao.interfaces.ChatDao;
 import ua.com.nc.dao.interfaces.GroupDao;
@@ -11,13 +11,13 @@ import ua.com.nc.domain.Chat;
 import ua.com.nc.domain.Group;
 import ua.com.nc.domain.Message;
 import ua.com.nc.domain.User;
-import ua.com.nc.security.CustomSecurityService;
 import ua.com.nc.service.ChatService;
 import ua.com.nc.service.GroupsService;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@Log4j2
 @Service
 public class ChatServiceImpl implements ChatService {
 
@@ -36,6 +36,15 @@ public class ChatServiceImpl implements ChatService {
     @Autowired
     private GroupDao groupDao;
 
+    /**
+     * Add message to group or simple chat depending on parameters
+     *
+     * @param text text of message for adding in group chat
+     * @param senderId id of sender
+     * @param receiverId id of receiver
+     * @param groupId id og group where message should add
+     * @return id of added message
+     */
     @Override
     public Integer addMessage(String text, Integer senderId, Integer receiverId, Integer groupId) {
         Message message = new Message(null, senderId, new Timestamp(System.currentTimeMillis()), text);
@@ -47,19 +56,24 @@ public class ChatServiceImpl implements ChatService {
             if(canWriteToGroupChat(senderId, groupId)){
                 return addMessageToGroupChat(message, groupId);
             }else{
+                log.debug("This user can't add message to this chat " + message + " group id " + groupId);
                 return null;
             }
+        }else {
+            log.debug("Not full data to add message to chat" + message);
+            return null;
+        }
 
-        }
-        if(receiverId == null & senderId == null){
-            return null;
-        }else{
-            return null;
-        }
     }
 
-    @Override
-    public Integer addMessageToGroupChat(Message message, Integer groupId) {
+    /**
+     * Add message to group chat
+     *
+     * @param message message for adding in group chat
+     * @param groupId id og group where message should add
+     * @return id of added message
+     */
+    private Integer addMessageToGroupChat(Message message, Integer groupId) {
         Chat chat = chatDao.getByGroupId(groupId);
         if(chat != null){
             message.setChatId(chat.getId());
@@ -87,8 +101,14 @@ public class ChatServiceImpl implements ChatService {
 
     }
 
-    @Override
-    public Integer addMessageToChat(Message message, Integer receiverId) {
+    /**
+     * Add message to chat with two users
+     *
+     * @param message message for adding in group chat
+     * @param receiverId id of receiver
+     * @return id of added message
+     */
+    private Integer addMessageToChat(Message message, Integer receiverId) {
         Chat chat = chatDao.getChatBySenderIdAndReceiverId(message.getSenderId(), receiverId);
         if(chat != null){
             message.setChatId(chat.getId());

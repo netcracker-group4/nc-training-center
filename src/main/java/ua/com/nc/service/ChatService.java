@@ -9,10 +9,6 @@ public interface ChatService {
 
     Integer addMessage(String text, Integer senderId, Integer receiverId, Integer groupId);
 
-    Integer addMessageToGroupChat(Message message, Integer groupId);
-
-    Integer addMessageToChat(Message message, Integer receiverId);
-
     Integer addMessageToExistingChat(Message message);
 
     List<Chat> getChatsByUserId(Integer userId);

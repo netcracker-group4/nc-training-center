@@ -135,9 +135,9 @@
                 <v-layout row wrap style="margin-bottom: 40px">
                     <v-spacer></v-spacer>
                     <div class="text-xs-center">
-                        <v-dialog v-model="sendMessageWindowShow" width="500">
+                        <v-dialog v-if="btnReload()" v-model="sendMessageWindowShow" width="500">
                             <template v-slot:activator="{ on }">
-                                <v-btn v-if="isBtnShow" color="success" large
+                                <v-btn  color="success" large
                                        @click="sendMessageWindowShow = ! sendMessageWindowShow">Message
                                 </v-btn>
                             </template>
@@ -207,16 +207,8 @@
                 isBtnShow: true,
             }
         },
-        watch:{
-            '$route'(ro, from){
-                if(this.$store.state.user.id != this.$route.params.id){
-                    this.isBtnShow = true
-                    location.reload()
-                }else{
-                    this.isBtnShow = false
-                }
-
-            }
+        updated(){
+            //this.btnReload()
         },
         mounted(){
             if(this.$store.state.user.id != this.$route.params.id){
@@ -225,13 +217,18 @@
                 this.isBtnShow = false
             }
         },
-        methods: {
-            btnReload(){
+        watch:{
+            '$route'(ro, from){
                 if(this.$store.state.user.id != this.$route.params.id){
                     this.isBtnShow = true
-                                    }else{
+                }else{
                     this.isBtnShow = false
                 }
+            }
+        },
+        methods: {
+            btnReload(){
+                return this.isBtnShow
             },
             chatsReload() {
                 let self = this

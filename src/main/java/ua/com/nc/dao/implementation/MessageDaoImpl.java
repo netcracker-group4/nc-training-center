@@ -114,7 +114,6 @@ public class MessageDaoImpl extends AbstractDaoImpl<Message> implements MessageD
         return getFromSqlById(sql, chatId);
     }
 
-
     @Override
     public Integer insertMessageReturningId(Message message) {
         Integer messageId = null;
