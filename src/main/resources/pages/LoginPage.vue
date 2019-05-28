@@ -5,10 +5,14 @@
                 <v-container>
                     <v-layout row wrap>
                         <v-flex xs12 sm12>
-                            <v-text-field v-model="email" placeholder="Email"></v-text-field>
+                            <v-text-field
+                                    v-on:keyup.enter="login"
+                                    v-model="email" placeholder="Email"
+                            ></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm12>
                             <v-text-field
+                                    v-on:keyup.enter="login"
                                     :append-icon="pass_show ? 'visibility' : 'visibility_off'"
                                     v-model="password"
                                     :type="pass_show ? 'text' : 'password'"

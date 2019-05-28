@@ -45,6 +45,10 @@ public class UserServiceImpl implements UserService {
     private String titleMessageRecoverPassword;
     @Value("${text.message-recover-password}")
     private String textMessageRecoverPassword;
+    @Value("${title.message-to-deleted-employee}")
+    private String titleMessageToDeletedEmployee;
+    @Value("${text.message-to-deleted-employee}")
+    private String textMessageToDeletedEmployee;
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -69,6 +73,8 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserMapper userMapper;
+
+    final static Integer HOURS_LIMIT = 23;
 
     @Override
     public void add(DtoUserSave dtoUserSave) {
@@ -206,21 +212,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean activateUser(String token) {
+    public void activateUser(String token) {
         User user = userDao.getByToken(token);
 
-        if (user == null) {
-            return false;
+        if (user != null) {
+            if (timeDifference(user.getCreated()) > HOURS_LIMIT) {
+                userDao.delete(user.getId());
+                String title = titleMessageToDeletedEmployee;
+                String text = textMessageToDeletedEmployee;
+                sendMessage(user, title, text);
+            } else {
+                user.setActive(true);
+                userDao.updateActive(user);
+            }
         }
-
-        if (timeDifference(user.getCreated()) > 23) {
-            return false;
-        }
-
-        user.setActive(true);
-        userDao.updateActive(user);
-
-        return true;
     }
 
     private Integer timeDifference(Timestamp userCreated) {
